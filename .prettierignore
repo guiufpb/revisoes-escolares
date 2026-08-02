@@ -1,0 +1,9 @@
+node_modules
+package-lock.json
+ambiente_interativo/js/app.bundle.js
+ambiente_interativo/screenshots
+ambiente_interativo/screenshots_mariana_matematica
+test-results
+tmp
+**/*.png
+**/*.pdf

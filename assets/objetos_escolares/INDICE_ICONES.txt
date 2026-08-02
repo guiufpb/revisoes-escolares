@@ -1,0 +1,67 @@
+INDICE DE ICONES - BIBLIOTECA VISUAL ESCOLAR
+Projeto: Revisoes escolares
+Pasta: assets/objetos_escolares
+
+Formato: nome do arquivo | significado em portugues | origem | observacao
+
+backpack.svg | mochila | fluent-emoji-flat:backpack | exato
+bakery.svg | padaria | fluent-emoji-flat:bread | aproximado: padaria representada por pão
+ball.svg | bola | fluent-emoji-flat:soccer-ball | exato
+bathroom.svg | banheiro | fluent-emoji-flat:restroom | exato
+blackboard.svg | quadro | fluent-emoji-flat:clipboard | aproximado: não há blackboard; usado prancheta/quadro de escrita
+book.svg | livro | fluent-emoji-flat:open-book | exato
+bus.svg | ônibus | fluent-emoji-flat:bus | exato
+cafeteria.svg | cantina/refeitório | openmoji:cafeteria | exato
+calculator.svg | calculadora | fluent-emoji-flat:abacus | aproximado: não há calculadora; usado ábaco como instrumento de cálculo
+car.svg | carro | fluent-emoji-flat:automobile | exato
+chair.svg | cadeira | fluent-emoji-flat:chair | exato
+church.svg | igreja | fluent-emoji-flat:church | exato
+classroom.svg | sala de aula | fluent-emoji-flat:school | aproximado: não há classroom; usado escola
+cleaner.svg | faxineiro/faxineira | fluent-emoji-flat:broom | aproximado: profissional representado por vassoura
+clock.svg | relógio | fluent-emoji-flat:alarm-clock | aproximado: relógio/alarm clock
+coach.svg | professor/professora de educação física | fluent-emoji-flat:person-bouncing-ball | aproximado: educador físico representado por pessoa com bola
+colored-pencils.svg | lápis de cor | fluent-emoji-flat:crayon | aproximado: crayon usado para material de colorir
+computer-room.svg | sala de informática | fluent-emoji-flat:desktop-computer | aproximado: sala representada por computador
+computer.svg | computador | fluent-emoji-flat:desktop-computer | exato
+cook.svg | cozinheiro/cozinheira | fluent-emoji-flat:cook | exato
+crayons.svg | giz de cera | fluent-emoji-flat:crayon | aproximado: um giz de cera representa o conjunto
+desk.svg | mesa/carteira | fluent-emoji-flat:desktop-computer | aproximado: não há carteira escolar; usado computador de mesa/desktop
+eraser.svg | borracha | fluent-emoji-flat:white-square-button | aproximado: não há emoji de borracha; usado quadrado branco como bloco de borracha
+floor-plan.svg | planta cartográfica | fluent-emoji-flat:world-map | aproximado: não há planta baixa; usado mapa
+glue.svg | cola | fluent-emoji-flat:bottle-with-popping-cork | aproximado: não há cola; usado frasco
+gym.svg | quadra/ginásio | fluent-emoji-flat:soccer-ball | aproximado: quadra representada por bola esportiva
+house.svg | casa | fluent-emoji-flat:house | exato
+janitor.svg | zelador/zeladora | fluent-emoji-flat:hammer-and-wrench | aproximado: zeladoria/manutenção representada por ferramentas
+library.svg | biblioteca | fluent-emoji-flat:books | aproximado: biblioteca representada por livros
+map.svg | mapa | fluent-emoji-flat:world-map | exato
+market.svg | mercado | fluent-emoji-flat:department-store | aproximado: mercado representado por loja/departamento
+mental-map.svg | mapa mental | fluent-emoji-flat:world-map | aproximado: mapa mental representado por mapa
+microscope.svg | microscópio | fluent-emoji-flat:microscope | exato
+model.svg | maquete | fluent-emoji-flat:building-construction | aproximado: maquete representada por construção em miniatura
+notebook.svg | caderno | fluent-emoji-flat:notebook | exato
+paintbrush.svg | pincel | fluent-emoji-flat:paintbrush | exato
+paper-clips.svg | clipes de papel | fluent-emoji-flat:linked-paperclips | exato
+paper.svg | papel | fluent-emoji-flat:page-facing-up | aproximado: folha de papel avulsa
+park.svg | parque | fluent-emoji-flat:national-park | exato
+pedestrian-crossing.svg | travessia de pedestres | fluent-emoji-flat:children-crossing | aproximado: travessia representada por placa de crianças atravessando
+pen.svg | caneta | fluent-emoji-flat:pen | exato
+pencil-case.svg | estojo | fluent-emoji-flat:briefcase | aproximado: não há estojo; usado estojo/bolsa retangular
+pencil-sharpener.svg | apontador | fluent-emoji-flat:triangular-ruler | aproximado: não há apontador; usado material escolar geométrico
+pencil.svg | lápis | fluent-emoji-flat:pencil | exato
+pharmacy.svg | farmácia | fluent-emoji-flat:medical-symbol | aproximado: farmácia representada por símbolo médico
+playground.svg | parquinho/pátio | fluent-emoji-flat:playground-slide | exato
+principal-office.svg | sala da direção | fluent-emoji-flat:office-building | aproximado: sala da direção representada por prédio de escritório
+principal.svg | diretor/diretora | fluent-emoji-flat:office-worker | aproximado: direção representada por profissional de escritório
+road.svg | estrada/rua | fluent-emoji-flat:motorway | aproximado: estrada/rua representada por rodovia
+ruler.svg | régua | fluent-emoji-flat:straight-ruler | exato
+school.svg | escola | fluent-emoji-flat:school | exato
+schoolbag.svg | mochila escolar | fluent-emoji-flat:backpack | aproximado: schoolbag representado por backpack
+scissors.svg | tesoura | fluent-emoji-flat:scissors | exato
+square.svg | praça | fluent-emoji-flat:national-park | aproximado: praça representada por parque
+stop-sign.svg | placa PARE | fluent-emoji-flat:stop-sign | exato
+store.svg | loja | fluent-emoji-flat:convenience-store | exato
+street.svg | rua | openmoji:openstreetmap | aproximado: rua representada por mapa urbano
+student.svg | aluno/aluna | fluent-emoji-flat:student | exato
+teacher.svg | professor/professora | fluent-emoji-flat:teacher | exato
+traffic-light.svg | semáforo | fluent-emoji-flat:vertical-traffic-light | exato
+tree.svg | árvore | fluent-emoji-flat:deciduous-tree | exato

@@ -1,0 +1,37 @@
+# Dependências e caches locais
+/node_modules/
+/.vite/
+
+# Resultados temporários de testes e ferramentas
+/test-results/
+/playwright-report/
+/blob-report/
+/tmp/
+/.playwright/
+**/.auth/
+*.log
+npm-debug.log*
+
+# Arquivos reconstruídos automaticamente
+/ambiente_interativo/js/app.bundle.js
+
+# Capturas e previews de validação visual
+/ambiente_interativo/screenshots/
+/ambiente_interativo/screenshots_*/
+**/preview_paginas/
+
+# Materiais escolares identificados por aluna ficam somente no computador
+/[0-9][0-9] */
+
+# Documentos binários e saídas que não devem ser publicados acidentalmente
+*.pdf
+
+# Arquivos locais de editores e do sistema operacional
+/.vscode/
+/.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.tmp
+*.bak
+*~

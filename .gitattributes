@@ -1,0 +1,12 @@
+* text=auto eol=lf
+
+# Atalhos do Windows precisam manter CRLF.
+*.bat text eol=crlf
+
+# Arquivos binários não recebem conversão de fim de linha.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.pdf binary

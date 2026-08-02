@@ -1,0 +1,134 @@
+RELATORIO DE TESTE - AMBIENTE INTERATIVO
+=======================================
+
+Data: 09/06/2026
+
+ARQUIVO CRIADO
+- revisoes/mariana/matematica-revisao-ampla.js
+
+ARQUIVOS ALTERADOS
+- index.html
+- css/estilo.css
+- js/app.js
+- README_INTERATIVO.txt
+- RELATORIO_TESTE_INTERATIVO.txt
+
+REVISAO ADICIONADA
+- Caminho: Mariana > Matematica > Revisao ampla.
+- Quantidade: 25 telas/etapas interativas.
+- Conteudos baseados no PDF:
+  04 Mariana Matematica/Matematica Mariana OCR.pdf
+- A revisao inclui subtracao, operacoes inversas, sequencias, grafico,
+  dezena/unidade, numeros ate 19, ordinais, pares/impares, geometria,
+  vistas, planificacoes, mini simulado e atividade livre.
+
+TESTES DA MARIANA
+- Tela inicial com Alice e Mariana: PASSOU.
+- Mariana mostra apenas Matematica e novas trilhas: PASSOU.
+- Matematica mostra Revisao ampla: PASSOU.
+- Abertura da revisao e barra de 25 etapas: PASSOU.
+- Questao de subtracao 8 - 3 = 5: PASSOU.
+- Questao 10 unidades = 1 dezena: PASSOU.
+- Classificacao de 10 a 19 em par/impar: PASSOU.
+- Ligacao de objetos a solidos geometricos: PASSOU.
+- Canvas com arrasto real do ponteiro: PASSOU.
+- Botao de salvar desenho: PASSOU.
+- Canvas restaurado depois de recarregar: PASSOU.
+- Etapa, respostas e pontuacao restauradas depois de recarregar: PASSOU.
+- Chave exclusiva de progresso da Mariana: PASSOU.
+- Tela final com pontuacao: PASSOU.
+
+TESTES DA ALICE
+- Alice mostra apenas Ciencias: PASSOU.
+- Alice > Ciencias > Origem dos materiais: PASSOU.
+- Canvas da Alice continua presente: PASSOU.
+- Progresso anterior da Alice foi preservado: PASSOU.
+- O progresso da Mariana nao aparece quando Alice esta ativa: PASSOU.
+
+CONSOLE E ARQUIVOS
+- Erros ou avisos JavaScript no fluxo final: nenhum.
+- Sintaxe dos arquivos JavaScript: valida.
+- CSS, JavaScript e SVGs locais: encontrados.
+- Nenhuma biblioteca externa ou acesso a internet.
+
+OBSERVACAO SOBRE FILE://
+- A ferramenta automatizada bloqueia URLs file:// por politica de seguranca.
+- Os testes Playwright usaram a mesma pasta em servidor local 127.0.0.1.
+- O projeto usa scripts classicos e caminhos relativos locais, portanto esta
+  preparado para abrir ambiente_interativo/index.html diretamente no Edge.
+
+SCREENSHOTS
+Pasta:
+- ambiente_interativo/screenshots_mariana_matematica
+
+Arquivos:
+- 01_inicio.png
+- 02_mariana_materias.png
+- 03_matematica_revisao.png
+- 04_subtracao.png
+- 05_dezena_unidade.png
+- 06_pares_impares.png
+- 07_geometria.png
+- 08_canvas.png
+- 09_resultado_final.png
+
+AUTOMACAO ADICIONADA EM 09/06/2026
+- tests/ambiente-interativo.spec.js
+- tests/acessibilidade.spec.js
+- playwright.config.js
+- .prettierrc
+- .prettierignore
+- eslint.config.js
+
+PACOTES CONFIRMADOS
+- Prettier 3.8.3
+- ESLint 10.4.1
+- @playwright/test 1.60.0
+- @axe-core/playwright 4.11.3
+- Vite 8.0.16
+
+COMANDOS
+- npm run format
+- npm run format:check
+- npm run lint
+- npm run test:interativo
+- npm run test:a11y
+- npm test
+
+QUALIDADE E EXECUCAO LOCAL
+- Formatacao de HTML, CSS e JavaScript com Prettier.
+- Analise dos arquivos JavaScript do ambiente e dos testes com ESLint.
+- Testes funcionais com Playwright.
+- Testes de acessibilidade com axe-core.
+- Abertura local e servidor dos testes com Vite.
+
+COBERTURA AUTOMATICA
+- Botoes Alice e Mariana na tela inicial.
+- Fluxo Mariana > Matematica > Revisao ampla.
+- Questao simples de subtracao.
+- Barra de progresso e etapa 21 de 25.
+- Canvas de vistas geometricas.
+- Ausencia de erros JavaScript no console.
+- Analise axe nas quatro telas principais.
+- Barra de progresso com nome acessivel para tecnologias assistivas.
+
+RESULTADO DA EXECUCAO EM 09/06/2026
+- Vite em http://127.0.0.1:5173: disponivel (HTTP 200).
+- npm run test:interativo: 1 teste aprovado.
+- npm run test:a11y: 4 testes aprovados.
+- npm test: 5 testes aprovados.
+- Erros JavaScript no fluxo testado: nenhum.
+- Violacoes axe de impacto serious ou critical: nenhuma apos a correcao.
+
+CORRECAO DE ACESSIBILIDADE
+- A barra de progresso recebeu o nome acessivel "Progresso da revisao".
+- A auditoria aguarda o fim da animacao de entrada antes de medir contraste,
+  evitando resultados temporarios causados pela opacidade da transicao.
+
+CONFIGURACAO DE QUALIDADE EM 09/06/2026
+- npm run format:check: PASSOU; todos os arquivos seguem o estilo do Prettier.
+- npm run lint: PASSOU; nenhum erro do ESLint.
+- npm test: PASSOU; 5 testes Playwright aprovados.
+- Alice > Ciencias > Origem dos materiais: preservada.
+- Mariana > Matematica > Revisao ampla: preservada.
+- Canvas, localStorage, Vite, Playwright e testes de acessibilidade: preservados.

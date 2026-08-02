@@ -1,0 +1,19 @@
+LICENCAS E CREDITOS - BIBLIOTECA VISUAL
+Projeto: Revisoes escolares
+
+Bibliotecas instaladas via npm:
+- @iconify-json/openmoji
+- @iconify-json/twemoji
+- @iconify-json/fluent-emoji-flat
+- @iconify/utils
+
+Bibliotecas efetivamente usadas nesta primeira biblioteca:
+- fluent-emoji-flat (pacote @iconify-json/fluent-emoji-flat; licenca informada no package.json: MIT)
+- openmoji (pacote @iconify-json/openmoji; licenca informada no package.json: CC-BY-SA-4.0)
+
+Observacoes:
+- Os SVGs foram exportados a partir dos pacotes Iconify instalados localmente em node_modules.
+- Os icones devem respeitar as respectivas licencas dos conjuntos originais.
+- Fluent Emoji Flat deriva do conjunto Microsoft Fluent Emoji; consulte a licenca do pacote e do projeto original antes de redistribuir fora do uso escolar/local.
+- OpenMoji e Twemoji tambem possuem licencas proprias nos respectivos pacotes/projetos.
+- Alguns arquivos usam icones aproximados quando nao havia um pictograma exato para o objeto escolar solicitado; esses casos estao marcados no INDICE_ICONES.txt.

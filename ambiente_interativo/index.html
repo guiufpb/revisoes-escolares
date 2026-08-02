@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#7657d5" />
+    <title>Revisões Escolares</title>
+    <link rel="stylesheet" href="css/estilo.css" />
+  </head>
+  <body>
+    <header class="topo">
+      <button
+        class="botao-icone"
+        id="botao-inicio"
+        type="button"
+        aria-label="Voltar ao início"
+        hidden
+      >
+        <span aria-hidden="true">⌂</span>
+      </button>
+      <div class="marca">
+        <img src="../assets/objetos_escolares/book.svg" alt="" width="46" height="46" />
+        <span>Revisões Escolares</span>
+      </div>
+      <div class="acoes-topo">
+        <div class="progresso-resumo" id="progresso-resumo" aria-live="polite">Vamos começar!</div>
+        <button class="limpar-progresso" id="limpar-progresso" type="button" hidden>
+          Limpar progresso
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section
+        class="tela tela-ativa tela-inicial"
+        id="tela-inicial"
+        aria-labelledby="titulo-inicial"
+      >
+        <div class="nuvem nuvem-1" aria-hidden="true"></div>
+        <div class="nuvem nuvem-2" aria-hidden="true"></div>
+        <div class="painel-boas-vindas">
+          <img
+            class="ilustracao-principal"
+            src="../assets/objetos_escolares/school.svg"
+            alt="Ilustração de uma escola"
+          />
+          <p class="chapeu">Aprender brincando</p>
+          <h1 id="titulo-inicial">Revisões Escolares</h1>
+          <p>Escolha quem vai estudar hoje:</p>
+          <div class="seletor-alunos">
+            <button class="cartao-aluno cartao-alice" type="button" data-aluno="alice">
+              <span class="avatar" aria-hidden="true">A</span>
+              <span>Alice</span>
+              <small>Começar revisão</small>
+            </button>
+            <button class="cartao-aluno cartao-mariana" type="button" data-aluno="mariana">
+              <span class="avatar" aria-hidden="true">M</span>
+              <span>Mariana</span>
+              <small>Começar revisão</small>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="tela tela-trilhas" id="tela-trilhas" aria-labelledby="titulo-trilhas" hidden>
+        <div class="cabecalho-tela">
+          <p class="chapeu" id="saudacao-aluno">Olá!</p>
+          <h1 id="titulo-trilhas">O que vamos revisar?</h1>
+          <p>Escolha uma matéria para abrir a trilha.</p>
+        </div>
+
+        <div class="grade-materias" id="grade-materias">
+          <button
+            class="cartao-materia ciencias"
+            id="materia-ciencias"
+            type="button"
+            data-materia="ciencias"
+          >
+            <img src="../assets/objetos_escolares/microscope.svg" alt="" />
+            <span>Ciências</span>
+            <small>Origem dos materiais</small>
+            <strong>Abrir revisão →</strong>
+          </button>
+          <button
+            class="cartao-materia matematica"
+            id="materia-matematica"
+            type="button"
+            data-materia="matematica"
+            hidden
+          >
+            <img src="../assets/objetos_escolares/calculator.svg" alt="" />
+            <span>Matemática</span>
+            <small>Revisão ampla</small>
+            <strong>Abrir trilha →</strong>
+          </button>
+          <article class="cartao-materia em-breve">
+            <img src="../assets/objetos_escolares/pencil.svg" alt="" />
+            <span>Novas trilhas</span>
+            <small>Mais conteúdos em breve</small>
+          </article>
+        </div>
+      </section>
+
+      <section class="tela tela-revisao" id="tela-revisao" aria-labelledby="titulo-revisao" hidden>
+        <nav class="migalhas" aria-label="Navegação da revisão">
+          <button type="button" id="voltar-trilhas">Alice</button>
+          <span aria-hidden="true">›</span>
+          <span>Ciências</span>
+          <span aria-hidden="true">›</span>
+          <strong>Origem dos materiais</strong>
+        </nav>
+
+        <div class="cabecalho-revisao">
+          <div>
+            <p class="chapeu">Ciências</p>
+            <h1 id="titulo-revisao">Origem dos materiais</h1>
+            <p>Observe, pense e marque a melhor resposta.</p>
+          </div>
+          <img src="../assets/objetos_escolares/mental-map.svg" alt="" width="116" height="116" />
+        </div>
+
+        <article class="cartao-conteudo">
+          <div class="numero-etapa">1</div>
+          <div>
+            <h2>De onde vêm os objetos?</h2>
+            <p>
+              Os materiais usados para fabricar objetos podem ter origem <strong>vegetal</strong>,
+              <strong>animal</strong> ou <strong>mineral</strong>.
+            </p>
+            <div class="exemplos-materiais">
+              <span>🌳 madeira: vegetal</span>
+              <span>🐑 lã: animal</span>
+              <span>⛰️ ferro: mineral</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="cartao-atividade" id="atividade-demo">
+          <div class="numero-etapa">2</div>
+          <div class="atividade-corpo">
+            <p class="etiqueta">Sua vez</p>
+            <h2 id="pergunta-atividade">Carregando atividade...</h2>
+            <div
+              class="opcoes"
+              id="opcoes-atividade"
+              role="group"
+              aria-labelledby="pergunta-atividade"
+            ></div>
+            <button class="botao-principal" id="corrigir-atividade" type="button" disabled>
+              Conferir resposta
+            </button>
+            <div class="retorno" id="retorno-atividade" role="status" aria-live="polite"></div>
+          </div>
+        </article>
+
+        <article class="cartao-desenho">
+          <div class="numero-etapa">3</div>
+          <div class="atividade-corpo">
+            <p class="etiqueta">Espaço de ideias</p>
+            <h2>Desenhe um objeto feito de madeira</h2>
+            <p>Use o mouse, o dedo ou a caneta da mesa digitalizadora.</p>
+            <div class="ferramentas-desenho">
+              <label
+                >Cor
+                <input type="color" value="#6546c4" data-cor-canvas aria-label="Cor do lápis" />
+              </label>
+              <label
+                >Traço
+                <input
+                  type="range"
+                  min="2"
+                  max="18"
+                  value="6"
+                  data-espessura-canvas
+                  aria-label="Espessura do traço"
+                />
+              </label>
+              <button class="botao-secundario" type="button" data-limpar-canvas>
+                Limpar desenho
+              </button>
+            </div>
+            <canvas
+              class="area-desenho"
+              id="canvas-ideias"
+              width="900"
+              height="360"
+              tabindex="0"
+              aria-label="Área para desenhar um objeto feito de madeira"
+              aria-describedby="dica-canvas-ideias"
+            >
+              Área de desenho. Use os controles de cor, espessura e limpeza ao redor do canvas.
+            </canvas>
+            <p class="dica-canvas" id="dica-canvas-ideias">
+              Dica: uma mesa, um lápis ou uma cadeira podem ser feitos de madeira.
+            </p>
+          </div>
+        </article>
+      </section>
+
+      <section
+        class="tela tela-trilha-matematica"
+        id="tela-trilha-matematica"
+        aria-labelledby="titulo-trilha-matematica"
+        hidden
+      >
+        <nav class="migalhas" aria-label="Navegação da matéria">
+          <button type="button" data-voltar-materias>Mariana</button>
+          <span aria-hidden="true">›</span>
+          <strong>Matemática</strong>
+        </nav>
+        <div class="cabecalho-tela">
+          <p class="chapeu">Matemática</p>
+          <h1 id="titulo-trilha-matematica">Escolha uma revisão</h1>
+          <p>Uma aventura com números, problemas e formas.</p>
+        </div>
+        <div class="grade-materias">
+          <button class="cartao-materia matematica" type="button" id="abrir-revisao-mariana">
+            <img src="../assets/objetos_escolares/calculator.svg" alt="" />
+            <span>Revisão ampla</span>
+            <small>25 etapas interativas</small>
+            <strong>Começar ou continuar →</strong>
+          </button>
+          <article class="cartao-materia em-breve">
+            <img src="../assets/objetos_escolares/colored-pencils.svg" alt="" />
+            <span>Novas trilhas</span>
+            <small>Mais desafios em breve</small>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="tela tela-mariana-revisao"
+        id="tela-mariana-revisao"
+        aria-labelledby="mariana-titulo-etapa"
+        hidden
+      >
+        <nav class="migalhas" aria-label="Navegação da revisão de Matemática">
+          <button type="button" data-voltar-materias>Mariana</button>
+          <span aria-hidden="true">›</span>
+          <button type="button" data-voltar-trilha-matematica>Matemática</button>
+          <span aria-hidden="true">›</span>
+          <strong>Revisão ampla</strong>
+        </nav>
+        <div class="painel-progresso-mariana">
+          <div>
+            <span id="mariana-contador-etapa">Etapa 1 de 25</span>
+            <strong id="mariana-pontos">0 pontos</strong>
+          </div>
+          <div
+            class="barra-progresso-mariana"
+            role="progressbar"
+            aria-label="Progresso da revisão"
+            aria-valuemin="1"
+            aria-valuemax="25"
+            aria-valuenow="1"
+          >
+            <span id="mariana-barra-preenchida"></span>
+          </div>
+        </div>
+        <div id="mariana-conteudo-etapa"></div>
+        <div class="navegacao-etapas">
+          <button class="botao-secundario botao-grande" id="mariana-voltar" type="button">
+            ← Voltar
+          </button>
+          <button class="botao-principal botao-grande" id="mariana-proxima" type="button">
+            Próxima →
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Feito para aprender com curiosidade e alegria.</span>
+    </footer>
+
+    <script src="js/app.bundle.js" defer></script>
+  </body>
+</html>

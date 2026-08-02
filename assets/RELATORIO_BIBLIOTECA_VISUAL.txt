@@ -1,0 +1,114 @@
+RELATORIO DA BIBLIOTECA VISUAL
+Projeto: Revisoes escolares
+Pasta principal: Documentos/Codex/Revisoes escolares
+
+1. Quantos icones foram encontrados/salvos: 61
+   Pendentes: 0
+
+2. Objetos prontos:
+- backpack.svg (mochila) - fluent-emoji-flat:backpack
+- bakery.svg (padaria) - fluent-emoji-flat:bread - aproximado
+- ball.svg (bola) - fluent-emoji-flat:soccer-ball
+- bathroom.svg (banheiro) - fluent-emoji-flat:restroom
+- blackboard.svg (quadro) - fluent-emoji-flat:clipboard - aproximado
+- book.svg (livro) - fluent-emoji-flat:open-book
+- bus.svg (ônibus) - fluent-emoji-flat:bus
+- cafeteria.svg (cantina/refeitório) - openmoji:cafeteria
+- calculator.svg (calculadora) - fluent-emoji-flat:abacus - aproximado
+- car.svg (carro) - fluent-emoji-flat:automobile
+- chair.svg (cadeira) - fluent-emoji-flat:chair
+- church.svg (igreja) - fluent-emoji-flat:church
+- classroom.svg (sala de aula) - fluent-emoji-flat:school - aproximado
+- cleaner.svg (faxineiro/faxineira) - fluent-emoji-flat:broom - aproximado
+- clock.svg (relógio) - fluent-emoji-flat:alarm-clock - aproximado
+- coach.svg (professor/professora de educação física) - fluent-emoji-flat:person-bouncing-ball - aproximado
+- colored-pencils.svg (lápis de cor) - fluent-emoji-flat:crayon - aproximado
+- computer-room.svg (sala de informática) - fluent-emoji-flat:desktop-computer - aproximado
+- computer.svg (computador) - fluent-emoji-flat:desktop-computer
+- cook.svg (cozinheiro/cozinheira) - fluent-emoji-flat:cook
+- crayons.svg (giz de cera) - fluent-emoji-flat:crayon - aproximado
+- desk.svg (mesa/carteira) - fluent-emoji-flat:desktop-computer - aproximado
+- eraser.svg (borracha) - fluent-emoji-flat:white-square-button - aproximado
+- floor-plan.svg (planta cartográfica) - fluent-emoji-flat:world-map - aproximado
+- glue.svg (cola) - fluent-emoji-flat:bottle-with-popping-cork - aproximado
+- gym.svg (quadra/ginásio) - fluent-emoji-flat:soccer-ball - aproximado
+- house.svg (casa) - fluent-emoji-flat:house
+- janitor.svg (zelador/zeladora) - fluent-emoji-flat:hammer-and-wrench - aproximado
+- library.svg (biblioteca) - fluent-emoji-flat:books - aproximado
+- map.svg (mapa) - fluent-emoji-flat:world-map
+- market.svg (mercado) - fluent-emoji-flat:department-store - aproximado
+- mental-map.svg (mapa mental) - fluent-emoji-flat:world-map - aproximado
+- microscope.svg (microscópio) - fluent-emoji-flat:microscope
+- model.svg (maquete) - fluent-emoji-flat:building-construction - aproximado
+- notebook.svg (caderno) - fluent-emoji-flat:notebook
+- paintbrush.svg (pincel) - fluent-emoji-flat:paintbrush
+- paper-clips.svg (clipes de papel) - fluent-emoji-flat:linked-paperclips
+- paper.svg (papel) - fluent-emoji-flat:page-facing-up - aproximado
+- park.svg (parque) - fluent-emoji-flat:national-park
+- pedestrian-crossing.svg (travessia de pedestres) - fluent-emoji-flat:children-crossing - aproximado
+- pen.svg (caneta) - fluent-emoji-flat:pen
+- pencil-case.svg (estojo) - fluent-emoji-flat:briefcase - aproximado
+- pencil-sharpener.svg (apontador) - fluent-emoji-flat:triangular-ruler - aproximado
+- pencil.svg (lápis) - fluent-emoji-flat:pencil
+- pharmacy.svg (farmácia) - fluent-emoji-flat:medical-symbol - aproximado
+- playground.svg (parquinho/pátio) - fluent-emoji-flat:playground-slide
+- principal-office.svg (sala da direção) - fluent-emoji-flat:office-building - aproximado
+- principal.svg (diretor/diretora) - fluent-emoji-flat:office-worker - aproximado
+- road.svg (estrada/rua) - fluent-emoji-flat:motorway - aproximado
+- ruler.svg (régua) - fluent-emoji-flat:straight-ruler
+- school.svg (escola) - fluent-emoji-flat:school
+- schoolbag.svg (mochila escolar) - fluent-emoji-flat:backpack - aproximado
+- scissors.svg (tesoura) - fluent-emoji-flat:scissors
+- square.svg (praça) - fluent-emoji-flat:national-park - aproximado
+- stop-sign.svg (placa PARE) - fluent-emoji-flat:stop-sign
+- store.svg (loja) - fluent-emoji-flat:convenience-store
+- street.svg (rua) - openmoji:openstreetmap - aproximado
+- student.svg (aluno/aluna) - fluent-emoji-flat:student
+- teacher.svg (professor/professora) - fluent-emoji-flat:teacher
+- traffic-light.svg (semáforo) - fluent-emoji-flat:vertical-traffic-light
+- tree.svg (árvore) - fluent-emoji-flat:deciduous-tree
+
+3. Objetos nao encontrados:
+- Nenhum item ficou sem arquivo SVG.
+
+4. Objetos substituidos por icones aproximados: 31
+- eraser.svg: aproximado: não há emoji de borracha; usado quadrado branco como bloco de borracha; origem fluent-emoji-flat:white-square-button
+- paper.svg: aproximado: folha de papel avulsa; origem fluent-emoji-flat:page-facing-up
+- pencil-sharpener.svg: aproximado: não há apontador; usado material escolar geométrico; origem fluent-emoji-flat:triangular-ruler
+- pencil-case.svg: aproximado: não há estojo; usado estojo/bolsa retangular; origem fluent-emoji-flat:briefcase
+- schoolbag.svg: aproximado: schoolbag representado por backpack; origem fluent-emoji-flat:backpack
+- glue.svg: aproximado: não há cola; usado frasco; origem fluent-emoji-flat:bottle-with-popping-cork
+- clock.svg: aproximado: relógio/alarm clock; origem fluent-emoji-flat:alarm-clock
+- calculator.svg: aproximado: não há calculadora; usado ábaco como instrumento de cálculo; origem fluent-emoji-flat:abacus
+- desk.svg: aproximado: não há carteira escolar; usado computador de mesa/desktop; origem fluent-emoji-flat:desktop-computer
+- blackboard.svg: aproximado: não há blackboard; usado prancheta/quadro de escrita; origem fluent-emoji-flat:clipboard
+- crayons.svg: aproximado: um giz de cera representa o conjunto; origem fluent-emoji-flat:crayon
+- colored-pencils.svg: aproximado: crayon usado para material de colorir; origem fluent-emoji-flat:crayon
+- classroom.svg: aproximado: não há classroom; usado escola; origem fluent-emoji-flat:school
+- library.svg: aproximado: biblioteca representada por livros; origem fluent-emoji-flat:books
+- gym.svg: aproximado: quadra representada por bola esportiva; origem fluent-emoji-flat:soccer-ball
+- principal-office.svg: aproximado: sala da direção representada por prédio de escritório; origem fluent-emoji-flat:office-building
+- computer-room.svg: aproximado: sala representada por computador; origem fluent-emoji-flat:desktop-computer
+- cleaner.svg: aproximado: profissional representado por vassoura; origem fluent-emoji-flat:broom
+- janitor.svg: aproximado: zeladoria/manutenção representada por ferramentas; origem fluent-emoji-flat:hammer-and-wrench
+- principal.svg: aproximado: direção representada por profissional de escritório; origem fluent-emoji-flat:office-worker
+- coach.svg: aproximado: educador físico representado por pessoa com bola; origem fluent-emoji-flat:person-bouncing-ball
+- street.svg: aproximado: rua representada por mapa urbano; origem openmoji:openstreetmap
+- square.svg: aproximado: praça representada por parque; origem fluent-emoji-flat:national-park
+- market.svg: aproximado: mercado representado por loja/departamento; origem fluent-emoji-flat:department-store
+- bakery.svg: aproximado: padaria representada por pão; origem fluent-emoji-flat:bread
+- pharmacy.svg: aproximado: farmácia representada por símbolo médico; origem fluent-emoji-flat:medical-symbol
+- pedestrian-crossing.svg: aproximado: travessia representada por placa de crianças atravessando; origem fluent-emoji-flat:children-crossing
+- road.svg: aproximado: estrada/rua representada por rodovia; origem fluent-emoji-flat:motorway
+- mental-map.svg: aproximado: mapa mental representado por mapa; origem fluent-emoji-flat:world-map
+- floor-plan.svg: aproximado: não há planta baixa; usado mapa; origem fluent-emoji-flat:world-map
+- model.svg: aproximado: maquete representada por construção em miniatura; origem fluent-emoji-flat:building-construction
+
+5. Status da biblioteca:
+- A biblioteca visual esta pronta para uso nas proximas cartilhas.
+- Para itens marcados como aproximados, recomenda-se revisar visualmente e substituir por icones mais especificos caso uma biblioteca melhor seja adicionada no futuro.
+
+6. Como referenciar nas proximas cartilhas:
+- Em HTML localizado dentro de uma pasta de materia, usar caminho relativo ate a raiz do projeto, por exemplo: ../../assets/objetos_escolares/pencil.svg quando o HTML estiver em uma pasta saida da materia.
+- Alternativa recomendada para HTML auto-contido: ler o SVG local e incorporar o conteudo inline no HTML final durante a geracao da cartilha.
+- Evitar internet e imagens externas; preferir sempre os SVGs locais em assets/objetos_escolares.
