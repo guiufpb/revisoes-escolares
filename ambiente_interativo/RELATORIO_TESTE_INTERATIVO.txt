@@ -1,6 +1,502 @@
 RELATORIO DE TESTE - AMBIENTE INTERATIVO
 =======================================
 
+ATUALIZAÇÃO: 11/08/2026 - OITAVA LEITURA
+========================================
+
+ESCOPO IMPLEMENTADO
+- A Bela Desadormecida adicionada ao catálogo de Alice e Mariana.
+- História de Frances Minters e ilustrações de G. Brian Karas.
+- PDF compartilhado com 30 páginas e capa derivada da página 1.
+- Questionário temático com 13 perguntas: 10 objetivas e 3 ditados.
+- As objetivas usam A, B, C e D com mistura estável, equilibrada por perfil e
+  sem ciclo previsível.
+- Os ditados reutilizam o controlador compartilhado: espera de 1 segundo,
+  aviso audível "Atenção", pausa e frase principal em uma fala separada.
+- O glossário foi limitado a termos de maior complexidade semântica e aparece
+  somente nas páginas correspondentes.
+
+ARQUIVOS E INTEGRIDADE
+- PDF: ambiente_interativo/leituras/a-bela-desadormecida/
+  a-bela-desadormecida.pdf
+- Capa: ambiente_interativo/leituras/a-bela-desadormecida/capa.jpg
+- Tamanho do PDF: 12.308.597 bytes.
+- SHA-256 da origem e da cópia:
+  4C768FA835D731B976B70BB20A1C99B0380F28B06505BDFCC53CA155578297D1
+- Total: 30 páginas em retrato, 540 x 720 pontos.
+- O PDF não possui uma camada de texto extraível. Todas as páginas foram
+  renderizadas e lidas visualmente nas cinco folhas de contato; as páginas com
+  narrativa também foram ampliadas para conferir o texto integral.
+- Capa, narrativa, páginas ilustradas, desfecho, epílogo e quarta capa foram
+  conferidos; não foram encontradas páginas ausentes, ilegíveis ou fora de ordem.
+
+CHAVES INDEPENDENTES
+- Alice: revisoesEscolares.alice.leitura.belaDesadormecida.v1
+- Mariana: revisoesEscolares.mariana.leitura.belaDesadormecida.v1
+
+VALIDAÇÃO FINAL
+- npm run format: PASSOU.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU.
+- npm test: PASSOU, com 47 de 47 testes (11 de acessibilidade e 36 funcionais).
+- O bundle principal foi regenerado a partir das fontes pelo Vite.
+- Inspeção no navegador: PASSOU, sem erros no console da aplicação.
+- Catálogos de Alice e Mariana, capa, páginas 1, 18 e 30, glossário com dois
+  verbetes, quatro alternativas, dez respostas objetivas e primeiro ditado
+  foram conferidos.
+- Os testes temporais confirmaram pelo menos 1 segundo antes de "Atenção" e
+  pelo menos 550 milissegundos adicionais antes da frase principal.
+
+ATUALIZAÇÃO: 10/08/2026 - SÉTIMA LEITURA
+=========================================
+
+ESCOPO IMPLEMENTADO
+- Um castelo bem assombrado adicionado ao catálogo de Alice e Mariana.
+- Texto de Lícia Holanda e ilustrações de Juliana Chagas.
+- PDF compartilhado com 25 páginas e capa recortada da página 1.
+- Questionário temático com 13 perguntas: 10 objetivas e 3 ditados.
+- As objetivas usam A, B, C e D com mistura estável, equilibrada por perfil e
+  sem ciclo previsível.
+- Os ditados reutilizam o controlador compartilhado: espera de 1 segundo,
+  aviso audível "Atenção", pausa e frase principal em uma fala separada.
+- O glossário foi limitado a termos de maior complexidade semântica e aparece
+  somente nas páginas correspondentes.
+
+ARQUIVOS E INTEGRIDADE
+- PDF: ambiente_interativo/leituras/um-castelo-bem-assombrado/
+  um-castelo-bem-assombrado.pdf
+- Capa: ambiente_interativo/leituras/um-castelo-bem-assombrado/capa.jpg
+- Tamanho do PDF: 19.039.385 bytes.
+- SHA-256 da origem e da cópia:
+  54EF8F3D5E26EBC84D1F4E5FFEEEB979C9F0821A9A8CF22427BEF34459564C90
+- Total: 25 páginas em paisagem, 949,606 x 666,142 pontos.
+- O texto das 25 páginas foi extraído integralmente; como parte da camada de
+  texto possui caracteres corrompidos, todas as páginas foram também lidas
+  visualmente nas cinco folhas de contato.
+- Capa, créditos, dedicatória, narrativa, explicações dos mistérios, biografias
+  e quarta capa foram conferidos; não foram encontradas páginas ausentes,
+  ilegíveis ou fora de ordem.
+
+CHAVES INDEPENDENTES
+- Alice: revisoesEscolares.alice.leitura.casteloBemAssombrado.v1
+- Mariana: revisoesEscolares.mariana.leitura.casteloBemAssombrado.v1
+
+VALIDAÇÃO FINAL
+- npm run format: PASSOU.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU.
+- npm test: PASSOU, com 44 de 44 testes (10 de acessibilidade e 34 funcionais).
+- O bundle principal foi regenerado a partir das fontes pelo Vite.
+- Inspeção no navegador: PASSOU, sem erros no console da aplicação.
+- Catálogo, página 1, glossário da página 9, página 25, quatro alternativas,
+  dez respostas objetivas e primeiro ditado foram conferidos.
+- Os testes temporais confirmaram pelo menos 1 segundo antes de "Atenção" e
+  pelo menos 550 milissegundos adicionais antes da frase principal.
+
+ATUALIZAÇÃO: 07/08/2026 - SEXTA LEITURA E DITADOS SEM CORTES
+=============================================================
+
+ESCOPO IMPLEMENTADO
+- A formiga que queria cantar adicionada ao catálogo de Alice e Mariana.
+- Texto de Aparecida Machado e ilustrações de Raisa Christina.
+- PDF compartilhado com 36 páginas e capa derivada da página 1.
+- Questionário temático com 13 perguntas: 10 objetivas e 3 ditados.
+- As objetivas usam A, B, C e D com mistura estável, equilibrada por perfil e
+  sem ciclo previsível.
+- O glossário foi limitado a palavras de maior complexidade semântica para
+  crianças de 6 e 8 anos e aparece somente nas páginas correspondentes.
+- O controlador compartilhado dos ditados agora aguarda 1 segundo, pronuncia
+  "Atenção", faz uma pausa e só então inicia a frase em uma fala separada. A
+  preparação audível protege a primeira palavra e vale para os ditados desta
+  leitura, das anteriores e das próximas leituras.
+
+ARQUIVOS E INTEGRIDADE
+- PDF: ambiente_interativo/leituras/a-formiga-que-queria-cantar/
+  a-formiga-que-queria-cantar.pdf
+- Capa: ambiente_interativo/leituras/a-formiga-que-queria-cantar/capa.jpg
+- Tamanho do PDF: 7.373.329 bytes.
+- SHA-256 da origem e da cópia:
+  2FC8A0E9A7088D43F3A20B7EF91241FE41671BADCEC333FE66803F6E7671FD25
+- Total: 36 páginas em retrato, 653,622 x 738,661 pontos.
+- O texto das 36 páginas foi extraído e lido integralmente.
+- As 36 páginas foram renderizadas e inspecionadas em quatro folhas de contato.
+- Capa, créditos, dedicatória, narrativa, biografias e quarta capa foram
+  conferidas; não foram encontradas páginas ausentes, ilegíveis ou fora de ordem.
+
+CHAVES INDEPENDENTES
+- Alice: revisoesEscolares.alice.leitura.formigaQueriaCantar.v1
+- Mariana: revisoesEscolares.mariana.leitura.formigaQueriaCantar.v1
+
+VALIDAÇÃO FINAL
+- npm run format: PASSOU.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU.
+- npm test: PASSOU, com 41 de 41 testes (9 de acessibilidade e 32 funcionais).
+- O bundle principal foi regenerado a partir das fontes pelo Vite.
+- Inspeção no navegador: PASSOU, sem erros no console da aplicação.
+- Catálogo, capa, páginas 1, 16 e 36, glossário com dois verbetes, quatro
+  alternativas, primeiro ditado e mensagens de preparação e conclusão foram
+  conferidos.
+- Os testes temporais confirmaram pelo menos 1 segundo antes de "Atenção" e
+  pelo menos 550 milissegundos adicionais antes da frase principal.
+- As dez respostas corretas usam todas as letras A, B, C e D, com diferença
+  máxima de uma ocorrência e sem ciclo simples previsível.
+
+ATUALIZAÇÃO: 06/08/2026 - QUINTA LEITURA
+========================================
+
+ESCOPO IMPLEMENTADO
+- O dia que o Sol tirou férias adicionado ao catálogo de Alice e Mariana.
+- Texto de Barbara Samel Rocha Tostes e ilustrações de Lionel Mota.
+- PDF compartilhado com 30 páginas e capa derivada da página 1.
+- Questionário temático com 13 perguntas: 10 objetivas e 3 ditados.
+- As objetivas usam A, B, C e D com mistura estável, equilibrada por perfil e
+  sem ciclo previsível.
+- Os três ditados aguardam 1 segundo e usam uma preparação muda da síntese antes
+  da frase, protegendo a primeira palavra contra cortes na saída de áudio.
+- A página final ganhou uma explicação infantil do eclipse solar, uma imagem
+  educativa própria e um aviso de observação segura antes do questionário.
+- O glossário foi limitado aos termos mais complexos do texto: apavoradas,
+  famintas, substituto, intelectuais, desanimados e eclipse solar.
+
+ARQUIVOS E INTEGRIDADE
+- PDF: ambiente_interativo/leituras/o-dia-que-o-sol-tirou-ferias/
+  o-dia-que-o-sol-tirou-ferias.pdf
+- Capa: ambiente_interativo/leituras/o-dia-que-o-sol-tirou-ferias/capa.jpg
+- Imagem: ambiente_interativo/leituras/o-dia-que-o-sol-tirou-ferias/
+  eclipse-solar.png
+- Tamanho do PDF: 8.568.669 bytes.
+- SHA-256 da origem e da cópia:
+  4D61BF4E84CF6B3AE85D5FA2416FE83F98736852D6F454FF1291EBEED54BEEEB
+- Total: 30 páginas em paisagem, 594,75 x 425,25 pontos.
+- O PDF não possui camada de texto extraível; as 30 páginas foram renderizadas
+  e lidas visualmente em cinco folhas de contato.
+- Capa, autoria, narrativa, ilustrações, biografias e quarta capa foram
+  conferidas; não foram encontradas páginas ausentes, ilegíveis ou fora de ordem.
+
+CHAVES INDEPENDENTES
+- Alice: revisoesEscolares.alice.leitura.solTirouFerias.v1
+- Mariana: revisoesEscolares.mariana.leitura.solTirouFerias.v1
+
+VALIDAÇÃO FINAL
+- npm run format: PASSOU.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU.
+- npm test: PASSOU, com 38 de 38 testes (8 de acessibilidade e 30 funcionais).
+- O bundle principal foi regenerado a partir das fontes pelo Vite.
+- Inspeção no navegador: PASSOU, sem erros no console da aplicação nem do
+  leitor em janela ampla.
+- Catálogo, páginas 1, 5 e 30, glossário, imagem, explicação infantil, aviso de
+  segurança, leitor amplo, quatro alternativas e primeiro ditado conferidos.
+- As dez respostas corretas apareceram nas posições B, D, D, C, B, A, A, C,
+  D e A: todas as letras foram usadas, com diferença máxima de uma ocorrência
+  e sem ciclo simples previsível.
+- A pausa de 1 segundo foi confirmada antes do início da fala do ditado.
+
+ATUALIZAÇÃO: 05/08/2026 - QUARTA LEITURA
+=========================================
+
+ESCOPO IMPLEMENTADO
+- A Raposa e as Uvas adicionada ao catálogo de Alice e Mariana.
+- Fábula de Esopo, adaptação de Anderson Abreu e ilustrações de Elder Franca.
+- PDF compartilhado com 21 páginas e capa derivada da página 1.
+- Questionário temático com 13 perguntas: 10 objetivas e 3 ditados.
+- Todas as objetivas usam A, B, C e D com mistura estável, equilibrada por
+  perfil e sem ciclo previsível.
+- Os ditados usam a pausa inicial de 1 segundo e o treino de digitação já
+  compartilhados pelo controlador de leitura.
+
+ARQUIVOS E INTEGRIDADE
+- PDF: ambiente_interativo/leituras/a-raposa-e-as-uvas/raposa-e-as-uvas.pdf
+- Capa: ambiente_interativo/leituras/a-raposa-e-as-uvas/capa.jpg
+- Tamanho do PDF: 5.223.267 bytes.
+- SHA-256 da origem e da cópia:
+  BAA600A6D36D6621ECF279956F9318FAE3352A68F56202C26BFA85A3A33FC882
+- Total: 21 páginas em retrato, 419,53 x 595,28 pontos.
+- O texto das 21 páginas foi extraído e lido integralmente.
+- As 21 páginas foram renderizadas e inspecionadas em três folhas de contato.
+- Capa, ficha técnica, narrativa, moral, reflexões e quarta capa foram
+  conferidas; não foram encontradas páginas ausentes, ilegíveis ou fora de ordem.
+
+CHAVES INDEPENDENTES
+- Alice: revisoesEscolares.alice.leitura.raposaEUvas.v1
+- Mariana: revisoesEscolares.mariana.leitura.raposaEUvas.v1
+
+VALIDAÇÃO FINAL
+- npm run format: PASSOU.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU.
+- npm test: PASSOU, com 33 de 33 testes (7 de acessibilidade e 26 funcionais).
+- Inspeção no navegador: PASSOU, sem erros no console.
+- As dez respostas corretas apareceram nas posições D, D, B, C, D, B, A,
+  C, C e A: todas as letras foram usadas, com diferença máxima de uma
+  ocorrência e sem ciclo simples previsível.
+- As páginas 1 e 21, as quatro alternativas, os três ditados, a pausa de
+  1 segundo e o resultado final de 13 de 13 acertos foram conferidos.
+
+ATUALIZAÇÃO: 05/08/2026 - DISTRIBUIÇÃO DAS ALTERNATIVAS
+========================================================
+
+ESCOPO IMPLEMENTADO
+- As respostas corretas deixaram de ocupar sempre a alternativa A.
+- Todas as 29 perguntas objetivas agora têm alternativas A, B, C e D.
+- Foram incluídos 29 novos distratores pertinentes às respectivas histórias.
+- O leitor compartilhado usa uma mistura determinística por perfil, livro e
+  pergunta: a ordem não muda ao retornar, mas não segue um ciclo previsível.
+- A diferença de frequência entre A, B, C e D é de no máximo uma resposta.
+- Alice e Mariana recebem sequências próprias; os três ditados permanecem
+  inalterados.
+- A regra vale igualmente para Alice e Mariana e para leituras futuras.
+- Respostas continuam salvas pelo identificador da alternativa, sem quebrar
+  progresso existente.
+
+COBERTURA AUTOMATIZADA
+- Os três livros são concluídos localizando a resposta correta pelo conteúdo.
+- Cada pergunta objetiva é conferida com exatamente quatro alternativas.
+- A presença de A, B, C e D, o equilíbrio e a ausência do ciclo simples são
+  verificados em cada livro.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU, sem erros.
+- npm test: PASSOU, 31 de 31 testes aprovados.
+- Inspeção visual: PASSOU; quatro opções exibidas e sequências distintas
+  confirmadas para Alice e Mariana no mesmo livro.
+
+ATUALIZAÇÃO: 04/08/2026 - TERCEIRA LEITURA E DITADO
+====================================================
+
+ESCOPO IMPLEMENTADO
+- A Galinha dos Ovos de Ouro adicionada ao catálogo de Alice e Mariana.
+- Fábula de Esopo, com adaptação de Anderson Abreu.
+- PDF local compartilhado com 35 páginas e capa derivada da página 1.
+- Progresso, página, respostas e conclusão independentes por livro e perfil.
+- Questionário temático com 12 perguntas: 9 de múltipla escolha e 3 ditados.
+- Ditados reproduzidos localmente pela síntese de voz do navegador em pt-BR.
+- Cada reprodução aguarda 1 segundo em silêncio antes de iniciar a fala.
+- A espera pertence ao controlador compartilhado e vale para ambos os perfis e
+  para os ditados que forem adicionados futuramente.
+- Campo de texto próprio para treino de teclado, com salvamento automático.
+- Correção de ditado tolerante a maiúsculas, acentos e pontuação final.
+
+ARQUIVOS DO NOVO MATERIAL
+- PDF:
+  ambiente_interativo/leituras/a-galinha-dos-ovos-de-ouro/galinha-ovos-ouro.pdf
+- Capa:
+  ambiente_interativo/leituras/a-galinha-dos-ovos-de-ouro/capa.jpg
+- Tamanho do PDF: 3.254.433 bytes.
+- SHA-256 da origem e da cópia:
+  F9DE43F304D4CA9FDCBD67BE3031D6ACDB0CD166BA4799A33EFC298B8905FEB2
+- Quantidade conferida por pdfinfo, pypdf e PDF.js: 35 páginas.
+- Tamanho de página: 419,528 x 595,276 pontos, orientação retrato.
+
+CONFERÊNCIA INTEGRAL
+- O texto das 35 páginas foi extraído e lido integralmente.
+- As 35 páginas foram renderizadas localmente pelo Poppler.
+- Todas as páginas foram inspecionadas em cinco folhas de contato.
+- Capa, ficha técnica, narrativa, moral, reflexões e quarta capa conferidas.
+- Não foram encontradas páginas ausentes, ilegíveis ou fora de ordem.
+- As 12 perguntas e as três frases ditadas são pertinentes à narrativa.
+
+CHAVES INDEPENDENTES DO NOVO LIVRO
+- Alice: revisoesEscolares.alice.leitura.galinhaOvosOuro.v1
+- Mariana: revisoesEscolares.mariana.leitura.galinhaOvosOuro.v1
+- As chaves dos dois livros anteriores, Ciências e Matemática foram preservadas.
+
+COBERTURA AUTOMATIZADA ADICIONADA
+- Terceiro livro visível nos dois perfis com autoria, adaptação e 35 páginas.
+- PDF local servido com 3.254.433 bytes e confirmado com 35 páginas.
+- Página 1 renderizada em canvas para Alice e Mariana.
+- Página 35 libera o questionário com 12 perguntas.
+- Nove perguntas de múltipla escolha e três ditados concluídos com 12 acertos.
+- Síntese de voz chamada com as três frases temáticas corretas.
+- Espera inicial verificada automaticamente antes de cada uma das três frases.
+- Digitação sem acentos aceita com normalização segura.
+- Atividade de ditado auditada em viewport móvel.
+
+RESULTADO FINAL (04/08/2026)
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU, sem erros.
+- npm test: PASSOU, 31 de 31 testes aprovados.
+- Testes funcionais: 24 aprovados.
+- Testes de acessibilidade: 7 aprovados, sem violações graves ou críticas.
+- Inspeção visual no navegador: PASSOU.
+- Conferidos o catálogo, a capa, o leitor na página 1, a navegação até a
+  página 35 e a interação completa do primeiro ditado.
+
+ATUALIZAÇÃO: 03/08/2026 - SEGUNDA LEITURA
+==========================================
+
+ESCOPO IMPLEMENTADO
+- Quem é o rei dos animais? adicionado ao catálogo de Alice e Mariana.
+- Texto de Nádia Aguiar e ilustrações de Rudson Duarte.
+- PDF local compartilhado com 32 páginas e capa derivada da página 1.
+- Catálogo e leitor generalizados para aceitar vários livros sem duplicar telas.
+- Leitor integrado e leitor dedicado usam os metadados do livro selecionado.
+- Progresso, página, respostas e conclusão independentes por livro e por perfil.
+- Questionário próprio com 10 perguntas sobre respeito, empatia, bullying,
+  cooperação, arrependimento e liderança acolhedora.
+
+ARQUIVOS DO NOVO MATERIAL
+- PDF:
+  ambiente_interativo/leituras/quem-e-o-rei-dos-animais/rei-dos-animais.pdf
+- Capa:
+  ambiente_interativo/leituras/quem-e-o-rei-dos-animais/capa.jpg
+- Tamanho do PDF: 4.371.565 bytes.
+- SHA-256 da origem e da cópia:
+  519B90BD6C00FA7F75C19ADD6614BCB0AFCE2D7E299A88DEF42B2FF183CAF51B
+- Quantidade conferida por pdfinfo, pypdf e PDF.js: 32 páginas.
+- Tamanho de página: 639,449 x 724,488 pontos, orientação retrato.
+
+CONFERÊNCIA INTEGRAL
+- O texto das 32 páginas foi extraído e lido integralmente.
+- As 32 páginas foram renderizadas localmente pelo Poppler.
+- Todas as páginas foram inspecionadas em quatro folhas de contato.
+- Capa, créditos, dedicatória, narrativa, biografias e quarta capa conferidas.
+- Não foram encontradas páginas ausentes, ilegíveis ou fora de ordem.
+- A história confirma os conteúdos usados nas 10 perguntas.
+
+CHAVES INDEPENDENTES DO NOVO LIVRO
+- Alice: revisoesEscolares.alice.leitura.quemEReiAnimais.v1
+- Mariana: revisoesEscolares.mariana.leitura.quemEReiAnimais.v1
+- As chaves anteriores de leitura, Ciências e Matemática foram preservadas.
+
+COBERTURA AUTOMATIZADA ADICIONADA
+- Segundo livro visível nos dois perfis com autoria e 32 páginas.
+- PDF local servido com 4.371.565 bytes e confirmado com 32 páginas.
+- Página 1 renderizada em canvas para Alice e Mariana.
+- Página 32 libera o questionário de Quem é o rei dos animais?.
+- Dez perguntas respondidas e conclusão persistida.
+- Progresso do novo livro isolado do livro anterior e do perfil da irmã.
+- Leitor dedicado parametrizado para qualquer livro do catálogo.
+
+RESULTADO FINAL (03/08/2026)
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU.
+- npm test: PASSOU; 28 testes Playwright aprovados.
+- tests/acessibilidade.spec.js: 6 testes aprovados.
+- tests/ambiente-interativo.spec.js: 22 testes aprovados.
+- Violações axe de impacto serious ou critical: 0 nas telas testadas.
+- Inspeção visual no navegador: PASSOU para catálogo, leitor integrado e leitor
+  dedicado do novo livro.
+
+ATUALIZAÇÃO: 02/08/2026 - MATÉRIA LEITURA
+==========================================
+
+ESCOPO IMPLEMENTADO
+- Leitura adicionada para Alice e Mariana sem remover as matérias existentes.
+- Biblioteca reutilizável com um catálogo central compartilhado.
+- Livro: Primeiras Lições sobre Dinheiro, de Anderson Abreu.
+- Visualizador em canvas com PDF.js instalado localmente por npm.
+- Worker e módulo PDF.js locais, gerados no fluxo Vite, sem CDN ou internet.
+- Navegação por botões, campo de página, teclado, toque, ajuste e zoom.
+- Cancelamento de renderização antiga durante navegação rápida.
+- Progresso exclusivo por perfil e por livro, com normalização segura.
+- Questionário final com 10 perguntas, novas tentativas e resultado salvo.
+- Limpeza exclusiva da leitura ativa, com confirmação.
+- Alternativa amigável para abrir o PDF e orientação específica em file://.
+- Atalho principal corrigido para iniciar o Vite em vez de abrir index.html por
+  file://.
+- Leitor dedicado em uma nova janela ampla, com ajuste à tela, zoom, navegação,
+  botão de tela cheia e sincronização com o progresso da janela principal.
+
+ARQUIVOS DO MATERIAL
+- PDF final compartilhado:
+  ambiente_interativo/leituras/primeiras-licoes-sobre-dinheiro/infantil-dinheiro.pdf
+- Capa derivada localmente da página 1:
+  ambiente_interativo/leituras/primeiras-licoes-sobre-dinheiro/capa.jpg
+- Tamanho conferido antes e depois: 14.842.959 bytes.
+- SHA-256 conferido antes e depois:
+  F3F072A0C1688D3989A3A1E7617FE8D57A62A45F0BEBD77CDD0286A705A36F3D
+- Quantidade conferida por pdfinfo e PDF.js: 25 páginas.
+- Tamanho de página: 1315,5 x 930 pontos, orientação paisagem.
+
+CONFERÊNCIA VISUAL DO PDF
+- As 25 páginas foram renderizadas localmente pelo Poppler em PNG.
+- Todas as 25 renderizações foram inspecionadas em cinco folhas de contato.
+- Ordem, cores, textos e ilustrações estavam presentes e legíveis.
+- Página 1 (capa): conferida.
+- Página 2 (créditos/autorização): conferida e mantida acessível.
+- Página 8 (cena ilustrada no caixa): conferida mesmo sem depender de OCR.
+- Página 25 (mensagem final): conferida.
+- Não foram encontradas páginas ausentes, cortes, sobreposições ou quadrados pretos.
+
+CHAVES INDEPENDENTES
+- Alice:
+  revisoesEscolares.alice.leitura.primeirasLicoesDinheiro.v1
+- Mariana:
+  revisoesEscolares.mariana.leitura.primeirasLicoesDinheiro.v1
+- Teste de isolamento: aprovado.
+- Teste de limpeza seletiva: aprovado; Ciências, Matemática e estado da irmã
+  permaneceram intactos.
+
+COBERTURA AUTOMATIZADA EXECUTADA
+- Leitura visível para os dois perfis: aprovado.
+- Mesmo catálogo, título, autor e 25 páginas: aprovado.
+- Resposta HTTP do PDF e tamanho de 14.842.959 bytes: aprovado.
+- PDF.js confirmou 25 páginas: aprovado.
+- Página 1 no canvas e limite do botão anterior: aprovado.
+- Avanço, nome acessível do canvas e estado salvo: aprovado.
+- Recarga e retomada exata: aprovado.
+- Corrida de renderização 5/6/7 terminou corretamente na página 7: aprovado.
+- Página 25 e liberação do questionário: aprovado.
+- Dez perguntas, resultado e conclusão persistida: aprovado.
+- Estados de Alice e Mariana isolados: aprovado.
+- Limpeza exclusiva da leitura: aprovado.
+- Página/JSON/respostas inválidos normalizados: aprovado.
+- localStorage bloqueado com fallback em memória: aprovado.
+- Abertura por file:// com orientação segura: aprovado.
+- Abertura do leitor dedicado em nova janela e sincronização: aprovado.
+- Retorno automático da página 25 ao questionário principal: aprovado.
+- Viewport 390 x 844 sem largura excedente: aprovado.
+- Teclado, foco no título e nomes acessíveis: aprovado.
+- Console dos fluxos Alice, Mariana e Leitura sem erros graves: aprovado.
+
+ACESSIBILIDADE
+- axe-core executado na tela inicial e tela de matérias.
+- axe-core executado na revisão da Alice e revisão/canvas da Mariana.
+- axe-core executado na biblioteca de leituras.
+- axe-core executado no visualizador em viewport móvel.
+- axe-core executado no leitor dedicado.
+- axe-core executado no questionário e no resultado final.
+- Violações serious/critical: 0 nas telas testadas.
+- Botões possuem áreas de toque, foco visível e retorno textual além de cor.
+- Canvas possui nome acessível atualizado e orientação próxima.
+- Mudança de página e respostas usam regiões aria-live/status.
+- prefers-reduced-motion é respeitado.
+
+VALIDAÇÃO VISUAL DO AMBIENTE
+- O teste Playwright validou dimensões do canvas, conteúdo desenhado e ausência
+  de rolagem horizontal em 390 x 844.
+- O leitor dedicado foi aberto no navegador interno em janela ampla: capa,
+  barra compacta, controles e navegação ficaram inteiros e legíveis.
+- A navegação visual da página 1 para a página 2 foi conferida no navegador.
+- A abertura file:// foi validada pelo teste Playwright dedicado.
+- O material do PDF foi inspecionado visualmente nas 25 páginas renderizadas.
+
+COMANDOS FINAIS (02/08/2026)
+- npm run format: PASSOU.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU.
+- npm test: PASSOU; 26 testes Playwright aprovados.
+- tests/acessibilidade.spec.js: 6 testes aprovados.
+- tests/ambiente-interativo.spec.js: 20 testes aprovados.
+- Build Vite regenerou ambiente_interativo/js/app.bundle.js a partir das fontes.
+- Build Vite gerou ambiente_interativo/js/pdfjs.bundle.mjs para o leitor local.
+
+LIMITAÇÕES
+- A leitura integrada requer o servidor local por restrições de segurança de
+  carregamento de PDF/módulos em file://. O atalho abrir_ambiente_interativo.bat
+  agora inicia o servidor automaticamente. Se index.html for aberto diretamente,
+  a interface oferece a abertura do PDF em janela ampla e a continuação para o
+  questionário. Nenhuma limitação funcional adicional foi encontrada.
+
+COMO ABRIR
+- Recomendado: dois cliques em abrir_ambiente_interativo.bat
+- Alternativa no terminal: npm run interativo
+- Endereço: http://127.0.0.1:5173/ambiente_interativo/index.html
+
+HISTÓRICO ANTERIOR PRESERVADO
+============================
+
 Data: 09/06/2026
 
 ARQUIVO CRIADO

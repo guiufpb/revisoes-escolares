@@ -8,6 +8,7 @@
   var estadoAlice;
   var armazenamentoAlice;
   var desenhoAliceAtivo = false;
+  var telaAtualId = 'inicial';
 
   function estadoInicialAlice() {
     return { etapa: 0, concluidas: [], respostas: {}, desenhos: {}, tentativas: 0 };
@@ -108,6 +109,7 @@
   }
 
   function mostrarTela(id) {
+    telaAtualId = id;
     gerenciarDesenhoAlice(id === 'revisao');
     Object.keys(telas).forEach(function (chave) {
       var ativa = chave === id;
@@ -116,6 +118,10 @@
     });
 
     document.getElementById('botao-inicio').hidden = id === 'inicial';
+    document.getElementById('limpar-progresso').textContent =
+      id === 'bibliotecaLeitura' || id === 'visualizadorLeitura' || id === 'questionarioLeitura'
+        ? 'Limpar progresso desta leitura'
+        : 'Limpar progresso';
     if (id === 'marianaRevisao') {
       window.requestAnimationFrame(window.DesenhoRevisoes.ajustarTodos);
     }
@@ -175,13 +181,28 @@
 
   function atualizarCartoes() {
     window.RegistroRevisoes.validar().forEach(function (revisao) {
+      if (revisao.exibirEstadoNoCartao === false) return;
       atualizarEstadoCartao(revisao, revisao.id === ID_ALICE ? situacaoAlice() : situacaoMariana());
     });
   }
 
   function atualizarResumo() {
     var resumo = document.getElementById('progresso-resumo');
-    if (alunoAtual === 'mariana' && window.RevisaoMatematicaMariana) {
+    var estadoLeitura = window.LeituraRevisoes && window.LeituraRevisoes.obterEstado();
+    var livroLeitura = window.LeituraRevisoes && window.LeituraRevisoes.obterLivroAtual();
+    if (
+      estadoLeitura &&
+      (telaAtualId === 'bibliotecaLeitura' ||
+        telaAtualId === 'visualizadorLeitura' ||
+        telaAtualId === 'questionarioLeitura')
+    ) {
+      resumo.textContent =
+        (alunoAtual === 'alice' ? 'Alice' : 'Mariana') +
+        ': página ' +
+        estadoLeitura.paginaAtual +
+        '/' +
+        livroLeitura.totalPaginas;
+    } else if (alunoAtual === 'mariana' && window.RevisaoMatematicaMariana) {
       var estadoMariana = window.RevisaoMatematicaMariana.obterEstado();
       resumo.textContent =
         'Mariana: etapa ' +
@@ -208,6 +229,7 @@
       aluno === 'alice' ? 'Olá, Alice!' : 'Olá, Mariana!';
     document.getElementById('materia-ciencias').hidden = aluno !== 'alice';
     document.getElementById('materia-matematica').hidden = aluno !== 'mariana';
+    document.getElementById('materia-leitura').hidden = false;
     document.getElementById('limpar-progresso').hidden = false;
     atualizarResumo();
     mostrarTela('trilhas');
@@ -301,6 +323,10 @@
     document.querySelector('[data-materia="matematica"]').addEventListener('click', function () {
       mostrarTela('trilhaMatematica');
     });
+    document.querySelector('[data-materia="leitura"]').addEventListener('click', function () {
+      window.LeituraRevisoes.abrirBiblioteca(alunoAtual);
+      atualizarResumo();
+    });
     document.getElementById('abrir-revisao-mariana').addEventListener('click', function () {
       window.RevisaoMatematicaMariana.abrir();
       mostrarTela('marianaRevisao');
@@ -327,6 +353,15 @@
       atualizarResumo();
     });
     document.getElementById('limpar-progresso').addEventListener('click', function () {
+      if (
+        telaAtualId === 'bibliotecaLeitura' ||
+        telaAtualId === 'visualizadorLeitura' ||
+        telaAtualId === 'questionarioLeitura'
+      ) {
+        if (window.LeituraRevisoes.limparProgresso()) mostrarTela('bibliotecaLeitura');
+        atualizarResumo();
+        return;
+      }
       var mensagem =
         alunoAtual === 'mariana'
           ? 'Limpar apenas o progresso de Matemática da Mariana?'
@@ -364,6 +399,9 @@
         revisao: document.getElementById('tela-revisao'),
         trilhaMatematica: document.getElementById('tela-trilha-matematica'),
         marianaRevisao: document.getElementById('tela-mariana-revisao'),
+        bibliotecaLeitura: document.getElementById('tela-biblioteca-leitura'),
+        visualizadorLeitura: document.getElementById('tela-visualizador-leitura'),
+        questionarioLeitura: document.getElementById('tela-questionario-leitura'),
       };
       armazenamentoAlice = window.ArmazenamentoRevisoes.criar({
         chave: window.RegistroRevisoes.obter(ID_ALICE).chaveArmazenamento,
@@ -374,6 +412,7 @@
       estadoAlice = armazenamentoAlice.carregar();
       window.RegistroRevisoes.validar();
       montarAtividade();
+      window.LeituraRevisoes.inicializar({ mostrarTela: mostrarTela });
       registrarEventos();
       atualizarResumo();
       mostrarTela('inicial');

@@ -10,7 +10,11 @@ module.exports = [
     ],
   },
   {
-    files: ['ambiente_interativo/js/app.entry.js'],
+    files: [
+      'ambiente_interativo/js/app.entry.js',
+      'ambiente_interativo/js/pdfjs.entry.js',
+      'ambiente_interativo/js/leitor-dedicado.js',
+    ],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -18,7 +22,11 @@ module.exports = [
   },
   {
     files: ['ambiente_interativo/**/*.js'],
-    ignores: ['ambiente_interativo/js/app.entry.js'],
+    ignores: [
+      'ambiente_interativo/js/app.entry.js',
+      'ambiente_interativo/js/pdfjs.entry.js',
+      'ambiente_interativo/js/leitor-dedicado.js',
+    ],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'script',

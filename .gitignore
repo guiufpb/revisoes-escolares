@@ -25,6 +25,7 @@ npm-debug.log*
 
 # Documentos binários e saídas que não devem ser publicados acidentalmente
 *.pdf
+/Peticao_JEC_Escola_Crista_2026.docx
 
 # Arquivos locais de editores e do sistema operacional
 /.vscode/

@@ -1436,6 +1436,737 @@ footer {
   justify-content: center;
 }
 
+.cartao-materia.leitura img {
+  background: #dff8eb;
+}
+
+.cabecalho-biblioteca {
+  display: flex;
+  max-width: none;
+  gap: 24px;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.cabecalho-biblioteca > div {
+  max-width: 760px;
+}
+
+.grade-leituras {
+  display: grid;
+  gap: 24px;
+}
+
+.cartao-livro {
+  display: grid;
+  grid-template-columns: minmax(260px, 46%) 1fr;
+  overflow: hidden;
+  border: 3px solid white;
+  border-radius: 30px;
+  background: white;
+  box-shadow: var(--sombra);
+}
+
+.cartao-livro > img {
+  width: 100%;
+  height: 100%;
+  min-height: 340px;
+  object-fit: contain;
+  padding: 18px;
+  background: #eef8e9;
+}
+
+.cartao-livro-corpo {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: clamp(24px, 5vw, 42px);
+}
+
+.cartao-livro-corpo h2 {
+  margin-bottom: 4px;
+  font-size: clamp(1.65rem, 4vw, 2.55rem);
+}
+
+.autor-livro {
+  margin-bottom: 2px;
+  color: #514a66;
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
+.paginas-livro {
+  color: #6f6982;
+  font-weight: 800;
+}
+
+.resumo-livro {
+  max-width: 590px;
+  font-size: 1.08rem;
+}
+
+.situacao-leitura {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  margin: auto 0 18px;
+  padding: 5px 12px;
+  border: 2px solid #514a66;
+  border-radius: 999px;
+  color: #514a66;
+  background: #f3f1f7;
+  font-weight: 900;
+}
+
+.situacao-leitura[data-estado-leitura='em-andamento'] {
+  border-color: #8a6200;
+  color: #694800;
+  background: #fff2b8;
+}
+
+.situacao-leitura[data-estado-leitura='concluido'] {
+  border-color: #218b5d;
+  color: #155b3b;
+  background: #d9f8e8;
+}
+
+.cabecalho-leitor {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: end;
+  margin-bottom: 22px;
+}
+
+.cabecalho-leitor h1 {
+  max-width: 850px;
+  margin-bottom: 0;
+  font-size: clamp(1.8rem, 5vw, 3rem);
+}
+
+.contador-pagina {
+  flex: 0 0 auto;
+  margin-bottom: 4px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: var(--roxo-escuro);
+  background: var(--lilas);
+  font-weight: 900;
+}
+
+.painel-leitor-pdf {
+  padding: clamp(14px, 3vw, 26px);
+  border: 3px solid white;
+  border-radius: 28px;
+  background: white;
+  box-shadow: var(--sombra);
+}
+
+.barra-ferramentas-leitura {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.botao-destaque-leitor {
+  min-height: 48px;
+  padding: 11px 18px;
+  border: 0;
+  border-radius: 15px;
+  color: white;
+  background: var(--roxo);
+  box-shadow: 0 5px 0 var(--roxo-escuro);
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.botao-palavras-pagina {
+  min-height: 48px;
+  padding: 10px 16px;
+  border: 3px solid #8f1633;
+  border-radius: 15px;
+  color: white;
+  background: #c6284b;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.botao-palavras-pagina:hover {
+  background: #a91f3d;
+}
+
+.palavra-glossario {
+  display: inline;
+  min-width: 0;
+  min-height: 0;
+  margin: 0 0.08em;
+  padding: 0 0.06em 0.02em;
+  border: 0;
+  border-bottom: 3px dotted currentColor;
+  border-radius: 2px;
+  color: #51369e;
+  background: transparent;
+  box-shadow: none;
+  cursor: help;
+  font: inherit;
+  font-weight: 900;
+  line-height: inherit;
+}
+
+.palavra-glossario:hover {
+  color: #33206e;
+  background: #f2edff;
+}
+
+.palavra-glossario:focus-visible,
+.fechar-dialogo-glossario:focus-visible {
+  outline: 4px solid var(--amarelo);
+  outline-offset: 3px;
+}
+
+.atalhos-glossario {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  width: fit-content;
+  margin: 12px 0 20px;
+  padding: 10px 14px;
+  border: 2px solid #e2d9fb;
+  border-radius: 14px;
+  color: #514a66;
+  background: #faf8ff;
+  font-weight: 800;
+}
+
+.dialogo-glossario {
+  width: min(620px, calc(100% - 28px));
+  max-height: min(720px, calc(100% - 28px));
+  padding: 0;
+  overflow: auto;
+  border: 0;
+  border-radius: 24px;
+  color: var(--texto);
+  background: white;
+  box-shadow: 0 24px 70px rgba(34, 29, 54, 0.35);
+}
+
+.dialogo-glossario::backdrop {
+  background: rgba(34, 29, 54, 0.58);
+  backdrop-filter: blur(3px);
+}
+
+.cartao-dialogo-glossario {
+  padding: clamp(20px, 5vw, 34px);
+}
+
+.cabecalho-dialogo-glossario {
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 18px;
+}
+
+.cabecalho-dialogo-glossario h2 {
+  margin: 0;
+  color: var(--roxo-escuro);
+  font-size: clamp(1.7rem, 5vw, 2.35rem);
+}
+
+.fechar-dialogo-glossario {
+  flex: 0 0 auto;
+  width: 48px;
+  min-height: 48px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--roxo-escuro);
+  background: var(--lilas);
+  cursor: pointer;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.verbete-glossario + .verbete-glossario {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 2px solid #ece7f7;
+}
+
+.verbete-glossario h3 {
+  margin: 0 0 8px;
+  color: var(--roxo-escuro);
+  font-size: 1.35rem;
+}
+
+.verbete-glossario p {
+  margin: 9px 0 0;
+  font-size: clamp(1rem, 2.5vw, 1.15rem);
+  line-height: 1.6;
+}
+
+.verbete-glossario p:last-child {
+  padding: 12px 14px;
+  border-radius: 13px;
+  background: #fff7d5;
+}
+
+.controles-zoom,
+.ir-para-pagina {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.controles-zoom output {
+  min-width: 58px;
+  text-align: center;
+  font-weight: 900;
+}
+
+.botao-quadrado {
+  width: 46px;
+  min-height: 46px;
+  padding: 5px;
+  font-size: 1.35rem;
+}
+
+.ir-para-pagina {
+  margin-left: auto;
+  font-weight: 900;
+}
+
+.ir-para-pagina input {
+  width: 76px;
+  min-height: 46px;
+  padding: 7px;
+  border: 3px solid #dcd2f7;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 900;
+}
+
+.recipiente-canvas-livro {
+  position: relative;
+  display: grid;
+  width: 100%;
+  min-height: 280px;
+  overflow: auto;
+  place-items: start center;
+  padding: 12px;
+  border-radius: 18px;
+  background: #dedbe6;
+  overscroll-behavior: contain;
+}
+
+.canvas-livro {
+  display: block;
+  max-width: none;
+  height: auto;
+  background: white;
+  box-shadow: 0 5px 18px rgba(34, 29, 54, 0.2);
+}
+
+.estado-pdf,
+.erro-pdf {
+  position: absolute;
+  z-index: 2;
+  inset: 50% auto auto 50%;
+  width: min(520px, calc(100% - 32px));
+  padding: 18px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 7px 18px rgba(34, 29, 54, 0.16);
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-weight: 900;
+}
+
+.erro-pdf {
+  width: min(680px, calc(100% - 32px));
+  color: #7b1b1b;
+  background: #ffe8e8;
+}
+
+.erro-pdf span {
+  display: block;
+  margin-top: 6px;
+}
+
+.acoes-erro-pdf {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.acoes-erro-pdf button {
+  min-height: 48px;
+}
+
+.erro-pdf small {
+  display: block;
+  margin-top: 14px;
+  color: #5e3838;
+  font-weight: 700;
+}
+
+.descricao-canvas-livro,
+.alternativa-pdf {
+  margin: 10px 0 0;
+  color: #625b75;
+  font-size: 0.92rem;
+}
+
+.alternativa-pdf {
+  text-align: center;
+}
+
+.alternativa-pdf a {
+  color: var(--roxo-escuro);
+  font-weight: 900;
+}
+
+.navegacao-paginas-leitura,
+.navegacao-questionario-leitura {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.explicacao-final-leitura {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.9fr);
+  gap: clamp(20px, 4vw, 38px);
+  align-items: center;
+  margin-top: 28px;
+  padding: clamp(22px, 4vw, 38px);
+  border: 3px solid #dfd6fa;
+  border-radius: 30px;
+  background: linear-gradient(145deg, #fffef4, #f0ebff);
+  box-shadow: var(--sombra);
+}
+
+.explicacao-final-leitura[hidden] {
+  display: none;
+}
+
+.explicacao-final-leitura h2 {
+  margin-bottom: 14px;
+  color: var(--roxo-escuro);
+  font-size: clamp(1.55rem, 3.5vw, 2.25rem);
+}
+
+.texto-explicacao-final-leitura > div {
+  display: grid;
+  gap: 12px;
+}
+
+.texto-explicacao-final-leitura p {
+  margin: 0;
+  line-height: 1.65;
+}
+
+.texto-explicacao-final-leitura .chapeu {
+  margin-bottom: 8px;
+}
+
+.aviso-seguranca-eclipse {
+  padding: 14px 16px;
+  border-left: 6px solid #f2b705;
+  border-radius: 12px;
+  background: #fff5c7;
+  color: #4b3a00;
+  font-weight: 800;
+}
+
+.explicacao-final-leitura img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 4px solid white;
+  border-radius: 24px;
+  box-shadow: 0 14px 32px rgba(49, 29, 104, 0.2);
+}
+
+.botao-terminar-leitura {
+  display: block;
+  width: min(560px, 100%);
+  min-height: 62px;
+  margin: 22px auto 0;
+  font-size: 1.12rem;
+}
+
+.somente-leitor-tela {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.progresso-questionario-leitura {
+  height: 16px;
+  overflow: hidden;
+  margin-bottom: 22px;
+  border-radius: 999px;
+  background: #e9e2ff;
+}
+
+.progresso-questionario-leitura span {
+  display: block;
+  width: 10%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ff8fb8, #ffd65a, #71d6a5);
+  transition: width 0.25s ease;
+}
+
+.cartao-pergunta-leitura,
+.resultado-leitura,
+.revisao-questionario-leitura {
+  padding: clamp(24px, 5vw, 46px);
+  border: 3px solid white;
+  border-radius: 30px;
+  background: white;
+  box-shadow: var(--sombra);
+}
+
+.cartao-pergunta-leitura h2 {
+  max-width: 850px;
+  font-size: clamp(1.55rem, 4vw, 2.35rem);
+}
+
+.aviso-correcao-em-lote {
+  max-width: 820px;
+  margin: 14px 0 0;
+  padding: 12px 16px;
+  border: 2px solid #cfc1f3;
+  border-radius: 14px;
+  color: #514a66;
+  background: #f7f3ff;
+  font-weight: 800;
+}
+
+.revisao-questionario-leitura > h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.9rem, 5vw, 2.8rem);
+}
+
+.resumo-revisao-questionario {
+  margin: 0;
+  color: var(--roxo-escuro);
+  font-size: clamp(1.2rem, 3vw, 1.55rem);
+  font-weight: 900;
+}
+
+.lista-revisao-questionario {
+  display: grid;
+  gap: 16px;
+  margin: 28px 0;
+}
+
+.item-revisao-questionario {
+  padding: clamp(17px, 3vw, 24px);
+  border: 3px solid #d8d0ed;
+  border-radius: 20px;
+  background: #fcfbff;
+}
+
+.item-revisao-questionario.correta {
+  border-color: #218b5d;
+  background: #effbf5;
+}
+
+.item-revisao-questionario.incorreta {
+  border-color: #d94d73;
+  background: #fff4f7;
+}
+
+.item-revisao-questionario h3 {
+  margin: 8px 0 12px;
+  font-size: clamp(1.1rem, 3vw, 1.35rem);
+}
+
+.status-item-revisao,
+.resposta-item-revisao,
+.resposta-certa-revisao,
+.explicacao-item-revisao {
+  margin: 8px 0;
+}
+
+.status-item-revisao,
+.resposta-certa-revisao {
+  color: var(--roxo-escuro);
+  font-weight: 900;
+}
+
+.item-revisao-questionario.correta .status-item-revisao {
+  color: #176c47;
+}
+
+.item-revisao-questionario.incorreta .status-item-revisao {
+  color: #a52d50;
+}
+
+.explicacao-item-revisao {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: white;
+}
+
+.continuar-ditados {
+  min-width: min(100%, 300px);
+}
+
+.opcoes-leitura {
+  display: grid;
+  gap: 13px;
+  margin: 24px 0;
+}
+
+.atividade-ditado {
+  display: grid;
+  max-width: 820px;
+  gap: 14px;
+  margin: 24px 0;
+  padding: clamp(18px, 4vw, 28px);
+  border: 3px solid #dfd6fa;
+  border-radius: 20px;
+  background: #fcfbff;
+}
+
+.atividade-ditado p {
+  margin: 0;
+  color: #514a66;
+  font-weight: 800;
+}
+
+.atividade-ditado label {
+  margin-top: 4px;
+  color: var(--roxo-escuro);
+  font-weight: 900;
+}
+
+.botao-ouvir-ditado {
+  width: fit-content;
+  min-height: 52px;
+  font-size: 1.05rem;
+}
+
+.entrada-ditado {
+  width: 100%;
+  min-height: 58px;
+  padding: 12px 15px;
+  border: 3px solid #cfc1f3;
+  border-radius: 14px;
+  outline: none;
+  background: white;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  font-weight: 800;
+}
+
+.entrada-ditado:focus {
+  border-color: var(--roxo);
+  box-shadow: 0 0 0 4px rgba(92, 61, 184, 0.18);
+}
+
+.entrada-ditado.correta {
+  border-color: #218b5d;
+  background: #dcf8e9;
+}
+
+.entrada-ditado.incorreta {
+  border-color: #d94d73;
+  background: #ffe2ea;
+}
+
+.opcao-leitura {
+  display: flex;
+  gap: 13px;
+  align-items: center;
+  width: 100%;
+  min-height: 62px;
+  padding: 13px 17px;
+  border: 3px solid #dfd6fa;
+  border-radius: 18px;
+  text-align: left;
+  background: #fcfbff;
+  cursor: pointer;
+  font-size: clamp(1rem, 2.3vw, 1.25rem);
+  font-weight: 900;
+}
+
+.opcao-leitura:hover,
+.opcao-leitura.selecionada {
+  border-color: var(--roxo);
+  background: var(--lilas);
+}
+
+.opcao-leitura.correta {
+  border-color: #218b5d;
+  background: #dcf8e9;
+}
+
+.opcao-leitura.incorreta {
+  border-color: #d94d73;
+  background: #ffe2ea;
+}
+
+.retorno-pergunta-leitura {
+  min-height: 54px;
+  padding-top: 4px;
+}
+
+.resultado-leitura {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+.trofeu-leitura {
+  display: grid;
+  width: 96px;
+  height: 96px;
+  place-items: center;
+  border-radius: 50%;
+  color: #765000;
+  background: var(--amarelo);
+  box-shadow: 0 7px 0 #e5ae26;
+  font-size: 3.6rem;
+}
+
+.resultado-leitura h2 {
+  margin: 26px 0 6px;
+  font-size: clamp(2rem, 5vw, 3rem);
+}
+
+.placar-leitura {
+  color: var(--roxo-escuro);
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+
+.resultado-leitura > p:not(.placar-leitura) {
+  max-width: 650px;
+}
+
+.botoes-resultado-leitura {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 14px;
+}
+
 @media (max-width: 650px) {
   .topo {
     grid-template-columns: 42px 1fr;
@@ -1527,6 +2258,56 @@ footer {
   .navegacao-etapas {
     position: sticky;
     bottom: 8px;
+  }
+
+  .cabecalho-biblioteca,
+  .cabecalho-leitor {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .cartao-livro {
+    grid-template-columns: 1fr;
+  }
+
+  .cartao-livro > img {
+    min-height: 0;
+    aspect-ratio: 1.414 / 1;
+    padding: 10px;
+  }
+
+  .ir-para-pagina {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .botao-destaque-leitor {
+    width: 100%;
+  }
+
+  .ir-para-pagina label {
+    flex: 1;
+  }
+
+  .recipiente-canvas-livro {
+    min-height: 210px;
+    padding: 6px;
+  }
+
+  .explicacao-final-leitura {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .navegacao-paginas-leitura,
+  .navegacao-questionario-leitura {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .navegacao-paginas-leitura button,
+  .navegacao-questionario-leitura button {
+    width: 100%;
   }
 }
 

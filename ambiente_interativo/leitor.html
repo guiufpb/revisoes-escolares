@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#472d9c" />
+    <title>Leitor - Primeiras Lições sobre Dinheiro</title>
+    <link rel="stylesheet" href="css/leitor-dedicado.css" />
+  </head>
+  <body>
+    <header class="topo-leitor-dedicado">
+      <div>
+        <p>Leitura</p>
+        <h1 id="titulo-leitor-dedicado">Primeiras Lições sobre Dinheiro</h1>
+      </div>
+      <div class="acoes-leitor-dedicado">
+        <button id="ajustar-pagina-dedicado" type="button">Ajustar à tela</button>
+        <button id="diminuir-zoom-dedicado" type="button" aria-label="Diminuir zoom">−</button>
+        <output id="zoom-dedicado" aria-live="polite">100%</output>
+        <button id="aumentar-zoom-dedicado" type="button" aria-label="Aumentar zoom">+</button>
+        <button id="alternar-tela-cheia" type="button">⛶ Tela cheia</button>
+        <button
+          id="palavras-pagina-dedicado"
+          class="botao-palavras-pagina"
+          type="button"
+          aria-haspopup="dialog"
+          aria-controls="dialogo-glossario"
+          data-glossario-lista=""
+          hidden
+        >
+          📘 Palavras desta página
+        </button>
+      </div>
+    </header>
+
+    <main class="corpo-leitor-dedicado">
+      <div id="estado-leitor-dedicado" class="estado-leitor-dedicado" role="status">
+        Preparando o livro...
+      </div>
+      <canvas
+        id="canvas-leitor-dedicado"
+        tabindex="0"
+        aria-label="Página 1 do livro Primeiras Lições sobre Dinheiro"
+        aria-describedby="ajuda-leitor-dedicado"
+      >
+        Seu navegador não oferece o canvas necessário para mostrar o livro.
+      </canvas>
+    </main>
+
+    <footer class="navegacao-leitor-dedicado">
+      <button id="pagina-anterior-dedicado" type="button" disabled>← Página anterior</button>
+      <div>
+        <strong id="contador-pagina-dedicado">Página 1 de 25</strong>
+        <span id="ajuda-leitor-dedicado">Use também as setas esquerda e direita.</span>
+      </div>
+      <button id="proxima-pagina-dedicado" type="button">Próxima página →</button>
+      <button id="terminar-leitura-dedicado" class="terminar-leitura-dedicado" type="button" hidden>
+        Terminei - responder perguntas
+      </button>
+      <a
+        id="abrir-pdf-original-dedicado"
+        href="leituras/primeiras-licoes-sobre-dinheiro/infantil-dinheiro.pdf"
+        target="_blank"
+        rel="noopener"
+      >
+        Abrir PDF original
+      </a>
+    </footer>
+
+    <div id="anuncio-leitor-dedicado" class="somente-leitor-tela" aria-live="polite"></div>
+    <script type="module" src="js/leitor-dedicado.js"></script>
+  </body>
+</html>

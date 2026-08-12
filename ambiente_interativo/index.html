@@ -93,12 +93,233 @@
             <small>Revisão ampla</small>
             <strong>Abrir trilha →</strong>
           </button>
+          <button
+            class="cartao-materia leitura"
+            id="materia-leitura"
+            type="button"
+            data-materia="leitura"
+          >
+            <img src="../assets/objetos_escolares/book.svg" alt="" />
+            <span>Leitura</span>
+            <small>Histórias para descobrir</small>
+            <strong>Escolher um livro →</strong>
+          </button>
           <article class="cartao-materia em-breve">
             <img src="../assets/objetos_escolares/pencil.svg" alt="" />
             <span>Novas trilhas</span>
             <small>Mais conteúdos em breve</small>
           </article>
         </div>
+      </section>
+
+      <section
+        class="tela tela-biblioteca-leitura"
+        id="tela-biblioteca-leitura"
+        aria-labelledby="titulo-biblioteca-leitura"
+        hidden
+      >
+        <nav class="migalhas" aria-label="Navegação da biblioteca de leituras">
+          <button type="button" data-voltar-materias-leitura>
+            <span id="nome-perfil-biblioteca">Alice</span>
+          </button>
+          <span aria-hidden="true">›</span>
+          <strong>Leitura</strong>
+        </nav>
+        <div class="cabecalho-tela cabecalho-biblioteca">
+          <div>
+            <p class="chapeu">Leitura</p>
+            <h1 id="titulo-biblioteca-leitura">Escolha uma leitura</h1>
+            <p>Abra um livro, avance no seu ritmo e continue depois de onde parou.</p>
+          </div>
+          <button class="botao-secundario" id="limpar-progresso-leitura" type="button">
+            Limpar progresso desta leitura
+          </button>
+        </div>
+        <div class="grade-leituras" id="grade-leituras"></div>
+      </section>
+
+      <section
+        class="tela tela-visualizador-leitura"
+        id="tela-visualizador-leitura"
+        aria-labelledby="titulo-livro-visualizador"
+        hidden
+      >
+        <nav class="migalhas" aria-label="Navegação da leitura">
+          <button type="button" data-voltar-materias-leitura>
+            <span id="nome-perfil-visualizador">Alice</span>
+          </button>
+          <span aria-hidden="true">›</span>
+          <button type="button" data-voltar-biblioteca-leitura>Leitura</button>
+          <span aria-hidden="true">›</span>
+          <strong>Livro</strong>
+        </nav>
+        <div class="cabecalho-leitor">
+          <div>
+            <p class="chapeu">Agora é hora de ler</p>
+            <h1 id="titulo-livro-visualizador">Primeiras Lições sobre Dinheiro</h1>
+          </div>
+          <p id="contador-pagina-leitura" class="contador-pagina">Página 1 de 25</p>
+        </div>
+
+        <div class="painel-leitor-pdf">
+          <div class="barra-ferramentas-leitura" aria-label="Ferramentas do livro">
+            <button class="botao-destaque-leitor" id="abrir-leitor-dedicado" type="button">
+              ↗ Abrir leitor em nova janela
+            </button>
+            <button
+              class="botao-palavras-pagina"
+              id="palavras-pagina-leitura"
+              type="button"
+              aria-haspopup="dialog"
+              aria-controls="dialogo-glossario"
+              data-glossario-lista=""
+              hidden
+            >
+              📘 Palavras desta página
+            </button>
+            <button class="botao-secundario" id="ajustar-largura-leitura" type="button">
+              Ajustar à largura
+            </button>
+            <div class="controles-zoom" aria-label="Controles de zoom">
+              <button
+                class="botao-secundario botao-quadrado"
+                id="diminuir-zoom-leitura"
+                type="button"
+                aria-label="Diminuir zoom"
+              >
+                −
+              </button>
+              <output id="zoom-leitura" aria-live="polite">100%</output>
+              <button
+                class="botao-secundario botao-quadrado"
+                id="aumentar-zoom-leitura"
+                type="button"
+                aria-label="Aumentar zoom"
+              >
+                +
+              </button>
+            </div>
+            <form id="form-ir-pagina-leitura" class="ir-para-pagina">
+              <label for="ir-pagina-leitura">Ir para a página</label>
+              <input id="ir-pagina-leitura" type="number" min="1" max="25" value="1" />
+              <button class="botao-secundario" type="submit">Ir</button>
+            </form>
+          </div>
+
+          <div
+            class="recipiente-canvas-livro"
+            id="recipiente-canvas-livro"
+            aria-describedby="descricao-canvas-livro"
+          >
+            <div id="estado-carregamento-pdf" class="estado-pdf" role="status" aria-live="polite">
+              Preparando o livro...
+            </div>
+            <div id="erro-pdf" class="erro-pdf" role="alert" hidden>
+              <strong>O livro não pôde ser desenhado nesta tela.</strong>
+              <span id="erro-pdf-mensagem"></span>
+              <div class="acoes-erro-pdf">
+                <button class="botao-principal" id="abrir-pdf-janela" type="button">
+                  Abrir PDF em uma janela ampla
+                </button>
+                <button class="botao-secundario" id="concluir-leitura-arquivo" type="button" hidden>
+                  Já terminei o PDF - responder perguntas
+                </button>
+              </div>
+              <small id="dica-abertura-local" hidden>
+                Para usar o leitor integrado, feche esta aba e dê dois cliques em
+                <strong>abrir_ambiente_interativo.bat</strong> na pasta do projeto.
+              </small>
+            </div>
+            <canvas
+              id="canvas-livro"
+              class="canvas-livro"
+              tabindex="0"
+              aria-label="Página 1 do livro Primeiras Lições sobre Dinheiro"
+            >
+              Seu navegador não oferece o canvas necessário para mostrar esta página do livro.
+            </canvas>
+          </div>
+          <p id="descricao-canvas-livro" class="descricao-canvas-livro">
+            Use os botões abaixo ou as setas esquerda e direita do teclado para mudar de página.
+          </p>
+          <div id="anuncio-pagina-leitura" class="somente-leitor-tela" aria-live="polite"></div>
+
+          <div class="navegacao-paginas-leitura">
+            <button
+              class="botao-secundario botao-grande"
+              id="pagina-anterior-leitura"
+              type="button"
+              disabled
+            >
+              ← Página anterior
+            </button>
+            <button class="botao-principal botao-grande" id="proxima-pagina-leitura" type="button">
+              Próxima página →
+            </button>
+          </div>
+          <section
+            class="explicacao-final-leitura"
+            id="explicacao-final-leitura"
+            aria-labelledby="titulo-explicacao-final-leitura"
+            hidden
+          >
+            <div class="texto-explicacao-final-leitura">
+              <p class="chapeu">Uma descoberta depois da história</p>
+              <h2 id="titulo-explicacao-final-leitura"></h2>
+              <div id="paragrafos-explicacao-final-leitura"></div>
+            </div>
+            <img id="imagem-explicacao-final-leitura" alt="" />
+          </section>
+          <button
+            class="botao-principal botao-terminar-leitura"
+            id="terminar-leitura"
+            type="button"
+            hidden
+          >
+            Terminei a leitura - responder perguntas
+          </button>
+          <p class="alternativa-pdf">
+            Se o leitor não funcionar,
+            <a id="abrir-pdf-original" target="_blank" rel="noopener">
+              abra ou baixe o PDF original </a
+            >.
+          </p>
+        </div>
+      </section>
+
+      <section
+        class="tela tela-questionario-leitura"
+        id="tela-questionario-leitura"
+        aria-labelledby="titulo-questionario-leitura"
+        hidden
+      >
+        <nav class="migalhas" aria-label="Navegação do questionário de leitura">
+          <button type="button" data-voltar-materias-leitura>
+            <span id="nome-perfil-questionario">Alice</span>
+          </button>
+          <span aria-hidden="true">›</span>
+          <button type="button" data-voltar-biblioteca-leitura>Leitura</button>
+          <span aria-hidden="true">›</span>
+          <strong>Perguntas</strong>
+        </nav>
+        <div class="cabecalho-tela">
+          <p class="chapeu">Depois da história</p>
+          <h1 id="titulo-questionario-leitura">Vamos conversar sobre o livro?</h1>
+          <p id="contador-questionario-leitura">Pergunta 1 de 10</p>
+        </div>
+        <div
+          class="progresso-questionario-leitura"
+          id="progresso-questionario-leitura"
+          role="progressbar"
+          aria-label="Progresso das perguntas"
+          aria-valuemin="1"
+          aria-valuemax="10"
+          aria-valuenow="1"
+        >
+          <span></span>
+        </div>
+        <div id="corpo-questionario-leitura"></div>
+        <div id="anuncio-questionario-leitura" class="somente-leitor-tela" aria-live="polite"></div>
       </section>
 
       <section class="tela tela-revisao" id="tela-revisao" aria-labelledby="titulo-revisao" hidden>

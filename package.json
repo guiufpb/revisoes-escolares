@@ -2,7 +2,7 @@
   "name": "revisoes-escolares",
   "private": true,
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && vite build --config vite.pdfjs.config.js",
     "dev": "vite --host 127.0.0.1",
     "gerar:pdf": "node scripts/gerar_pdf.js",
     "gerar:previews": "node scripts/gerar_previews.js",
@@ -23,7 +23,8 @@
     "@iconify-json/fluent-emoji-flat": "^1.2.5",
     "@iconify-json/openmoji": "^1.2.27",
     "@iconify-json/twemoji": "^1.2.5",
-    "@iconify/utils": "^3.1.3"
+    "@iconify/utils": "^3.1.3",
+    "pdfjs-dist": "^6.2.108"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",
