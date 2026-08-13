@@ -42,12 +42,15 @@ jobs:
       - name: Executar lint
         run: npm run lint
 
+      - name: Preparar PDFs vazios para testes
+        run: node scripts/gerar_pdfs_teste_ci.js
+
       - name: Executar todos os testes
         run: npm test
 
       - name: Guardar diagnósticos em caso de falha
         if: failure()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: diagnosticos-playwright-${{ github.run_attempt }}
           path: |
