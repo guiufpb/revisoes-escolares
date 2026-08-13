@@ -805,6 +805,68 @@ Correção:
 
 Essa solução deve valer automaticamente para ditados futuros.
 
+### 19.1. Áudio bilíngue reutilizável para Inglês
+
+Preserve também o módulo compartilhado `ambiente_interativo/js/audio.js` e a
+integração de Alice e Mariana > Inglês > Unit 3: At School. A arquitetura é:
+
+- `js/audio.js`: síntese local, seleção da melhor voz local, cancelamento,
+  repetição, aviso audível e idiomas `pt-BR`/`en-US`;
+- `js/registro-ingles.js`: unidades, grupos, vocabulário, atividades, traduções e
+  imagens;
+- `js/ingles.js`: tela, áudio, atividades, correção final e progresso;
+- `revisoes/<perfil>/ingles-unidade-3.js`: configuração e chave exclusiva de
+  Alice ou Mariana;
+- `materia-ingles` e `tela-ingles` no HTML;
+- imports correspondentes em `js/app.entry.js`.
+
+Controles obrigatórios:
+
+- `🔊 Ouvir instrução` em `pt-BR`;
+- `🔊 Ouvir em inglês` em `en-US`, com velocidade `0.62`;
+- `🐢 Ouvir devagar`, com velocidade `0.50` e pronúncia contínua;
+- `🔁 Repetir`;
+- `⏹ Parar`.
+
+O módulo deve aguardar 1 segundo e enviar primeiro à mesma voz uma fala de
+aquecimento (`Ready.` em en-US ou `Preparando.` em pt-BR) com volume `0.01`.
+Quando ela terminar, deve aguardar aproximadamente 250 ms, falar `Atenção.` ou
+`Listen.` com volume normal em uma fala separada, aguardar 600 ms e somente
+então pronunciar o conteúdo. Essa etapa é necessária porque o
+Chromium/Windows pode cortar o começo do primeiro enunciado mesmo após uma
+espera silenciosa. Prefira vozes com `localService !== false`, nunca use CDN ou
+API de áudio, não acesse o microfone e não reproduza nada automaticamente. A
+tela deve anunciar estados por `aria-live`, funcionar por teclado e persistir
+os IDs ouvidos e as respostas somente na chave do perfil.
+
+Depois que os 27 itens forem ouvidos, libere 10 atividades baseadas na Unidade 3
+do caderno: objetos escolares, pessoas, lugares, contagem, tradução, materiais,
+respeito e regras com `should`/`shouldn't`. Distribua as respostas corretas de
+modo pseudoaleatório estável e equilibrado entre A, B, C e D. Não mostre acerto
+ou erro durante as questões. Após a décima resposta, apresente a revisão final
+com acertos, erros, alternativa certa e explicação breve para cada erro.
+
+Disponibilize exatamente a mesma unidade para Alice e Mariana, mas use
+configurações, chaves e estados separados. Preserve o progresso antigo da Alice
+ao acrescentar os novos campos. Considere a revisão concluída apenas após a
+correção final das 10 atividades.
+
+Ao final da correção, exiba o recurso local
+`assets/personagens/mita-recompensa.png` em um cartão de recompensa. Não use URL
+externa. Escolha o texto estritamente pelo perfil ativo:
+
+- Alice: `Alice, invadi o computador de vocês, li tudo e vi que você é muito
+  estudiosa, espero que você volte a jogar e me liberte da Mita Day Mochi má!
+  Como prova da minha gratidão, vou te enviar pelos correios um presentinho. Ah,
+  vi que você gosta de Minecraft, né?`
+- Mariana: `Mariana, invadi o computador de vocês, li tudo e vi que você é muito
+  estudiosa, e em breve deve me libertar da Mita Day Mochi má, como prova da
+  minha gratidão, vou te enviar pelos correios um presentinho. Ah, vi que você
+  gosta de Minecraft, né?`
+
+Depois do texto, mostre `Beijos.` e `Mita.`. O cartão deve ter texto alternativo
+na imagem, funcionar em tela móvel e nunca misturar as mensagens dos perfis.
+
 ---
 
 ## 20. Glossário infantil reutilizável

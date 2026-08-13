@@ -26,7 +26,7 @@ computer.svg | computador | fluent-emoji-flat:desktop-computer | exato
 cook.svg | cozinheiro/cozinheira | fluent-emoji-flat:cook | exato
 crayons.svg | giz de cera | fluent-emoji-flat:crayon | aproximado: um giz de cera representa o conjunto
 desk.svg | mesa/carteira | fluent-emoji-flat:desktop-computer | aproximado: não há carteira escolar; usado computador de mesa/desktop
-eraser.svg | borracha | fluent-emoji-flat:white-square-button | aproximado: não há emoji de borracha; usado quadrado branco como bloco de borracha
+eraser.svg | borracha | ilustração SVG original | borracha escolar rosa e azul
 floor-plan.svg | planta cartográfica | fluent-emoji-flat:world-map | aproximado: não há planta baixa; usado mapa
 glue.svg | cola | fluent-emoji-flat:bottle-with-popping-cork | aproximado: não há cola; usado frasco
 gym.svg | quadra/ginásio | fluent-emoji-flat:soccer-ball | aproximado: quadra representada por bola esportiva

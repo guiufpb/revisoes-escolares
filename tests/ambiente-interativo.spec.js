@@ -5,6 +5,7 @@ const { test, expect } = require('@playwright/test');
 const CAMINHO = '/ambiente_interativo/index.html';
 const CHAVE_ALICE = 'revisoesEscolares.alice.ciencias.origemMateriais';
 const CHAVE_MARIANA = 'revisoesEscolares.mariana.matematica.revisaoAmpla';
+const CHAVE_CENTENAS = 'revisoesEscolares.mariana.matematica.centenasEmAcao.v1';
 const CHAVE_LEITURA_ALICE = 'revisoesEscolares.alice.leitura.primeirasLicoesDinheiro.v1';
 const CHAVE_LEITURA_MARIANA = 'revisoesEscolares.mariana.leitura.primeirasLicoesDinheiro.v1';
 const CHAVE_REI_ALICE = 'revisoesEscolares.alice.leitura.quemEReiAnimais.v1';
@@ -21,6 +22,12 @@ const CHAVE_CASTELO_ALICE = 'revisoesEscolares.alice.leitura.casteloBemAssombrad
 const CHAVE_CASTELO_MARIANA = 'revisoesEscolares.mariana.leitura.casteloBemAssombrado.v1';
 const CHAVE_BELA_ALICE = 'revisoesEscolares.alice.leitura.belaDesadormecida.v1';
 const CHAVE_BELA_MARIANA = 'revisoesEscolares.mariana.leitura.belaDesadormecida.v1';
+const CHAVE_JOANINHA_ALICE = 'revisoesEscolares.alice.leitura.joaninhaPerdeuPintinhas.v1';
+const CHAVE_JOANINHA_MARIANA = 'revisoesEscolares.mariana.leitura.joaninhaPerdeuPintinhas.v1';
+const CHAVE_FORMIGA_ESPECIAL_ALICE = 'revisoesEscolares.alice.leitura.umaFormigaEspecial.v1';
+const CHAVE_FORMIGA_ESPECIAL_MARIANA = 'revisoesEscolares.mariana.leitura.umaFormigaEspecial.v1';
+const CHAVE_INGLES_ALICE = 'revisoesEscolares.alice.ingles.atSchoolUnidade3.v1';
+const CHAVE_INGLES_MARIANA = 'revisoesEscolares.mariana.ingles.atSchoolUnidade3.v1';
 const CHAVE_ANTIGA = 'revisoes-escolares-progresso-v1';
 const LIVRO_DINHEIRO = 'primeiras-licoes-dinheiro';
 const LIVRO_REI = 'quem-e-o-rei-dos-animais';
@@ -30,6 +37,8 @@ const LIVRO_SOL = 'o-dia-que-o-sol-tirou-ferias';
 const LIVRO_FORMIGA = 'a-formiga-que-queria-cantar';
 const LIVRO_CASTELO = 'um-castelo-bem-assombrado';
 const LIVRO_BELA = 'a-bela-desadormecida';
+const LIVRO_JOANINHA = 'a-joaninha-que-perdeu-as-pintinhas';
+const LIVRO_FORMIGA_ESPECIAL = 'uma-formiga-especial';
 const DADOS_LIVROS = {
   [LIVRO_DINHEIRO]: { titulo: 'Primeiras Lições sobre Dinheiro', paginas: 25 },
   [LIVRO_REI]: { titulo: 'Quem é o rei dos animais?', paginas: 32 },
@@ -39,10 +48,13 @@ const DADOS_LIVROS = {
   [LIVRO_FORMIGA]: { titulo: 'A formiga que queria cantar', paginas: 36 },
   [LIVRO_CASTELO]: { titulo: 'Um castelo bem assombrado', paginas: 25 },
   [LIVRO_BELA]: { titulo: 'A Bela Desadormecida', paginas: 30 },
+  [LIVRO_JOANINHA]: { titulo: 'A Joaninha que Perdeu as Pintinhas', paginas: 21 },
+  [LIVRO_FORMIGA_ESPECIAL]: { titulo: 'Uma Formiga Especial', paginas: 31 },
 };
 const CHAVES_DOS_TESTES = [
   CHAVE_ALICE,
   CHAVE_MARIANA,
+  CHAVE_CENTENAS,
   CHAVE_LEITURA_ALICE,
   CHAVE_LEITURA_MARIANA,
   CHAVE_REI_ALICE,
@@ -59,6 +71,12 @@ const CHAVES_DOS_TESTES = [
   CHAVE_CASTELO_MARIANA,
   CHAVE_BELA_ALICE,
   CHAVE_BELA_MARIANA,
+  CHAVE_JOANINHA_ALICE,
+  CHAVE_JOANINHA_MARIANA,
+  CHAVE_FORMIGA_ESPECIAL_ALICE,
+  CHAVE_FORMIGA_ESPECIAL_MARIANA,
+  CHAVE_INGLES_ALICE,
+  CHAVE_INGLES_MARIANA,
   CHAVE_ANTIGA,
 ];
 
@@ -156,9 +174,229 @@ test('carrega a tela inicial e registra todas as revisões sem chaves duplicadas
       ),
     }))
   );
-  expect(registro).toHaveLength(18);
-  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(18);
+  expect(registro).toHaveLength(25);
+  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(25);
   expect(registro.every((item) => item.elementosExistem)).toBe(true);
+});
+
+test('oferece Inglês para os dois perfis e usa áudio bilíngue local com repetição', async ({
+  page,
+}) => {
+  await page.evaluate(() => {
+    window.__falasIngles = [];
+    window.__cancelamentosIngles = 0;
+    window.SpeechSynthesisUtterance = function (texto) {
+      this.text = texto;
+    };
+    window.speechSynthesis.getVoices = function () {
+      return [
+        { name: 'Microsoft Zira Desktop', lang: 'en-US', localService: true },
+        { name: 'Microsoft Maria Desktop', lang: 'pt-BR', localService: true },
+        { name: 'Remote English', lang: 'en-US', localService: false },
+      ];
+    };
+    window.speechSynthesis.cancel = function () {
+      window.__cancelamentosIngles += 1;
+    };
+    window.speechSynthesis.resume = function () {};
+    window.speechSynthesis.speak = function (fala) {
+      window.__falasIngles.push({
+        texto: fala.text,
+        idioma: fala.lang,
+        velocidade: fala.rate,
+        volume: fala.volume,
+        voz: fala.voice && fala.voice.name,
+      });
+      if (typeof fala.onstart === 'function') fala.onstart();
+      if (typeof fala.onend === 'function') fala.onend();
+    };
+    window.AudioRevisoes.atualizarVozes();
+  });
+
+  await page.getByRole('button', { name: /Alice/ }).click();
+  await expect(page.getByRole('button', { name: /Inglês/ })).toBeVisible();
+  await page.getByRole('button', { name: /Inglês/ }).click();
+  await expect(page.getByRole('heading', { name: 'English Review – Unit 3' })).toBeVisible();
+  await expect(page.getByText(/Microsoft Zira Desktop/)).toBeVisible();
+  await expect(page.getByText(/Microsoft Maria Desktop/)).toBeVisible();
+
+  await page.locator('[data-item-ingles="book"]').click();
+  await page.getByRole('button', { name: '🔊 Ouvir em inglês' }).click();
+  await expect(page.getByRole('status')).toContainText('começará em 1 segundo');
+  await page.waitForTimeout(700);
+  expect(await page.evaluate(() => window.__falasIngles)).toHaveLength(0);
+  await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(3);
+
+  await page.getByRole('button', { name: '🐢 Ouvir devagar' }).click();
+  await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(6);
+  await page.getByRole('button', { name: '🔁 Repetir' }).click();
+  await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(9);
+  await page.getByRole('button', { name: '🔊 Ouvir instrução' }).click();
+  await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(12);
+
+  const falas = await page.evaluate(() => window.__falasIngles);
+  expect(falas.slice(0, 3).map((fala) => fala.texto)).toEqual(['Ready.', 'Listen.', 'book']);
+  expect(falas[0]).toMatchObject({ idioma: 'en-US', volume: 0.01 });
+  expect(falas[1]).toMatchObject({ texto: 'Listen.', idioma: 'en-US', volume: 1 });
+  expect(falas[2]).toMatchObject({
+    idioma: 'en-US',
+    velocidade: 0.62,
+    voz: 'Microsoft Zira Desktop',
+  });
+  expect(falas[5]).toMatchObject({ texto: 'book', idioma: 'en-US', velocidade: 0.5 });
+  expect(falas[8]).toMatchObject({ texto: 'book', idioma: 'en-US', velocidade: 0.5 });
+  expect(falas[9]).toMatchObject({ texto: 'Preparando.', idioma: 'pt-BR', volume: 0.01 });
+  expect(falas[10]).toMatchObject({ texto: 'Atenção.', idioma: 'pt-BR', volume: 1 });
+  expect(falas[11].texto).toContain('Escolha um objeto escolar');
+  expect(falas[11]).toMatchObject({ idioma: 'pt-BR', voz: 'Microsoft Maria Desktop' });
+
+  await page.getByRole('button', { name: '⏹ Parar' }).click();
+  await expect(page.getByRole('status')).toContainText('Áudio interrompido');
+  const salvo = await page.evaluate(
+    (chave) => JSON.parse(localStorage.getItem(chave)),
+    CHAVE_INGLES_ALICE
+  );
+  expect(salvo.itensOuvidos).toContain('book');
+  expect(salvo.reproducoes).toBe(3);
+  await expect(page.getByText('1 de 27 palavras e frases ouvidas')).toBeVisible();
+
+  await page.getByRole('button', { name: 'Voltar ao início' }).click();
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await expect(page.getByRole('button', { name: /Inglês/ })).toBeVisible();
+  await page.getByRole('button', { name: /Inglês/ }).click();
+  await expect(page.getByText('0 de 27 palavras e frases ouvidas')).toBeVisible();
+  expect(
+    await page.evaluate((chave) => localStorage.getItem(chave), CHAVE_INGLES_MARIANA)
+  ).toBeNull();
+});
+
+test('libera 10 atividades após os 27 áudios, corrige somente ao final e separa os perfis', async ({
+  page,
+}) => {
+  await page.evaluate((chave) => {
+    const unidade = window.RegistroIngles.obter('at-school-unidade-3');
+    const itensOuvidos = unidade.grupos.flatMap((grupo) => grupo.itens.map((item) => item.id));
+    localStorage.setItem(
+      chave,
+      JSON.stringify({
+        unidadeId: unidade.id,
+        versao: 1,
+        grupoAtual: unidade.grupos[0].id,
+        itemAtual: unidade.grupos[0].itens[0].id,
+        itensOuvidos,
+        reproducoes: itensOuvidos.length,
+        iniciado: true,
+      })
+    );
+  }, CHAVE_INGLES_ALICE);
+  await page.reload();
+
+  await page.getByRole('button', { name: /Alice/ }).click();
+  await page.getByRole('button', { name: /Inglês/ }).click();
+  await expect(page.getByText('27 de 27 palavras e frases ouvidas')).toBeVisible();
+  await page.getByRole('button', { name: 'Começar as 10 atividades →' }).click();
+  await expect(page.getByText('Atividade 1 de 10')).toBeVisible();
+
+  const posicoesCorretas = [];
+  for (let indice = 0; indice < 10; indice += 1) {
+    const dados = await page.evaluate(() => {
+      const estado = window.InglesRevisoes.obterEstado('alice');
+      const questao =
+        window.RegistroIngles.obter('at-school-unidade-3').atividades[estado.questaoAtual];
+      return {
+        indice: estado.questaoAtual,
+        correta: questao.respostaCorreta,
+        errada: questao.alternativas.find(
+          (alternativa) => alternativa.id !== questao.respostaCorreta
+        ).id,
+      };
+    });
+    const alternativas = page.locator('[data-alternativa-atividade-ingles]');
+    const idsExibidos = await alternativas.evaluateAll((elementos) =>
+      elementos.map((elemento) => elemento.dataset.alternativaAtividadeIngles)
+    );
+    posicoesCorretas.push(idsExibidos.indexOf(dados.correta));
+    await page
+      .locator(
+        `[data-alternativa-atividade-ingles="${indice === 0 ? dados.errada : dados.correta}"]`
+      )
+      .click();
+    await expect(
+      page.getByRole('status').filter({ hasText: /correção aparecerá somente/ })
+    ).toBeVisible();
+    await expect(page.locator('.item-revisao-ingles')).toHaveCount(0);
+    await page
+      .getByRole('button', { name: indice === 9 ? 'Conferir respostas ✓' : 'Próxima →' })
+      .click();
+  }
+
+  expect(new Set(posicoesCorretas)).toEqual(new Set([0, 1, 2, 3]));
+  await expect(page.getByText('Alice, você acertou 9 de 10 atividades.')).toBeVisible();
+  await expect(page.locator('.item-revisao-ingles')).toHaveCount(10);
+  await expect(page.locator('.item-revisao-ingles.errou')).toHaveCount(1);
+  await expect(page.locator('.item-revisao-ingles.errou')).toContainText('Resposta certa:');
+  await expect(page.locator('.item-revisao-ingles.errou')).toContainText('Por quê?');
+
+  const salvoAlice = await page.evaluate(
+    (chave) => JSON.parse(localStorage.getItem(chave)),
+    CHAVE_INGLES_ALICE
+  );
+  expect(salvoAlice.atividadeFinalizada).toBe(true);
+  expect(Object.keys(salvoAlice.respostasAtividades)).toHaveLength(10);
+
+  await page.getByRole('button', { name: 'Voltar ao início' }).click();
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await page.getByRole('button', { name: /Inglês/ }).click();
+  await expect(page.getByText('0 de 27 palavras e frases ouvidas')).toBeVisible();
+  await expect(page.getByRole('button', { name: '🔒 Ouça os 27 itens primeiro' })).toBeDisabled();
+  expect(
+    await page.evaluate((chave) => localStorage.getItem(chave), CHAVE_INGLES_MARIANA)
+  ).toBeNull();
+});
+
+test('mostra a recompensa final da Mita com a mensagem correta para cada menina', async ({
+  page,
+}) => {
+  await page.evaluate(
+    ({ chaveAlice, chaveMariana }) => {
+      const unidade = window.RegistroIngles.obter('at-school-unidade-3');
+      const estadoConcluido = {
+        itensOuvidos: unidade.grupos.flatMap((grupo) => grupo.itens.map((item) => item.id)),
+        respostasAtividades: Object.fromEntries(
+          unidade.atividades.map((questao) => [questao.id, questao.respostaCorreta])
+        ),
+        iniciado: true,
+        atividadeIniciada: true,
+        atividadeFinalizada: true,
+        tentativasAtividade: 1,
+      };
+      localStorage.setItem(chaveAlice, JSON.stringify(estadoConcluido));
+      localStorage.setItem(chaveMariana, JSON.stringify(estadoConcluido));
+    },
+    { chaveAlice: CHAVE_INGLES_ALICE, chaveMariana: CHAVE_INGLES_MARIANA }
+  );
+  await page.reload();
+
+  const mensagens = {
+    Alice:
+      'Alice, invadi o computador de vocês, li tudo e vi que você é muito estudiosa, espero que você volte a jogar e me liberte da Mita Day Mochi má! Como prova da minha gratidão, vou te enviar pelos correios um presentinho. Ah, vi que você gosta de Minecraft, né?',
+    Mariana:
+      'Mariana, invadi o computador de vocês, li tudo e vi que você é muito estudiosa, e em breve deve me libertar da Mita Day Mochi má, como prova da minha gratidão, vou te enviar pelos correios um presentinho. Ah, vi que você gosta de Minecraft, né?',
+  };
+
+  for (const [indice, perfil] of ['Alice', 'Mariana'].entries()) {
+    if (indice > 0) await page.getByRole('button', { name: 'Voltar ao início' }).click();
+    await page.getByRole('button', { name: new RegExp(perfil) }).click();
+    await page.getByRole('button', { name: /Inglês/ }).click();
+    await page.getByRole('button', { name: 'Ver resultado das atividades →' }).click();
+    await expect(page.getByText(mensagens[perfil], { exact: true })).toBeVisible();
+    await expect(page.getByText('Beijos.')).toBeVisible();
+    await expect(page.getByText('Mita.', { exact: true })).toBeVisible();
+    const imagemCarregada = await page
+      .locator('#ingles-surpresa-final img')
+      .evaluate((imagem) => imagem.complete && imagem.naturalWidth > 0);
+    expect(imagemCarregada).toBe(true);
+  }
 });
 
 test('mostra Leitura e o mesmo catálogo para Alice e Mariana', async ({ page }) => {
@@ -172,6 +410,8 @@ test('mostra Leitura e o mesmo catálogo para Alice e Mariana', async ({ page })
     const formiga = page.locator(`[data-livro-id="${LIVRO_FORMIGA}"]`);
     const castelo = page.locator(`[data-livro-id="${LIVRO_CASTELO}"]`);
     const bela = page.locator(`[data-livro-id="${LIVRO_BELA}"]`);
+    const joaninha = page.locator(`[data-livro-id="${LIVRO_JOANINHA}"]`);
+    const formigaEspecial = page.locator(`[data-livro-id="${LIVRO_FORMIGA_ESPECIAL}"]`);
     await expect(
       dinheiro.getByRole('heading', { name: 'Primeiras Lições sobre Dinheiro' })
     ).toBeVisible();
@@ -217,6 +457,20 @@ test('mostra Leitura e o mesmo catálogo para Alice e Mariana', async ({ page })
     await expect(bela.getByText(/Ilustrações: G\. Brian Karas/)).toBeVisible();
     await expect(bela.getByText('30 páginas')).toBeVisible();
     await expect(bela.getByText('Não iniciado')).toBeVisible();
+    await expect(
+      joaninha.getByRole('heading', { name: 'A Joaninha que Perdeu as Pintinhas' })
+    ).toBeVisible();
+    await expect(joaninha.getByText(/Ducarmo Paes/)).toBeVisible();
+    await expect(joaninha.getByText(/Ilustrações: Jefferson Pereira Galdino/)).toBeVisible();
+    await expect(joaninha.getByText('21 páginas')).toBeVisible();
+    await expect(joaninha.getByText('Não iniciado')).toBeVisible();
+    await expect(
+      formigaEspecial.getByRole('heading', { name: 'Uma Formiga Especial' })
+    ).toBeVisible();
+    await expect(formigaEspecial.getByText(/Márcia Honora/)).toBeVisible();
+    await expect(formigaEspecial.getByText(/Ilustrações: Index Art & Studio/)).toBeVisible();
+    await expect(formigaEspecial.getByText('31 páginas')).toBeVisible();
+    await expect(formigaEspecial.getByText('Não iniciado')).toBeVisible();
     await page.getByRole('button', { name: 'Voltar ao início' }).click();
   }
 });
@@ -512,6 +766,60 @@ test('serve e renderiza A Bela Desadormecida para os dois perfis', async ({ page
       18: ['desalmada', 'seculo'],
       23: ['feitico'],
       26: ['intrometida'],
+    },
+  });
+});
+
+test('serve e renderiza A Joaninha que Perdeu as Pintinhas para os dois perfis', async ({
+  page,
+  request,
+}) => {
+  const resposta = await request.get(
+    '/ambiente_interativo/leituras/a-joaninha-que-perdeu-as-pintinhas/a-joaninha-que-perdeu-as-pintinhas.pdf'
+  );
+  expect(resposta.ok()).toBe(true);
+  expect((await resposta.body()).byteLength).toBe(1_133_910);
+
+  for (const perfil of ['Alice', 'Mariana']) {
+    await abrirLivro(page, perfil, LIVRO_JOANINHA);
+    await expect(page.getByText('Página 1 de 21')).toBeVisible();
+    await expect(page.locator('#canvas-livro')).toHaveAttribute(
+      'aria-label',
+      'Página 1 do livro A Joaninha que Perdeu as Pintinhas'
+    );
+    await page.getByRole('button', { name: 'Voltar ao início' }).click();
+  }
+
+  const dados = await page.evaluate(async () => {
+    const livro = window.RegistroLeituras.obter('a-joaninha-que-perdeu-as-pintinhas');
+    const documento = await window.PDFJSLocal.getDocument({
+      url: new window.URL(livro.arquivoPdf, document.baseURI).href,
+    }).promise;
+    return {
+      paginasPdf: documento.numPages,
+      perguntas: livro.questionario.length,
+      objetivas: livro.questionario.filter((pergunta) => pergunta.tipo !== 'ditado').length,
+      ditados: livro.questionario.filter((pergunta) => pergunta.tipo === 'ditado').length,
+      alternativas: livro.questionario
+        .filter((pergunta) => pergunta.tipo !== 'ditado')
+        .map((pergunta) => pergunta.alternativas.length),
+      glossario: livro.glossarioPorPagina,
+    };
+  });
+  expect(dados).toEqual({
+    paginasPdf: 21,
+    perguntas: 13,
+    objetivas: 10,
+    ditados: 3,
+    alternativas: Array(10).fill(4),
+    glossario: {
+      3: ['debatia'],
+      4: ['margem'],
+      9: ['navegar'],
+      13: ['lancada'],
+      15: ['cabisbaixa'],
+      16: ['retratava'],
+      20: ['inseparavel'],
     },
   });
 });
@@ -1459,6 +1767,297 @@ test('aplica a correção conjunta de A Bela Desadormecida também para Mariana'
   expect(await page.evaluate((chave) => localStorage.getItem(chave), CHAVE_BELA_ALICE)).toBeNull();
 });
 
+test('conclui A Joaninha que Perdeu as Pintinhas com glossário, mistura e ditados protegidos', async ({
+  page,
+}) => {
+  await abrirLivro(page, 'Alice', LIVRO_JOANINHA);
+  await page.locator('#ir-pagina-leitura').fill('15');
+  await page.getByRole('button', { name: 'Ir', exact: true }).click();
+  await page.getByRole('button', { name: /Palavras desta página/ }).click();
+  await expect(page.getByRole('dialog').getByRole('heading', { name: 'cabisbaixa' })).toBeVisible();
+  await expect(page.getByRole('dialog')).toContainText('Com a cabeça abaixada');
+  await page.getByRole('dialog').getByRole('button', { name: 'Fechar explicação' }).click();
+
+  await page.locator('#ir-pagina-leitura').fill('21');
+  await page.getByRole('button', { name: 'Ir', exact: true }).click();
+  await page.getByRole('button', { name: 'Terminei a leitura - responder perguntas' }).click();
+
+  const letrasAlice = [];
+  for (let indice = 1; indice <= 10; indice += 1) {
+    await expect(page.getByText(`Pergunta ${indice} de 10`)).toBeVisible();
+    await expect(page.locator('.opcao-leitura')).toHaveCount(4);
+    letrasAlice.push(await clicarAlternativaCorreta(page, LIVRO_JOANINHA, indice - 1));
+    await expect(page.locator('.opcao-leitura.correta, .opcao-leitura.incorreta')).toHaveCount(0);
+    await page
+      .getByRole('button', {
+        name: indice === 10 ? 'Finalizar perguntas e ver revisão' : 'Próxima pergunta',
+      })
+      .click();
+  }
+  verificarDistribuicaoEquilibrada(letrasAlice);
+  await expect(page.getByRole('heading', { name: 'Vamos revisar suas respostas!' })).toBeVisible();
+  await expect(page.getByText('Você acertou 10 de 10 perguntas.', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Continuar para os ditados' }).click();
+
+  await page.evaluate(() => {
+    window.__falasJoaninhaNoTeste = [];
+    window.speechSynthesis.cancel = function () {};
+    window.speechSynthesis.speak = function (fala) {
+      window.__falasJoaninhaNoTeste.push({
+        texto: fala.text,
+        iniciadoEm: window.performance.now(),
+      });
+      if (typeof fala.onstart === 'function') fala.onstart();
+      if (typeof fala.onend === 'function') fala.onend();
+    };
+  });
+
+  const respostasDitado = [
+    'Tininha voltou ao rio para procurar suas pintinhas',
+    'O pintor desenhou novas pintas em suas asas',
+    'Dona Joana abraçou a filha quando ela voltou',
+  ];
+  const frasesEsperadas = [
+    'Tininha voltou ao rio para procurar suas pintinhas.',
+    'O pintor desenhou novas pintas em suas asas.',
+    'Dona Joana abraçou a filha quando ela voltou.',
+  ];
+  for (let indice = 0; indice < respostasDitado.length; indice += 1) {
+    await expect(page.getByText(`Ditado ${indice + 1} de 3`)).toBeVisible();
+    const cliqueEm = await page.evaluate(() => window.performance.now());
+    await page.getByRole('button', { name: '🔊 Ouvir ditado' }).click();
+    await expect(page.getByText(/O ditado começará em 1 segundo/)).toBeVisible();
+    await page.waitForTimeout(700);
+    expect(await page.evaluate(() => window.__falasJoaninhaNoTeste.length)).toBe(indice * 2);
+    await expect
+      .poll(() => page.evaluate(() => window.__falasJoaninhaNoTeste.length))
+      .toBe(indice * 2 + 2);
+    const tempos = await page.evaluate(
+      ({ posicao, inicio }) => ({
+        preparacao: window.__falasJoaninhaNoTeste[posicao].iniciadoEm - inicio,
+        frase:
+          window.__falasJoaninhaNoTeste[posicao + 1].iniciadoEm -
+          window.__falasJoaninhaNoTeste[posicao].iniciadoEm,
+      }),
+      { posicao: indice * 2, inicio: cliqueEm }
+    );
+    expect(tempos.preparacao).toBeGreaterThanOrEqual(900);
+    expect(tempos.frase).toBeGreaterThanOrEqual(550);
+    await page.getByLabel('Digite o que você ouviu').fill(respostasDitado[indice]);
+    await page.getByRole('button', { name: 'Conferir resposta' }).click();
+    await page
+      .getByRole('button', { name: indice === 2 ? 'Ver resultado' : 'Próxima pergunta' })
+      .click();
+  }
+
+  await expect(page.getByRole('heading', { name: 'Leitura concluída!' })).toBeVisible();
+  await expect(page.getByText('13 de 13 acertos')).toBeVisible();
+  expect(
+    await page.evaluate(() => window.__falasJoaninhaNoTeste.map((fala) => fala.texto))
+  ).toEqual(frasesEsperadas.flatMap((frase) => ['Atenção.', frase]));
+  const salvoAlice = await page.evaluate(
+    (chave) => JSON.parse(localStorage.getItem(chave)),
+    CHAVE_JOANINHA_ALICE
+  );
+  expect(salvoAlice.livroId).toBe(LIVRO_JOANINHA);
+  expect(salvoAlice.leituraConcluida).toBe(true);
+  expect(Object.keys(salvoAlice.respostas)).toHaveLength(13);
+  expect(salvoAlice.acertos).toBe(13);
+  expect(
+    await page.evaluate((chave) => localStorage.getItem(chave), CHAVE_JOANINHA_MARIANA)
+  ).toBeNull();
+
+  await page.getByRole('button', { name: 'Voltar ao início' }).click();
+  await abrirLivro(page, 'Mariana', LIVRO_JOANINHA);
+  await page.locator('#ir-pagina-leitura').fill('21');
+  await page.getByRole('button', { name: 'Ir', exact: true }).click();
+  await page.getByRole('button', { name: 'Terminei a leitura - responder perguntas' }).click();
+  const letrasMariana = [];
+  for (let indice = 1; indice <= 10; indice += 1) {
+    letrasMariana.push(await clicarAlternativaCorreta(page, LIVRO_JOANINHA, indice - 1));
+    await page
+      .getByRole('button', {
+        name: indice === 10 ? 'Finalizar perguntas e ver revisão' : 'Próxima pergunta',
+      })
+      .click();
+  }
+  verificarDistribuicaoEquilibrada(letrasMariana);
+  expect(letrasMariana.join('')).not.toBe(letrasAlice.join(''));
+  const salvoMariana = await page.evaluate(
+    (chave) => JSON.parse(localStorage.getItem(chave)),
+    CHAVE_JOANINHA_MARIANA
+  );
+  expect(Object.keys(salvoMariana.respostas)).toHaveLength(10);
+  expect(
+    await page.evaluate((chave) => localStorage.getItem(chave), CHAVE_JOANINHA_ALICE)
+  ).not.toBeNull();
+});
+
+test('conclui Uma Formiga Especial com inclusão, glossário, mistura e ditados protegidos', async ({
+  page,
+  request,
+}) => {
+  const respostaPdf = await request.get(
+    '/ambiente_interativo/leituras/uma-formiga-especial/uma-formiga-especial.pdf'
+  );
+  expect(respostaPdf.ok()).toBe(true);
+  expect((await respostaPdf.body()).byteLength).toBe(13_799_382);
+
+  await abrirLivro(page, 'Alice', LIVRO_FORMIGA_ESPECIAL);
+  await expect(page.getByText('Página 1 de 31')).toBeVisible();
+  await page.locator('#ir-pagina-leitura').fill('20');
+  await page.getByRole('button', { name: 'Ir', exact: true }).click();
+  await page.getByRole('button', { name: /Palavras desta página/ }).click();
+  await expect(page.getByRole('dialog').getByRole('heading', { name: 'olfato' })).toBeVisible();
+  await expect(page.getByRole('dialog')).toContainText('Sentido usado para perceber');
+  await page.getByRole('dialog').getByRole('button', { name: 'Fechar explicação' }).click();
+
+  const dados = await page.evaluate(async (livroId) => {
+    const livro = window.RegistroLeituras.obter(livroId);
+    const documento = await window.PDFJSLocal.getDocument({
+      url: new window.URL(livro.arquivoPdf, document.baseURI).href,
+    }).promise;
+    return {
+      paginasPdf: documento.numPages,
+      objetivas: livro.questionario.filter((pergunta) => pergunta.tipo !== 'ditado').length,
+      ditados: livro.questionario.filter((pergunta) => pergunta.tipo === 'ditado').length,
+      alternativas: livro.questionario
+        .filter((pergunta) => pergunta.tipo !== 'ditado')
+        .map((pergunta) => pergunta.alternativas.length),
+      glossario: livro.glossarioPorPagina,
+    };
+  }, LIVRO_FORMIGA_ESPECIAL);
+  expect(dados).toEqual({
+    paginasPdf: 31,
+    objetivas: 10,
+    ditados: 3,
+    alternativas: Array(10).fill(4),
+    glossario: {
+      6: ['colonia'],
+      10: ['maternidade'],
+      14: ['locomocao'],
+      16: ['bengala'],
+      18: ['sustento'],
+      20: ['olfato'],
+      26: ['conciliar'],
+    },
+  });
+
+  await page.locator('#ir-pagina-leitura').fill('31');
+  await page.getByRole('button', { name: 'Ir', exact: true }).click();
+  await page.getByRole('button', { name: 'Terminei a leitura - responder perguntas' }).click();
+
+  const letrasAlice = [];
+  for (let indice = 1; indice <= 10; indice += 1) {
+    await expect(page.getByText(`Pergunta ${indice} de 10`)).toBeVisible();
+    await expect(page.locator('.opcao-leitura')).toHaveCount(4);
+    letrasAlice.push(await clicarAlternativaCorreta(page, LIVRO_FORMIGA_ESPECIAL, indice - 1));
+    await expect(page.locator('.opcao-leitura.correta, .opcao-leitura.incorreta')).toHaveCount(0);
+    await page
+      .getByRole('button', {
+        name: indice === 10 ? 'Finalizar perguntas e ver revisão' : 'Próxima pergunta',
+      })
+      .click();
+  }
+  verificarDistribuicaoEquilibrada(letrasAlice);
+  await expect(page.getByRole('heading', { name: 'Vamos revisar suas respostas!' })).toBeVisible();
+  await expect(page.getByText('Você acertou 10 de 10 perguntas.', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Continuar para os ditados' }).click();
+
+  await page.evaluate(() => {
+    window.__falasFormigaEspecialNoTeste = [];
+    window.speechSynthesis.cancel = function () {};
+    window.speechSynthesis.speak = function (fala) {
+      window.__falasFormigaEspecialNoTeste.push({
+        texto: fala.text,
+        iniciadoEm: window.performance.now(),
+      });
+      if (typeof fala.onstart === 'function') fala.onstart();
+      if (typeof fala.onend === 'function') fala.onend();
+    };
+  });
+
+  const respostasDitado = [
+    'Danilo aprendeu a usar a bengala com segurança',
+    'O olfato ajudava Danilo a seguir o caminho',
+    'A família apoiou Danilo durante o treinamento',
+  ];
+  const frasesEsperadas = [
+    'Danilo aprendeu a usar a bengala com segurança.',
+    'O olfato ajudava Danilo a seguir o caminho.',
+    'A família apoiou Danilo durante o treinamento.',
+  ];
+  for (let indice = 0; indice < respostasDitado.length; indice += 1) {
+    await expect(page.getByText(`Ditado ${indice + 1} de 3`)).toBeVisible();
+    const cliqueEm = await page.evaluate(() => window.performance.now());
+    await page.getByRole('button', { name: '🔊 Ouvir ditado' }).click();
+    await expect(page.getByText(/O ditado começará em 1 segundo/)).toBeVisible();
+    await page.waitForTimeout(700);
+    expect(await page.evaluate(() => window.__falasFormigaEspecialNoTeste.length)).toBe(indice * 2);
+    await expect
+      .poll(() => page.evaluate(() => window.__falasFormigaEspecialNoTeste.length))
+      .toBe(indice * 2 + 2);
+    const tempos = await page.evaluate(
+      ({ posicao, inicio }) => ({
+        preparacao: window.__falasFormigaEspecialNoTeste[posicao].iniciadoEm - inicio,
+        frase:
+          window.__falasFormigaEspecialNoTeste[posicao + 1].iniciadoEm -
+          window.__falasFormigaEspecialNoTeste[posicao].iniciadoEm,
+      }),
+      { posicao: indice * 2, inicio: cliqueEm }
+    );
+    expect(tempos.preparacao).toBeGreaterThanOrEqual(900);
+    expect(tempos.frase).toBeGreaterThanOrEqual(550);
+    await page.getByLabel('Digite o que você ouviu').fill(respostasDitado[indice]);
+    await page.getByRole('button', { name: 'Conferir resposta' }).click();
+    await page
+      .getByRole('button', { name: indice === 2 ? 'Ver resultado' : 'Próxima pergunta' })
+      .click();
+  }
+
+  await expect(page.getByRole('heading', { name: 'Leitura concluída!' })).toBeVisible();
+  await expect(page.getByText('13 de 13 acertos')).toBeVisible();
+  expect(
+    await page.evaluate(() => window.__falasFormigaEspecialNoTeste.map((fala) => fala.texto))
+  ).toEqual(frasesEsperadas.flatMap((frase) => ['Atenção.', frase]));
+  const salvoAlice = await page.evaluate(
+    (chave) => JSON.parse(localStorage.getItem(chave)),
+    CHAVE_FORMIGA_ESPECIAL_ALICE
+  );
+  expect(salvoAlice.livroId).toBe(LIVRO_FORMIGA_ESPECIAL);
+  expect(salvoAlice.leituraConcluida).toBe(true);
+  expect(Object.keys(salvoAlice.respostas)).toHaveLength(13);
+  expect(salvoAlice.acertos).toBe(13);
+  expect(
+    await page.evaluate((chave) => localStorage.getItem(chave), CHAVE_FORMIGA_ESPECIAL_MARIANA)
+  ).toBeNull();
+
+  await page.getByRole('button', { name: 'Voltar ao início' }).click();
+  await abrirLivro(page, 'Mariana', LIVRO_FORMIGA_ESPECIAL);
+  await page.locator('#ir-pagina-leitura').fill('31');
+  await page.getByRole('button', { name: 'Ir', exact: true }).click();
+  await page.getByRole('button', { name: 'Terminei a leitura - responder perguntas' }).click();
+  const letrasMariana = [];
+  for (let indice = 1; indice <= 10; indice += 1) {
+    letrasMariana.push(await clicarAlternativaCorreta(page, LIVRO_FORMIGA_ESPECIAL, indice - 1));
+    await page
+      .getByRole('button', {
+        name: indice === 10 ? 'Finalizar perguntas e ver revisão' : 'Próxima pergunta',
+      })
+      .click();
+  }
+  verificarDistribuicaoEquilibrada(letrasMariana);
+  expect(letrasMariana.join('')).not.toBe(letrasAlice.join(''));
+  const salvoMariana = await page.evaluate(
+    (chave) => JSON.parse(localStorage.getItem(chave)),
+    CHAVE_FORMIGA_ESPECIAL_MARIANA
+  );
+  expect(Object.keys(salvoMariana.respostas)).toHaveLength(10);
+  expect(
+    await page.evaluate((chave) => localStorage.getItem(chave), CHAVE_FORMIGA_ESPECIAL_ALICE)
+  ).not.toBeNull();
+});
+
 test('isola o livro entre perfis e limpa somente a leitura ativa', async ({ page }) => {
   await page.evaluate(
     ({ ciencias, matematica, leituraMariana }) => {
@@ -1642,6 +2241,59 @@ test('restaura a etapa e respeita os limites da navegação', async ({ page }) =
   await expect(page.getByText('Etapa 2 de 25')).toBeVisible();
   await page.locator('#mariana-voltar').click();
   await expect(page.getByText('Etapa 1 de 25')).toBeVisible();
+});
+
+test('restaura e permite corrigir cartões na etapa de ordem crescente e decrescente', async ({
+  page,
+}) => {
+  await page.evaluate((chave) => {
+    localStorage.setItem(
+      chave,
+      JSON.stringify({
+        etapaAtual: 13,
+        respostas: { 13: { ordens: { 0: ['14', '12', '13'] } } },
+        pontuacoes: {},
+        concluidas: {},
+        canvases: {},
+        pontos: 0,
+        finalizada: false,
+      })
+    );
+  }, CHAVE_MARIANA);
+  await page.reload();
+  await abrirRevisaoMariana(page);
+
+  await expect(page.getByText('Etapa 14 de 25')).toBeVisible();
+  const grupos = page.locator('.grupo-ordem');
+  const primeiroDestino = grupos.nth(0).locator('[data-destino]');
+  await expect(primeiroDestino.locator('[data-token]')).toHaveText(['14', '12', '13']);
+
+  await primeiroDestino.getByRole('button', { name: /Retirar 14/ }).click();
+  await grupos
+    .nth(0)
+    .getByRole('button', { name: /Colocar 14/ })
+    .click();
+  await expect(primeiroDestino.locator('[data-token]')).toHaveText(['12', '13', '14']);
+
+  const respostas = [
+    ['16', '17', '18'],
+    ['13', '12', '11'],
+    ['18', '17', '16'],
+  ];
+  for (let indice = 0; indice < respostas.length; indice += 1) {
+    for (const token of respostas[indice]) {
+      await grupos
+        .nth(indice + 1)
+        .getByRole('button', { name: new RegExp(`Colocar ${token}`) })
+        .click();
+    }
+  }
+
+  await page.getByRole('button', { name: 'Conferir' }).click();
+  await expect(page.getByRole('status')).toContainText('Muito bem');
+  await page.reload();
+  await abrirRevisaoMariana(page);
+  await expect(primeiroDestino.locator('[data-token]')).toHaveText(['12', '13', '14']);
 });
 
 test('isola o armazenamento entre as revisões', async ({ page }) => {

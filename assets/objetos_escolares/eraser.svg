@@ -1,1 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="white-square-button"><g fill="none"><path fill="#fff" d="M2 5a3 3 0 0 1 3-3h22a3 3 0 0 1 3 3v22a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3z"/><path fill="#000" d="M5 7a2 2 0 0 1 2-2h18a2 2 0 0 1 2 2v18a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="borracha escolar rosa e azul">
+  <g transform="rotate(-32 32 32)">
+    <rect x="7" y="18" width="50" height="29" rx="9" fill="#ff6f91" stroke="#8f3151" stroke-width="3"/>
+    <path d="M37 18h11a9 9 0 0 1 9 9v11a9 9 0 0 1-9 9H37z" fill="#76cde8"/>
+    <path d="M37 19v27" fill="none" stroke="#8f3151" stroke-width="3"/>
+    <path d="M13 25c4-4 11-5 18-3" fill="none" stroke="#ffb8c8" stroke-linecap="round" stroke-width="3"/>
+  </g>
+</svg>

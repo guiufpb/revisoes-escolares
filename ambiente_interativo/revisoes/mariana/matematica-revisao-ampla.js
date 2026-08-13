@@ -493,7 +493,7 @@
     },
     {
       titulo: 'Crescente e decrescente',
-      explicacao: 'Arraste os cartões para montar cada ordem.',
+      explicacao: 'Arraste ou clique nos cartões para montar cada ordem.',
       tipo: 'ordem',
       grupos: [
         { titulo: 'Crescente', tokens: ['14', '12', '13'], resposta: ['12', '13', '14'] },
@@ -504,6 +504,7 @@
       render: function () {
         return (
           cabecalho(this.titulo, this.explicacao, icone('ruler.svg', '')) +
+          '<p class="instrucao-ordem">Para corrigir, clique em um cartão que já está no quadro: ele voltará para os cartões disponíveis.</p>' +
           '<div class="grupos-ordem">' +
           this.grupos
             .map(function (grupo, indice) {
@@ -512,7 +513,9 @@
                 indice +
                 '"><strong>' +
                 grupo.titulo +
-                '</strong><div class="tokens-arrastar">' +
+                '</strong><div class="tokens-arrastar" role="group" aria-label="Cartões disponíveis para a ordem ' +
+                grupo.titulo.toLowerCase() +
+                '">' +
                 grupo.tokens
                   .map(function (token) {
                     return (
@@ -524,7 +527,9 @@
                     );
                   })
                   .join('') +
-                '</div><div class="destino-ordem" data-destino></div></div>'
+                '</div><div class="destino-ordem" data-destino role="group" aria-label="Ordem ' +
+                grupo.titulo.toLowerCase() +
+                ' montada"></div></div>'
               );
             })
             .join('') +
@@ -1065,26 +1070,74 @@
 
     conteudo.querySelectorAll('.grupo-ordem').forEach(function (grupo) {
       var grupoIndice = grupo.dataset.grupo;
+      var configuracaoGrupo = etapas[indice].grupos[Number(grupoIndice)];
+      var origem = grupo.querySelector('.tokens-arrastar');
       var destino = grupo.querySelector('[data-destino]');
+      var ordemSalva = Array.isArray(resposta.ordens[grupoIndice])
+        ? resposta.ordens[grupoIndice]
+        : [];
+      resposta.ordens[grupoIndice] = ordemSalva.filter(function (token, posicao, lista) {
+        return configuracaoGrupo.tokens.indexOf(token) >= 0 && lista.indexOf(token) === posicao;
+      });
+
+      function estaNoDestino(token) {
+        return resposta.ordens[grupoIndice].indexOf(token) >= 0;
+      }
+
+      function atualizarCartoes() {
+        configuracaoGrupo.tokens.forEach(function (token) {
+          var botao = grupo.querySelector('[data-token="' + CSS.escape(token) + '"]');
+          if (!botao || estaNoDestino(token)) return;
+          origem.appendChild(botao);
+          botao.classList.remove('cartao-na-ordem');
+          botao.setAttribute(
+            'aria-label',
+            'Colocar ' + token + ' na ordem ' + configuracaoGrupo.titulo.toLowerCase()
+          );
+          botao.title = 'Clique ou arraste para colocar';
+        });
+        resposta.ordens[grupoIndice].forEach(function (token) {
+          var botao = grupo.querySelector('[data-token="' + CSS.escape(token) + '"]');
+          if (!botao) return;
+          destino.appendChild(botao);
+          botao.classList.add('cartao-na-ordem');
+          botao.setAttribute(
+            'aria-label',
+            'Retirar ' + token + ' da ordem ' + configuracaoGrupo.titulo.toLowerCase()
+          );
+          botao.title = 'Clique para retirar ou arraste para reposicionar';
+        });
+      }
+
+      function salvarEAtualizar() {
+        atualizarCartoes();
+        guardarRespostaEtapa(indice, resposta);
+      }
 
       function adicionar(token) {
-        resposta.ordens[grupoIndice] = resposta.ordens[grupoIndice] || [];
-        if (resposta.ordens[grupoIndice].indexOf(token) < 0) {
+        if (
+          configuracaoGrupo.tokens.indexOf(token) >= 0 &&
+          resposta.ordens[grupoIndice].indexOf(token) < 0
+        ) {
           resposta.ordens[grupoIndice].push(token);
-          var botao = document.createElement('button');
-          botao.type = 'button';
-          botao.className = 'token-arrastar';
-          botao.textContent = token;
-          botao.addEventListener('click', function () {
-            resposta.ordens[grupoIndice] = resposta.ordens[grupoIndice].filter(function (item) {
-              return item !== token;
-            });
-            botao.remove();
-            guardarRespostaEtapa(indice, resposta);
-          });
-          destino.appendChild(botao);
-          guardarRespostaEtapa(indice, resposta);
+          salvarEAtualizar();
         }
+      }
+
+      function retirar(token) {
+        resposta.ordens[grupoIndice] = resposta.ordens[grupoIndice].filter(function (item) {
+          return item !== token;
+        });
+        salvarEAtualizar();
+      }
+
+      function reposicionarNoFim(token) {
+        if (configuracaoGrupo.tokens.indexOf(token) < 0) return;
+        resposta.ordens[grupoIndice] = resposta.ordens[grupoIndice].filter(function (item) {
+          return item !== token;
+        });
+        resposta.ordens[grupoIndice].push(token);
+        salvarEAtualizar();
       }
 
       grupo.querySelectorAll('[data-token]').forEach(function (token) {
@@ -1092,17 +1145,30 @@
           evento.dataTransfer.setData('text/plain', token.dataset.token);
         });
         token.addEventListener('click', function () {
-          adicionar(token.dataset.token);
+          if (estaNoDestino(token.dataset.token)) {
+            retirar(token.dataset.token);
+          } else {
+            adicionar(token.dataset.token);
+          }
         });
+      });
+      origem.addEventListener('dragover', function (evento) {
+        evento.preventDefault();
+      });
+      origem.addEventListener('drop', function (evento) {
+        evento.preventDefault();
+        retirar(evento.dataTransfer.getData('text/plain'));
       });
       destino.addEventListener('dragover', function (evento) {
         evento.preventDefault();
       });
       destino.addEventListener('drop', function (evento) {
         evento.preventDefault();
-        adicionar(evento.dataTransfer.getData('text/plain'));
+        reposicionarNoFim(evento.dataTransfer.getData('text/plain'));
       });
+      atualizarCartoes();
     });
+    guardarRespostaEtapa(indice, resposta);
   }
 
   function configurarClassificacao(indice) {

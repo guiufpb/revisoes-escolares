@@ -1160,6 +1160,341 @@
     },
   ];
 
+  var perguntasJoaninhaPintinhas = [
+    {
+      id: 'nome-joaninha',
+      enunciado: 'Como se chamava a joaninha da história?',
+      alternativas: [
+        { id: 'tininha', texto: 'Tininha' },
+        { id: 'joana', texto: 'Joana' },
+        { id: 'felipa', texto: 'Felipa' },
+        { id: 'julinha', texto: 'Julinha' },
+      ],
+      respostaCorreta: 'tininha',
+      feedback: 'Isso! A joaninha aventureira se chamava Tininha.',
+      explicacaoRevisao: 'O livro apresenta a personagem principal pelo nome Tininha.',
+    },
+    {
+      id: 'queda-no-rio',
+      enunciado: 'O que aconteceu quando Tininha tentou atravessar o rio?',
+      alternativas: [
+        { id: 'escorregou', texto: 'Ela escorregou do galho seco e caiu na água' },
+        { id: 'voou', texto: 'Ela abriu as asas e voou até a outra margem' },
+        { id: 'ponte', texto: 'Ela encontrou uma ponte e atravessou caminhando' },
+        { id: 'barco', texto: 'Ela entrou em um barco e remou sozinha' },
+      ],
+      respostaCorreta: 'escorregou',
+      feedback: 'Muito bem! Tininha perdeu o equilíbrio no galho seco e caiu no rio.',
+      explicacaoRevisao:
+        'No começo da história, Tininha escorrega do galho usado para atravessar o rio e cai na água.',
+    },
+    {
+      id: 'mae-nao-reconheceu',
+      enunciado: 'Por que Dona Joana não reconheceu Tininha quando ela voltou para casa?',
+      alternativas: [
+        { id: 'sem-pintinhas', texto: 'Porque Tininha havia perdido as pintinhas na água' },
+        { id: 'outra-cor', texto: 'Porque Tininha havia pintado o corpo de azul' },
+        { id: 'muito-alta', texto: 'Porque Tininha havia crescido muito depressa' },
+        { id: 'fantasia', texto: 'Porque Tininha usava uma fantasia de borboleta' },
+      ],
+      respostaCorreta: 'sem-pintinhas',
+      feedback: 'Certo! Sem as pintinhas, Dona Joana pensou que aquela não era sua filha.',
+      explicacaoRevisao:
+        'As pintinhas de Tininha ficaram pelo caminho durante a queda no rio, por isso sua mãe não a reconheceu.',
+    },
+    {
+      id: 'procurar-pintinhas',
+      enunciado: 'O que Tininha decidiu fazer depois que a mãe não a reconheceu?',
+      alternativas: [
+        { id: 'voltar-rio', texto: 'Voltar ao rio para procurar as pintinhas' },
+        { id: 'dormir-flor', texto: 'Dormir em uma flor e esquecer o problema' },
+        { id: 'morar-praia', texto: 'Ir morar sozinha na praia' },
+        { id: 'pedir-roupa', texto: 'Pedir uma roupa nova à amiga formiga' },
+      ],
+      respostaCorreta: 'voltar-rio',
+      feedback: 'Isso mesmo! Tininha reuniu coragem e voltou para procurar o que havia perdido.',
+      explicacaoRevisao:
+        'Assustada, Tininha retorna ao rio porque acredita que poderá encontrar ali todas as suas pintinhas.',
+    },
+    {
+      id: 'folha-verde',
+      enunciado: 'O que Tininha usou para navegar pelo rio?',
+      alternativas: [
+        { id: 'folha-verde', texto: 'Uma folha verde' },
+        { id: 'casca-noz', texto: 'Uma casca de noz' },
+        { id: 'barquinho-papel', texto: 'Um barquinho de papel' },
+        { id: 'pedaco-madeira', texto: 'Um pedaço de madeira' },
+      ],
+      respostaCorreta: 'folha-verde',
+      feedback: 'Perfeito! A folha verde virou o pequeno barco de Tininha.',
+      explicacaoRevisao: 'Tininha sobe em uma folha verde para navegar e procurar as pintinhas.',
+    },
+    {
+      id: 'rio-levou',
+      enunciado: 'Para onde a correnteza levou Tininha?',
+      alternativas: [
+        { id: 'mar', texto: 'Para o mar' },
+        { id: 'cachoeira', texto: 'Para uma cachoeira' },
+        { id: 'lagoa', texto: 'Para uma lagoa' },
+        { id: 'caverna', texto: 'Para uma caverna' },
+      ],
+      respostaCorreta: 'mar',
+      feedback: 'Muito bem! Tininha só percebeu o caminho quando foi lançada ao mar.',
+      explicacaoRevisao:
+        'Enquanto viajava sobre a folha, Tininha foi carregada pela água do rio até o mar.',
+    },
+    {
+      id: 'jovem-pintor',
+      enunciado: 'Quem encontrou Tininha na areia e ouviu sua história?',
+      alternativas: [
+        { id: 'pintor', texto: 'Um jovem pintor' },
+        { id: 'pescador', texto: 'Um velho pescador' },
+        { id: 'mergulhadora', texto: 'Uma mergulhadora' },
+        { id: 'vendedora', texto: 'Uma vendedora de conchas' },
+      ],
+      respostaCorreta: 'pintor',
+      feedback: 'Isso! Um jovem que pintava um quadro do mar encontrou Tininha.',
+      explicacaoRevisao:
+        'Na praia, Tininha esbarra no sapato de um jovem que estava pintando um quadro do mar.',
+    },
+    {
+      id: 'ajuda-pintor',
+      enunciado: 'Como o pintor ajudou Tininha?',
+      alternativas: [
+        { id: 'pintou-pintas', texto: 'Desenhou pintas nas asas dela com tinta e pincel' },
+        { id: 'deu-barco', texto: 'Deu a ela um barco para voltar pelo mar' },
+        { id: 'achou-pintas', texto: 'Encontrou as pintinhas escondidas na areia' },
+        { id: 'ensinou-nadar', texto: 'Ensinou Tininha a nadar' },
+      ],
+      respostaCorreta: 'pintou-pintas',
+      feedback: 'Certo! Com cuidado, o pintor desenhou novas pintas nas asas de Tininha.',
+      explicacaoRevisao:
+        'O jovem usa sua tinta e seu pincel para devolver às asas de Tininha a aparência pintadinha.',
+    },
+    {
+      id: 'amiga-avisou',
+      enunciado: 'Quem correu na frente para avisar Dona Joana que Tininha estava voltando?',
+      alternativas: [
+        { id: 'formiga', texto: 'A amiga formiga' },
+        { id: 'libelula', texto: 'A libélula' },
+        { id: 'peixe', texto: 'O peixe do rio' },
+        { id: 'gaivota', texto: 'A gaivota' },
+      ],
+      respostaCorreta: 'formiga',
+      feedback: 'Exatamente! A amiga inseparável correu para preparar a chegada de Tininha.',
+      explicacaoRevisao:
+        'A formiga, amiga inseparável de Tininha, avisa Dona Joana e pede que todos preparem uma festa.',
+    },
+    {
+      id: 'volta-ao-lar',
+      enunciado: 'O que aconteceu quando Tininha chegou ao seu lar?',
+      alternativas: [
+        { id: 'abraco-festa', texto: 'A mãe a abraçou e os amigos comemoraram sua volta' },
+        { id: 'nova-viagem', texto: 'Ela partiu imediatamente para outra viagem' },
+        { id: 'ninguem-viu', texto: 'Ninguém percebeu que ela havia chegado' },
+        { id: 'voltou-praia', texto: 'A mãe pediu que ela voltasse para a praia' },
+      ],
+      respostaCorreta: 'abraco-festa',
+      feedback: 'Isso mesmo! Tininha foi recebida com carinho, abraço e comemoração.',
+      explicacaoRevisao:
+        'No final, Dona Joana corre para abraçar a filha, enquanto os amigos celebram a volta de Tininha.',
+    },
+    {
+      id: 'ditado-procurar-pintinhas',
+      tipo: 'ditado',
+      enunciado: 'Ditado 1: ouça e digite a frase sobre a procura de Tininha.',
+      textoDitado: 'Tininha voltou ao rio para procurar suas pintinhas.',
+      respostaCorreta: 'Tininha voltou ao rio para procurar suas pintinhas.',
+      feedback: 'Muito bem! Tininha não desistiu de encontrar suas pintinhas.',
+    },
+    {
+      id: 'ditado-pintor-ajudou',
+      tipo: 'ditado',
+      enunciado: 'Ditado 2: ouça e digite a frase sobre a ajuda do pintor.',
+      textoDitado: 'O pintor desenhou novas pintas em suas asas.',
+      respostaCorreta: 'O pintor desenhou novas pintas em suas asas.',
+      feedback: 'Isso! A arte e a bondade do pintor ajudaram Tininha.',
+    },
+    {
+      id: 'ditado-abraco-mae',
+      tipo: 'ditado',
+      enunciado: 'Ditado 3: ouça e digite a frase sobre a chegada de Tininha.',
+      textoDitado: 'Dona Joana abraçou a filha quando ela voltou.',
+      respostaCorreta: 'Dona Joana abraçou a filha quando ela voltou.',
+      feedback: 'Perfeito! O abraço mostrou a alegria do reencontro entre mãe e filha.',
+    },
+  ];
+
+  var perguntasFormigaEspecial = [
+    {
+      id: 'local-formigueiro',
+      enunciado: 'Onde ficava o formigueiro de Danilo?',
+      alternativas: [
+        { id: 'quintal-silva', texto: 'No quintal da família Silva' },
+        { id: 'parque-cidade', texto: 'Em um parque no centro da cidade' },
+        { id: 'margem-rio', texto: 'Na margem de um rio' },
+        { id: 'horta-escola', texto: 'Na horta de uma escola' },
+      ],
+      respostaCorreta: 'quintal-silva',
+      feedback: 'Isso! A colônia vivia no formigueiro do quintal da família Silva.',
+      explicacaoRevisao:
+        'Logo no início, o livro conta que o formigueiro ficava no quintal da família Silva.',
+    },
+    {
+      id: 'mae-danilo',
+      enunciado: 'Como se chamava a mãe de Danilo?',
+      alternativas: [
+        { id: 'maricota', texto: 'Dona Maricota' },
+        { id: 'joana', texto: 'Dona Joana' },
+        { id: 'felipa', texto: 'Felipa' },
+        { id: 'tininha', texto: 'Tininha' },
+      ],
+      respostaCorreta: 'maricota',
+      feedback: 'Muito bem! Dona Maricota era a mãe atenta e carinhosa de Danilo.',
+      explicacaoRevisao:
+        'Dona Maricota é apresentada como uma formiga respeitada e mãe de muitos filhos.',
+    },
+    {
+      id: 'percepcao-visao',
+      enunciado: 'O que Dona Maricota percebeu alguns dias depois do nascimento de Danilo?',
+      alternativas: [
+        { id: 'nao-enxergava-bem', texto: 'Que ele não enxergava bem' },
+        { id: 'nao-ouvia', texto: 'Que ele não conseguia ouvir os irmãos' },
+        { id: 'nao-sentia-cheiros', texto: 'Que ele não sentia nenhum cheiro' },
+        { id: 'nao-gostava-sol', texto: 'Que ele não gostava de dias ensolarados' },
+      ],
+      respostaCorreta: 'nao-enxergava-bem',
+      feedback: 'Certo! Danilo tinha a visão diminuída e precisava de algumas adaptações.',
+      explicacaoRevisao:
+        'Dona Maricota observou que Danilo não enxergava bem e se machucava ao encontrar obstáculos.',
+    },
+    {
+      id: 'ajuda-locomocao',
+      enunciado: 'O que ajudou Danilo a se locomover com mais segurança?',
+      alternativas: [
+        { id: 'bengala-treinamento', texto: 'Uma bengala e bastante treinamento' },
+        { id: 'asas-novas', texto: 'Um par de asas novas' },
+        { id: 'carrinho', texto: 'Um carrinho puxado pelos irmãos' },
+        { id: 'mapa', texto: 'Um mapa desenhado em uma folha' },
+      ],
+      respostaCorreta: 'bengala-treinamento',
+      feedback: 'Perfeito! Com a bengala e o treino, Danilo aprendeu a caminhar com segurança.',
+      explicacaoRevisao:
+        'A família conseguiu uma bengala para formigas cegas e todos ajudaram Danilo a treinar.',
+    },
+    {
+      id: 'sentido-desenvolvido',
+      enunciado: 'Qual sentido era muito desenvolvido em Danilo?',
+      alternativas: [
+        { id: 'olfato', texto: 'O olfato' },
+        { id: 'paladar', texto: 'O paladar' },
+        { id: 'visao', texto: 'A visão' },
+        { id: 'audicao', texto: 'A audição' },
+      ],
+      respostaCorreta: 'olfato',
+      feedback: 'Isso mesmo! Danilo tinha um olfato muito desenvolvido.',
+      explicacaoRevisao:
+        'O livro explica que a visão de Danilo era diminuída, enquanto seus outros sentidos eram aumentados.',
+    },
+    {
+      id: 'caminho-formigas',
+      enunciado: 'Como as formigas orientavam umas às outras pelo caminho?',
+      alternativas: [
+        { id: 'rastro-cheiro', texto: 'Deixando um rastro de cheiro no chão' },
+        { id: 'placas', texto: 'Colocando placas em todas as trilhas' },
+        { id: 'luzes', texto: 'Acendendo pequenas luzes à noite' },
+        { id: 'gritos', texto: 'Gritando o nome de cada rua' },
+      ],
+      respostaCorreta: 'rastro-cheiro',
+      feedback: 'Muito bem! O cheiro deixado no chão ajudava a próxima formiga a se orientar.',
+      explicacaoRevisao:
+        'As formigas usam o olfato e seguem o cheiro deixado por outras formigas no caminho.',
+    },
+    {
+      id: 'apoio-treinamento',
+      enunciado: 'Quem ajudou Danilo durante o treinamento de olfato?',
+      alternativas: [
+        { id: 'irmaos', texto: 'Seus muitos irmãos' },
+        { id: 'familia-silva', texto: 'As crianças da família Silva' },
+        { id: 'grilos', texto: 'Os grilos músicos' },
+        { id: 'passaros', texto: 'Os pássaros do quintal' },
+      ],
+      respostaCorreta: 'irmaos',
+      feedback: 'Exatamente! Os irmãos apoiaram Danilo e participaram de seu treinamento.',
+      explicacaoRevisao:
+        'A história diz que os muitos irmãos de Danilo o ajudaram bastante durante o treino.',
+    },
+    {
+      id: 'objetivo-danilo',
+      enunciado: 'Por que Danilo queria aprender a usar a bengala e o olfato juntos?',
+      alternativas: [
+        { id: 'ajudar-sustento', texto: 'Para trabalhar e ajudar no sustento do formigueiro' },
+        { id: 'viajar-sozinho', texto: 'Para viajar sozinho até outra cidade' },
+        { id: 'vencer-corrida', texto: 'Para vencer uma corrida contra os irmãos' },
+        { id: 'esconder-se', texto: 'Para se esconder de todas as outras formigas' },
+      ],
+      respostaCorreta: 'ajudar-sustento',
+      feedback: 'Isso! Danilo queria contribuir com o trabalho da comunidade.',
+      explicacaoRevisao:
+        'Danilo desejava trabalhar como as outras formigas e ajudar a manter o formigueiro.',
+    },
+    {
+      id: 'diversao-noite',
+      enunciado: 'O que Danilo fazia à noite depois do trabalho?',
+      alternativas: [
+        { id: 'bailes-tango', texto: 'Ia aos bailes dos grilos e dançava tango' },
+        { id: 'dormia-dia-todo', texto: 'Dormia o dia e a noite inteiros' },
+        { id: 'pintava-quadros', texto: 'Pintava quadros do quintal' },
+        { id: 'jogava-futebol', texto: 'Jogava futebol com os pássaros' },
+      ],
+      respostaCorreta: 'bailes-tango',
+      feedback: 'Certo! Danilo trabalhava durante o dia e se divertia dançando tango à noite.',
+      explicacaoRevisao:
+        'Além de cumprir suas tarefas, Danilo participava dos bailes dos grilos e dançava muito bem.',
+    },
+    {
+      id: 'mensagem-historia',
+      enunciado: 'Qual mensagem combina melhor com a história de Danilo?',
+      alternativas: [
+        {
+          id: 'adaptacoes-participacao',
+          texto: 'Com apoio, treino e adaptações, cada pessoa pode participar e contribuir',
+        },
+        { id: 'fazer-tudo-sozinho', texto: 'Pedir ajuda é errado e todos devem aprender sozinhos' },
+        { id: 'diferencas-afastam', texto: 'Quem é diferente deve ficar longe do grupo' },
+        { id: 'so-visao-importa', texto: 'A visão é o único sentido importante para trabalhar' },
+      ],
+      respostaCorreta: 'adaptacoes-participacao',
+      feedback: 'Perfeito! Respeito, apoio e recursos adequados ajudam todos a participar.',
+      explicacaoRevisao:
+        'Danilo usa a bengala, desenvolve habilidades, recebe apoio e participa do trabalho e da diversão com autonomia.',
+    },
+    {
+      id: 'ditado-bengala',
+      tipo: 'ditado',
+      enunciado: 'Ditado 1: ouça e digite a frase sobre a bengala de Danilo.',
+      textoDitado: 'Danilo aprendeu a usar a bengala com segurança.',
+      respostaCorreta: 'Danilo aprendeu a usar a bengala com segurança.',
+      feedback: 'Muito bem! A bengala ajudou Danilo a perceber obstáculos no caminho.',
+    },
+    {
+      id: 'ditado-olfato',
+      tipo: 'ditado',
+      enunciado: 'Ditado 2: ouça e digite a frase sobre o olfato de Danilo.',
+      textoDitado: 'O olfato ajudava Danilo a seguir o caminho.',
+      respostaCorreta: 'O olfato ajudava Danilo a seguir o caminho.',
+      feedback: 'Isso! Danilo usava seu olfato desenvolvido para se orientar.',
+    },
+    {
+      id: 'ditado-apoio',
+      tipo: 'ditado',
+      enunciado: 'Ditado 3: ouça e digite a frase sobre o apoio da família.',
+      textoDitado: 'A família apoiou Danilo durante o treinamento.',
+      respostaCorreta: 'A família apoiou Danilo durante o treinamento.',
+      feedback: 'Perfeito! O apoio da família fez parte da aprendizagem de Danilo.',
+    },
+  ];
+
   var livros = [
     {
       id: 'primeiras-licoes-dinheiro',
@@ -1323,6 +1658,55 @@
         26: ['intrometida'],
       },
       questionario: perguntasBelaDesadormecida,
+    },
+    {
+      id: 'a-joaninha-que-perdeu-as-pintinhas',
+      versao: 1,
+      titulo: 'A Joaninha que Perdeu as Pintinhas',
+      autor: 'Ducarmo Paes',
+      ilustrador: 'Jefferson Pereira Galdino',
+      arquivoPdf:
+        'leituras/a-joaninha-que-perdeu-as-pintinhas/a-joaninha-que-perdeu-as-pintinhas.pdf',
+      capa: 'leituras/a-joaninha-que-perdeu-as-pintinhas/capa.jpg',
+      totalPaginas: 21,
+      resumo:
+        'Tininha perde suas pintinhas em uma aventura pelo rio e encontra amizade, ajuda e carinho no caminho de volta para casa.',
+      perfisDisponiveis: ['alice', 'mariana'],
+      correcaoObjetivas: 'ao-final',
+      glossarioPorPagina: {
+        3: ['debatia'],
+        4: ['margem'],
+        9: ['navegar'],
+        13: ['lancada'],
+        15: ['cabisbaixa'],
+        16: ['retratava'],
+        20: ['inseparavel'],
+      },
+      questionario: perguntasJoaninhaPintinhas,
+    },
+    {
+      id: 'uma-formiga-especial',
+      versao: 1,
+      titulo: 'Uma Formiga Especial',
+      autor: 'Márcia Honora',
+      ilustrador: 'Index Art & Studio',
+      arquivoPdf: 'leituras/uma-formiga-especial/uma-formiga-especial.pdf',
+      capa: 'leituras/uma-formiga-especial/capa.jpg',
+      totalPaginas: 31,
+      resumo:
+        'Danilo aprende a usar uma bengala e seu olfato desenvolvido para circular com autonomia, trabalhar e se divertir com as outras formigas.',
+      perfisDisponiveis: ['alice', 'mariana'],
+      correcaoObjetivas: 'ao-final',
+      glossarioPorPagina: {
+        6: ['colonia'],
+        10: ['maternidade'],
+        14: ['locomocao'],
+        16: ['bengala'],
+        18: ['sustento'],
+        20: ['olfato'],
+        26: ['conciliar'],
+      },
+      questionario: perguntasFormigaEspecial,
     },
   ];
 

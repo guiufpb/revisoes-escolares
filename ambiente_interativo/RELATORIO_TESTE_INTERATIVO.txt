@@ -1,6 +1,180 @@
 RELATORIO DE TESTE - AMBIENTE INTERATIVO
 =======================================
 
+ATUALIZAÇÃO: 13/08/2026 - DÉCIMA LEITURA
+=========================================
+
+ESCOPO IMPLEMENTADO
+- Uma Formiga Especial adicionada ao catálogo compartilhado de Alice e Mariana.
+- Texto de Márcia Honora e ilustrações de Index Art & Studio.
+- PDF compartilhado com 31 páginas e capa derivada da página 1.
+- Questionário temático com 13 perguntas: 10 objetivas e 3 ditados.
+- As objetivas usam A, B, C e D com mistura pseudoaleatória estável,
+  equilibrada por perfil e sem ciclo previsível; Alice e Mariana recebem
+  sequências diferentes.
+- A correção das objetivas é mostrada em conjunto depois da décima pergunta.
+- Os ditados reutilizam a proteção compartilhada: espera de 1 segundo, aviso
+  audível "Atenção", pausa e frase principal em uma fala separada.
+- O glossário foi limitado a sete termos de maior complexidade semântica:
+  colônia, maternidade, locomoção, bengala, sustento, olfato e conciliar.
+- As perguntas apresentam Danilo com respeito: apoio, adaptações, autonomia,
+  participação no trabalho e convivência com a comunidade.
+
+ARQUIVOS E INTEGRIDADE
+- PDF: ambiente_interativo/leituras/uma-formiga-especial/uma-formiga-especial.pdf
+- Capa: ambiente_interativo/leituras/uma-formiga-especial/capa.jpg
+- Tamanho do PDF: 13.799.382 bytes.
+- SHA-256 da origem e da cópia:
+  53802781AE4DD677A8E55782BEB9829B0A1FE8CE05C84D0C699BB67CC594EB79
+- Total: 31 páginas quadradas, 482 x 482 pontos.
+- O PDF não possui camada de texto extraível. Todas as páginas foram
+  renderizadas e lidas visualmente; créditos, narrativa, glossário e fatos do
+  questionário também foram conferidos em tamanho integral.
+
+CHAVES INDEPENDENTES
+- Alice: revisoesEscolares.alice.leitura.umaFormigaEspecial.v1
+- Mariana: revisoesEscolares.mariana.leitura.umaFormigaEspecial.v1
+
+VALIDAÇÃO FINAL
+- npm run format: PASSOU.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU, sem erros.
+- npm test: PASSOU, com 78 de 78 testes Playwright.
+- Catálogo, PDF, capa, páginas, glossário, quatro alternativas, revisão das dez
+  objetivas, três ditados e isolamento entre os perfis possuem cobertura
+  automatizada dedicada.
+- Os testes temporais exigem pelo menos 1 segundo antes de "Atenção" e pelo
+  menos 550 milissegundos adicionais antes da frase principal.
+- A formatação, o lint, os testes e a inspeção no navegador são registrados
+  após a execução integral da sequência de qualidade.
+
+ATUALIZAÇÃO: 13/08/2026 - MATEMÁTICA MANIPULATIVA
+=================================================
+
+ESCOPO IMPLEMENTADO
+- Criado o núcleo compartilhado Cena Matemática Interativa, separado em modelo
+  matemático/normalização, renderização/interação e controlador/persistência.
+- Criada somente para Mariana a revisão Centenas em ação, ID
+  mariana-matematica-centenas-em-acao, chave
+  revisoesEscolares.mariana.matematica.centenasEmAcao.v1 e 19 etapas.
+- As 17 etapas avaliativas usam diretamente a cena compartilhada e cobrem
+  material dourado, quadro de ordens, ábaco, composição, decomposição, zero
+  intermediário, comparação, sequências, reta, dinheiro fictício, 1.000,
+  tabela/gráfico e mini simulado.
+- Suporte a U, D-U, C-D-U e M-C-D-U, com trocas explícitas 10 U > 1 D,
+  10 D > 1 C e 10 C > 1 M.
+- Pointer Events, arrastar, selecionar/colocar por toque/clique e controles de
+  teclado foram preservados como caminhos equivalentes.
+- A revisão ampla da Mariana continuou no arquivo, painel, cartão e chave
+  originais. Nenhum conteúdo, cartão, registro ou chave de Matemática foi criado
+  para Alice.
+
+FONTE PEDAGÓGICA
+- As 20 páginas digitalizadas de Revisão matemática Mariana agosto-26.pdf foram
+  renderizadas e inspecionadas visualmente.
+- Foram extraídos somente conceitos, vocabulário e progressão. Os textos,
+  números, atividades, SVG/CSS e organização da nova revisão são originais.
+- Nenhum PDF, preview, imagem de cartilha ou checklist de impressão foi criado.
+
+PERSISTÊNCIA E ISOLAMENTO
+- Estado versão 1 pequeno e serializável: etapa, cenas normalizadas, pontuações,
+  conclusões, pontos e finalização.
+- JSON inválido, versão desconhecida, etapa, quantidades, respostas e tentativas
+  fora dos limites retornam a valores seguros.
+- Com localStorage bloqueado, a revisão permanece utilizável em memória.
+- Limpar progresso dentro de Centenas em ação remove somente a chave nova.
+  Alice, a revisão ampla e as demais matérias ficam intactas.
+
+INFRAESTRUTURA PARA ALICE
+- Testes isolados comprovam cenas somente com U, D-U, limites menores, trocas
+  opcionais e ajuda configurável.
+- A entrega deixa o componente pronto para revisões futuras de 1º ano, mas não
+  cadastra revisão fictícia, cartão nem progresso para Alice.
+
+VALIDAÇÃO AUTOMATIZADA
+- Linha de base antes das mudanças: npm test, 57 de 57 testes aprovados em 4,4 min.
+- npm run format: PASSOU.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU, sem erros.
+- npm test: PASSOU, 75 de 75 testes Playwright em 4,6 min.
+- Build Vite principal e bundle PDF.js: PASSOU.
+- A nova suíte tests/matematica-manipulativa.spec.js tem 18 cenários e cobre
+  todas as ordens, ponteiro, teclado, trocas, ábaco, zero intermediário,
+  sequências, reta, gráfico, dinheiro, desfazer/limpar, persistência, isolamento,
+  normalização, memória sem localStorage, listeners, console, mobile, axe e file://.
+- Avisos produzidos pelos testes de JSON inválido, armazenamento bloqueado e
+  imagens dependentes do PDF.js são esperados e não representam falha.
+
+ACESSIBILIDADE E VERIFICAÇÃO MANUAL
+- Axe WCAG 2 A/AA e 2.1 A/AA na cena móvel: nenhuma violação serious ou critical.
+- Viewport 390 x 844 na etapa M-C-D-U: scrollWidth 375 para innerWidth 390,
+  sem rolagem horizontal.
+- Percorridos Alice, o hub da Mariana, a revisão ampla e a nova revisão.
+- A revisão ampla retomou a etapa salva; a nova revisão restaurou a construção
+  depois de recarregar.
+- O clique real no navegador encontrou uma sensibilidade pós-arraste, corrigida
+  com seleção no fim do toque e supressão de clique única; a colocação por mouse
+  e o caminho de teclado passaram nos testes finais.
+- Console da verificação manual: zero erros e zero avisos.
+- O servidor Vite iniciado para a conferência foi encerrado.
+
+GIT E GITHUB
+- Git 2.55.0.windows.3 instalado.
+- Repositório local na branch main, com dois commits no histórico e alterações
+  preexistentes preservadas.
+- Nenhum remoto configurado; nenhum repositório, commit, push ou publicação foi
+  criado nesta tarefa.
+- GitHub CLI gh ausente e não instalado.
+- Plugin oficial GitHub instalado e com ferramentas disponíveis; consulta
+  somente leitura respondeu pelo conector. Nenhuma autorização adicional ficou
+  necessária para o trabalho local e nenhum dado do projeto foi enviado.
+
+ATUALIZAÇÃO: 12/08/2026 - NONA LEITURA
+=======================================
+
+ESCOPO IMPLEMENTADO
+- A Joaninha que Perdeu as Pintinhas adicionada ao catálogo de Alice e Mariana.
+- Texto de Ducarmo Paes e ilustrações de Jefferson Pereira Galdino.
+- PDF compartilhado com 21 páginas e capa recortada da página 1.
+- Questionário temático com 13 perguntas: 10 objetivas e 3 ditados.
+- As objetivas usam A, B, C e D com mistura estável, equilibrada por perfil e
+  sem ciclo previsível; Alice e Mariana recebem sequências diferentes.
+- A correção das objetivas é mostrada em conjunto depois da décima pergunta.
+- Os ditados reutilizam o controlador compartilhado: espera de 1 segundo,
+  aviso audível "Atenção", pausa e frase principal em uma fala separada.
+- O glossário foi limitado a sete termos de maior complexidade semântica e
+  aparece somente nas páginas correspondentes.
+
+ARQUIVOS E INTEGRIDADE
+- PDF: ambiente_interativo/leituras/a-joaninha-que-perdeu-as-pintinhas/
+  a-joaninha-que-perdeu-as-pintinhas.pdf
+- Capa: ambiente_interativo/leituras/a-joaninha-que-perdeu-as-pintinhas/capa.jpg
+- Tamanho do PDF: 1.133.910 bytes.
+- SHA-256 da origem e da cópia:
+  CDD09C66F40D3539CB6EBE64B9DCF1A097DFF4EBF9C73C976C99A20921B080FE
+- Total: 21 páginas em paisagem, 720 x 540 pontos.
+- O PDF não possui camada de texto extraível. As 21 páginas foram renderizadas
+  e lidas visualmente em quatro folhas de contato; as páginas que sustentam o
+  questionário e o glossário também foram conferidas em tamanho integral.
+- Capa, narrativa e desfecho foram conferidos; não foram encontradas páginas
+  ausentes, ilegíveis ou fora de ordem.
+
+CHAVES INDEPENDENTES
+- Alice: revisoesEscolares.alice.leitura.joaninhaPerdeuPintinhas.v1
+- Mariana: revisoesEscolares.mariana.leitura.joaninhaPerdeuPintinhas.v1
+
+VALIDAÇÃO FINAL
+- npm run format: PASSOU.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU.
+- npm test: PASSOU, com 57 de 57 testes (15 de acessibilidade e 42 funcionais).
+- O bundle principal foi regenerado a partir das fontes pelo Vite.
+- Inspeção no navegador interno: PASSOU, sem avisos ou erros no console.
+- Catálogos dos dois perfis, capa, páginas 1, 15 e 21, glossário, quatro
+  alternativas, revisão das dez objetivas e primeiro ditado foram conferidos.
+- Os testes temporais confirmaram pelo menos 1 segundo antes de "Atenção" e
+  pelo menos 550 milissegundos adicionais antes da frase principal.
+
 ATUALIZAÇÃO: 11/08/2026 - OITAVA LEITURA
 ========================================
 
@@ -628,3 +802,69 @@ CONFIGURACAO DE QUALIDADE EM 09/06/2026
 - Alice > Ciencias > Origem dos materiais: preservada.
 - Mariana > Matematica > Revisao ampla: preservada.
 - Canvas, localStorage, Vite, Playwright e testes de acessibilidade: preservados.
+
+IMPLEMENTACAO DO AUDIO BILINGUE EM 12/08/2026
+- Criado modulo compartilhado js/audio.js para sintetizar fala local em pt-BR e
+  en-US, selecionar a melhor voz do idioma e impedir sequencias antigas de
+  continuarem depois de uma nova solicitacao.
+- O mecanismo aguarda 1 segundo, executa um aquecimento da voz com volume de 1%,
+  espera 250 ms, pronuncia o aviso audivel inteiro e espera mais 600 ms antes do
+  conteudo. O corte inicial do Chromium/Windows e absorvido pelo aquecimento em
+  vez de atingir "Listen" ou a primeira palavra da atividade.
+- Criados controles Ouvir instrucao, Ouvir em ingles, Ouvir devagar, Repetir e
+  Parar, todos operaveis por teclado e com retorno em regiao aria-live.
+- A opcao Ouvir em ingles usa velocidade 0.62.
+- A opcao Ouvir devagar usa velocidade 0.50 para oferecer uma pronuncia mais
+  lenta e ainda continua, sem soletrar nem separar artificialmente as silabas.
+- Criado registro reutilizavel de unidades de Ingles e configuracao independente
+  por perfil.
+- A primeira unidade integrada e Alice > Ingles > Unit 3: At School, com 27
+  palavras e frases distribuidas entre objetos, pessoas, lugares e comandos.
+- A voz e o texto permanecem locais; o recurso nao usa microfone, API externa,
+  CDN nem servico de nuvem.
+- npm run lint: PASSOU.
+- npm run format:check: PASSOU.
+- npm run build: PASSOU, com os bundles principal e PDF.js atualizados.
+- npm test: PASSOU, com 52 de 52 testes Playwright aprovados.
+
+RECOMPENSA FINAL DE INGLES EM 12/08/2026
+- A figura fornecida foi preservada localmente em
+  assets/personagens/mita-recompensa.png, sem upload ou dependencia externa.
+- A recompensa aparece somente dentro da revisao final, depois que as 10
+  atividades forem corrigidas.
+- Alice e Mariana recebem textos diferentes, escolhidos pelo perfil ativo.
+- A imagem possui texto alternativo e o cartao se reorganiza em uma coluna no
+  celular, sem rolagem horizontal.
+- Foram adicionados testes para comparar integralmente as duas mensagens,
+  confirmar o carregamento da imagem e auditar a acessibilidade movel.
+- npm run lint: PASSOU.
+- npm run format:check: PASSOU.
+- npm test: PASSOU, com 54 de 54 testes Playwright aprovados.
+- Auditoria axe da tela de Ingles em viewport 390 x 844: nenhuma violacao de
+  impacto serious ou critical.
+
+CONTINUACAO INTERATIVA DE INGLES EM 12/08/2026
+- O PDF OCR de 22 paginas e a cartilha antiga de 10 paginas foram conferidos para
+  identificar a progressao da Unidade 3 sem copiar paginas nem imagens do livro.
+- A etapa de audios continua com os 27 itens existentes e preserva o progresso
+  anterior da Alice por normalizacao segura do mesmo armazenamento.
+- As 10 atividades somente sao liberadas depois que os 27 itens forem ouvidos.
+- O conteudo cobre objetos escolares, pessoas, lugares, contagem, traducao,
+  materiais, respeito e regras com should/shouldn't.
+- As respostas corretas ocupam posicoes pseudoaleatorias estaveis e equilibradas
+  entre A, B, C e D para cada perfil.
+- As questoes nao informam acerto ou erro imediatamente. Apos a decima, a revisao
+  mostra acertos, erros, alternativa correta e explicacao breve para cada erro.
+- A mesma unidade passou a estar disponivel para Mariana, com chave de
+  armazenamento propria e nenhum compartilhamento de respostas ou progresso.
+- A situacao Concluida agora exige a finalizacao das atividades, nao apenas os 27
+  audios.
+- Foram adicionados testes funcionais do fluxo completo e auditoria axe em
+  viewport movel para as atividades da Mariana.
+- A inspecao visual em 390 x 844 confirmou alternativas legiveis, revisao final
+  sem rolagem horizontal e margem para o cabecalho fixo.
+- O antigo icone aproximado de eraser, que aparecia como quadrado preto, foi
+  substituido por uma ilustracao SVG original de borracha rosa e azul.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU.
+- npm test: PASSOU, com 52 de 52 testes Playwright aprovados.

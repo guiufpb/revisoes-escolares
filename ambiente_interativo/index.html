@@ -94,6 +94,17 @@
             <strong>Abrir trilha →</strong>
           </button>
           <button
+            class="cartao-materia ingles"
+            id="materia-ingles"
+            type="button"
+            data-materia="ingles"
+          >
+            <img src="../assets/objetos_escolares/blackboard.svg" alt="" />
+            <span>Inglês</span>
+            <small>Unit 3 · At School</small>
+            <strong>Ouvir e praticar →</strong>
+          </button>
+          <button
             class="cartao-materia leitura"
             id="materia-leitura"
             type="button"
@@ -110,6 +121,226 @@
             <small>Mais conteúdos em breve</small>
           </article>
         </div>
+      </section>
+
+      <section
+        class="tela tela-ingles"
+        id="tela-ingles"
+        aria-labelledby="ingles-titulo-unidade"
+        hidden
+      >
+        <nav class="migalhas" aria-label="Navegação da revisão de Inglês">
+          <button type="button" data-voltar-materias>
+            <span id="ingles-nome-perfil">Alice</span>
+          </button>
+          <span aria-hidden="true">›</span>
+          <strong>Inglês</strong>
+        </nav>
+
+        <div class="cabecalho-ingles">
+          <div>
+            <p class="chapeu">Inglês com áudio local</p>
+            <h1 id="ingles-titulo-unidade">English Review – Unit 3</h1>
+            <p class="titulo-at-school" id="ingles-subtitulo-unidade" lang="en-US">At School</p>
+            <p>
+              Escolha uma palavra ou frase. O ambiente pronuncia em inglês e também pode ler as
+              instruções em português.
+            </p>
+          </div>
+          <img src="../assets/objetos_escolares/school.svg" alt="" width="138" height="138" />
+        </div>
+
+        <section class="painel-audio-ingles" aria-labelledby="titulo-controles-audio-ingles">
+          <div class="cabecalho-painel-audio">
+            <div>
+              <p class="etiqueta">Leitor bilíngue</p>
+              <h2 id="titulo-controles-audio-ingles">Ouça e repita no seu ritmo</h2>
+            </div>
+            <p id="ingles-vozes-locais" class="vozes-locais">
+              Preparando as vozes locais do computador...
+            </p>
+          </div>
+          <div
+            class="controles-audio-ingles"
+            role="group"
+            aria-label="Controles de leitura em voz alta"
+          >
+            <button class="botao-secundario" id="ingles-ouvir-instrucao" type="button">
+              🔊 Ouvir instrução
+            </button>
+            <button class="botao-principal" id="ingles-ouvir-normal" type="button">
+              🔊 Ouvir em inglês
+            </button>
+            <button class="botao-secundario" id="ingles-ouvir-devagar" type="button">
+              🐢 Ouvir devagar
+            </button>
+            <button class="botao-secundario" id="ingles-repetir" type="button">🔁 Repetir</button>
+            <button class="botao-parar-audio" id="ingles-parar" type="button">⏹ Parar</button>
+          </div>
+          <div
+            class="status-audio-ingles"
+            id="ingles-status-audio"
+            role="status"
+            aria-live="polite"
+          >
+            Escolha uma palavra ou frase abaixo e use um botão para ouvir.
+          </div>
+        </section>
+
+        <div class="progresso-ingles-cabecalho">
+          <strong id="ingles-progresso-texto">0 palavras e frases ouvidas</strong>
+          <span>O progresso fica salvo somente neste perfil.</span>
+        </div>
+        <div
+          class="barra-progresso-ingles"
+          id="ingles-progresso"
+          role="progressbar"
+          aria-label="Palavras e frases ouvidas"
+          aria-valuemin="0"
+          aria-valuemax="27"
+          aria-valuenow="0"
+        >
+          <span></span>
+        </div>
+
+        <nav class="grupos-ingles" id="ingles-grupos" aria-label="Grupos de vocabulário"></nav>
+
+        <section class="conteudo-grupo-ingles" aria-labelledby="ingles-titulo-grupo">
+          <div class="cabecalho-grupo-ingles">
+            <div>
+              <p class="etiqueta" id="ingles-traducao-grupo">Objetos escolares</p>
+              <h2 id="ingles-titulo-grupo" lang="en-US">School Objects</h2>
+              <p id="ingles-instrucao-grupo"></p>
+            </div>
+            <article class="item-selecionado-ingles" aria-label="Item escolhido para ouvir">
+              <img id="ingles-item-imagem" src="../assets/objetos_escolares/pencil.svg" alt="" />
+              <div>
+                <strong id="ingles-item-ingles" lang="en-US">pencil</strong>
+                <span id="ingles-item-portugues">lápis</span>
+              </div>
+            </article>
+          </div>
+          <div
+            class="grade-palavras-ingles"
+            id="ingles-grade-itens"
+            role="group"
+            aria-label="Palavras e frases para praticar"
+          ></div>
+        </section>
+
+        <section
+          class="continuidade-ingles"
+          id="ingles-continuidade"
+          aria-labelledby="ingles-titulo-continuidade"
+        >
+          <div>
+            <p class="etiqueta">Próxima etapa</p>
+            <h2 id="ingles-titulo-continuidade">Activities · Atividades</h2>
+            <p id="ingles-mensagem-continuidade">
+              Ouça os 27 itens para liberar as atividades baseadas no caderno.
+            </p>
+          </div>
+          <button class="botao-principal" id="ingles-iniciar-atividades" type="button" disabled>
+            🔒 Ouça os 27 itens primeiro
+          </button>
+        </section>
+
+        <section
+          class="painel-atividades-ingles"
+          id="ingles-painel-atividades"
+          aria-labelledby="ingles-titulo-atividade"
+          hidden
+        >
+          <div id="ingles-cartao-questao">
+            <div class="cabecalho-atividade-ingles">
+              <div>
+                <p class="etiqueta" id="ingles-progresso-atividade">Atividade 1 de 10</p>
+                <h2 id="ingles-titulo-atividade">Practice Time!</h2>
+              </div>
+              <button
+                class="botao-secundario"
+                id="ingles-ouvir-pergunta"
+                type="button"
+                aria-label="Ouvir a pergunta atual em inglês"
+              >
+                🔊 Ouvir pergunta
+              </button>
+            </div>
+
+            <div
+              class="imagens-enunciado-ingles"
+              id="ingles-imagens-enunciado"
+              aria-hidden="true"
+            ></div>
+            <h3 id="ingles-pergunta-atividade" lang="en-US"></h3>
+            <p class="traducao-pergunta-ingles" id="ingles-instrucao-atividade"></p>
+            <div
+              class="alternativas-atividade-ingles"
+              id="ingles-alternativas-atividade"
+              role="group"
+              aria-labelledby="ingles-pergunta-atividade"
+            ></div>
+            <p
+              class="status-atividade-ingles"
+              id="ingles-status-atividade"
+              role="status"
+              aria-live="polite"
+            >
+              Escolha uma alternativa. A correção aparecerá somente ao final.
+            </p>
+            <div class="navegacao-atividade-ingles">
+              <button class="botao-secundario" id="ingles-atividade-anterior" type="button">
+                ← Anterior
+              </button>
+              <button class="botao-principal" id="ingles-atividade-proxima" type="button" disabled>
+                Próxima →
+              </button>
+            </div>
+          </div>
+
+          <div class="revisao-atividades-ingles" id="ingles-revisao-atividades" hidden>
+            <div class="resultado-atividades-ingles">
+              <p class="etiqueta">Revisão final</p>
+              <h2 id="ingles-titulo-resultado">Resultado das atividades</h2>
+              <p id="ingles-resumo-resultado"></p>
+            </div>
+            <div id="ingles-lista-revisao"></div>
+            <aside
+              class="surpresa-final-ingles"
+              id="ingles-surpresa-final"
+              aria-labelledby="ingles-titulo-surpresa"
+            >
+              <img
+                src="../assets/personagens/mita-recompensa.png"
+                alt="Mita sorrindo, com as mãos unidas"
+              />
+              <div>
+                <p class="etiqueta">🎁 Mensagem surpresa</p>
+                <h3 id="ingles-titulo-surpresa">
+                  Uma mensagem para <span id="ingles-destinataria-surpresa">Alice</span>
+                </h3>
+                <p id="ingles-texto-surpresa"></p>
+                <p class="assinatura-surpresa-ingles">Beijos.<br /><strong>Mita.</strong></p>
+              </div>
+            </aside>
+            <div class="acoes-resultado-ingles">
+              <button class="botao-secundario" id="ingles-refazer-atividades" type="button">
+                Refazer as 10 atividades
+              </button>
+              <button class="botao-principal" id="ingles-voltar-vocabulario" type="button">
+                Voltar às palavras
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <aside class="privacidade-audio-ingles">
+          <strong>🔒 Áudio local</strong>
+          <span>
+            A pronúncia usa as vozes instaladas neste computador. O ambiente não grava a criança e
+            não envia o conteúdo para a internet.
+          </span>
+        </aside>
       </section>
 
       <section
@@ -441,6 +672,16 @@
             <small>25 etapas interativas</small>
             <strong>Começar ou continuar →</strong>
           </button>
+          <button
+            class="cartao-materia matematica cartao-centenas"
+            type="button"
+            id="abrir-centenas-em-acao"
+          >
+            <img src="../assets/objetos_escolares/colored-pencils.svg" alt="" />
+            <span>Centenas em ação</span>
+            <small>19 etapas com peças, ábaco e trocas</small>
+            <strong>Construir e descobrir →</strong>
+          </button>
           <article class="cartao-materia em-breve">
             <img src="../assets/objetos_escolares/colored-pencils.svg" alt="" />
             <span>Novas trilhas</span>
@@ -484,6 +725,46 @@
             ← Voltar
           </button>
           <button class="botao-principal botao-grande" id="mariana-proxima" type="button">
+            Próxima →
+          </button>
+        </div>
+      </section>
+
+      <section
+        class="tela tela-matematica-cena"
+        id="tela-matematica-cena"
+        aria-labelledby="matematica-cena-titulo"
+        hidden
+      >
+        <nav class="migalhas" aria-label="Navegação da revisão manipulativa de Matemática">
+          <button type="button" data-voltar-materias>Mariana</button>
+          <span aria-hidden="true">›</span>
+          <button type="button" data-voltar-trilha-matematica>Matemática</button>
+          <span aria-hidden="true">›</span>
+          <strong id="matematica-cena-nome-revisao">Centenas em ação</strong>
+        </nav>
+        <div class="painel-progresso-mariana painel-progresso-centenas">
+          <div>
+            <span id="matematica-cena-contador">Etapa 1 de 19</span>
+            <strong id="matematica-cena-pontos">0 conquistas</strong>
+          </div>
+          <div
+            class="barra-progresso-mariana"
+            role="progressbar"
+            aria-label="Progresso de Centenas em ação"
+            aria-valuemin="1"
+            aria-valuemax="19"
+            aria-valuenow="1"
+          >
+            <span id="matematica-cena-barra"></span>
+          </div>
+        </div>
+        <div id="matematica-cena-conteudo"></div>
+        <div class="navegacao-etapas navegacao-centenas">
+          <button class="botao-secundario botao-grande" id="matematica-cena-voltar" type="button">
+            ← Voltar
+          </button>
+          <button class="botao-principal botao-grande" id="matematica-cena-proxima" type="button">
             Próxima →
           </button>
         </div>

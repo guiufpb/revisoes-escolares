@@ -1,0 +1,89 @@
+name: Erro em uma atividade
+description: Relate uma atividade que travou, exibiu algo incorreto ou impediu a correção.
+title: '[Atividade] '
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por ajudar a melhorar as revisões. Não inclua nomes completos, dados pessoais ou informações sensíveis nos textos e nas imagens.
+
+  - type: dropdown
+    id: perfil
+    attributes:
+      label: Perfil
+      options:
+        - Alice
+        - Mariana
+        - Outro ou não identificado
+    validations:
+      required: true
+
+  - type: dropdown
+    id: materia
+    attributes:
+      label: Matéria
+      options:
+        - Matemática
+        - Inglês
+        - Leitura
+        - Ciências
+        - Outra
+    validations:
+      required: true
+
+  - type: input
+    id: revisao-etapa
+    attributes:
+      label: Revisão e etapa
+      description: Informe o nome da revisão e a etapa mostrada na tela.
+      placeholder: 'Ex.: Revisão ampla, etapa 14 de 25'
+    validations:
+      required: true
+
+  - type: textarea
+    id: passos
+    attributes:
+      label: Passos para reproduzir
+      description: Conte, em ordem, o que foi feito antes do problema aparecer.
+      placeholder: |
+        1. Abri a atividade...
+        2. Arrastei...
+        3. Tentei corrigir...
+    validations:
+      required: true
+
+  - type: textarea
+    id: esperado
+    attributes:
+      label: O que deveria acontecer?
+    validations:
+      required: true
+
+  - type: textarea
+    id: ocorrido
+    attributes:
+      label: O que aconteceu?
+    validations:
+      required: true
+
+  - type: input
+    id: navegador
+    attributes:
+      label: Navegador e dispositivo
+      placeholder: 'Ex.: Firefox no computador; Chrome no celular'
+
+  - type: textarea
+    id: imagens
+    attributes:
+      label: Capturas de tela
+      description: Arraste imagens sem dados pessoais para este campo, se elas ajudarem a mostrar o problema.
+
+  - type: checkboxes
+    id: confirmacao
+    attributes:
+      label: Confirmação
+      options:
+        - label: Verifiquei que o relato e as imagens não contêm dados pessoais ou sensíveis.
+          required: true

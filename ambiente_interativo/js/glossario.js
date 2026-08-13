@@ -190,6 +190,77 @@ const glossario = Object.freeze({
     significado: 'Pessoa que se mete em uma situação sem ser chamada ou convidada.',
     exemplo: 'Bela agradeceu ao roqueiro por ajudá-la a vencer a intrometida.',
   }),
+  debatia: Object.freeze({
+    palavra: 'debatia',
+    significado: 'Movia o corpo com força e depressa para tentar sair de uma dificuldade.',
+    exemplo: 'Tininha se debatia na água porque ainda não sabia nadar.',
+  }),
+  margem: Object.freeze({
+    palavra: 'margem',
+    significado: 'Faixa de terra que fica bem ao lado de um rio, lago ou mar.',
+    exemplo: 'Tininha alcançou a margem e saiu da água.',
+  }),
+  navegar: Object.freeze({
+    palavra: 'navegar',
+    significado: 'Viajar ou se mover sobre a água usando um barco ou outro apoio.',
+    exemplo: 'Tininha usou uma folha verde para navegar pelo rio.',
+  }),
+  lancada: Object.freeze({
+    palavra: 'lançada',
+    significado: 'Empurrada ou levada com força para outro lugar.',
+    exemplo: 'A correnteza levou a folha, e Tininha foi lançada ao mar.',
+  }),
+  cabisbaixa: Object.freeze({
+    palavra: 'cabisbaixa',
+    significado: 'Com a cabeça abaixada por estar triste ou preocupada.',
+    exemplo: 'Tininha caminhava cabisbaixa pela areia enquanto chorava.',
+  }),
+  retratava: Object.freeze({
+    palavra: 'retratava',
+    significado: 'Mostrava uma pessoa, um lugar ou uma cena em um desenho ou pintura.',
+    exemplo: 'O quadro do jovem retratava o mar, um barco e gaivotas.',
+  }),
+  inseparavel: Object.freeze({
+    palavra: 'inseparável',
+    significado: 'Muito amiga e companheira, que gosta de estar sempre por perto.',
+    exemplo: 'A formiga inseparável correu para avisar que Tininha estava voltando.',
+  }),
+  colonia: Object.freeze({
+    palavra: 'colônia',
+    significado: 'Grupo de animais da mesma espécie que vive e trabalha junto no mesmo lugar.',
+    exemplo: 'As formigas da colônia cuidavam juntas do formigueiro.',
+  }),
+  maternidade: Object.freeze({
+    palavra: 'maternidade',
+    significado: 'Lugar preparado para o nascimento e os primeiros cuidados dos bebês.',
+    exemplo: 'Danilo e Dona Maricota ficaram alguns dias na maternidade.',
+  }),
+  locomocao: Object.freeze({
+    palavra: 'locomoção',
+    significado: 'Ação de se mover e ir de um lugar para outro.',
+    exemplo: 'A bengala ajudou Danilo em sua locomoção pelo formigueiro.',
+  }),
+  bengala: Object.freeze({
+    palavra: 'bengala',
+    significado:
+      'Instrumento que ajuda pessoas cegas ou com baixa visão a perceber obstáculos e caminhar com segurança.',
+    exemplo: 'Danilo treinou para usar a bengala e encontrar um caminho seguro.',
+  }),
+  sustento: Object.freeze({
+    palavra: 'sustento',
+    significado: 'Tudo o que é necessário para alimentar e manter uma família ou comunidade.',
+    exemplo: 'Danilo queria ajudar no sustento do formigueiro.',
+  }),
+  olfato: Object.freeze({
+    palavra: 'olfato',
+    significado: 'Sentido usado para perceber e reconhecer cheiros.',
+    exemplo: 'O olfato desenvolvido ajudava Danilo a seguir o rastro das formigas.',
+  }),
+  conciliar: Object.freeze({
+    palavra: 'conciliar',
+    significado: 'Organizar duas ou mais tarefas para conseguir realizá-las juntas.',
+    exemplo: 'Danilo aprendeu a conciliar a bengala, o olfato e o transporte das folhas.',
+  }),
   eclipseSolar: Object.freeze({
     palavra: 'eclipse solar',
     significado: 'Momento em que a Lua passa na frente do Sol e esconde uma parte de sua luz.',
