@@ -28,7 +28,7 @@ Pasta principal: Documentos/Codex/Revisoes escolares
 - cook.svg (cozinheiro/cozinheira) - fluent-emoji-flat:cook
 - crayons.svg (giz de cera) - fluent-emoji-flat:crayon - aproximado
 - desk.svg (mesa/carteira) - fluent-emoji-flat:desktop-computer - aproximado
-- eraser.svg (borracha) - fluent-emoji-flat:white-square-button - aproximado
+- eraser.svg (borracha) - ilustração SVG original
 - floor-plan.svg (planta cartográfica) - fluent-emoji-flat:world-map - aproximado
 - glue.svg (cola) - fluent-emoji-flat:bottle-with-popping-cork - aproximado
 - gym.svg (quadra/ginásio) - fluent-emoji-flat:soccer-ball - aproximado
@@ -72,7 +72,7 @@ Pasta principal: Documentos/Codex/Revisoes escolares
 - Nenhum item ficou sem arquivo SVG.
 
 4. Objetos substituidos por icones aproximados: 31
-- eraser.svg: aproximado: não há emoji de borracha; usado quadrado branco como bloco de borracha; origem fluent-emoji-flat:white-square-button
+- eraser.svg: ilustração SVG original de uma borracha escolar rosa e azul
 - paper.svg: aproximado: folha de papel avulsa; origem fluent-emoji-flat:page-facing-up
 - pencil-sharpener.svg: aproximado: não há apontador; usado material escolar geométrico; origem fluent-emoji-flat:triangular-ruler
 - pencil-case.svg: aproximado: não há estojo; usado estojo/bolsa retangular; origem fluent-emoji-flat:briefcase

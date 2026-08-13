@@ -9,6 +9,9 @@ const CHAVE_SOL_ALICE = 'revisoesEscolares.alice.leitura.solTirouFerias.v1';
 const CHAVE_FORMIGA_ALICE = 'revisoesEscolares.alice.leitura.formigaQueriaCantar.v1';
 const CHAVE_CASTELO_ALICE = 'revisoesEscolares.alice.leitura.casteloBemAssombrado.v1';
 const CHAVE_BELA_ALICE = 'revisoesEscolares.alice.leitura.belaDesadormecida.v1';
+const CHAVE_JOANINHA_ALICE = 'revisoesEscolares.alice.leitura.joaninhaPerdeuPintinhas.v1';
+const CHAVE_FORMIGA_ESPECIAL_ALICE = 'revisoesEscolares.alice.leitura.umaFormigaEspecial.v1';
+const CHAVE_INGLES_MARIANA = 'revisoesEscolares.mariana.ingles.atSchoolUnidade3.v1';
 
 async function verificarAcessibilidade(page, nomeDaTela) {
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -59,6 +62,72 @@ test('revisão da Alice e mensagens de estado', async ({ page }) => {
   await page.getByRole('button', { name: /Madeira de árvores/ }).click();
   await page.getByRole('button', { name: 'Conferir resposta' }).click();
   await expect(page.getByRole('status')).not.toBeEmpty();
+});
+
+test('Inglês da Alice com controles de áudio em largura móvel', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.getByRole('button', { name: /Alice/ }).click();
+  await page.getByRole('button', { name: /Inglês/ }).click();
+  await expect(page.getByRole('heading', { name: 'English Review – Unit 3' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '🔊 Ouvir instrução' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '🔊 Ouvir em inglês' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '🐢 Ouvir devagar' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '🔁 Repetir' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '⏹ Parar' })).toBeVisible();
+  await verificarAcessibilidade(page, 'Inglês bilíngue da Alice');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+});
+
+test('atividades de Inglês da Mariana em largura móvel', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.evaluate((chave) => {
+    const unidade = window.RegistroIngles.obter('at-school-unidade-3');
+    localStorage.setItem(
+      chave,
+      JSON.stringify({
+        itensOuvidos: unidade.grupos.flatMap((grupo) => grupo.itens.map((item) => item.id)),
+        iniciado: true,
+      })
+    );
+  }, CHAVE_INGLES_MARIANA);
+  await page.reload();
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await page.getByRole('button', { name: /Inglês/ }).click();
+  await page.getByRole('button', { name: 'Começar as 10 atividades →' }).click();
+  await expect(page.getByText('Atividade 1 de 10')).toBeVisible();
+  await expect(page.locator('[data-alternativa-atividade-ingles]')).toHaveCount(4);
+  await verificarAcessibilidade(page, 'Atividades de Inglês da Mariana');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+});
+
+test('recompensa final de Inglês em largura móvel', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.evaluate((chave) => {
+    const unidade = window.RegistroIngles.obter('at-school-unidade-3');
+    localStorage.setItem(
+      chave,
+      JSON.stringify({
+        itensOuvidos: unidade.grupos.flatMap((grupo) => grupo.itens.map((item) => item.id)),
+        respostasAtividades: Object.fromEntries(
+          unidade.atividades.map((questao) => [questao.id, questao.respostaCorreta])
+        ),
+        iniciado: true,
+        atividadeIniciada: true,
+        atividadeFinalizada: true,
+      })
+    );
+  }, CHAVE_INGLES_MARIANA);
+  await page.reload();
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await page.getByRole('button', { name: /Inglês/ }).click();
+  await page.getByRole('button', { name: 'Ver resultado das atividades →' }).click();
+  await expect(page.locator('#ingles-surpresa-final')).toBeVisible();
+  await expect(page.locator('#ingles-surpresa-final img')).toHaveAttribute(
+    'alt',
+    'Mita sorrindo, com as mãos unidas'
+  );
+  await verificarAcessibilidade(page, 'Recompensa final de Inglês');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 
 test('revisão da Mariana e canvas em largura móvel', async ({ page }) => {
@@ -307,6 +376,98 @@ test('glossário e ditado de A Bela Desadormecida em largura móvel', async ({ p
   await expect(page.getByText('Ditado 1 de 3')).toBeVisible();
   await expect(page.getByRole('button', { name: '🔊 Ouvir ditado' })).toBeVisible();
   await verificarAcessibilidade(page, 'Ditado da Bela Desadormecida');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+});
+
+test('glossário e ditado de A Joaninha que Perdeu as Pintinhas em largura móvel', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.evaluate((chave) => {
+    localStorage.setItem(
+      chave,
+      JSON.stringify({
+        paginaAtual: 15,
+        maiorPaginaAlcancada: 21,
+        paginasVisitadas: [15, 21],
+        leituraIniciada: true,
+      })
+    );
+  }, CHAVE_JOANINHA_ALICE);
+  await page.reload();
+  await page.getByRole('button', { name: /Alice/ }).click();
+  await page.getByRole('button', { name: /Leitura/ }).click();
+  await page
+    .locator('[data-livro-id="a-joaninha-que-perdeu-as-pintinhas"]')
+    .getByRole('button', { name: /Continuar da página 15/ })
+    .click();
+  await expect(page.locator('#estado-carregamento-pdf')).toBeHidden();
+  await page.getByRole('button', { name: /Palavras desta página/ }).click();
+  await expect(page.getByRole('dialog').getByRole('heading', { name: 'cabisbaixa' })).toBeVisible();
+  await verificarAcessibilidade(page, 'Glossário da Joaninha');
+  await page.getByRole('dialog').getByRole('button', { name: 'Fechar explicação' }).click();
+  await page.locator('#ir-pagina-leitura').fill('21');
+  await page.getByRole('button', { name: 'Ir', exact: true }).click();
+  await page.getByRole('button', { name: 'Terminei a leitura - responder perguntas' }).click();
+  for (let indice = 1; indice <= 10; indice += 1) {
+    await clicarAlternativaCorreta(page, 'a-joaninha-que-perdeu-as-pintinhas', indice - 1);
+    await page
+      .getByRole('button', {
+        name: indice === 10 ? 'Finalizar perguntas e ver revisão' : 'Próxima pergunta',
+      })
+      .click();
+  }
+  await expect(page.getByRole('heading', { name: 'Vamos revisar suas respostas!' })).toBeVisible();
+  await verificarAcessibilidade(page, 'Revisão conjunta da Joaninha');
+  await page.getByRole('button', { name: 'Continuar para os ditados' }).click();
+  await expect(page.getByText('Ditado 1 de 3')).toBeVisible();
+  await expect(page.getByRole('button', { name: '🔊 Ouvir ditado' })).toBeVisible();
+  await verificarAcessibilidade(page, 'Ditado da Joaninha');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+});
+
+test('glossário e ditado de Uma Formiga Especial em largura móvel', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.evaluate((chave) => {
+    localStorage.setItem(
+      chave,
+      JSON.stringify({
+        paginaAtual: 20,
+        maiorPaginaAlcancada: 31,
+        paginasVisitadas: [20, 31],
+        leituraIniciada: true,
+      })
+    );
+  }, CHAVE_FORMIGA_ESPECIAL_ALICE);
+  await page.reload();
+  await page.getByRole('button', { name: /Alice/ }).click();
+  await page.getByRole('button', { name: /Leitura/ }).click();
+  await page
+    .locator('[data-livro-id="uma-formiga-especial"]')
+    .getByRole('button', { name: /Continuar da página 20/ })
+    .click();
+  await expect(page.locator('#estado-carregamento-pdf')).toBeHidden();
+  await page.getByRole('button', { name: /Palavras desta página/ }).click();
+  await expect(page.getByRole('dialog').getByRole('heading', { name: 'olfato' })).toBeVisible();
+  await verificarAcessibilidade(page, 'Glossário de Uma Formiga Especial');
+  await page.getByRole('dialog').getByRole('button', { name: 'Fechar explicação' }).click();
+  await page.locator('#ir-pagina-leitura').fill('31');
+  await page.getByRole('button', { name: 'Ir', exact: true }).click();
+  await page.getByRole('button', { name: 'Terminei a leitura - responder perguntas' }).click();
+  for (let indice = 1; indice <= 10; indice += 1) {
+    await clicarAlternativaCorreta(page, 'uma-formiga-especial', indice - 1);
+    await page
+      .getByRole('button', {
+        name: indice === 10 ? 'Finalizar perguntas e ver revisão' : 'Próxima pergunta',
+      })
+      .click();
+  }
+  await expect(page.getByRole('heading', { name: 'Vamos revisar suas respostas!' })).toBeVisible();
+  await verificarAcessibilidade(page, 'Revisão conjunta de Uma Formiga Especial');
+  await page.getByRole('button', { name: 'Continuar para os ditados' }).click();
+  await expect(page.getByText('Ditado 1 de 3')).toBeVisible();
+  await expect(page.getByRole('button', { name: '🔊 Ouvir ditado' })).toBeVisible();
+  await verificarAcessibilidade(page, 'Ditado de Uma Formiga Especial');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 

@@ -2,6 +2,11 @@
   'use strict';
 
   var ID_ALICE = 'alice-ciencias-origem-materiais';
+  var ID_CENTENAS = 'mariana-matematica-centenas-em-acao';
+  var IDS_INGLES = {
+    alice: 'alice-ingles-at-school-unidade-3',
+    mariana: 'mariana-ingles-at-school-unidade-3',
+  };
   var telas;
   var alunoAtual = null;
   var opcaoSelecionada = null;
@@ -109,6 +114,12 @@
   }
 
   function mostrarTela(id) {
+    if (telaAtualId === 'ingles' && id !== 'ingles' && window.InglesRevisoes) {
+      window.InglesRevisoes.pararAudio();
+    }
+    if (telaAtualId === 'matematicaCena' && id !== 'matematicaCena') {
+      window.MatematicaRevisoes.suspender();
+    }
     telaAtualId = id;
     gerenciarDesenhoAlice(id === 'revisao');
     Object.keys(telas).forEach(function (chave) {
@@ -121,7 +132,11 @@
     document.getElementById('limpar-progresso').textContent =
       id === 'bibliotecaLeitura' || id === 'visualizadorLeitura' || id === 'questionarioLeitura'
         ? 'Limpar progresso desta leitura'
-        : 'Limpar progresso';
+        : id === 'ingles'
+          ? 'Limpar progresso de Inglês'
+          : id === 'matematicaCena'
+            ? 'Limpar esta revisão de Matemática'
+            : 'Limpar progresso';
     if (id === 'marianaRevisao') {
       window.requestAnimationFrame(window.DesenhoRevisoes.ajustarTodos);
     }
@@ -182,7 +197,16 @@
   function atualizarCartoes() {
     window.RegistroRevisoes.validar().forEach(function (revisao) {
       if (revisao.exibirEstadoNoCartao === false) return;
-      atualizarEstadoCartao(revisao, revisao.id === ID_ALICE ? situacaoAlice() : situacaoMariana());
+      var ehIngles = revisao.id === IDS_INGLES[revisao.aluno];
+      if (ehIngles && (!alunoAtual || revisao.aluno !== alunoAtual)) return;
+      var situacao;
+      if (revisao.id === ID_ALICE) situacao = situacaoAlice();
+      else if (revisao.id === ID_CENTENAS) {
+        situacao = window.MatematicaRevisoes.situacao(ID_CENTENAS);
+      } else if (ehIngles && window.InglesRevisoes) {
+        situacao = window.InglesRevisoes.obterSituacao(revisao.aluno);
+      } else situacao = situacaoMariana();
+      atualizarEstadoCartao(revisao, situacao);
     });
   }
 
@@ -202,6 +226,25 @@
         estadoLeitura.paginaAtual +
         '/' +
         livroLeitura.totalPaginas;
+    } else if (telaAtualId === 'ingles' && window.InglesRevisoes) {
+      resumo.textContent =
+        (alunoAtual === 'alice' ? 'Alice' : 'Mariana') +
+        ' · Inglês: ' +
+        (window.InglesRevisoes.obterResumo(alunoAtual) || 'vamos ouvir!');
+    } else if (telaAtualId === 'matematicaCena') {
+      var ativa = window.MatematicaRevisoes.obterAtiva();
+      var estadoCentenas = ativa && window.MatematicaRevisoes.obterEstado(ativa.id);
+      resumo.textContent = estadoCentenas
+        ? 'Mariana · ' +
+          ativa.titulo +
+          ': etapa ' +
+          (estadoCentenas.etapaAtual + 1) +
+          '/' +
+          ativa.etapas.length +
+          ' · ' +
+          estadoCentenas.pontos +
+          ' conquistas'
+        : 'Mariana: vamos construir!';
     } else if (alunoAtual === 'mariana' && window.RevisaoMatematicaMariana) {
       var estadoMariana = window.RevisaoMatematicaMariana.obterEstado();
       resumo.textContent =
@@ -228,6 +271,7 @@
     document.getElementById('saudacao-aluno').textContent =
       aluno === 'alice' ? 'Olá, Alice!' : 'Olá, Mariana!';
     document.getElementById('materia-ciencias').hidden = aluno !== 'alice';
+    document.getElementById('materia-ingles').hidden = false;
     document.getElementById('materia-matematica').hidden = aluno !== 'mariana';
     document.getElementById('materia-leitura').hidden = false;
     document.getElementById('limpar-progresso').hidden = false;
@@ -320,6 +364,10 @@
     document
       .querySelector('[data-materia="ciencias"]')
       .addEventListener('click', abrirRevisaoAlice);
+    document.querySelector('[data-materia="ingles"]').addEventListener('click', function () {
+      window.InglesRevisoes.abrir(alunoAtual);
+      atualizarResumo();
+    });
     document.querySelector('[data-materia="matematica"]').addEventListener('click', function () {
       mostrarTela('trilhaMatematica');
     });
@@ -332,16 +380,20 @@
       mostrarTela('marianaRevisao');
       atualizarResumo();
     });
+    document.getElementById('abrir-centenas-em-acao').addEventListener('click', function () {
+      window.MatematicaRevisoes.abrir(ID_CENTENAS);
+      atualizarResumo();
+    });
     document.querySelectorAll('[data-voltar-materias]').forEach(function (botao) {
       botao.addEventListener('click', function () {
         mostrarTela('trilhas');
       });
     });
-    document
-      .querySelector('[data-voltar-trilha-matematica]')
-      .addEventListener('click', function () {
+    document.querySelectorAll('[data-voltar-trilha-matematica]').forEach(function (botao) {
+      botao.addEventListener('click', function () {
         mostrarTela('trilhaMatematica');
       });
+    });
     document.getElementById('corrigir-atividade').addEventListener('click', corrigirAtividade);
     document.getElementById('voltar-trilhas').addEventListener('click', function () {
       mostrarTela('trilhas');
@@ -359,6 +411,16 @@
         telaAtualId === 'questionarioLeitura'
       ) {
         if (window.LeituraRevisoes.limparProgresso()) mostrarTela('bibliotecaLeitura');
+        atualizarResumo();
+        return;
+      }
+      if (telaAtualId === 'ingles') {
+        if (window.InglesRevisoes.limparProgresso()) atualizarResumo();
+        return;
+      }
+      if (telaAtualId === 'matematicaCena') {
+        var revisaoAtiva = window.MatematicaRevisoes.obterAtiva();
+        if (revisaoAtiva) window.MatematicaRevisoes.limpar(revisaoAtiva.id, true);
         atualizarResumo();
         return;
       }
@@ -397,8 +459,10 @@
         inicial: document.getElementById('tela-inicial'),
         trilhas: document.getElementById('tela-trilhas'),
         revisao: document.getElementById('tela-revisao'),
+        ingles: document.getElementById('tela-ingles'),
         trilhaMatematica: document.getElementById('tela-trilha-matematica'),
         marianaRevisao: document.getElementById('tela-mariana-revisao'),
+        matematicaCena: document.getElementById('tela-matematica-cena'),
         bibliotecaLeitura: document.getElementById('tela-biblioteca-leitura'),
         visualizadorLeitura: document.getElementById('tela-visualizador-leitura'),
         questionarioLeitura: document.getElementById('tela-questionario-leitura'),
@@ -413,6 +477,8 @@
       window.RegistroRevisoes.validar();
       montarAtividade();
       window.LeituraRevisoes.inicializar({ mostrarTela: mostrarTela });
+      window.InglesRevisoes.inicializar({ mostrarTela: mostrarTela });
+      window.MatematicaRevisoes.inicializar({ mostrarTela: mostrarTela });
       registrarEventos();
       atualizarResumo();
       mostrarTela('inicial');

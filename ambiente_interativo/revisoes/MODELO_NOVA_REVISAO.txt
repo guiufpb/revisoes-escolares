@@ -1,0 +1,96 @@
+MODELO DE NOVA REVISAO COM CENA MATEMATICA
+==========================================
+
+1. Crie apenas o arquivo de conteúdo em revisoes/<perfil>/.
+2. Use uma ID e uma chave localStorage exclusivas e versionadas.
+3. Cadastre o arquivo em js/app.entry.js e uma entrada em js/registro-revisoes.js.
+4. Não duplique js/matematica.js, js/matematica-cena.js ou
+   js/matematica-manipulaveis.js.
+
+Exemplo mínimo declarativo:
+
+window.MatematicaRevisoes.registrar({
+  id: 'perfil-matematica-dezenas-divertidas',
+  aluno: 'perfil',
+  titulo: 'Dezenas divertidas',
+  chaveArmazenamento: 'revisoesEscolares.perfil.matematica.dezenasDivertidas.v1',
+  etapas: [
+    {
+      id: 'inicio',
+      tipo: 'apresentacao',
+      titulo: 'Dezenas divertidas',
+      texto: 'Vamos construir números com peças.',
+    },
+    {
+      id: 'monte-14',
+      tipo: 'cena',
+      titulo: 'Uma dezena e quatro unidades',
+      objetivo: 'Monte 14 no quadro de ordens.',
+      cena: {
+        tipo: 'quadro',
+        titulo: 'Monte 14',
+        instrucao: 'Coloque 1 dezena e 4 unidades.',
+        ordens: 'D-U',
+        valorAlvo: 14,
+        representacaoAlvo: { D: 1, U: 4 },
+        limites: { D: 2, U: 9 },
+        trocas: false,
+        nivelAjuda: 'ampliada',
+        dicas: ['A barra vale 10.', 'Depois coloque 4 cubinhos.'],
+      },
+    },
+    {
+      id: 'fim',
+      tipo: 'final',
+      titulo: 'Você conseguiu!',
+      texto: 'Sua construção ficou pronta.',
+    },
+  ],
+});
+
+Tipos disponíveis em cena.tipo:
+- material: cubinho, barra, placa e cubo de milhar, com trocas explícitas;
+- quadro: ordens U, D-U, C-D-U ou M-C-D-U;
+- abaco: montar ou descobrir um número;
+- composicao: cartões de parcelas, número e palavras;
+- sequencia: cartões para espaços em sequências crescentes ou decrescentes;
+- reta: marcadores grandes e saltos configuráveis;
+- dinheiro: fichas fictícias, combinações e trocas equivalentes;
+- grafico: tabela acessível e barras ajustáveis;
+- mini: pequeno conjunto de respostas numéricas.
+
+A Cena Matemática expõe montar, obterEstado, restaurar, reiniciar, validar,
+adicionar, remover, trocar e destruir. O estado retornado é pequeno, serializável
+e normalizado; o controlador da revisão salva esse estado. Não salve DOM, eventos,
+funções ou HTML no localStorage.
+
+Para conteúdo de 1º ano, use somente U ou D-U, limites menores, instruções curtas,
+trocas opcionais e nivelAjuda: 'ampliada'. A infraestrutura aceita esse nível,
+mas um novo cartão só deve ser cadastrado quando houver uma revisão real completa.
+
+CONTRATO DE INTERACAO E TESTES
+==============================
+
+Toda atividade manipulativa deve permitir o ciclo completo:
+errar -> conferir -> corrigir -> conferir novamente -> avancar -> voltar -> recarregar.
+
+Antes de cadastrar uma nova atividade, confirme:
+- toda inclusao pode ser desfeita, retirada ou reposicionada;
+- uma resposta errada nao bloqueia os controles nem obriga a avancar;
+- arrastar possui alternativa por clique/toque e, quando aplicavel, por teclado;
+- o estado salvo e pequeno e corresponde exatamente ao que aparece na tela;
+- ao voltar ou recarregar, pecas e cartoes reaparecem nas mesmas posicoes;
+- restaurar ou reabrir nao duplica eventos nem acoes;
+- limpar afeta somente a cena atual;
+- mensagens explicam como corrigir uma tentativa;
+- ordens incompatíveis sao recusadas sem alterar o estado.
+
+O teste Playwright da nova atividade deve cobrir, no minimo:
+1. resposta correta na primeira tentativa;
+2. resposta errada e nova tentativa;
+3. retirada ou reposicionamento do item errado;
+4. conclusao correta depois do erro;
+5. avancar e voltar com a tentativa preservada;
+6. recarregar com tentativa incompleta e com resposta concluida;
+7. interacao por clique e teclado, alem do arrastar quando existir;
+8. viewport movel, acessibilidade e ausencia de erros no console.
