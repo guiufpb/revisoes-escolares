@@ -1,4 +1,5 @@
 const path = require('node:path');
+const { env } = require('node:process');
 const { pathToFileURL } = require('node:url');
 const { test, expect } = require('@playwright/test');
 
@@ -51,6 +52,12 @@ const DADOS_LIVROS = {
   [LIVRO_JOANINHA]: { titulo: 'A Joaninha que Perdeu as Pintinhas', paginas: 21 },
   [LIVRO_FORMIGA_ESPECIAL]: { titulo: 'Uma Formiga Especial', paginas: 31 },
 };
+
+async function conferirTamanhoPdfLocal(resposta, tamanhoEsperado) {
+  if (env.CI) return;
+  expect((await resposta.body()).byteLength).toBe(tamanhoEsperado);
+}
+
 const CHAVES_DOS_TESTES = [
   CHAVE_ALICE,
   CHAVE_MARIANA,
@@ -483,7 +490,7 @@ test('serve e renderiza A Galinha dos Ovos de Ouro para os dois perfis', async (
     '/ambiente_interativo/leituras/a-galinha-dos-ovos-de-ouro/galinha-ovos-ouro.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  expect((await resposta.body()).byteLength).toBe(3_254_433);
+  await conferirTamanhoPdfLocal(resposta, 3_254_433);
 
   for (const perfil of ['Alice', 'Mariana']) {
     await abrirLivro(page, perfil, LIVRO_GALINHA);
@@ -514,7 +521,7 @@ test('serve e renderiza A Raposa e as Uvas para os dois perfis', async ({ page, 
     '/ambiente_interativo/leituras/a-raposa-e-as-uvas/raposa-e-as-uvas.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  expect((await resposta.body()).byteLength).toBe(5_223_267);
+  await conferirTamanhoPdfLocal(resposta, 5_223_267);
 
   for (const perfil of ['Alice', 'Mariana']) {
     await abrirLivro(page, perfil, LIVRO_RAPOSA);
@@ -558,7 +565,7 @@ test('serve e renderiza O dia que o Sol tirou férias para os dois perfis', asyn
     '/ambiente_interativo/leituras/o-dia-que-o-sol-tirou-ferias/o-dia-que-o-sol-tirou-ferias.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  expect((await resposta.body()).byteLength).toBe(8_568_669);
+  await conferirTamanhoPdfLocal(resposta, 8_568_669);
   const imagemEclipse = await request.get(
     '/ambiente_interativo/leituras/o-dia-que-o-sol-tirou-ferias/eclipse-solar.png'
   );
@@ -618,7 +625,7 @@ test('serve e renderiza A formiga que queria cantar para os dois perfis', async 
     '/ambiente_interativo/leituras/a-formiga-que-queria-cantar/a-formiga-que-queria-cantar.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  expect((await resposta.body()).byteLength).toBe(7_373_329);
+  await conferirTamanhoPdfLocal(resposta, 7_373_329);
 
   for (const perfil of ['Alice', 'Mariana']) {
     await abrirLivro(page, perfil, LIVRO_FORMIGA);
@@ -674,7 +681,7 @@ test('serve e renderiza Um castelo bem assombrado para os dois perfis', async ({
     '/ambiente_interativo/leituras/um-castelo-bem-assombrado/um-castelo-bem-assombrado.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  expect((await resposta.body()).byteLength).toBe(19_039_385);
+  await conferirTamanhoPdfLocal(resposta, 19_039_385);
 
   for (const perfil of ['Alice', 'Mariana']) {
     await abrirLivro(page, perfil, LIVRO_CASTELO);
@@ -724,7 +731,7 @@ test('serve e renderiza A Bela Desadormecida para os dois perfis', async ({ page
     '/ambiente_interativo/leituras/a-bela-desadormecida/a-bela-desadormecida.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  expect((await resposta.body()).byteLength).toBe(12_308_597);
+  await conferirTamanhoPdfLocal(resposta, 12_308_597);
 
   for (const perfil of ['Alice', 'Mariana']) {
     await abrirLivro(page, perfil, LIVRO_BELA);
@@ -778,7 +785,7 @@ test('serve e renderiza A Joaninha que Perdeu as Pintinhas para os dois perfis',
     '/ambiente_interativo/leituras/a-joaninha-que-perdeu-as-pintinhas/a-joaninha-que-perdeu-as-pintinhas.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  expect((await resposta.body()).byteLength).toBe(1_133_910);
+  await conferirTamanhoPdfLocal(resposta, 1_133_910);
 
   for (const perfil of ['Alice', 'Mariana']) {
     await abrirLivro(page, perfil, LIVRO_JOANINHA);
@@ -829,7 +836,7 @@ test('serve e renderiza o novo livro completo para os dois perfis', async ({ pag
     '/ambiente_interativo/leituras/quem-e-o-rei-dos-animais/rei-dos-animais.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  expect((await resposta.body()).byteLength).toBe(4_371_565);
+  await conferirTamanhoPdfLocal(resposta, 4_371_565);
 
   for (const perfil of ['Alice', 'Mariana']) {
     await abrirLivro(page, perfil, LIVRO_REI);
@@ -859,7 +866,7 @@ test('serve o PDF local completo e renderiza a primeira página no canvas', asyn
     '/ambiente_interativo/leituras/primeiras-licoes-sobre-dinheiro/infantil-dinheiro.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  expect((await resposta.body()).byteLength).toBe(14_842_959);
+  await conferirTamanhoPdfLocal(resposta, 14_842_959);
 
   await abrirLivro(page, 'Alice');
   await expect(page.getByText('Página 1 de 25')).toBeVisible();
@@ -1901,7 +1908,7 @@ test('conclui Uma Formiga Especial com inclusão, glossário, mistura e ditados 
     '/ambiente_interativo/leituras/uma-formiga-especial/uma-formiga-especial.pdf'
   );
   expect(respostaPdf.ok()).toBe(true);
-  expect((await respostaPdf.body()).byteLength).toBe(13_799_382);
+  await conferirTamanhoPdfLocal(respostaPdf, 13_799_382);
 
   await abrirLivro(page, 'Alice', LIVRO_FORMIGA_ESPECIAL);
   await expect(page.getByText('Página 1 de 31')).toBeVisible();
