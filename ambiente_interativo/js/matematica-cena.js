@@ -798,6 +798,11 @@
       }
       interacao.suprimirClique = foiArrasto;
       interacao.arrasto = null;
+      if (foiArrasto) {
+        window.setTimeout(function () {
+          interacao.suprimirClique = false;
+        }, 0);
+      }
     }
 
     function obterEstado() {
