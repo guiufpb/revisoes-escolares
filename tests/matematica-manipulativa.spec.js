@@ -5,7 +5,8 @@ const AxeBuilder = require('@axe-core/playwright').default;
 
 const CAMINHO = '/ambiente_interativo/index.html';
 const ID = 'mariana-matematica-centenas-em-acao';
-const CHAVE = 'revisoesEscolares.mariana.matematica.centenasEmAcao.v1';
+const CHAVE = 'revisoesEscolares.mariana.matematica.centenasEmAcao.v2';
+const CHAVE_ANTIGA = 'revisoesEscolares.mariana.matematica.centenasEmAcao.v1';
 const CHAVE_AMPLA = 'revisoesEscolares.mariana.matematica.revisaoAmpla';
 const CHAVE_ALICE = 'revisoesEscolares.alice.ciencias.origemMateriais';
 
@@ -71,19 +72,154 @@ test('mantém a revisão ampla separada e mostra a nova somente para Mariana', a
   expect(await page.evaluate((chave) => localStorage.getItem(chave), CHAVE)).toBeTruthy();
 });
 
-test('renderiza e navega por todas as 19 etapas até o encerramento', async ({ page }) => {
+test('inicia a nova rodada sem apagar o progresso da rodada anterior', async ({ page }) => {
+  const progressoAnterior = JSON.stringify({ versao: 1, etapaAtual: 18, finalizada: true });
+  await page.evaluate(({ chave, valor }) => localStorage.setItem(chave, valor), {
+    chave: CHAVE_ANTIGA,
+    valor: progressoAnterior,
+  });
+  await page.reload();
+  await abrirHubMariana(page);
+  await expect(page.getByRole('button', { name: /Centenas em ação/ })).toContainText(
+    '20 novas etapas'
+  );
+  await expect(page.getByRole('button', { name: /Centenas em ação/ })).not.toContainText(
+    'Concluída'
+  );
+  expect(await page.evaluate((chave) => localStorage.getItem(chave), CHAVE_ANTIGA)).toBe(
+    progressoAnterior
+  );
+  expect(await page.evaluate((chave) => localStorage.getItem(chave), CHAVE)).toBeNull();
+});
+
+test('cadastra 20 etapas novas com três ábacos e as três trocas de ordens', async ({ page }) => {
+  const resumo = await page.evaluate((id) => {
+    const revisao = window.MatematicaRevisoes.listar().find((item) => item.id === id);
+    return {
+      total: revisao.etapas.length,
+      ids: revisao.etapas.map((etapa) => etapa.id),
+      abacos: revisao.etapas.filter((etapa) => etapa.cena && etapa.cena.tipo === 'abaco').length,
+      trocas: revisao.etapas
+        .filter((etapa) => etapa.cena && etapa.cena.trocas)
+        .map((etapa) => ({ ordens: etapa.cena.ordens, inicial: etapa.cena.inicial })),
+    };
+  }, ID);
+  expect(resumo.total).toBe(20);
+  expect(new Set(resumo.ids).size).toBe(20);
+  expect(resumo.abacos).toBe(3);
+  expect(resumo.trocas).toEqual([
+    { ordens: 'D-U', inicial: { U: 10 } },
+    { ordens: 'C-D-U', inicial: { D: 10 } },
+    { ordens: 'M-C-D-U', inicial: { C: 10 } },
+  ]);
+});
+
+test('permite errar, retirar, corrigir, voltar e recarregar na nova rodada', async ({ page }) => {
   await abrirCentenas(page);
   await page.getByRole('button', { name: 'Começar a aventura' }).click();
-  await expect(page.getByText('Etapa 2 de 19')).toBeVisible();
 
-  for (let indice = 1; indice < 19; indice += 1) {
+  await page.locator('[data-math-tool="D"]').click();
+  await page.locator('[data-math-drop-click="D"]').click({ position: { x: 8, y: 8 } });
+  await page.locator('[data-math-check]').click();
+  await expect(page.locator('[data-math-status]')).toContainText('Observe quantas dezenas');
+
+  await page
+    .locator('[data-math-piece][data-order="D"]')
+    .dragTo(page.locator('[data-math-remove-zone]'));
+  await expect(page.locator('[data-math-piece][data-order="D"]')).toHaveCount(0);
+  await page.locator('[data-math-tool="C"]').focus();
+  await page.keyboard.press('Enter');
+  await page.locator('[data-math-place="C"]').focus();
+  await page.keyboard.press('Space');
+  await expect(page.locator('[data-math-piece][data-order="C"]')).toHaveCount(1);
+  await expect(page.locator('[data-math-summary]')).toContainText('100');
+  await page.locator('[data-math-check]').click();
+  await expect(page.locator('[data-math-status]')).toContainText('Muito bem');
+  await expect
+    .poll(() =>
+      page.evaluate(
+        (chave) => JSON.parse(localStorage.getItem(chave)).cenas['placa-centena'].quantidades.C,
+        CHAVE
+      )
+    )
+    .toBe(1);
+
+  await page.locator('#matematica-cena-proxima').click();
+  await expect(page.getByText('Etapa 3 de 20')).toBeVisible();
+  await page.locator('#matematica-cena-voltar').click();
+  await expect(page.getByText('Etapa 2 de 20')).toBeVisible();
+  await expect(page.locator('[data-order="C"]')).toHaveCount(1);
+  await expect(page.locator('[data-order="D"]')).toHaveCount(0);
+  await page.reload();
+  await abrirCentenas(page);
+  await expect(page.getByText('Etapa 2 de 20')).toBeVisible();
+  await expect(page.locator('[data-order="C"]')).toHaveCount(1);
+});
+
+test('executa as três trocas novas dentro da própria revisão', async ({ page }) => {
+  await abrirCentenas(page);
+  await page.getByRole('button', { name: 'Começar a aventura' }).click();
+
+  const casos = [
+    { etapa: 2, troca: 'U-D', origem: 'U', destino: 'D' },
+    { etapa: 3, troca: 'D-C', origem: 'D', destino: 'C' },
+    { etapa: 17, troca: 'C-M', origem: 'C', destino: 'M' },
+  ];
+  for (const caso of casos) {
+    await page.evaluate((etapa) => window.MatematicaRevisoes.irPara(etapa), caso.etapa);
+    await page.locator(`[data-math-exchange="${caso.troca}"]`).click();
+    await expect(page.locator(`[data-order="${caso.origem}"]`)).toHaveCount(0);
+    await expect(page.locator(`[data-order="${caso.destino}"]`)).toHaveCount(1);
+    await page.locator('[data-math-check]').click();
+    await expect(page.locator('[data-math-status]')).toContainText('Muito bem');
+  }
+});
+
+test('pratica montar e ler os três novos ábacos', async ({ page }) => {
+  await abrirCentenas(page);
+  await page.getByRole('button', { name: 'Começar a aventura' }).click();
+
+  await page.evaluate(() => window.MatematicaRevisoes.irPara(5));
+  for (let indice = 0; indice < 8; indice += 1) {
+    await page.locator('[data-math-tool="C"]').click();
+    await page.locator('[data-math-place="C"]').click();
+  }
+  await page.locator('[data-math-check]').click();
+  await expect(page.locator('[data-math-status]')).toContainText('Muito bem');
+
+  await page.evaluate(() => window.MatematicaRevisoes.irPara(6));
+  for (const [ordem, quantidade] of [
+    ['C', 6],
+    ['D', 4],
+    ['U', 1],
+  ]) {
+    for (let indice = 0; indice < quantidade; indice += 1) {
+      await page.locator(`[data-math-tool="${ordem}"]`).click();
+      await page.locator(`[data-math-place="${ordem}"]`).click();
+    }
+  }
+  await page.locator('[data-math-check]').click();
+  await expect(page.locator('[data-math-status]')).toContainText('Muito bem');
+
+  await page.evaluate(() => window.MatematicaRevisoes.irPara(7));
+  await page.locator('[data-math-answer="307"]').click();
+  await page.locator('[data-math-check]').click();
+  await expect(page.locator('[data-math-status]')).toContainText('Muito bem');
+});
+
+test('renderiza e navega por todas as 20 etapas até o encerramento', async ({ page }) => {
+  await abrirCentenas(page);
+  await page.getByRole('button', { name: 'Começar a aventura' }).click();
+  await expect(page.getByText('Etapa 2 de 20')).toBeVisible();
+
+  for (let indice = 1; indice < 20; indice += 1) {
     await page.evaluate((destino) => window.MatematicaRevisoes.irPara(destino), indice);
     await expect(page.locator('#matematica-cena-titulo')).toBeVisible();
-    if (indice < 18) await expect(page.locator('#recipiente-cena-matematica')).toBeVisible();
+    if (indice < 19) await expect(page.locator('#recipiente-cena-matematica')).toBeVisible();
   }
 
   await expect(
-    page.getByRole('heading', { name: /Você colocou as centenas em ação/ })
+    page.getByRole('heading', { name: /Nova missão das centenas concluída/ })
   ).toBeVisible();
   await expect(page.locator('#matematica-cena-proxima')).toBeHidden();
   expect(
@@ -341,20 +477,20 @@ test('desfaz e limpa somente a cena atual', async ({ page }) => {
 test('salva, recarrega e restaura a construção manipulativa', async ({ page }) => {
   await abrirCentenas(page);
   await page.getByRole('button', { name: 'Começar a aventura' }).click();
-  await page.locator('[data-math-tool="D"]').click();
-  await page.locator('[data-math-place="D"]').click();
+  await page.locator('[data-math-tool="C"]').click();
+  await page.locator('[data-math-place="C"]').click();
   await expect
     .poll(() =>
       page.evaluate(
-        (chave) => JSON.parse(localStorage.getItem(chave)).cenas['dez-dezenas'].quantidades.D,
+        (chave) => JSON.parse(localStorage.getItem(chave)).cenas['placa-centena'].quantidades.C,
         CHAVE
       )
     )
     .toBe(1);
   await page.reload();
   await abrirCentenas(page);
-  await expect(page.getByText('Etapa 2 de 19')).toBeVisible();
-  await expect(page.locator('[data-order="D"]')).toHaveCount(1);
+  await expect(page.getByText('Etapa 2 de 20')).toBeVisible();
+  await expect(page.locator('[data-order="C"]')).toHaveCount(1);
 });
 
 test('limpa apenas a revisão ativa e preserva Alice e a Matemática ampla', async ({ page }) => {
@@ -384,9 +520,9 @@ test('normaliza JSON corrompido, versão incompatível e valores fora do limite'
       chave,
       JSON.stringify({
         versao: 1,
-        etapaAtual: 5,
+        etapaAtual: 8,
         cenas: {
-          'quadro-326': {
+          'quadro-582': {
             versao: 1,
             quantidades: { C: 999, D: -3, U: 'não é número' },
             tentativas: 999,
@@ -397,12 +533,12 @@ test('normaliza JSON corrompido, versão incompatível e valores fora do limite'
   }, CHAVE);
   await page.reload();
   const normalizado = await page.evaluate((id) => window.MatematicaRevisoes.obterEstado(id), ID);
-  expect(normalizado.etapaAtual).toBe(5);
-  expect(normalizado.cenas['quadro-326'].quantidades).toMatchObject({ C: 9, D: 0, U: 0 });
-  expect(normalizado.cenas['quadro-326'].tentativas).toBe(99);
+  expect(normalizado.etapaAtual).toBe(8);
+  expect(normalizado.cenas['quadro-582'].quantidades).toMatchObject({ C: 9, D: 0, U: 0 });
+  expect(normalizado.cenas['quadro-582'].tentativas).toBe(99);
 
   await page.evaluate(
-    (chave) => localStorage.setItem(chave, JSON.stringify({ versao: 99, etapaAtual: 18 })),
+    (chave) => localStorage.setItem(chave, JSON.stringify({ versao: 99, etapaAtual: 19 })),
     CHAVE
   );
   await page.reload();
@@ -461,7 +597,7 @@ test('é acessível e não cria rolagem horizontal em 390 por 844', async ({ pag
   await page.setViewportSize({ width: 390, height: 844 });
   await abrirCentenas(page);
   await page.getByRole('button', { name: 'Começar a aventura' }).click();
-  await page.evaluate(() => window.MatematicaRevisoes.irPara(15));
+  await page.evaluate(() => window.MatematicaRevisoes.irPara(17));
   await expect(page.locator('.ordem-m')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
   const resultado = await new AxeBuilder({ page })

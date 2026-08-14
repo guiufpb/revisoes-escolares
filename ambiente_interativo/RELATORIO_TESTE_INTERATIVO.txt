@@ -1,6 +1,67 @@
 RELATORIO DE TESTE - AMBIENTE INTERATIVO
 =======================================
 
+ATUALIZAÇÃO: 14/08/2026 - CENTENAS EM AÇÃO, NOVA RODADA
+=======================================================
+
+ESCOPO IMPLEMENTADO
+- A trilha Mariana > Matemática > Centenas em ação foi refeita com 20 etapas:
+  apresentação, 18 desafios avaliativos e encerramento.
+- Todos os IDs de etapa, números e situações pedagógicas da rodada são novos.
+- A nova sequência inclui material dourado, quadro C-D-U, composição,
+  decomposição, zero intermediário, ordenação, sequências, reta numérica,
+  dinheiro pedagógico, gráfico e chegada ao milhar.
+- Há três experiências de ábaco: montar 800, montar 641 e ler 307 com zero na
+  haste das dezenas.
+- As três trocas de ordens aparecem dentro da própria revisão e são explícitas:
+  10 U > 1 D, 10 D > 1 C e 10 C > 1 M.
+
+PERSISTÊNCIA E HISTÓRICO
+- ID mantido: mariana-matematica-centenas-em-acao.
+- Chave atual: revisoesEscolares.mariana.matematica.centenasEmAcao.v2.
+- A chave v1 permanece intacta e não é migrada. Assim, a nova rodada começa
+  como Não iniciada, sem apagar o histórico da prática anterior.
+- Corrigido o controlador para preservar a identidade do objeto de estado após
+  normalizar e salvar. Várias ações consecutivas agora persistem, em vez de a
+  cena visual continuar usando uma referência anterior à primeira gravação.
+- Corrigida a liberação do bloqueio de clique sintético depois de um arraste.
+  A ação legítima seguinte por clique ou teclado não é mais descartada.
+
+COBERTURA ACRESCENTADA
+- O arquivo tests/matematica-manipulativa.spec.js passou de 19 para 24 cenários.
+- Os novos cenários conferem a chave v2, preservação da v1, 20 IDs únicos, três
+  ábacos, três trocas reais e o ciclo errar > retirar > corrigir > conferir >
+  avançar > voltar > recarregar.
+- A persistência é verificada depois de múltiplas ações na mesma cena.
+
+VALIDAÇÃO FINAL
+- Linha de base antes das mudanças: format:check, lint e 79 de 79 testes
+  Playwright aprovados.
+- npm run format: PASSOU.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU, sem erros.
+- npm test: PASSOU, com 84 de 84 testes Playwright em 5,1 min.
+- Build Vite principal e bundle PDF.js: PASSOU.
+- Testes específicos de Matemática: 24 de 24 aprovados.
+- Axe WCAG 2 A/AA e 2.1 A/AA: nenhuma violação serious ou critical na cena
+  M-C-D-U em viewport 390 x 844.
+
+VERIFICAÇÃO MANUAL
+- Alice continuou sem cartão ou progresso fictício de Matemática.
+- A revisão ampla da Mariana retomou corretamente a etapa 14 já salva.
+- O cartão Centenas em ação exibiu 20 novas etapas e estado Não iniciada.
+- Foram concluídas manualmente a placa de 100, a troca 10 U > 1 D e o ábaco de
+  800. Depois da recarga e reabertura, a etapa 6 e as oito argolas retornaram.
+- Em 390 x 844, innerWidth 390 e scrollWidth 375: sem rolagem horizontal.
+- Erros de console durante o fluxo manual: nenhum.
+- O servidor Vite usado na inspeção foi encerrado ao final.
+
+FONTE PEDAGÓGICA
+- As 20 páginas do PDF Revisão matemática Mariana agosto-26.pdf foram novamente
+  renderizadas e inspecionadas visualmente.
+- Apenas habilidades e progressão foram usadas. Textos, números, cenários e
+  apresentação da atividade são originais; nenhuma página foi reproduzida.
+
 ATUALIZAÇÃO: 13/08/2026 - DÉCIMA LEITURA
 =========================================
 

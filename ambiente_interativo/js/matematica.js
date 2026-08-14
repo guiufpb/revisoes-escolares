@@ -81,10 +81,21 @@
     return estados[id];
   }
 
+  function atualizarObjeto(destino, origem) {
+    Object.keys(destino).forEach(function (chave) {
+      delete destino[chave];
+    });
+    Object.keys(origem).forEach(function (chave) {
+      destino[chave] = origem[chave];
+    });
+    return destino;
+  }
+
   function salvar(motivo) {
     if (!revisaoAtiva) return;
     var estado = obterEstado(revisaoAtiva.id);
-    estados[revisaoAtiva.id] = armazenamento(revisaoAtiva).salvar(estado);
+    var normalizado = armazenamento(revisaoAtiva).salvar(estado);
+    estados[revisaoAtiva.id] = atualizarObjeto(estado, normalizado);
     document.dispatchEvent(
       new CustomEvent('revisaoprogressoalterado', {
         detail: { revisaoId: revisaoAtiva.id, motivo: motivo },

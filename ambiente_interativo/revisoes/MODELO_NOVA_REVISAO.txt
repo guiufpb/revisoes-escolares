@@ -7,6 +7,15 @@ MODELO DE NOVA REVISAO COM CENA MATEMATICA
 4. Não duplique js/matematica.js, js/matematica-cena.js ou
    js/matematica-manipulaveis.js.
 
+Ao renovar uma revisão existente para oferecer uma nova rodada de prática:
+- mantenha o ID apenas quando o mesmo cartão e a mesma trilha continuarem sendo
+  o destino correto;
+- avance a versão da chave localStorage, por exemplo de v1 para v2;
+- use IDs de etapa novos e não apague nem migre silenciosamente a chave antiga;
+- atualize total de etapas no registro, cartão, progresso e testes;
+- teste que o progresso antigo permanece intacto e que a rodada nova começa
+  sem o estado Concluída.
+
 Exemplo mínimo declarativo:
 
 window.MatematicaRevisoes.registrar({
@@ -76,6 +85,7 @@ errar -> conferir -> corrigir -> conferir novamente -> avancar -> voltar -> reca
 
 Antes de cadastrar uma nova atividade, confirme:
 - toda inclusao pode ser desfeita, retirada ou reposicionada;
+- varias acoes consecutivas ficam persistidas, e nao apenas a primeira;
 - uma resposta errada nao bloqueia os controles nem obriga a avancar;
 - arrastar possui alternativa por clique/toque e, quando aplicavel, por teclado;
 - o estado salvo e pequeno e corresponde exatamente ao que aparece na tela;

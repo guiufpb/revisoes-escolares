@@ -297,7 +297,7 @@ visualizador, questionário, glossário, ditado e resultado.
   parada, desbloqueio após 27 áudios, 10 atividades, correção somente ao final,
   distribuição das alternativas, acessibilidade e largura móvel.
 - npm test: gera os dois bundles Vite e executa toda a suíte Playwright.
-- Validação mais recente: 78 de 78 testes Playwright aprovados, incluindo a
+- Validação mais recente: 84 de 84 testes Playwright aprovados, incluindo a
   nova leitura, o áudio bilíngue, as atividades, a recompensa final, a
   Matemática manipulativa e o isolamento dos perfis.
 
@@ -316,8 +316,12 @@ MATEMATICA MANIPULATIVA - CENTENAS EM ACAO
 Trilha disponível nesta entrega:
 - Mariana > Matemática > Centenas em ação.
 - ID: mariana-matematica-centenas-em-acao
-- Chave: revisoesEscolares.mariana.matematica.centenasEmAcao.v1
-- 19 etapas: apresentação, 17 cenas avaliativas e encerramento.
+- Chave atual: revisoesEscolares.mariana.matematica.centenasEmAcao.v2
+- 20 etapas: apresentação, 18 cenas avaliativas e encerramento.
+- A rodada v2 usa números e situações novos, três desafios de ábaco e as trocas
+  explícitas 10 U > 1 D, 10 D > 1 C e 10 C > 1 M.
+- O progresso antigo v1 não é migrado nem apagado. A nova chave faz o cartão
+  começar como uma prática nova, sem misturar conclusões da rodada anterior.
 
 A revisão ampla anterior continua separada, com o mesmo arquivo, cartão, painel
 e chave revisoesEscolares.mariana.matematica.revisaoAmpla. Não existe migração,
@@ -381,7 +385,8 @@ Persistência da nova revisão:
 JSON inválido, índices, quantidades e tentativas fora do limite e versões
 incompatíveis são normalizados. Quando localStorage está bloqueado, a camada
 ArmazenamentoRevisoes conserva o progresso em memória durante a aba. Limpar o
-progresso dentro da revisão remove somente a chave Centenas em ação.
+progresso dentro da revisão remove somente a chave v2 de Centenas em ação. A
+chave histórica v1 permanece intacta.
 
 INFRAESTRUTURA PARA ALICE
 ========================
