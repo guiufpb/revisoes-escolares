@@ -1807,6 +1807,21 @@ footer {
   background: #eaf8ff;
 }
 
+.alternativa-atividade-ingles.incorreta {
+  border-color: #b93c4b;
+  background: #fff0f2;
+}
+
+.alternativa-atividade-ingles.correta {
+  border-color: #27834d;
+  background: #effbf3;
+}
+
+.alternativa-atividade-ingles:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
 .alternativa-atividade-ingles img {
   width: 60px;
   height: 60px;

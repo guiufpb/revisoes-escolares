@@ -4,7 +4,7 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra a branch `codex/github-automation` em **15/08/2026**.
+Este inventário registra a branch `codex/mariana-city-life` em **15/08/2026**.
 
 ## 2. Base da aplicação
 
@@ -149,6 +149,21 @@ Chaves:
 - `revisoesEscolares.alice.ingles.atSchoolUnidade3.v1`
 - `revisoesEscolares.mariana.ingles.atSchoolUnidade3.v1`
 
+### Mariana — Unit 5: City Life
+
+- Nova revisão independente, disponível somente no perfil da Mariana.
+- **44 palavras e expressões com pronúncia local** antes das atividades.
+- Quatro grupos: lugares da cidade; posições; materiais e propriedades; prédios e formas.
+- **16 atividades** baseadas no caderno de agosto de 2026, sem publicar o PDF ou suas imagens.
+- Conteúdo sobre `city`, `town`, `village`, estabelecimentos, `there is`/`there are`,
+  preposições, materiais, propriedades e formas tridimensionais.
+- Correção imediata por questão: um erro mostra uma pista específica, mantém as alternativas
+  ativas e bloqueia o avanço somente até a resposta ser corrigida e conferida novamente.
+- Voltar e recarregar restauram a resposta, a conferência, a questão atual e o progresso de áudio.
+- O cartão antigo da Unidade 3 permanece acessível e mantém sua chave e seu comportamento.
+
+Chave: `revisoesEscolares.mariana.ingles.cityLifeUnidade5.v1`.
+
 ### Melhorias aglutinadas de pronúncia
 
 As melhorias foram concentradas em `js/audio.js` e consumidas por `js/ingles.js`, evitando que cada revisão implemente sua própria voz.
@@ -266,13 +281,13 @@ Teste obrigatório: `errar → conferir → corrigir → conferir → avançar �
 
 Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
 
-Na data deste inventário existem **84 testes Playwright**:
+Na data deste inventário existem **86 testes Playwright**:
 
-- `tests/ambiente-interativo.spec.js`: fluxos centrais, Inglês, Leitura, Matemática ampla, armazenamento, canvas e `file://`.
+- `tests/ambiente-interativo.spec.js`: fluxos centrais, as duas revisões de Inglês da Mariana, Leitura, Matemática ampla, armazenamento, canvas e `file://`.
 - `tests/matematica-manipulativa.spec.js`: cenas, trocas, ábacos, clique no quadro, teclado, persistência e nova Centenas em ação.
 - `tests/acessibilidade.spec.js`: axe e responsividade das telas principais.
 
-A cobertura inclui isolamento, erro e correção, recarga, Pointer Events, teclado, dados corrompidos, `localStorage` bloqueado, áudio bilíngue, leitor, ditados, canvas, console, arquivo local e viewport móvel.
+A cobertura inclui isolamento, erro e correção antes do avanço em City Life, recarga, Pointer Events, teclado, dados corrompidos, `localStorage` bloqueado, áudio bilíngue, leitor, ditados, canvas, console, arquivo local e viewport móvel.
 
 ## 10. GitHub e automações
 

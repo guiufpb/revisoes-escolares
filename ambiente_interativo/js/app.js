@@ -197,14 +197,14 @@
   function atualizarCartoes() {
     window.RegistroRevisoes.validar().forEach(function (revisao) {
       if (revisao.exibirEstadoNoCartao === false) return;
-      var ehIngles = revisao.id === IDS_INGLES[revisao.aluno];
+      var ehIngles = revisao.controladorCompartilhado === 'ingles';
       if (ehIngles && (!alunoAtual || revisao.aluno !== alunoAtual)) return;
       var situacao;
       if (revisao.id === ID_ALICE) situacao = situacaoAlice();
       else if (revisao.id === ID_CENTENAS) {
         situacao = window.MatematicaRevisoes.situacao(ID_CENTENAS);
       } else if (ehIngles && window.InglesRevisoes) {
-        situacao = window.InglesRevisoes.obterSituacao(revisao.aluno);
+        situacao = window.InglesRevisoes.obterSituacao(revisao.aluno, revisao.id);
       } else situacao = situacaoMariana();
       atualizarEstadoCartao(revisao, situacao);
     });
@@ -230,7 +230,7 @@
       resumo.textContent =
         (alunoAtual === 'alice' ? 'Alice' : 'Mariana') +
         ' · Inglês: ' +
-        (window.InglesRevisoes.obterResumo(alunoAtual) || 'vamos ouvir!');
+        (window.InglesRevisoes.obterResumo() || 'vamos ouvir!');
     } else if (telaAtualId === 'matematicaCena') {
       var ativa = window.MatematicaRevisoes.obterAtiva();
       var estadoCentenas = ativa && window.MatematicaRevisoes.obterEstado(ativa.id);
@@ -272,6 +272,7 @@
       aluno === 'alice' ? 'Olá, Alice!' : 'Olá, Mariana!';
     document.getElementById('materia-ciencias').hidden = aluno !== 'alice';
     document.getElementById('materia-ingles').hidden = false;
+    document.getElementById('abrir-ingles-city-life').hidden = aluno !== 'mariana';
     document.getElementById('materia-matematica').hidden = aluno !== 'mariana';
     document.getElementById('materia-leitura').hidden = false;
     document.getElementById('limpar-progresso').hidden = false;
@@ -365,7 +366,11 @@
       .querySelector('[data-materia="ciencias"]')
       .addEventListener('click', abrirRevisaoAlice);
     document.querySelector('[data-materia="ingles"]').addEventListener('click', function () {
-      window.InglesRevisoes.abrir(alunoAtual);
+      window.InglesRevisoes.abrir(alunoAtual, IDS_INGLES[alunoAtual]);
+      atualizarResumo();
+    });
+    document.getElementById('abrir-ingles-city-life').addEventListener('click', function () {
+      window.InglesRevisoes.abrir('mariana', 'mariana-ingles-city-life-unidade-5');
       atualizarResumo();
     });
     document.querySelector('[data-materia="matematica"]').addEventListener('click', function () {

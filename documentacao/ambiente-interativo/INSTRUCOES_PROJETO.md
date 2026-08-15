@@ -159,6 +159,11 @@ Nova solicitação invalida a anterior para impedir sobreposição. Preserve men
 - Na Unidade 3 atual, preserve 27 áudios antes das 10 atividades, salvo nova versão solicitada.
 - Preserve alternativas estáveis e correção conjunta no final.
 
+O controlador de Inglês aceita várias revisões no mesmo perfil, identificadas pelo
+`revisaoId` e por chaves independentes. A Unidade 3 continua com correção conjunta;
+novas rodadas podem declarar correção por questão quando precisarem cumprir o ciclo
+errar → conferir → corrigir → conferir → avançar.
+
 ### Testes de áudio
 
 - Simule vozes `pt-BR` e `en-US`.

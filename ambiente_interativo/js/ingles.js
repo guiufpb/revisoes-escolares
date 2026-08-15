@@ -67,6 +67,7 @@
       iniciado: false,
       questaoAtual: 0,
       respostasAtividades: {},
+      conferenciasAtividades: {},
       atividadeIniciada: false,
       atividadeFinalizada: false,
       tentativasAtividade: 0,
@@ -85,6 +86,8 @@
     var atividades = todasAsAtividades(unidade);
     var respostasRecebidas = objeto(valor.respostasAtividades);
     var respostasValidas = {};
+    var conferenciasRecebidas = objeto(valor.conferenciasAtividades);
+    var conferenciasValidas = {};
 
     atividades.forEach(function (atividade) {
       var idsAlternativas = atividade.alternativas.map(function (alternativa) {
@@ -92,6 +95,9 @@
       });
       if (idsAlternativas.indexOf(respostasRecebidas[atividade.id]) >= 0) {
         respostasValidas[atividade.id] = respostasRecebidas[atividade.id];
+        if (['correta', 'incorreta'].indexOf(conferenciasRecebidas[atividade.id]) >= 0) {
+          conferenciasValidas[atividade.id] = conferenciasRecebidas[atividade.id];
+        }
       }
     });
 
@@ -118,12 +124,17 @@
       Math.min(atividades.length - 1, Math.trunc(Number(valor.questaoAtual) || 0))
     );
     base.respostasAtividades = respostasValidas;
+    base.conferenciasAtividades = conferenciasValidas;
     base.atividadeIniciada =
       Boolean(valor.atividadeIniciada) || Object.keys(respostasValidas).length > 0;
     base.atividadeFinalizada =
       Boolean(valor.atividadeFinalizada) &&
       atividades.length > 0 &&
-      Object.keys(respostasValidas).length === atividades.length;
+      Object.keys(respostasValidas).length === atividades.length &&
+      (!unidade.correcaoPorQuestao ||
+        atividades.every(function (atividade) {
+          return conferenciasValidas[atividade.id] === 'correta';
+        }));
     base.tentativasAtividade = Math.max(0, Math.trunc(Number(valor.tentativasAtividade) || 0));
     base.iniciado =
       Boolean(valor.iniciado) ||
@@ -135,12 +146,26 @@
     return base;
   }
 
-  function configuracaoDoPerfil(perfil) {
-    return (window.ConfiguracoesIngles || {})[perfil] || null;
+  function configuracaoDoPerfil(perfil, revisaoId) {
+    var configuracoes = window.ConfiguracoesIngles || {};
+    if (!revisaoId && configuracoes[perfil]) return configuracoes[perfil];
+    return (
+      Object.keys(configuracoes)
+        .map(function (chave) {
+          return configuracoes[chave];
+        })
+        .find(function (configuracao) {
+          return (
+            configuracao &&
+            configuracao.perfil === perfil &&
+            (!revisaoId || configuracao.revisaoId === revisaoId)
+          );
+        }) || null
+    );
   }
 
-  function dadosDoPerfil(perfil) {
-    var configuracao = configuracaoDoPerfil(perfil);
+  function dadosDoPerfil(perfil, revisaoId) {
+    var configuracao = configuracaoDoPerfil(perfil, revisaoId);
     if (!configuracao) return null;
     var unidade = window.RegistroIngles.obter(configuracao.unidadeId);
     if (!unidade || unidade.perfisDisponiveis.indexOf(perfil) < 0) return null;
@@ -154,8 +179,8 @@
     return { configuracao: configuracao, unidade: unidade, armazenamento: deposito };
   }
 
-  function carregarPerfil(perfil) {
-    var dados = dadosDoPerfil(perfil);
+  function carregarPerfil(perfil, revisaoId) {
+    var dados = dadosDoPerfil(perfil, revisaoId);
     if (!dados) {
       throw new Error('Ainda não há uma unidade de Inglês configurada para este perfil.');
     }
@@ -189,14 +214,24 @@
     return 'nao-iniciada';
   }
 
-  function obterEstadoDoPerfil(perfil) {
-    if (estado && perfil === perfilAtual) return estado;
-    var dados = dadosDoPerfil(perfil);
+  function obterEstadoDoPerfil(perfil, revisaoId) {
+    if (
+      estado &&
+      perfil === perfilAtual &&
+      (!revisaoId || (configuracaoAtual && configuracaoAtual.revisaoId === revisaoId))
+    ) {
+      return estado;
+    }
+    var dados = dadosDoPerfil(perfil, revisaoId);
     return dados ? dados.armazenamento.carregar() : null;
   }
 
   function atividadesLiberadas() {
     return estado.itensOuvidos.length === todosOsItens(unidadeAtual).length;
+  }
+
+  function correcaoPorQuestao() {
+    return Boolean(unidadeAtual && unidadeAtual.correcaoPorQuestao);
   }
 
   function atualizarContinuidade() {
@@ -217,8 +252,10 @@
         'Ouça mais ' +
         restantes +
         (restantes === 1 ? ' item' : ' itens') +
-        ' para liberar as 10 atividades baseadas no caderno.';
-      botao.textContent = '🔒 Ouça os 27 itens primeiro';
+        ' para liberar as ' +
+        atividades.length +
+        ' atividades baseadas no caderno.';
+      botao.textContent = '🔒 Ouça os ' + total + ' itens primeiro';
       return;
     }
     if (estado.atividadeFinalizada) {
@@ -232,8 +269,9 @@
       return;
     }
     mensagem.textContent =
+      unidadeAtual.mensagemAtividades ||
       'Muito bem! Agora pratique objetos, pessoas, lugares, materiais e regras da escola.';
-    botao.textContent = 'Começar as 10 atividades →';
+    botao.textContent = 'Começar as ' + atividades.length + ' atividades →';
   }
 
   function atualizarProgresso() {
@@ -451,20 +489,25 @@
   function selecionarAlternativaAtividade(id) {
     var questao = questaoAtual();
     if (!questao) return;
+    if (correcaoPorQuestao() && estado.conferenciasAtividades[questao.id] === 'correta') return;
     estado.respostasAtividades[questao.id] = id;
+    if (correcaoPorQuestao()) delete estado.conferenciasAtividades[questao.id];
     estado.atividadeIniciada = true;
     estado.iniciado = true;
     salvarEstado();
     renderizarAlternativasAtividade(questao);
-    elemento('ingles-atividade-proxima').disabled = false;
-    elemento('ingles-status-atividade').textContent =
-      'Resposta marcada. A correção aparecerá somente ao final das 10 atividades.';
+    elemento('ingles-atividade-proxima').disabled = correcaoPorQuestao();
+    elemento('ingles-conferir-atividade').disabled = false;
+    elemento('ingles-status-atividade').textContent = correcaoPorQuestao()
+      ? 'Resposta marcada. Agora clique em “Conferir resposta”.'
+      : 'Resposta marcada. A correção aparecerá somente ao final das atividades.';
     atualizarContinuidade();
   }
 
   function renderizarAlternativasAtividade(questao) {
     var grade = elemento('ingles-alternativas-atividade');
     var resposta = estado.respostasAtividades[questao.id];
+    var conferencia = estado.conferenciasAtividades[questao.id];
     grade.innerHTML = '';
     alternativasParaExibicao(questao, estado.questaoAtual).forEach(function (alternativa, indice) {
       var botao = document.createElement('button');
@@ -475,6 +518,12 @@
       botao.className = 'alternativa-atividade-ingles';
       botao.dataset.alternativaAtividadeIngles = alternativa.id;
       botao.setAttribute('aria-pressed', String(resposta === alternativa.id));
+      botao.classList.toggle(
+        'incorreta',
+        conferencia === 'incorreta' && resposta === alternativa.id
+      );
+      botao.classList.toggle('correta', conferencia === 'correta' && resposta === alternativa.id);
+      botao.disabled = conferencia === 'correta';
       if (alternativa.imagem) {
         var imagem = document.createElement('img');
         imagem.src = '../assets/objetos_escolares/' + alternativa.imagem;
@@ -514,13 +563,49 @@
     elemento('ingles-instrucao-atividade').textContent = questao.instrucaoPortugues;
     renderizarImagensDoEnunciado(questao);
     renderizarAlternativasAtividade(questao);
+    var resposta = estado.respostasAtividades[questao.id];
+    var conferencia = estado.conferenciasAtividades[questao.id];
+    var imediata = correcaoPorQuestao();
+    var botaoConferir = elemento('ingles-conferir-atividade');
     elemento('ingles-atividade-anterior').disabled = estado.questaoAtual === 0;
-    elemento('ingles-atividade-proxima').disabled = !estado.respostasAtividades[questao.id];
+    botaoConferir.hidden = !imediata;
+    botaoConferir.disabled = !resposta || conferencia === 'correta';
+    elemento('ingles-atividade-proxima').disabled = imediata
+      ? conferencia !== 'correta'
+      : !resposta;
     elemento('ingles-atividade-proxima').textContent =
-      estado.questaoAtual === atividades.length - 1 ? 'Conferir respostas ✓' : 'Próxima →';
-    elemento('ingles-status-atividade').textContent = estado.respostasAtividades[questao.id]
-      ? 'Resposta marcada. A correção aparecerá somente ao final das 10 atividades.'
-      : 'Escolha uma alternativa. A correção aparecerá somente ao final.';
+      estado.questaoAtual === atividades.length - 1
+        ? imediata
+          ? 'Concluir revisão ✓'
+          : 'Conferir respostas ✓'
+        : 'Próxima →';
+    if (imediata && conferencia === 'correta') {
+      elemento('ingles-status-atividade').textContent = '✓ ' + questao.explicacao;
+    } else if (imediata && conferencia === 'incorreta') {
+      elemento('ingles-status-atividade').textContent =
+        '↻ ' + (questao.feedbackErro || 'Revise as opções e tente novamente.');
+    } else if (resposta) {
+      elemento('ingles-status-atividade').textContent = imediata
+        ? 'Resposta marcada. Agora clique em “Conferir resposta”.'
+        : 'Resposta marcada. A correção aparecerá somente ao final das atividades.';
+    } else {
+      elemento('ingles-status-atividade').textContent = imediata
+        ? 'Escolha uma alternativa e confira antes de avançar.'
+        : 'Escolha uma alternativa. A correção aparecerá somente ao final.';
+    }
+  }
+
+  function conferirRespostaAtividade() {
+    if (!correcaoPorQuestao()) return;
+    var questao = questaoAtual();
+    var resposta = questao && estado.respostasAtividades[questao.id];
+    if (!questao || !resposta) return;
+    estado.conferenciasAtividades[questao.id] =
+      resposta === questao.respostaCorreta ? 'correta' : 'incorreta';
+    estado.tentativasAtividade += 1;
+    salvarEstado();
+    renderizarQuestaoAtividade();
+    atualizarContinuidade();
   }
 
   function alternativaDaQuestao(questao, id) {
@@ -550,7 +635,10 @@
       ' atividades.';
     elemento('ingles-destinataria-surpresa').textContent =
       perfilAtual === 'alice' ? 'Alice' : 'Mariana';
-    elemento('ingles-texto-surpresa').textContent = MENSAGENS_SURPRESA[perfilAtual];
+    elemento('ingles-texto-surpresa').textContent =
+      unidadeAtual.mensagemFinal || MENSAGENS_SURPRESA[perfilAtual];
+    elemento('ingles-refazer-atividades').textContent =
+      'Refazer as ' + atividades.length + ' atividades';
     lista.innerHTML = '';
     atividades.forEach(function (questao, indice) {
       var respostaId = estado.respostasAtividades[questao.id];
@@ -605,8 +693,16 @@
   function finalizarAtividades() {
     var atividades = todasAsAtividades(unidadeAtual);
     if (Object.keys(estado.respostasAtividades).length !== atividades.length) return;
+    if (
+      correcaoPorQuestao() &&
+      !atividades.every(function (atividade) {
+        return estado.conferenciasAtividades[atividade.id] === 'correta';
+      })
+    ) {
+      return;
+    }
     estado.atividadeFinalizada = true;
-    estado.tentativasAtividade += 1;
+    if (!correcaoPorQuestao()) estado.tentativasAtividade += 1;
     salvarEstado();
     atualizarContinuidade();
     renderizarRevisaoAtividades();
@@ -616,6 +712,7 @@
     var atividades = todasAsAtividades(unidadeAtual);
     var questao = questaoAtual();
     if (!questao || !estado.respostasAtividades[questao.id]) return;
+    if (correcaoPorQuestao() && estado.conferenciasAtividades[questao.id] !== 'correta') return;
     if (estado.questaoAtual === atividades.length - 1) {
       finalizarAtividades();
       return;
@@ -628,6 +725,7 @@
   function refazerAtividades() {
     estado.questaoAtual = 0;
     estado.respostasAtividades = {};
+    estado.conferenciasAtividades = {};
     estado.atividadeIniciada = true;
     estado.atividadeFinalizada = false;
     salvarEstado();
@@ -662,6 +760,11 @@
     elemento('ingles-nome-perfil').textContent = perfilAtual === 'alice' ? 'Alice' : 'Mariana';
     elemento('ingles-titulo-unidade').textContent = unidadeAtual.subtitulo;
     elemento('ingles-subtitulo-unidade').textContent = unidadeAtual.titulo;
+    elemento('ingles-descricao-unidade').textContent =
+      unidadeAtual.descricao ||
+      'Escolha uma palavra ou frase. O ambiente pronuncia em inglês e também pode ler as instruções em português.';
+    elemento('ingles-imagem-cabecalho').src =
+      '../assets/objetos_escolares/' + (unidadeAtual.imagemCabecalho || 'school.svg');
     elemento('ingles-titulo-grupo').textContent = grupo.titulo;
     elemento('ingles-traducao-grupo').textContent = grupo.traducao;
     elemento('ingles-instrucao-grupo').textContent = grupo.instrucao;
@@ -673,15 +776,15 @@
     atualizarVozesNaTela();
   }
 
-  function abrir(perfil) {
-    carregarPerfil(perfil);
+  function abrir(perfil, revisaoId) {
+    carregarPerfil(perfil, revisaoId);
     renderizar();
     controladorApp.mostrarTela('ingles');
   }
 
   function limparProgresso() {
     if (!armazenamento || !unidadeAtual) return false;
-    if (!window.confirm('Limpar somente o progresso de Inglês deste perfil?')) return false;
+    if (!window.confirm('Limpar somente o progresso desta revisão de Inglês?')) return false;
     window.AudioRevisoes.parar({ silencioso: true, origem: 'ingles' });
     armazenamento.remover();
     estado = estadoInicial(unidadeAtual);
@@ -712,6 +815,7 @@
     });
     elemento('ingles-iniciar-atividades').addEventListener('click', abrirAtividades);
     elemento('ingles-ouvir-pergunta').addEventListener('click', ouvirPerguntaAtual);
+    elemento('ingles-conferir-atividade').addEventListener('click', conferirRespostaAtividade);
     elemento('ingles-atividade-anterior').addEventListener('click', irParaQuestaoAnterior);
     elemento('ingles-atividade-proxima').addEventListener('click', irParaProximaQuestao);
     elemento('ingles-refazer-atividades').addEventListener('click', refazerAtividades);
@@ -748,17 +852,22 @@
     pararAudio: function () {
       window.AudioRevisoes.parar({ silencioso: true, origem: 'ingles' });
     },
-    obterEstado: function (perfil) {
-      var atual = obterEstadoDoPerfil(perfil || perfilAtual);
+    obterEstado: function (perfil, revisaoId) {
+      var perfilDesejado = perfil || perfilAtual;
+      var revisaoDesejada =
+        revisaoId || (!perfil && configuracaoAtual && configuracaoAtual.revisaoId);
+      var atual = obterEstadoDoPerfil(perfilDesejado, revisaoDesejada);
       return atual ? JSON.parse(JSON.stringify(atual)) : null;
     },
-    obterSituacao: function (perfil) {
-      return situacaoDoEstado(obterEstadoDoPerfil(perfil || perfilAtual));
+    obterSituacao: function (perfil, revisaoId) {
+      return situacaoDoEstado(obterEstadoDoPerfil(perfil || perfilAtual, revisaoId));
     },
-    obterResumo: function (perfil) {
+    obterResumo: function (perfil, revisaoId) {
       var perfilDesejado = perfil || perfilAtual;
-      var dados = dadosDoPerfil(perfilDesejado);
-      var estadoDoPerfil = obterEstadoDoPerfil(perfilDesejado);
+      var revisaoDesejada =
+        revisaoId || (!perfil && configuracaoAtual && configuracaoAtual.revisaoId);
+      var dados = dadosDoPerfil(perfilDesejado, revisaoDesejada);
+      var estadoDoPerfil = obterEstadoDoPerfil(perfilDesejado, revisaoDesejada);
       return dados ? resumoDoEstado(estadoDoPerfil, dados.unidade) : null;
     },
     obterUnidade: function () {

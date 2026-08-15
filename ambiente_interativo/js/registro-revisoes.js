@@ -21,7 +21,7 @@
       chaveArmazenamento: 'revisoesEscolares.alice.ingles.atSchoolUnidade3.v1',
       totalEtapas: 37,
       possuiAudio: true,
-      controladorCompartilhado: 'ingles-at-school-unidade-3',
+      controladorCompartilhado: 'ingles',
     },
     {
       id: 'mariana-ingles-at-school-unidade-3',
@@ -32,7 +32,18 @@
       chaveArmazenamento: 'revisoesEscolares.mariana.ingles.atSchoolUnidade3.v1',
       totalEtapas: 37,
       possuiAudio: true,
-      controladorCompartilhado: 'ingles-at-school-unidade-3',
+      controladorCompartilhado: 'ingles',
+    },
+    {
+      id: 'mariana-ingles-city-life-unidade-5',
+      aluno: 'mariana',
+      titulo: 'English Review - Unit 5: City Life',
+      cartaoId: 'abrir-ingles-city-life',
+      painelId: 'tela-ingles',
+      chaveArmazenamento: 'revisoesEscolares.mariana.ingles.cityLifeUnidade5.v1',
+      totalEtapas: 60,
+      possuiAudio: true,
+      controladorCompartilhado: 'ingles',
     },
     {
       id: 'mariana-matematica-revisao-ampla',

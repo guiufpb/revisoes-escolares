@@ -33,6 +33,7 @@ import '../revisoes/alice/leitura-uma-formiga-especial.js';
 import '../revisoes/mariana/leitura-uma-formiga-especial.js';
 import '../revisoes/alice/ingles-unidade-3.js';
 import '../revisoes/mariana/ingles-unidade-3.js';
+import '../revisoes/mariana/ingles-city-life-unidade-5.js';
 import './leitura.js';
 import './ingles.js';
 import './app.js';
