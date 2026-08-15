@@ -29,6 +29,7 @@ const CHAVE_FORMIGA_ESPECIAL_ALICE = 'revisoesEscolares.alice.leitura.umaFormiga
 const CHAVE_FORMIGA_ESPECIAL_MARIANA = 'revisoesEscolares.mariana.leitura.umaFormigaEspecial.v1';
 const CHAVE_INGLES_ALICE = 'revisoesEscolares.alice.ingles.atSchoolUnidade3.v1';
 const CHAVE_INGLES_MARIANA = 'revisoesEscolares.mariana.ingles.atSchoolUnidade3.v1';
+const CHAVE_INGLES_CITY_LIFE = 'revisoesEscolares.mariana.ingles.cityLifeUnidade5.v1';
 const CHAVE_ANTIGA = 'revisoes-escolares-progresso-v1';
 const LIVRO_DINHEIRO = 'primeiras-licoes-dinheiro';
 const LIVRO_REI = 'quem-e-o-rei-dos-animais';
@@ -84,6 +85,7 @@ const CHAVES_DOS_TESTES = [
   CHAVE_FORMIGA_ESPECIAL_MARIANA,
   CHAVE_INGLES_ALICE,
   CHAVE_INGLES_MARIANA,
+  CHAVE_INGLES_CITY_LIFE,
   CHAVE_ANTIGA,
 ];
 
@@ -181,8 +183,8 @@ test('carrega a tela inicial e registra todas as revisões sem chaves duplicadas
       ),
     }))
   );
-  expect(registro).toHaveLength(25);
-  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(25);
+  expect(registro).toHaveLength(26);
+  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(26);
   expect(registro.every((item) => item.elementosExistem)).toBe(true);
 });
 
@@ -356,6 +358,107 @@ test('libera 10 atividades após os 27 áudios, corrige somente ao final e separ
   await page.getByRole('button', { name: /Inglês/ }).click();
   await expect(page.getByText('0 de 27 palavras e frases ouvidas')).toBeVisible();
   await expect(page.getByRole('button', { name: '🔒 Ouça os 27 itens primeiro' })).toBeDisabled();
+  expect(
+    await page.evaluate((chave) => localStorage.getItem(chave), CHAVE_INGLES_MARIANA)
+  ).toBeNull();
+});
+
+test('City Life exige 44 pronúncias e permite corrigir cada atividade antes de avançar', async ({
+  page,
+}) => {
+  await page.evaluate((chave) => {
+    const unidade = window.RegistroIngles.obter('city-life-unidade-5');
+    const itensOuvidos = unidade.grupos.flatMap((grupo) => grupo.itens.map((item) => item.id));
+    localStorage.setItem(
+      chave,
+      JSON.stringify({
+        unidadeId: unidade.id,
+        versao: unidade.versao,
+        grupoAtual: unidade.grupos[0].id,
+        itemAtual: unidade.grupos[0].itens[0].id,
+        itensOuvidos,
+        reproducoes: itensOuvidos.length,
+        iniciado: true,
+      })
+    );
+  }, CHAVE_INGLES_CITY_LIFE);
+  await page.reload();
+
+  await page.getByRole('button', { name: /Alice/ }).click();
+  await expect(page.locator('#abrir-ingles-city-life')).toBeHidden();
+  await page.getByRole('button', { name: 'Voltar ao início' }).click();
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await expect(page.locator('#abrir-ingles-city-life')).toBeVisible();
+  await page.locator('#abrir-ingles-city-life').click();
+
+  await expect(page.getByRole('heading', { name: 'English Review - Unit 5' })).toBeVisible();
+  await expect(page.getByText('44 de 44 palavras e frases ouvidas')).toBeVisible();
+  await expect(page.locator('#ingles-grupos').getByRole('button')).toHaveCount(4);
+  await page.locator('[data-item-ingles="town"]').focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('[data-item-ingles="town"]')).toHaveAttribute('aria-pressed', 'true');
+
+  await page.getByRole('button', { name: 'Começar as 16 atividades →' }).click();
+  await expect(page.getByText('Atividade 1 de 16')).toBeVisible();
+  const primeira = await page.evaluate(() => {
+    const questao = window.RegistroIngles.obter('city-life-unidade-5').atividades[0];
+    return {
+      correta: questao.respostaCorreta,
+      errada: questao.alternativas.find((alternativa) => alternativa.id !== questao.respostaCorreta)
+        .id,
+      feedbackErro: questao.feedbackErro,
+      explicacao: questao.explicacao,
+    };
+  });
+  await page.locator(`[data-alternativa-atividade-ingles="${primeira.errada}"]`).click();
+  await page.getByRole('button', { name: 'Conferir resposta' }).click();
+  await expect(page.getByRole('status').filter({ hasText: primeira.feedbackErro })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Próxima →' })).toBeDisabled();
+  await expect(
+    page.locator(`[data-alternativa-atividade-ingles="${primeira.errada}"]`)
+  ).toHaveClass(/incorreta/);
+
+  await page.locator(`[data-alternativa-atividade-ingles="${primeira.correta}"]`).click();
+  await page.getByRole('button', { name: 'Conferir resposta' }).click();
+  await expect(page.getByRole('status').filter({ hasText: primeira.explicacao })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Próxima →' })).toBeEnabled();
+  await page.getByRole('button', { name: 'Próxima →' }).click();
+  await expect(page.getByText('Atividade 2 de 16')).toBeVisible();
+  await page.getByRole('button', { name: '← Anterior' }).click();
+  await expect(page.getByText('Atividade 1 de 16')).toBeVisible();
+  await expect(
+    page.locator(`[data-alternativa-atividade-ingles="${primeira.correta}"]`)
+  ).toHaveClass(/correta/);
+  await page.getByRole('button', { name: 'Próxima →' }).click();
+  await page.reload();
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await page.locator('#abrir-ingles-city-life').click();
+  await page.getByRole('button', { name: 'Continuar atividades →' }).click();
+  await expect(page.getByText('Atividade 2 de 16')).toBeVisible();
+
+  for (let indice = 1; indice < 16; indice += 1) {
+    const correta = await page.evaluate(() => {
+      const estado = window.InglesRevisoes.obterEstado();
+      return window.RegistroIngles.obter('city-life-unidade-5').atividades[estado.questaoAtual]
+        .respostaCorreta;
+    });
+    await page.locator(`[data-alternativa-atividade-ingles="${correta}"]`).click();
+    await page.getByRole('button', { name: 'Conferir resposta' }).click();
+    await page
+      .getByRole('button', { name: indice === 15 ? 'Concluir revisão ✓' : 'Próxima →' })
+      .click();
+  }
+
+  await expect(page.getByText('Mariana, você acertou 16 de 16 atividades.')).toBeVisible();
+  const salvo = await page.evaluate(
+    (chave) => JSON.parse(localStorage.getItem(chave)),
+    CHAVE_INGLES_CITY_LIFE
+  );
+  expect(salvo.atividadeFinalizada).toBe(true);
+  expect(Object.values(salvo.conferenciasAtividades)).toEqual(
+    expect.arrayContaining(Array(16).fill('correta'))
+  );
+  expect(salvo.tentativasAtividade).toBe(17);
   expect(
     await page.evaluate((chave) => localStorage.getItem(chave), CHAVE_INGLES_MARIANA)
   ).toBeNull();

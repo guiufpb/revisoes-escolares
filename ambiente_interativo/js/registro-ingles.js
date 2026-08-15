@@ -342,7 +342,22 @@
     return JSON.parse(JSON.stringify(valor));
   }
 
+  function registrar(unidade) {
+    if (!unidade || !unidade.id) {
+      throw new Error('A unidade de Inglês precisa ter um ID.');
+    }
+    if (
+      unidades.some(function (item) {
+        return item.id === unidade.id;
+      })
+    ) {
+      throw new Error('A unidade de Inglês “' + unidade.id + '” já foi registrada.');
+    }
+    unidades.push(copiar(unidade));
+  }
+
   window.RegistroIngles = {
+    registrar: registrar,
     listar: function (perfil) {
       return unidades
         .filter(function (unidade) {

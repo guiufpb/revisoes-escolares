@@ -12,6 +12,7 @@ const CHAVE_BELA_ALICE = 'revisoesEscolares.alice.leitura.belaDesadormecida.v1';
 const CHAVE_JOANINHA_ALICE = 'revisoesEscolares.alice.leitura.joaninhaPerdeuPintinhas.v1';
 const CHAVE_FORMIGA_ESPECIAL_ALICE = 'revisoesEscolares.alice.leitura.umaFormigaEspecial.v1';
 const CHAVE_INGLES_MARIANA = 'revisoesEscolares.mariana.ingles.atSchoolUnidade3.v1';
+const CHAVE_INGLES_CITY_LIFE = 'revisoesEscolares.mariana.ingles.cityLifeUnidade5.v1';
 
 async function verificarAcessibilidade(page, nomeDaTela) {
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -97,6 +98,34 @@ test('atividades de Inglês da Mariana em largura móvel', async ({ page }) => {
   await expect(page.getByText('Atividade 1 de 10')).toBeVisible();
   await expect(page.locator('[data-alternativa-atividade-ingles]')).toHaveCount(4);
   await verificarAcessibilidade(page, 'Atividades de Inglês da Mariana');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+});
+
+test('City Life da Mariana funciona por teclado e sem rolagem horizontal no celular', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.evaluate((chave) => {
+    const unidade = window.RegistroIngles.obter('city-life-unidade-5');
+    localStorage.setItem(
+      chave,
+      JSON.stringify({
+        itensOuvidos: unidade.grupos.flatMap((grupo) => grupo.itens.map((item) => item.id)),
+        iniciado: true,
+      })
+    );
+  }, CHAVE_INGLES_CITY_LIFE);
+  await page.reload();
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await page.locator('#abrir-ingles-city-life').click();
+  await expect(page.getByRole('heading', { name: 'English Review - Unit 5' })).toBeVisible();
+  await page.getByRole('button', { name: 'Começar as 16 atividades →' }).click();
+  const alternativa = page.locator('[data-alternativa-atividade-ingles]').first();
+  await alternativa.focus();
+  await page.keyboard.press('Enter');
+  await expect(alternativa).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('button', { name: 'Conferir resposta' })).toBeEnabled();
+  await verificarAcessibilidade(page, 'City Life da Mariana');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 

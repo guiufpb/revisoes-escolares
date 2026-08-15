@@ -104,6 +104,12 @@
             <small>Unit 3 · At School</small>
             <strong>Ouvir e praticar →</strong>
           </button>
+          <button class="cartao-materia ingles" id="abrir-ingles-city-life" type="button" hidden>
+            <img src="../assets/objetos_escolares/street.svg" alt="" />
+            <span>City Life</span>
+            <small>Unit 5 · City Life</small>
+            <strong>Nova revisão de inglês →</strong>
+          </button>
           <button
             class="cartao-materia leitura"
             id="materia-leitura"
@@ -142,12 +148,18 @@
             <p class="chapeu">Inglês com áudio local</p>
             <h1 id="ingles-titulo-unidade">English Review – Unit 3</h1>
             <p class="titulo-at-school" id="ingles-subtitulo-unidade" lang="en-US">At School</p>
-            <p>
+            <p id="ingles-descricao-unidade">
               Escolha uma palavra ou frase. O ambiente pronuncia em inglês e também pode ler as
               instruções em português.
             </p>
           </div>
-          <img src="../assets/objetos_escolares/school.svg" alt="" width="138" height="138" />
+          <img
+            id="ingles-imagem-cabecalho"
+            src="../assets/objetos_escolares/school.svg"
+            alt=""
+            width="138"
+            height="138"
+          />
         </div>
 
         <section class="painel-audio-ingles" aria-labelledby="titulo-controles-audio-ingles">
@@ -291,6 +303,15 @@
             <div class="navegacao-atividade-ingles">
               <button class="botao-secundario" id="ingles-atividade-anterior" type="button">
                 ← Anterior
+              </button>
+              <button
+                class="botao-secundario"
+                id="ingles-conferir-atividade"
+                type="button"
+                hidden
+                disabled
+              >
+                Conferir resposta
               </button>
               <button class="botao-principal" id="ingles-atividade-proxima" type="button" disabled>
                 Próxima →
