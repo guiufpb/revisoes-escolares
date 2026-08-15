@@ -1,6 +1,16 @@
 AMBIENTE INTERATIVO - REVISOES ESCOLARES
 ========================================
 
+DOCUMENTACAO CENTRAL
+- Inventario atual de tudo que foi implementado:
+  documentacao/ambiente-interativo/INVENTARIO_IMPLEMENTACOES.md
+- Instrucoes atualizadas de manutencao e criacao:
+  documentacao/ambiente-interativo/INSTRUCOES_PROJETO.md
+- Indice da documentacao:
+  documentacao/ambiente-interativo/README.md
+- O AGENTS.md da raiz resume as regras obrigatorias para trabalhos futuros com
+  o Codex. Este README continua sendo o guia de abertura e uso do ambiente.
+
 COMO ABRIR
 1. Na pasta principal do projeto, dê dois cliques em:
    abrir_ambiente_interativo.bat
