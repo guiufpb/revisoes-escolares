@@ -14,7 +14,7 @@
           titulo: 'School Objects',
           traducao: 'Objetos escolares',
           instrucao:
-            'Escolha um objeto escolar. Depois, use os botões para ouvir o nome em inglês na velocidade normal ou devagar.',
+            'Clique em um objeto escolar para ouvir o nome em inglês. Use a opção devagar quando quiser repetir com mais calma.',
           itens: [
             { id: 'pencil', ingles: 'pencil', portugues: 'lápis', imagem: 'pencil.svg' },
             { id: 'book', ingles: 'book', portugues: 'livro', imagem: 'book.svg' },
@@ -43,7 +43,7 @@
           titulo: 'People at School',
           traducao: 'Pessoas da escola',
           instrucao:
-            'Escolha uma pessoa da escola e ouça como seu nome é pronunciado em inglês. Repita em voz alta no seu ritmo.',
+            'Clique em uma pessoa da escola para ouvir como seu nome é pronunciado em inglês. Repita em voz alta no seu ritmo.',
           itens: [
             {
               id: 'teacher',
@@ -88,7 +88,7 @@
           titulo: 'Places at School',
           traducao: 'Lugares da escola',
           instrucao:
-            'Escolha um lugar da escola. Escute o nome em inglês e observe a figura e a tradução.',
+            'Clique em um lugar da escola para ouvir o nome em inglês e observe a figura e a tradução.',
           itens: [
             {
               id: 'classroom',
@@ -123,7 +123,7 @@
           titulo: 'Listen and Practice',
           traducao: 'Ouça e pratique',
           instrucao:
-            'Escolha uma frase. Ouça em inglês, repita e use a opção devagar quando precisar perceber melhor cada palavra.',
+            'Clique em uma frase para ouvi-la em inglês, repita e use a opção devagar quando precisar perceber melhor cada palavra.',
           itens: [
             {
               id: 'this-pencil',

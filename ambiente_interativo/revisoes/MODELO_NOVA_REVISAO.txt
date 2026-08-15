@@ -111,3 +111,29 @@ O teste Playwright da nova atividade deve cobrir, no minimo:
 6. recarregar com tentativa incompleta e com resposta concluida;
 7. interacao por clique e teclado, alem do arrastar quando existir;
 8. viewport movel, acessibilidade e ausencia de erros no console.
+
+CADENCIA DE VALIDACAO
+====================
+
+- Para cada nova revisao, execute build, formatacao, lint e os testes direcionados
+  deste contrato.
+- Varias perguntas ou etapas desta mesma revisao contam como um unico conjunto.
+- Execute a suite global a cada tres novas revisoes ou conjuntos independentes de
+  atividades baseados em infraestrutura estabilizada.
+- Antecipe a suite global quando alterar navegacao, registros, armazenamento,
+  audio, controlador compartilhado, CSS/HTML estrutural, build, bundle, file://,
+  pontuacao, conclusao, limpeza ou restauracao.
+- Toda pull request para main continua aguardando a validacao global da CI.
+- Consulte a matriz completa em:
+  documentacao/ambiente-interativo/INSTRUCOES_PROJETO.md
+
+PADRAO PARA REVISOES DE INGLES
+==============================
+
+- Cadastre palavras e frases no conteudo da revisao e reutilize js/ingles.js e
+  js/audio.js; nao crie sintese de voz propria.
+- Na primeira pagina, o cartao da palavra deve selecionar o item e iniciar a
+  pronuncia normal em en-US com um unico clique, toque, Enter ou Espaco.
+- Preserve Ouvir em ingles, Ouvir devagar, Repetir e Parar como alternativas.
+- Trocar de grupo ou abrir a revisao nao inicia audio sozinho.
+- Teste a acao direta em ambos os perfis quando a revisao for compartilhada.

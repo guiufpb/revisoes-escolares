@@ -1,6 +1,44 @@
 RELATORIO DE TESTE - AMBIENTE INTERATIVO
 =======================================
 
+ATUALIZAÇÃO: 15/08/2026 - PRONÚNCIA DIRETA NOS CARTÕES DE INGLÊS
+================================================================
+
+ESCOPO IMPLEMENTADO
+- Clicar ou tocar em uma palavra da primeira página agora seleciona o cartão e
+  inicia imediatamente a pronúncia normal em inglês, sem exigir um segundo
+  clique em “Ouvir em inglês”.
+- Enter e Espaço nos cartões nativos oferecem o mesmo fluxo para teclado.
+- O comportamento foi implementado no controlador compartilhado js/ingles.js;
+  por isso atende Unit 3, City Life e futuras revisões de Alice e Mariana.
+- “Ouvir em inglês”, “Ouvir devagar”, “Repetir” e “Parar” foram preservados.
+- Abrir a revisão ou trocar apenas o grupo não dispara áudio.
+- Cliques rápidos continuam cancelando a sequência anterior, evitando falas
+  sobrepostas. O item só entra no progresso quando sua reprodução termina.
+
+INTERFACE E DOCUMENTAÇÃO
+- O status e as instruções dos grupos explicam o gesto direto de um clique.
+- AGENTS.md, instruções detalhadas, modelo de nova revisão e inventário foram
+  atualizados para tornar o padrão obrigatório nas próximas atividades.
+- A política de validação proporcional também foi consolidada nesses arquivos:
+  testes direcionados por entrega, suíte global a cada três revisões e sempre
+  que houver mudança compartilhada, além da suíte completa em pull requests.
+
+VALIDAÇÃO
+- npm run build: PASSOU; o bundle principal foi regenerado pelas fontes.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU, sem erros.
+- Testes direcionados de Inglês: 2 de 2 aprovados.
+- npm test: PASSOU, com 86 de 86 testes Playwright em 5,6 min.
+- A regressão simula vozes locais e confirma clique, tecla Espaço, velocidade
+  0,62, cancelamento da palavra anterior, botões adicionais e persistência.
+- Inspeção em 390 x 844: innerWidth 390 e scrollWidth 375, sem rolagem
+  horizontal e sem erros ou avisos no console.
+- O navegador interno usado na inspeção não possuía voz inglesa local; o clique
+  em “town” selecionou o cartão, chamou o áudio e exibiu corretamente a
+  orientação de instalação. A sequência completa en-US passou com voz simulada
+  nos testes automatizados e permanece local no computador principal.
+
 ATUALIZAÇÃO: 14/08/2026 - CENTENAS EM AÇÃO, NOVA RODADA
 =======================================================
 

@@ -143,6 +143,12 @@ Essa sequência absorve o corte inicial do Chromium/Windows antes da palavra est
 
 ### Controles obrigatórios
 
+- Na página inicial de vocabulário, clicar ou pressionar `Enter`/`Espaço` em um cartão seleciona o
+  item e inicia imediatamente sua pronúncia em `en-US` na velocidade normal `0.62`.
+- Esse comportamento pertence ao controlador compartilhado e vale para as revisões atuais e futuras
+  de Alice e Mariana.
+- Não inicie áudio ao abrir a revisão ou trocar de grupo; a reprodução exige a ação da
+  criança sobre um cartão ou controle de áudio.
 - Ouvir instrução.
 - Ouvir em inglês.
 - Ouvir devagar.
@@ -171,6 +177,8 @@ errar → conferir → corrigir → conferir → avançar.
 - Confirme atraso, aquecimento, aviso e conteúdo em ordem.
 - Confirme que “Parar” e nova solicitação cancelam a anterior.
 - Verifique “Repetir”.
+- Confirme que clique, toque, `Enter` e `Espaço` no cartão iniciam a pronúncia normal do item e que
+  cliques rápidos cancelam a sequência anterior.
 - Cubra os 27 itens, desbloqueio, persistência e isolamento.
 - Audite controles por teclado e em 390 × 844.
 - Não dependa da voz específica instalada na máquina de CI.
@@ -202,16 +210,20 @@ PDF.js permanece local. O leitor dedicado sincroniza páginas, cancela renderiza
 - Áreas de toque confortáveis e movimento reduzido respeitado.
 - Execute axe-core nas telas alteradas.
 
-## 12. Testes obrigatórios
+## 12. Validação proporcional ao risco
+
+### Base obrigatória para toda mudança de código
 
 ```text
 npm run build
 npm run format:check
 npm run lint
-npm test
 ```
 
-Matriz mínima:
+Acrescente regressão e execute os testes Playwright direcionados à revisão, ao controlador e às
+telas atingidas. Não use apenas o caminho feliz para considerar uma atividade validada.
+
+Matriz mínima dos testes direcionados, quando aplicável:
 
 - caminho feliz e primeira tentativa errada;
 - correção sem sair da etapa;
@@ -226,6 +238,40 @@ Matriz mínima:
 - `file://` para o fluxo principal.
 
 Não reduza testes para fazer uma mudança passar.
+
+### Quando executar a suíte global
+
+Execute `npm test` nas seguintes situações:
+
+1. A cada três novas revisões ou conjuntos independentes de atividades criados sobre infraestrutura
+   compartilhada já estabilizada. Várias perguntas ou etapas da mesma revisão contam como um único
+   conjunto, não como várias entregas para essa contagem.
+2. Sempre que uma alteração mudar o comportamento de qualquer parte compartilhada: navegação,
+   seleção de perfil, registros, armazenamento, áudio, controladores de Inglês, Leitura ou
+   Matemática, CSS estrutural, HTML global, build, bundle, PDF.js ou execução por `file://`.
+3. Sempre que mudar regras compartilhadas de pontuação, conclusão, limpeza, migração ou restauração
+   de progresso.
+4. Quando testes direcionados falharem de modo inesperado, houver indício de interferência entre
+   perfis/revisões ou o alcance da mudança não estiver claro.
+5. Antes de consolidar na `main` um lote que ainda não tenha passado por uma suíte global.
+
+Adicionar conteúdo declarativo, um import, cartão ou entrada de registro sem alterar o
+comportamento da infraestrutura não aciona sozinho a suíte global. Nesse caso, valide cadastro,
+chave exclusiva, isolamento, fluxo pedagógico, acessibilidade e persistência com testes
+direcionados.
+
+### Validação local e GitHub
+
+- Durante o desenvolvimento, prefira testes direcionados e saída resumida.
+- Uma mudança compartilhada ou o terceiro conjunto da cadência deve passar por `npm test`
+  localmente antes da publicação.
+- Toda pull request para `main` continua executando a suíte global no GitHub Actions.
+- Quando a mudança for somente de conteúdo e já tiver testes direcionados locais, a suíte global da
+  pull request pode ser a única execução completa daquela entrega.
+- Consolide o trabalho antes do push quando possível; novos commits na mesma pull request reiniciam
+  a validação remota.
+- Aguarde o check “Formatação, lint e testes” e consulte preferencialmente seu resumo final. Abra os
+  logs completos apenas em caso de falha ou diagnóstico necessário.
 
 Mudança apenas em Markdown/TXT não exige build, mas requer links válidos e `git diff --check`.
 

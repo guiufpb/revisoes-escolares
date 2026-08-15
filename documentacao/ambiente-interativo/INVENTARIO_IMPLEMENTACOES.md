@@ -135,7 +135,8 @@ Chave: `revisoesEscolares.mariana.matematica.centenasEmAcao.v2`.
 - Disponível para Alice e Mariana com progresso independente.
 - **27 palavras e frases** agrupadas em objetos, pessoas, lugares e comandos escolares.
 - Instrução em português e pronúncia em inglês para cada item.
-- A criança escolhe o item; nenhum áudio inicia automaticamente.
+- Clicar ou acionar pelo teclado um item já inicia sua pronúncia; nenhum áudio começa apenas ao
+  abrir a revisão ou trocar de grupo.
 - Depois dos 27 áudios, são liberadas 10 atividades.
 - Atividades sobre vocabulário, contagem, tradução, materiais, respeito e `should`/`shouldn't`.
 - Alternativas A–D pseudoaleatórias, estáveis e equilibradas por perfil.
@@ -167,6 +168,15 @@ Chave: `revisoesEscolares.mariana.ingles.cityLifeUnidade5.v1`.
 ### Melhorias aglutinadas de pronúncia
 
 As melhorias foram concentradas em `js/audio.js` e consumidas por `js/ingles.js`, evitando que cada revisão implemente sua própria voz.
+
+#### Pronúncia direta pelo cartão
+
+- Clicar, tocar ou acionar por teclado um cartão de palavra seleciona o item e inicia sua pronúncia
+  em inglês na velocidade normal de 0,62.
+- O padrão é compartilhado pela Unit 3 e City Life e passa a valer automaticamente para novas
+  revisões de Inglês de Alice e Mariana.
+- Os botões “Ouvir em inglês”, “Ouvir devagar”, “Repetir” e “Parar” permanecem disponíveis.
+- Abrir uma revisão ou apenas trocar o grupo de vocabulário não dispara áudio.
 
 #### Seleção inteligente da voz
 
@@ -280,6 +290,19 @@ Teste obrigatório: `errar → conferir → corrigir → conferir → avançar �
 ## 9. Testes e qualidade
 
 Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
+
+### Cadência de validação
+
+- Toda mudança de código passa por build, formatação e lint.
+- Cada nova revisão recebe regressões e testes direcionados de fluxo pedagógico, persistência,
+  isolamento, teclado, ponteiro, celular, acessibilidade e console conforme o risco.
+- A suíte global roda localmente a cada três revisões ou conjuntos independentes de atividades e é
+  antecipada por qualquer mudança comportamental em infraestrutura compartilhada.
+- Perguntas ou etapas da mesma revisão contam como um único conjunto para essa cadência.
+- Inclusões declarativas com apenas import, cartão ou cadastro central podem usar validação local
+  direcionada quando não mudarem o comportamento compartilhado.
+- Toda pull request para `main` continua executando a suíte global no GitHub Actions; a saída
+  completa é consultada apenas quando houver falha ou necessidade de diagnóstico.
 
 Na data deste inventário existem **86 testes Playwright**:
 

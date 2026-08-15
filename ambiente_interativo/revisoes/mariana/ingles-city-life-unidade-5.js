@@ -31,7 +31,7 @@
         titulo: 'City Places',
         traducao: 'Lugares da cidade',
         instrucao:
-          'Escolha um lugar da cidade. Depois, ouça o nome em inglês na velocidade normal ou devagar.',
+          'Clique em um lugar da cidade para ouvir o nome em inglês. Use a opção devagar quando quiser repetir com mais calma.',
         itens: [
           { id: 'city', ingles: 'city', portugues: 'cidade', imagem: 'street.svg' },
           { id: 'town', ingles: 'town', portugues: 'cidade pequena', imagem: 'church.svg' },
@@ -93,7 +93,7 @@
         titulo: 'Where Is It?',
         traducao: 'Onde está?',
         instrucao:
-          'Escolha uma palavra ou expressão de posição. Ouça em inglês e observe o significado em português.',
+          'Clique em uma palavra ou expressão de posição para ouvi-la em inglês e observe o significado em português.',
         itens: [
           { id: 'in', ingles: 'in', portugues: 'dentro de', imagem: 'store.svg' },
           { id: 'on', ingles: 'on', portugues: 'sobre ou em cima de', imagem: 'road.svg' },
@@ -126,7 +126,7 @@
         titulo: 'Materials and Properties',
         traducao: 'Materiais e propriedades',
         instrucao:
-          'Escolha um material ou uma propriedade. Ouça a pronúncia e compare com a tradução.',
+          'Clique em um material ou uma propriedade para ouvir a pronúncia e compare com a tradução.',
         itens: [
           { id: 'glass', ingles: 'glass', portugues: 'vidro', imagem: 'square.svg' },
           { id: 'metal', ingles: 'metal', portugues: 'metal', imagem: 'ruler.svg' },
@@ -164,7 +164,7 @@
         titulo: 'Buildings and Shapes',
         traducao: 'Prédios e formas',
         instrucao:
-          'Escolha uma palavra sobre construções ou formas. Escute em inglês e repita sem pressa.',
+          'Clique em uma palavra sobre construções ou formas para ouvi-la em inglês e repita sem pressa.',
         itens: [
           { id: 'building', ingles: 'building', portugues: 'prédio', imagem: 'store.svg' },
           { id: 'window', ingles: 'window', portugues: 'janela', imagem: 'classroom.svg' },
