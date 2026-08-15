@@ -1,6 +1,13 @@
 MODELO DE NOVA REVISAO COM CENA MATEMATICA
 ==========================================
 
+LEITURA OBRIGATORIA
+- Antes de usar este modelo, leia:
+  documentacao/ambiente-interativo/INSTRUCOES_PROJETO.md
+- Consulte o que ja existe para evitar duplicacao:
+  documentacao/ambiente-interativo/INVENTARIO_IMPLEMENTACOES.md
+- As regras resumidas para futuras alteracoes ficam no AGENTS.md da raiz.
+
 1. Crie apenas o arquivo de conteúdo em revisoes/<perfil>/.
 2. Use uma ID e uma chave localStorage exclusivas e versionadas.
 3. Cadastre o arquivo em js/app.entry.js e uma entrada em js/registro-revisoes.js.

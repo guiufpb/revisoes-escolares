@@ -2,6 +2,21 @@ FERRAMENTAS DO PROJETO
 Projeto: Revisões escolares
 
 
+DOCUMENTAÇÃO CENTRAL
+
+Inventário completo do Ambiente Interativo:
+
+  documentacao/ambiente-interativo/INVENTARIO_IMPLEMENTACOES.md
+
+Instruções atualizadas de manutenção e criação:
+
+  documentacao/ambiente-interativo/INSTRUCOES_PROJETO.md
+
+Regras automáticas para trabalhos futuros com o Codex:
+
+  AGENTS.md
+
+
 1. PREPARAÇÃO
 
 Requisitos: Node.js, npm e o Chromium do Playwright.
