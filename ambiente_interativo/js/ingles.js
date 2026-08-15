@@ -321,8 +321,7 @@
     salvarEstado();
     renderizarItens();
     atualizarItemSelecionado();
-    elemento('ingles-status-audio').textContent =
-      'Você escolheu “' + itemAtual().ingles + '”. Use um botão para ouvir.';
+    ouvirIngles(false);
   }
 
   function renderizarItens() {
@@ -762,7 +761,7 @@
     elemento('ingles-subtitulo-unidade').textContent = unidadeAtual.titulo;
     elemento('ingles-descricao-unidade').textContent =
       unidadeAtual.descricao ||
-      'Escolha uma palavra ou frase. O ambiente pronuncia em inglês e também pode ler as instruções em português.';
+      'Clique ou pressione Enter em uma palavra ou frase para ouvir em inglês. O ambiente também pode ler as instruções em português.';
     elemento('ingles-imagem-cabecalho').src =
       '../assets/objetos_escolares/' + (unidadeAtual.imagemCabecalho || 'school.svg');
     elemento('ingles-titulo-grupo').textContent = grupo.titulo;
@@ -774,6 +773,8 @@
     atualizarItemSelecionado();
     atualizarProgresso();
     atualizarVozesNaTela();
+    elemento('ingles-status-audio').textContent =
+      'Clique ou pressione Enter em uma palavra ou frase abaixo para ouvir em inglês.';
   }
 
   function abrir(perfil, revisaoId) {

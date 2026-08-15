@@ -230,21 +230,23 @@ test('oferece Inglês para os dois perfis e usa áudio bilíngue local com repet
   await expect(page.getByText(/Microsoft Maria Desktop/)).toBeVisible();
 
   await page.locator('[data-item-ingles="book"]').click();
-  await page.getByRole('button', { name: '🔊 Ouvir em inglês' }).click();
+  await page.locator('[data-item-ingles="pencil"]').click();
   await expect(page.getByRole('status')).toContainText('começará em 1 segundo');
   await page.waitForTimeout(700);
   expect(await page.evaluate(() => window.__falasIngles)).toHaveLength(0);
   await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(3);
 
-  await page.getByRole('button', { name: '🐢 Ouvir devagar' }).click();
+  await page.getByRole('button', { name: '🔊 Ouvir em inglês' }).click();
   await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(6);
-  await page.getByRole('button', { name: '🔁 Repetir' }).click();
+  await page.getByRole('button', { name: '🐢 Ouvir devagar' }).click();
   await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(9);
-  await page.getByRole('button', { name: '🔊 Ouvir instrução' }).click();
+  await page.getByRole('button', { name: '🔁 Repetir' }).click();
   await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(12);
+  await page.getByRole('button', { name: '🔊 Ouvir instrução' }).click();
+  await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(15);
 
   const falas = await page.evaluate(() => window.__falasIngles);
-  expect(falas.slice(0, 3).map((fala) => fala.texto)).toEqual(['Ready.', 'Listen.', 'book']);
+  expect(falas.slice(0, 3).map((fala) => fala.texto)).toEqual(['Ready.', 'Listen.', 'pencil']);
   expect(falas[0]).toMatchObject({ idioma: 'en-US', volume: 0.01 });
   expect(falas[1]).toMatchObject({ texto: 'Listen.', idioma: 'en-US', volume: 1 });
   expect(falas[2]).toMatchObject({
@@ -252,12 +254,13 @@ test('oferece Inglês para os dois perfis e usa áudio bilíngue local com repet
     velocidade: 0.62,
     voz: 'Microsoft Zira Desktop',
   });
-  expect(falas[5]).toMatchObject({ texto: 'book', idioma: 'en-US', velocidade: 0.5 });
-  expect(falas[8]).toMatchObject({ texto: 'book', idioma: 'en-US', velocidade: 0.5 });
-  expect(falas[9]).toMatchObject({ texto: 'Preparando.', idioma: 'pt-BR', volume: 0.01 });
-  expect(falas[10]).toMatchObject({ texto: 'Atenção.', idioma: 'pt-BR', volume: 1 });
-  expect(falas[11].texto).toContain('Escolha um objeto escolar');
-  expect(falas[11]).toMatchObject({ idioma: 'pt-BR', voz: 'Microsoft Maria Desktop' });
+  expect(falas[5]).toMatchObject({ texto: 'pencil', idioma: 'en-US', velocidade: 0.62 });
+  expect(falas[8]).toMatchObject({ texto: 'pencil', idioma: 'en-US', velocidade: 0.5 });
+  expect(falas[11]).toMatchObject({ texto: 'pencil', idioma: 'en-US', velocidade: 0.5 });
+  expect(falas[12]).toMatchObject({ texto: 'Preparando.', idioma: 'pt-BR', volume: 0.01 });
+  expect(falas[13]).toMatchObject({ texto: 'Atenção.', idioma: 'pt-BR', volume: 1 });
+  expect(falas[14].texto).toContain('Clique em um objeto escolar');
+  expect(falas[14]).toMatchObject({ idioma: 'pt-BR', voz: 'Microsoft Maria Desktop' });
 
   await page.getByRole('button', { name: '⏹ Parar' }).click();
   await expect(page.getByRole('status')).toContainText('Áudio interrompido');
@@ -265,8 +268,8 @@ test('oferece Inglês para os dois perfis e usa áudio bilíngue local com repet
     (chave) => JSON.parse(localStorage.getItem(chave)),
     CHAVE_INGLES_ALICE
   );
-  expect(salvo.itensOuvidos).toContain('book');
-  expect(salvo.reproducoes).toBe(3);
+  expect(salvo.itensOuvidos).toEqual(['pencil']);
+  expect(salvo.reproducoes).toBe(4);
   await expect(page.getByText('1 de 27 palavras e frases ouvidas')).toBeVisible();
 
   await page.getByRole('button', { name: 'Voltar ao início' }).click();
@@ -383,6 +386,23 @@ test('City Life exige 44 pronúncias e permite corrigir cada atividade antes de 
     );
   }, CHAVE_INGLES_CITY_LIFE);
   await page.reload();
+  await page.evaluate(() => {
+    window.__falasCityLife = [];
+    window.SpeechSynthesisUtterance = function (texto) {
+      this.text = texto;
+    };
+    window.speechSynthesis.getVoices = function () {
+      return [{ name: 'Microsoft Zira Desktop', lang: 'en-US', localService: true }];
+    };
+    window.speechSynthesis.cancel = function () {};
+    window.speechSynthesis.resume = function () {};
+    window.speechSynthesis.speak = function (fala) {
+      window.__falasCityLife.push({ texto: fala.text, idioma: fala.lang, velocidade: fala.rate });
+      if (typeof fala.onstart === 'function') fala.onstart();
+      if (typeof fala.onend === 'function') fala.onend();
+    };
+    window.AudioRevisoes.atualizarVozes();
+  });
 
   await page.getByRole('button', { name: /Alice/ }).click();
   await expect(page.locator('#abrir-ingles-city-life')).toBeHidden();
@@ -394,9 +414,24 @@ test('City Life exige 44 pronúncias e permite corrigir cada atividade antes de 
   await expect(page.getByRole('heading', { name: 'English Review - Unit 5' })).toBeVisible();
   await expect(page.getByText('44 de 44 palavras e frases ouvidas')).toBeVisible();
   await expect(page.locator('#ingles-grupos').getByRole('button')).toHaveCount(4);
-  await page.locator('[data-item-ingles="town"]').focus();
-  await page.keyboard.press('Enter');
+  await page.locator('[data-item-ingles="town"]').click();
   await expect(page.locator('[data-item-ingles="town"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('status')).toContainText('começará em 1 segundo');
+  await expect.poll(() => page.evaluate(() => window.__falasCityLife.length)).toBe(3);
+  expect(await page.evaluate(() => window.__falasCityLife[2])).toMatchObject({
+    texto: 'town',
+    idioma: 'en-US',
+    velocidade: 0.62,
+  });
+  await page.locator('[data-item-ingles="city"]').focus();
+  await page.keyboard.press('Space');
+  await expect(page.locator('[data-item-ingles="city"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect.poll(() => page.evaluate(() => window.__falasCityLife.length)).toBe(6);
+  expect(await page.evaluate(() => window.__falasCityLife[5])).toMatchObject({
+    texto: 'city',
+    idioma: 'en-US',
+    velocidade: 0.62,
+  });
 
   await page.getByRole('button', { name: 'Começar as 16 atividades →' }).click();
   await expect(page.getByText('Atividade 1 de 16')).toBeVisible();

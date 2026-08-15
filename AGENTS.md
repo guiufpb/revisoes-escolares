@@ -39,20 +39,42 @@ Estas regras valem para todo o repositório. O projeto é um ambiente escolar lo
 - Mantenha vozes locais `pt-BR` e `en-US`, sem microfone ou serviço de nuvem.
 - Preserve o aquecimento quase inaudível e as pausas que protegem “Listen” e a primeira palavra contra cortes do Chromium/Windows.
 - Preserve as velocidades 0,62 para “Ouvir em inglês” e 0,50 para “Ouvir devagar”; a opção lenta deve continuar natural, sem soletrar ou separar sílabas artificialmente.
+- Na página inicial de vocabulário, clicar ou pressionar Enter/Espaço em uma palavra ou frase deve selecioná-la e iniciar imediatamente a pronúncia em inglês na velocidade 0,62. Preserve os botões de velocidade, repetição e parada como controles adicionais e nunca inicie áudio apenas ao abrir a página ou trocar de grupo.
 - Mantenha repetir, parar, cancelamento da sequência anterior e retorno acessível do estado do áudio.
 
-## Qualidade mínima
+## Qualidade proporcional ao risco
 
-Para mudanças de código, execute na raiz:
+Para toda mudança de código, execute na raiz:
 
 ```text
 npm run build
 npm run format:check
 npm run lint
-npm test
 ```
 
-Acrescente regressão para o comportamento alterado. Teste desktop, viewport móvel de 390 × 844, teclado, ponteiro, recarga, armazenamento bloqueado quando aplicável, ausência de rolagem horizontal e console sem erros graves.
+Acrescente regressão para o comportamento alterado e execute os testes direcionados da revisão,
+do controlador ou da tela afetada. A validação direcionada deve cobrir, quando aplicável: caminho
+feliz, primeira tentativa errada, correção sem pular, desfazer, avançar, voltar, recarregar,
+persistência de várias ações, isolamento entre perfis e revisões, teclado, ponteiro, viewport móvel
+de 390 × 844, axe-core, ausência de rolagem horizontal e console sem erros graves.
+
+Execute a suíte global `npm test`:
+
+- a cada três novas revisões ou conjuntos independentes de atividades baseados em infraestrutura
+  já estabilizada; perguntas ou etapas da mesma revisão contam como um único conjunto;
+- imediatamente quando houver mudança de comportamento em navegação, registros compartilhados,
+  armazenamento, áudio, controladores compartilhados, CSS estrutural, HTML global, build, bundle,
+  PDF.js, `file://`, pontuação, conclusão, limpeza ou restauração;
+- antes de consolidar na `main` um lote que ainda não tenha passado pela suíte global.
+
+Uma inclusão somente declarativa pode ficar nos testes direcionados mesmo quando precisar de um
+novo import, cartão ou cadastro central sem mudança de comportamento. Se houver dúvida sobre o
+alcance, falha inesperada ou interferência entre perfis, antecipe `npm test`.
+
+Em pull requests, mantenha a suíte global no GitHub Actions e aguarde o check “Formatação, lint e
+testes”. Para mudanças de conteúdo já cobertas localmente por testes direcionados, não é necessário
+repetir a suíte global local antes da CI, salvo nos gatilhos acima. Consolide os commits antes do
+push quando possível para evitar execuções remotas desnecessárias.
 
 Mudanças apenas em documentação podem ser validadas com conferência dos links e `git diff --check`.
 
