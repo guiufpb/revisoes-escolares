@@ -7,6 +7,7 @@ const CAMINHO = '/ambiente_interativo/index.html';
 const CHAVE_ALICE = 'revisoesEscolares.alice.ciencias.origemMateriais';
 const CHAVE_MARIANA = 'revisoesEscolares.mariana.matematica.revisaoAmpla';
 const CHAVE_CENTENAS = 'revisoesEscolares.mariana.matematica.centenasEmAcao.v2';
+const CHAVE_GRAMATICA = 'revisoesEscolares.mariana.gramatica.revisaoAmpla.v1';
 const CHAVE_LEITURA_ALICE = 'revisoesEscolares.alice.leitura.primeirasLicoesDinheiro.v1';
 const CHAVE_LEITURA_MARIANA = 'revisoesEscolares.mariana.leitura.primeirasLicoesDinheiro.v1';
 const CHAVE_REI_ALICE = 'revisoesEscolares.alice.leitura.quemEReiAnimais.v1';
@@ -30,6 +31,7 @@ const CHAVE_FORMIGA_ESPECIAL_MARIANA = 'revisoesEscolares.mariana.leitura.umaFor
 const CHAVE_INGLES_ALICE = 'revisoesEscolares.alice.ingles.atSchoolUnidade3.v1';
 const CHAVE_INGLES_MARIANA = 'revisoesEscolares.mariana.ingles.atSchoolUnidade3.v1';
 const CHAVE_INGLES_CITY_LIFE = 'revisoesEscolares.mariana.ingles.cityLifeUnidade5.v1';
+const CHAVE_INGLES_FAZENDA = 'revisoesEscolares.alice.ingles.atTheFarmUnidade5.v1';
 const CHAVE_ANTIGA = 'revisoes-escolares-progresso-v1';
 const LIVRO_DINHEIRO = 'primeiras-licoes-dinheiro';
 const LIVRO_REI = 'quem-e-o-rei-dos-animais';
@@ -63,6 +65,7 @@ const CHAVES_DOS_TESTES = [
   CHAVE_ALICE,
   CHAVE_MARIANA,
   CHAVE_CENTENAS,
+  CHAVE_GRAMATICA,
   CHAVE_LEITURA_ALICE,
   CHAVE_LEITURA_MARIANA,
   CHAVE_REI_ALICE,
@@ -183,8 +186,8 @@ test('carrega a tela inicial e registra todas as revisões sem chaves duplicadas
       ),
     }))
   );
-  expect(registro).toHaveLength(26);
-  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(26);
+  expect(registro).toHaveLength(32);
+  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(32);
   expect(registro.every((item) => item.elementosExistem)).toBe(true);
 });
 
@@ -496,6 +499,117 @@ test('City Life exige 44 pronúncias e permite corrigir cada atividade antes de 
   expect(salvo.tentativasAtividade).toBe(17);
   expect(
     await page.evaluate((chave) => localStorage.getItem(chave), CHAVE_INGLES_MARIANA)
+  ).toBeNull();
+});
+
+test('At the Farm exige 41 pronúncias e preserva correção, recarga e isolamento', async ({
+  page,
+}) => {
+  await page.evaluate((chave) => {
+    const unidade = window.RegistroIngles.obter('at-the-farm-unidade-5');
+    const itensOuvidos = unidade.grupos.flatMap((grupo) => grupo.itens.map((item) => item.id));
+    localStorage.setItem(
+      chave,
+      JSON.stringify({
+        unidadeId: unidade.id,
+        versao: unidade.versao,
+        grupoAtual: unidade.grupos[0].id,
+        itemAtual: unidade.grupos[0].itens[0].id,
+        itensOuvidos,
+        reproducoes: itensOuvidos.length,
+        iniciado: true,
+      })
+    );
+  }, CHAVE_INGLES_FAZENDA);
+  await page.reload();
+  await page.evaluate(() => {
+    window.__falasFazenda = [];
+    window.SpeechSynthesisUtterance = function (texto) {
+      this.text = texto;
+    };
+    window.speechSynthesis.getVoices = function () {
+      return [{ name: 'Microsoft Zira Desktop', lang: 'en-US', localService: true }];
+    };
+    window.speechSynthesis.cancel = function () {};
+    window.speechSynthesis.resume = function () {};
+    window.speechSynthesis.speak = function (fala) {
+      window.__falasFazenda.push({ texto: fala.text, idioma: fala.lang, velocidade: fala.rate });
+      if (typeof fala.onstart === 'function') fala.onstart();
+      if (typeof fala.onend === 'function') fala.onend();
+    };
+    window.AudioRevisoes.atualizarVozes();
+  });
+
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await expect(page.locator('#abrir-ingles-at-the-farm')).toBeHidden();
+  await page.getByRole('button', { name: 'Voltar ao início' }).click();
+  await page.getByRole('button', { name: /Alice/ }).click();
+  await expect(page.locator('#abrir-ingles-at-the-farm')).toBeVisible();
+  await page.locator('#abrir-ingles-at-the-farm').click();
+
+  await expect(page.getByRole('heading', { name: 'English Review - Unit 5' })).toBeVisible();
+  await expect(page.getByText('41 de 41 palavras e frases ouvidas')).toBeVisible();
+  await expect(page.locator('#ingles-grupos').getByRole('button')).toHaveCount(4);
+  await page.locator('[data-item-ingles="pig"]').click();
+  await expect(page.locator('[data-item-ingles="pig"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect.poll(() => page.evaluate(() => window.__falasFazenda.length)).toBe(3);
+  expect(await page.evaluate(() => window.__falasFazenda[2])).toMatchObject({
+    texto: 'pig',
+    idioma: 'en-US',
+    velocidade: 0.62,
+  });
+
+  await page.getByRole('button', { name: 'Começar as 16 atividades →' }).click();
+  const primeira = await page.evaluate(() => {
+    const questao = window.RegistroIngles.obter('at-the-farm-unidade-5').atividades[0];
+    return {
+      correta: questao.respostaCorreta,
+      errada: questao.alternativas.find((alternativa) => alternativa.id !== questao.respostaCorreta)
+        .id,
+      feedbackErro: questao.feedbackErro,
+    };
+  });
+  await page.locator(`[data-alternativa-atividade-ingles="${primeira.errada}"]`).click();
+  await page.getByRole('button', { name: 'Conferir resposta' }).click();
+  await expect(page.getByRole('status').filter({ hasText: primeira.feedbackErro })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Próxima →' })).toBeDisabled();
+  await page.locator(`[data-alternativa-atividade-ingles="${primeira.correta}"]`).click();
+  await page.getByRole('button', { name: 'Conferir resposta' }).click();
+  await expect(page.getByRole('button', { name: 'Próxima →' })).toBeEnabled();
+  await page.getByRole('button', { name: 'Próxima →' }).click();
+  await page.getByRole('button', { name: '← Anterior' }).click();
+  await expect(
+    page.locator(`[data-alternativa-atividade-ingles="${primeira.correta}"]`)
+  ).toHaveClass(/correta/);
+  await page.getByRole('button', { name: 'Próxima →' }).click();
+  await page.reload();
+  await page.getByRole('button', { name: /Alice/ }).click();
+  await page.locator('#abrir-ingles-at-the-farm').click();
+  await page.getByRole('button', { name: 'Continuar atividades →' }).click();
+  await expect(page.getByText('Atividade 2 de 16')).toBeVisible();
+
+  for (let indice = 1; indice < 16; indice += 1) {
+    const correta = await page.evaluate(() => {
+      const estado = window.InglesRevisoes.obterEstado();
+      return window.RegistroIngles.obter('at-the-farm-unidade-5').atividades[estado.questaoAtual]
+        .respostaCorreta;
+    });
+    await page.locator(`[data-alternativa-atividade-ingles="${correta}"]`).click();
+    await page.getByRole('button', { name: 'Conferir resposta' }).click();
+    await page
+      .getByRole('button', { name: indice === 15 ? 'Concluir revisão ✓' : 'Próxima →' })
+      .click();
+  }
+
+  await expect(page.getByText('Alice, você acertou 16 de 16 atividades.')).toBeVisible();
+  const salvo = await page.evaluate(
+    (chave) => JSON.parse(localStorage.getItem(chave)),
+    CHAVE_INGLES_FAZENDA
+  );
+  expect(salvo.atividadeFinalizada).toBe(true);
+  expect(salvo.tentativasAtividade).toBe(17);
+  expect(
+    await page.evaluate((chave) => localStorage.getItem(chave), CHAVE_INGLES_CITY_LIFE)
   ).toBeNull();
 });
 

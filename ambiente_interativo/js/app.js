@@ -3,6 +3,15 @@
 
   var ID_ALICE = 'alice-ciencias-origem-materiais';
   var ID_CENTENAS = 'mariana-matematica-centenas-em-acao';
+  var ID_GRAMATICA = 'mariana-gramatica-revisao-ampla';
+  var IDS_GRAMATICA_COMPARTILHADA = {
+    alice: 'alice-gramatica-h-til-vocabulario',
+    mariana: 'mariana-gramatica-h-til-vocabulario',
+  };
+  var IDS_OPERACOES = {
+    alice: 'alice-matematica-contas-dia-a-dia',
+    mariana: 'mariana-matematica-contas-dia-a-dia',
+  };
   var IDS_INGLES = {
     alice: 'alice-ingles-at-school-unidade-3',
     mariana: 'mariana-ingles-at-school-unidade-3',
@@ -117,6 +126,9 @@
     if (telaAtualId === 'ingles' && id !== 'ingles' && window.InglesRevisoes) {
       window.InglesRevisoes.pararAudio();
     }
+    if (telaAtualId === 'gramaticaMariana' && id !== 'gramaticaMariana' && window.GramaticaDitado) {
+      window.GramaticaDitado.parar();
+    }
     if (telaAtualId === 'matematicaCena' && id !== 'matematicaCena') {
       window.MatematicaRevisoes.suspender();
     }
@@ -136,7 +148,11 @@
           ? 'Limpar progresso de Inglês'
           : id === 'matematicaCena'
             ? 'Limpar esta revisão de Matemática'
-            : 'Limpar progresso';
+            : id === 'matematicaOperacoes'
+              ? 'Limpar esta atividade de Matemática'
+              : id === 'gramaticaMariana'
+                ? 'Limpar progresso de Gramática'
+                : 'Limpar progresso';
     if (id === 'marianaRevisao') {
       window.requestAnimationFrame(window.DesenhoRevisoes.ajustarTodos);
     }
@@ -171,6 +187,21 @@
     return 'nao-iniciada';
   }
 
+  function situacaoGramatica() {
+    if (!window.RevisaoGramaticaMariana) return 'nao-iniciada';
+    return window.RevisaoGramaticaMariana.obterSituacao();
+  }
+
+  function situacaoGramaticaCompartilhada(id) {
+    if (!window.GramaticaQuestionarios) return 'nao-iniciada';
+    return window.GramaticaQuestionarios.obterSituacao(id);
+  }
+
+  function situacaoOperacoes(id) {
+    if (!window.MatematicaOperacoes) return 'nao-iniciada';
+    return window.MatematicaOperacoes.obterSituacao(id);
+  }
+
   function atualizarEstadoCartao(revisao, situacao) {
     var cartao = document.getElementById(revisao.cartaoId);
     if (!cartao) return;
@@ -198,11 +229,24 @@
     window.RegistroRevisoes.validar().forEach(function (revisao) {
       if (revisao.exibirEstadoNoCartao === false) return;
       var ehIngles = revisao.controladorCompartilhado === 'ingles';
-      if (ehIngles && (!alunoAtual || revisao.aluno !== alunoAtual)) return;
+      var ehOperacoes = revisao.controladorCompartilhado === 'matematica-operacoes';
+      var ehGramaticaCompartilhada = revisao.controladorCompartilhado === 'gramatica-questionarios';
+      if (
+        (ehIngles || ehOperacoes || ehGramaticaCompartilhada) &&
+        (!alunoAtual || revisao.aluno !== alunoAtual)
+      ) {
+        return;
+      }
       var situacao;
       if (revisao.id === ID_ALICE) situacao = situacaoAlice();
       else if (revisao.id === ID_CENTENAS) {
         situacao = window.MatematicaRevisoes.situacao(ID_CENTENAS);
+      } else if (revisao.id === ID_GRAMATICA) {
+        situacao = situacaoGramatica();
+      } else if (ehGramaticaCompartilhada) {
+        situacao = situacaoGramaticaCompartilhada(revisao.id);
+      } else if (ehOperacoes) {
+        situacao = situacaoOperacoes(revisao.id);
       } else if (ehIngles && window.InglesRevisoes) {
         situacao = window.InglesRevisoes.obterSituacao(revisao.aluno, revisao.id);
       } else situacao = situacaoMariana();
@@ -245,6 +289,48 @@
           estadoCentenas.pontos +
           ' conquistas'
         : 'Mariana: vamos construir!';
+    } else if (telaAtualId === 'matematicaOperacoes' && window.MatematicaOperacoes) {
+      var operacoesAtiva = window.MatematicaOperacoes.obterAtiva();
+      var estadoOperacoes =
+        operacoesAtiva && window.MatematicaOperacoes.obterEstado(operacoesAtiva.id);
+      resumo.textContent = estadoOperacoes
+        ? (operacoesAtiva.perfil === 'alice' ? 'Alice' : 'Mariana') +
+          ' · Matemática: questão ' +
+          (estadoOperacoes.questaoAtual + 1) +
+          '/' +
+          operacoesAtiva.questoes.length +
+          ' · ' +
+          estadoOperacoes.pontos +
+          ' acertos'
+        : 'Matemática: vamos calcular!';
+    } else if (telaAtualId === 'trilhaMatematica') {
+      resumo.textContent =
+        (alunoAtual === 'alice' ? 'Alice' : 'Mariana') + ' · Matemática: escolha uma atividade';
+    } else if (telaAtualId === 'gramaticaMariana') {
+      var gramaticaAtiva =
+        window.GramaticaQuestionarios && window.GramaticaQuestionarios.obterAtiva();
+      if (gramaticaAtiva) {
+        var estadoGramaticaCompartilhada = window.GramaticaQuestionarios.obterEstado(
+          gramaticaAtiva.id
+        );
+        resumo.textContent = estadoGramaticaCompartilhada.finalizada
+          ? gramaticaAtiva.nome + ' · Gramática: 25 questões concluídas ✓'
+          : gramaticaAtiva.nome +
+            ' · Gramática: questão ' +
+            (estadoGramaticaCompartilhada.questaoAtual + 1) +
+            '/25 · ' +
+            estadoGramaticaCompartilhada.pontos +
+            ' acertos';
+      } else if (window.RevisaoGramaticaMariana) {
+        var estadoGramatica = window.RevisaoGramaticaMariana.obterEstado();
+        resumo.textContent = estadoGramatica.finalizada
+          ? 'Mariana · Gramática: 40 questões concluídas ✓'
+          : 'Mariana · Gramática: questão ' +
+            (estadoGramatica.questaoAtual + 1) +
+            '/40 · ' +
+            estadoGramatica.pontos +
+            ' acertos';
+      }
     } else if (alunoAtual === 'mariana' && window.RevisaoMatematicaMariana) {
       var estadoMariana = window.RevisaoMatematicaMariana.obterEstado();
       resumo.textContent =
@@ -273,8 +359,18 @@
     document.getElementById('materia-ciencias').hidden = aluno !== 'alice';
     document.getElementById('materia-ingles').hidden = false;
     document.getElementById('abrir-ingles-city-life').hidden = aluno !== 'mariana';
-    document.getElementById('materia-matematica').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-ingles-at-the-farm').hidden = aluno !== 'alice';
+    document.getElementById('materia-matematica').hidden = false;
+    document.getElementById('materia-matematica-descricao').textContent =
+      aluno === 'alice' ? '15 questões de adição e subtração' : 'Revisões e desafios com números';
+    document.getElementById('matematica-nome-perfil').textContent =
+      aluno === 'alice' ? 'Alice' : 'Mariana';
+    document.getElementById('operacoes-matematica-descricao').textContent =
+      aluno === 'alice' ? '15 questões para praticar' : '20 questões, incluindo centenas';
+    document.getElementById('abrir-revisao-mariana').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-centenas-em-acao').hidden = aluno !== 'mariana';
     document.getElementById('materia-leitura').hidden = false;
+    document.getElementById('abrir-gramatica-mariana').hidden = aluno !== 'mariana';
     document.getElementById('limpar-progresso').hidden = false;
     atualizarResumo();
     mostrarTela('trilhas');
@@ -373,11 +469,29 @@
       window.InglesRevisoes.abrir('mariana', 'mariana-ingles-city-life-unidade-5');
       atualizarResumo();
     });
+    document.getElementById('abrir-ingles-at-the-farm').addEventListener('click', function () {
+      window.InglesRevisoes.abrir('alice', 'alice-ingles-at-the-farm-unidade-5');
+      atualizarResumo();
+    });
     document.querySelector('[data-materia="matematica"]').addEventListener('click', function () {
       mostrarTela('trilhaMatematica');
     });
+    document.getElementById('abrir-operacoes-matematica').addEventListener('click', function () {
+      window.MatematicaOperacoes.abrir(IDS_OPERACOES[alunoAtual]);
+      atualizarResumo();
+    });
     document.querySelector('[data-materia="leitura"]').addEventListener('click', function () {
       window.LeituraRevisoes.abrirBiblioteca(alunoAtual);
+      atualizarResumo();
+    });
+    document.getElementById('abrir-gramatica-mariana').addEventListener('click', function () {
+      window.GramaticaQuestionarios.desativar();
+      window.RevisaoGramaticaMariana.abrir();
+      mostrarTela('gramaticaMariana');
+      atualizarResumo();
+    });
+    document.getElementById('abrir-gramatica-h-til').addEventListener('click', function () {
+      window.GramaticaQuestionarios.abrir(IDS_GRAMATICA_COMPARTILHADA[alunoAtual]);
       atualizarResumo();
     });
     document.getElementById('abrir-revisao-mariana').addEventListener('click', function () {
@@ -429,6 +543,21 @@
         atualizarResumo();
         return;
       }
+      if (telaAtualId === 'matematicaOperacoes') {
+        var operacoes = window.MatematicaOperacoes.obterAtiva();
+        if (operacoes) window.MatematicaOperacoes.limpar(operacoes.id, true);
+        atualizarResumo();
+        return;
+      }
+      if (telaAtualId === 'gramaticaMariana') {
+        var gramatica = window.GramaticaQuestionarios.obterAtiva();
+        if (gramatica) {
+          if (window.GramaticaQuestionarios.limpar(gramatica.id, true)) atualizarResumo();
+        } else if (window.RevisaoGramaticaMariana.limparProgresso(true)) {
+          atualizarResumo();
+        }
+        return;
+      }
       var mensagem =
         alunoAtual === 'mariana'
           ? 'Limpar apenas o progresso de Matemática da Mariana?'
@@ -468,6 +597,8 @@
         trilhaMatematica: document.getElementById('tela-trilha-matematica'),
         marianaRevisao: document.getElementById('tela-mariana-revisao'),
         matematicaCena: document.getElementById('tela-matematica-cena'),
+        matematicaOperacoes: document.getElementById('tela-matematica-operacoes'),
+        gramaticaMariana: document.getElementById('tela-gramatica-mariana'),
         bibliotecaLeitura: document.getElementById('tela-biblioteca-leitura'),
         visualizadorLeitura: document.getElementById('tela-visualizador-leitura'),
         questionarioLeitura: document.getElementById('tela-questionario-leitura'),
@@ -484,6 +615,8 @@
       window.LeituraRevisoes.inicializar({ mostrarTela: mostrarTela });
       window.InglesRevisoes.inicializar({ mostrarTela: mostrarTela });
       window.MatematicaRevisoes.inicializar({ mostrarTela: mostrarTela });
+      window.MatematicaOperacoes.inicializar({ mostrarTela: mostrarTela });
+      window.GramaticaQuestionarios.inicializar({ mostrarTela: mostrarTela });
       registrarEventos();
       atualizarResumo();
       mostrarTela('inicial');

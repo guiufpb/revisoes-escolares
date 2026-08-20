@@ -42,6 +42,14 @@ Estas regras valem para todo o repositório. O projeto é um ambiente escolar lo
 - Na página inicial de vocabulário, clicar ou pressionar Enter/Espaço em uma palavra ou frase deve selecioná-la e iniciar imediatamente a pronúncia em inglês na velocidade 0,62. Preserve os botões de velocidade, repetição e parada como controles adicionais e nunca inicie áudio apenas ao abrir a página ou trocar de grupo.
 - Mantenha repetir, parar, cancelamento da sequência anterior e retorno acessível do estado do áudio.
 
+## Ditados em lacunas de Português
+
+- Quando uma lacuna pedir uma palavra que não possa ser deduzida com segurança apenas pelo enunciado visível, ofereça ditado opcional da resposta em `pt-BR`.
+- Use somente `ambiente_interativo/js/audio.js`; não revele a resposta escrita no botão, no DOM visível ou no rótulo acessível.
+- O áudio exige ação da criança, anuncia “Atenção”, fala uma palavra por vez e oferece repetir e parar.
+- Preserve digitação, acentuação, correção recuperável e progresso; o ditado é apoio auditivo, não preenchimento automático.
+- Teste teclado, cancelamento da fala anterior, troca de etapa, voz local, celular, axe-core e `file://`.
+
 ## Qualidade proporcional ao risco
 
 Para toda mudança de código, execute na raiz:

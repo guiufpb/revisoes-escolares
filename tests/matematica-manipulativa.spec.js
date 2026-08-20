@@ -51,9 +51,13 @@ test.beforeEach(async ({ page }) => {
   await expect(page.locator('html')).toHaveClass(/aplicacao-pronta/);
 });
 
-test('mantém a revisão ampla separada e mostra a nova somente para Mariana', async ({ page }) => {
+test('mantém a revisão manipulativa separada e mostra Centenas somente para Mariana', async ({
+  page,
+}) => {
   await page.getByRole('button', { name: /Alice/ }).click();
-  await expect(page.locator('#materia-matematica')).toBeHidden();
+  await expect(page.locator('#materia-matematica')).toBeVisible();
+  await page.getByRole('button', { name: /Matemática/ }).click();
+  await expect(page.getByRole('button', { name: /Contas do dia a dia/ })).toBeVisible();
   await expect(page.locator('#abrir-centenas-em-acao')).toBeHidden();
   expect(await page.evaluate((chave) => localStorage.getItem(chave), CHAVE)).toBeNull();
 

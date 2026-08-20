@@ -27,11 +27,39 @@ integrado, abra pelo atalho recomendado acima.
 
 TRILHAS DISPONÍVEIS
 - Alice > Ciências > Origem dos materiais.
+- Alice > Matemática > Contas do dia a dia, com 15 questões.
+- Alice > Gramática > H, til e vocabulário, com 25 questões.
 - Alice > Inglês > English Review - Unit 3: At School.
 - Alice > Leitura > Primeiras Lições sobre Dinheiro.
+- Mariana > Matemática > Contas do dia a dia, com 20 questões.
 - Mariana > Matemática > Revisão ampla.
+- Mariana > Matemática > Centenas em ação.
+- Mariana > Gramática > H, til e vocabulário, com 25 questões.
 - Mariana > Inglês > English Review - Unit 3: At School.
 - Mariana > Leitura > Primeiras Lições sobre Dinheiro.
+
+CONTAS DO DIA A DIA
+- Alice e Mariana recebem questões e situações diferentes, com progresso salvo
+  separadamente para cada perfil.
+- As cinco primeiras questões trabalham adição e subtração apenas com unidades.
+- Depois, os problemas avançam para números de dois algarismos e dezenas.
+- Alice responde a 15 questões. Mariana responde a 20 e, nas seis finais,
+  também pratica centenas, equivalências com dezenas e unidades e contas como
+  100 + 1.
+- A resposta é escrita no teclado. Se houver erro, a questão continua aberta:
+  leia a pista, corrija o número e confira novamente antes de avançar.
+- Voltar ou recarregar preserva a questão, as respostas e os acertos. O botão
+  de limpeza dentro da atividade reinicia somente a trilha e o perfil ativos.
+
+DITADO NAS LACUNAS DE GRAMÁTICA
+- Nas questões com resposta aberta indicada no painel, cada lacuna possui o
+  botão "Ouvir palavra". O áudio fala a resposta em português depois de
+  "Atenção", sem mostrar nem preencher a palavra.
+- A criança escreve o que ouviu, incluindo a acentuação correta. É possível
+  repetir a última palavra ou parar o áudio.
+- A fala só começa por ação da criança e é cancelada ao trocar de questão ou
+  sair da atividade. O recurso usa apenas voz local do Windows, sem internet,
+  microfone ou gravação.
 
 ÁUDIO BILÍNGUE E ATIVIDADES DE INGLÊS
 - A Unidade 3 está disponível para Alice e Mariana e apresenta objetos, pessoas,

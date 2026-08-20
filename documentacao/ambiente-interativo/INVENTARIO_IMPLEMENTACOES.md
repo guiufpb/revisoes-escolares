@@ -4,7 +4,7 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra a branch `codex/mariana-city-life` em **15/08/2026**.
+Este inventário registra a branch `codex/ditado-gramatica` em **20/08/2026**.
 
 ## 2. Base da aplicação
 
@@ -47,6 +47,8 @@ Este inventário registra a branch `codex/mariana-city-life` em **15/08/2026**.
 - `js/app.js` e `js/app.entry.js`: navegação, cartões e composição do bundle.
 - `js/armazenamento.js`: persistência segura.
 - `js/audio.js`: síntese de voz local bilíngue.
+- `js/gramatica-questionarios.js` e `js/gramatica-ditado.js`: questionários sequenciais de
+  Gramática e apoio auditivo por lacuna.
 - `js/desenho.js`: canvas e persistência de desenho.
 - `js/leitura.js`, `js/leitor-dedicado.js` e `js/glossario.js`: biblioteca e leitor.
 - `js/matematica.js`, `js/matematica-cena.js` e `js/matematica-manipulaveis.js`: Matemática manipulativa.
@@ -75,6 +77,26 @@ Este inventário registra a branch `codex/mariana-city-life` em **15/08/2026**.
 Chave: `revisoesEscolares.alice.ciencias.origemMateriais`.
 
 ## 5. Matemática
+
+### Alice e Mariana — Contas do dia a dia
+
+- Nova revisão independente de adição e subtração, disponível nos dois perfis com enunciados e
+  situações diferentes para cada criança.
+- Alice pratica **15 questões**; Mariana pratica **20 questões**.
+- As cinco primeiras questões de cada perfil trabalham somente unidades e números de um algarismo.
+- As questões seguintes avançam para dezenas e problemas com números de dois algarismos.
+- Exclusivamente para Mariana, as seis questões finais trabalham equivalências entre centenas,
+  dezenas e unidades e resultados imediatamente posteriores a 100, como `100 + 1`.
+- Todas as respostas são digitadas no teclado. Um erro produz uma pista específica, mantém o campo
+  editável e bloqueia o avanço somente até a resposta ser corrigida e conferida novamente.
+- Questão atual, respostas, correções, pontuação e conclusão são restauradas ao voltar ou recarregar.
+  Limpar remove somente a chave da atividade e do perfil ativos.
+- O mesmo controlador compartilhado atende os dois conteúdos, sem misturar perguntas ou progresso.
+
+Chaves:
+
+- `revisoesEscolares.alice.matematica.contasDiaADia.v1`
+- `revisoesEscolares.mariana.matematica.contasDiaADia.v1`
 
 ### Mariana — Revisão ampla
 
@@ -128,7 +150,48 @@ Etapas: apresentação; reconhecer 100; trocas U→D e D→C; montar 700; montar
 
 Chave: `revisoesEscolares.mariana.matematica.centenasEmAcao.v2`.
 
-## 6. Inglês — conteúdo, áudio e pronúncia
+## 6. Gramática
+
+### Mariana — revisão ampla de Gramática
+
+- Nova revisão independente e disponível somente para Mariana.
+- **40 questões** com correção imediata, tentativa recuperável e avanço bloqueado até a correção.
+- Conteúdo baseado no caderno de agosto de 2026: M e N no final das palavras; frases declarativas
+  e interrogativas; ponto-final e ponto de interrogação; `za`, `ze`, `zi`, `zo`, `zu`; contagem de
+  sílabas; ponto de exclamação em emoções fortes; transformação digitada de frases declarativas em
+  exclamativas; e uso introdutório de `s` e `ss`.
+- Campos de texto e alternativas reutilizam os componentes visuais da revisão ampla, com mensagens
+  específicas em região `aria-live` e operação por teclado, mouse ou toque.
+- Respostas, questão atual, correções, pontuação e conclusão são restauradas depois de voltar ou
+  recarregar; limpar remove somente a chave desta revisão.
+- O PDF escolar permaneceu privado e não foi copiado para a aplicação.
+- As questões 5, 7 e 22 oferecem ditado opcional de cada resposta em `pt-BR`, com “Atenção”,
+  repetição e parada, sem mostrar nem preencher automaticamente a palavra.
+
+Chave: `revisoesEscolares.mariana.gramatica.revisaoAmpla.v1`.
+
+### Alice e Mariana — H, til e vocabulário
+
+- Revisão compartilhada com **25 questões idênticas** para os dois perfis e progresso individual.
+- Conteúdo adaptado ao caderno: H inicial silencioso; dígrafos `ch`, `lh` e `nh`; H em
+  `super-homem`, `anti-higiênico`, `ah!` e `oh!`; til e nasalização; combinações com `ã` e `õ`;
+  plural; distinção entre `lã` e `lá`; circunflexo em `bebê`, `você`, `avô` e `robô`; sinônimos e
+  antônimos.
+- Questões específicas de teclado exigem o til ou o circunflexo; respostas sem o sinal continuam
+  corrigíveis e não liberam o avanço.
+- O mesmo conjunto de questões é cadastrado uma única vez, mas questão atual, respostas,
+  correções, pontos, conclusão e limpeza permanecem isolados por perfil.
+- O painel visual de Gramática é reutilizado sem remover a revisão anterior da Mariana, e o PDF
+  escolar permanece privado fora da aplicação.
+- Na questão 17, Alice e Mariana podem ouvir separadamente `irmã`, `avião`, `balões` e `manhã` e
+  continuam responsáveis por digitar o til corretamente.
+
+Chaves:
+
+- `revisoesEscolares.alice.gramatica.hTilVocabulario.v1`
+- `revisoesEscolares.mariana.gramatica.hTilVocabulario.v1`
+
+## 7. Inglês — conteúdo, áudio e pronúncia
 
 ### Unit 3 — At School
 
@@ -164,6 +227,22 @@ Chaves:
 - O cartão antigo da Unidade 3 permanece acessível e mantém sua chave e seu comportamento.
 
 Chave: `revisoesEscolares.mariana.ingles.cityLifeUnidade5.v1`.
+
+### Alice — Unit 5: At the Farm
+
+- Nova revisão independente, disponível somente no perfil da Alice.
+- **41 palavras e expressões com pronúncia local** antes das atividades.
+- Quatro grupos: animais da fazenda; famílias e grupos; cuidados e alimentos; lugares e sons.
+- **16 atividades** baseadas no caderno de agosto de 2026, sem publicar o PDF, suas imagens ou
+  anotações pessoais.
+- Conteúdo sobre nomes de animais, filhotes, aves e mamíferos, contagem, alimentação de cavalos,
+  necessidades básicas, habitats, cuidado e sons dos animais.
+- Correção imediata por questão, com pista específica, nova tentativa obrigatória antes do avanço
+  e restauração da resposta, conferência, questão e progresso após voltar ou recarregar.
+- O cartão fica visível somente para Alice; Unit 3 e City Life preservam suas próprias chaves.
+- Foram acrescentados 29 SVGs locais da biblioteca Fluent Emoji Flat já licenciada no projeto.
+
+Chave: `revisoesEscolares.alice.ingles.atTheFarmUnidade5.v1`.
 
 ### Melhorias aglutinadas de pronúncia
 
@@ -229,9 +308,11 @@ O eventual corte fica no aquecimento quase inaudível, não em “Listen” nem 
 
 - A mesma infraestrutura bilíngue atende Alice e Mariana.
 - O padrão de espera e aviso também foi reaproveitado nos ditados de Leitura, protegendo a primeira palavra avaliada.
+- Os ditados de Gramática reutilizam o mesmo módulo com voz `pt-BR`, velocidade 0,78 e mensagens
+  próprias para palavra ditada.
 - Testes verificam presença das vozes `pt-BR`/`en-US`, controles, progresso dos 27 itens, atividades, isolamento por perfil, recompensa e acessibilidade móvel.
 
-## 7. Leitura
+## 8. Leitura
 
 ### Biblioteca compartilhada
 
@@ -270,7 +351,7 @@ O eventual corte fica no aquecimento quase inaudível, não em “Listen” nem 
 - Na CI, `scripts/gerar_pdfs_teste_ci.js` cria PDFs vazios válidos com a quantidade exata de páginas apenas quando estão ausentes.
 - O gerador nunca sobrescreve livros reais locais.
 
-## 8. Prevenções de regressão incorporadas
+## 9. Prevenções de regressão incorporadas
 
 - Atividades de ordenar não prendem cartões após o primeiro erro.
 - Bandejas e posições são reconstruídas do estado salvo.
@@ -284,10 +365,11 @@ O eventual corte fica no aquecimento quase inaudível, não em “Listen” nem 
 - Limpar uma revisão não apaga outra matéria, perfil ou rodada.
 - Áudio antigo é cancelado antes de uma nova pronúncia.
 - O início audível da pronúncia é protegido por aquecimento e pausas.
+- Lacunas ambíguas de Gramática oferecem ditado opcional sem expor a resposta escrita no controle.
 
 Teste obrigatório: `errar → conferir → corrigir → conferir → avançar → voltar → recarregar`.
 
-## 9. Testes e qualidade
+## 10. Testes e qualidade
 
 Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
 
@@ -304,15 +386,25 @@ Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
 - Toda pull request para `main` continua executando a suíte global no GitHub Actions; a saída
   completa é consultada apenas quando houver falha ou necessidade de diagnóstico.
 
-Na data deste inventário existem **86 testes Playwright**:
+Na data deste inventário existem **111 testes Playwright**:
 
-- `tests/ambiente-interativo.spec.js`: fluxos centrais, as duas revisões de Inglês da Mariana, Leitura, Matemática ampla, armazenamento, canvas e `file://`.
+- `tests/ambiente-interativo.spec.js`: fluxos centrais, revisões de Inglês de Alice e Mariana, Leitura, Matemática ampla, armazenamento, canvas e `file://`.
 - `tests/matematica-manipulativa.spec.js`: cenas, trocas, ábacos, clique no quadro, teclado, persistência e nova Centenas em ação.
 - `tests/acessibilidade.spec.js`: axe e responsividade das telas principais.
+- `tests/gramatica-mariana.spec.js`: 40 questões, erro e correção, digitação, teclado, persistência,
+  isolamento, limpeza seletiva, conclusão, ditado nas questões 5/7/22, celular, axe e `file://`.
+- `tests/gramatica-h-til-vocabulario.spec.js`: conteúdo idêntico com chaves distintas, erro e
+  correção, teclado, exigência de sinais gráficos, retorno, recarga, isolamento, limpeza seletiva,
+  conclusão, ditado compartilhado da questão 17, celular, axe e `file://`.
+- `tests/matematica-operacoes.spec.js`: sequências próprias de 15 e 20 questões, progressão de
+  unidades para dezenas, centenas exclusivas da Mariana, digitação, correção recuperável,
+  persistência, isolamento, limpeza seletiva, celular, axe e `file://`.
 
-A cobertura inclui isolamento, erro e correção antes do avanço em City Life, recarga, Pointer Events, teclado, dados corrompidos, `localStorage` bloqueado, áudio bilíngue, leitor, ditados, canvas, console, arquivo local e viewport móvel.
+A cobertura inclui isolamento, erro e correção antes do avanço em City Life e At the Farm,
+recarga, Pointer Events, teclado, dados corrompidos, `localStorage` bloqueado, áudio bilíngue,
+leitor, ditados, canvas, console, arquivo local e viewport móvel.
 
-## 10. GitHub e automações
+## 11. GitHub e automações
 
 - GitHub CLI instalado e autenticado.
 - Repositório público: <https://github.com/guiufpb/revisoes-escolares>.
@@ -324,7 +416,7 @@ A cobertura inclui isolamento, erro e correção antes do avanço em City Life, 
 - `main` protegida por check obrigatório, atualização da branch, bloqueio de force-push e exclusão.
 - Pull request #1 em rascunho e com check aprovado nesta consolidação.
 
-## 11. Ferramentas auxiliares
+## 12. Ferramentas auxiliares
 
 - Geração de PDF A4 a partir de cartilhas HTML.
 - Geração de previews PNG.
@@ -333,7 +425,7 @@ A cobertura inclui isolamento, erro e correção antes do avanço em City Life, 
 - Biblioteca local de ícones e créditos.
 - Atalhos Windows independentes do diretório inicial e do perfil pessoal do navegador.
 
-## 12. Mapa principal
+## 13. Mapa principal
 
 | Caminho                          | Responsabilidade                         |
 | -------------------------------- | ---------------------------------------- |
@@ -346,7 +438,7 @@ A cobertura inclui isolamento, erro e correção antes do avanço em City Life, 
 | `scripts/`                       | PDF, previews, validação e apoio à CI    |
 | `.github/`                       | Actions, Dependabot e formulário de erro |
 
-## 13. Histórico técnico consolidado
+## 14. Histórico técnico consolidado
 
 - `105fba3` — ampliação do ambiente e automação das validações.
 - `564a6c7` — PDFs vazios nos testes remotos.

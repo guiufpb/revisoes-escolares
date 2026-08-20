@@ -1,6 +1,139 @@
 RELATORIO DE TESTE - AMBIENTE INTERATIVO
 =======================================
 
+ATUALIZAÇÃO: 20/08/2026 - DITADO NAS LACUNAS DE GRAMÁTICA
+==========================================================
+
+ESCOPO IMPLEMENTADO
+- As questões 5, 7 e 22 da revisão ampla da Mariana e a questão 17 da revisão
+  compartilhada de Alice e Mariana agora oferecem ditado por lacuna.
+- Cada botão reproduz somente a palavra esperada em português, depois de
+  "Atenção", sem revelar o texto nem preencher o campo automaticamente.
+- Foram incluídos repetir, parar, cancelamento ao trocar de palavra/questão/tela
+  e retorno acessível por aria-live.
+- O recurso reutiliza js/audio.js com voz local pt-BR e velocidade 0,78; não há
+  microfone, gravação, API ou dependência de internet.
+- Respostas, chaves, pontuação e progresso existentes foram preservados.
+
+VALIDAÇÃO DIRECIONADA
+- tests/gramatica-mariana.spec.js e tests/gramatica-h-til-vocabulario.spec.js:
+  18 de 18 cenários aprovados.
+- Cobertura: todas as 16 palavras, ausência de reprodução automática, idioma,
+  velocidade, teclado, repetição, parada, cancelamento, dois perfis, celular,
+  axe-core, ausência de overflow e file://.
+
+REVISÃO GLOBAL PARA PUBLICAÇÃO
+- npm run build, npm run format:check e npm run lint: PASSARAM.
+- npm test: 111 de 111 testes Playwright PASSARAM em 6,8 minutos.
+- A primeira passagem revelou uma expectativa antiga que ainda ocultava a
+  matéria Matemática da Alice. O teste foi alinhado à revisão já existente
+  "Contas do dia a dia" e confirmou que "Centenas em ação" continua exclusiva
+  da Mariana; a segunda passagem global terminou sem falhas.
+- A inspeção no navegador confirmou a voz local pt-BR, os estados de repetir e
+  parar, o retorno final do ditado, a ausência de erros graves e a adaptação
+  sem rolagem horizontal em 390 x 844.
+
+ATUALIZAÇÃO: 19/08/2026 - H, TIL E VOCABULÁRIO PARA ALICE E MARIANA
+====================================================================
+
+ESCOPO IMPLEMENTADO
+- Criada uma revisão compartilhada de Gramática com 25 questões idênticas para
+  Alice e Mariana, mantendo progresso individual por perfil.
+- O conteúdo trabalha H inicial silencioso; CH, LH e NH; palavras com hífen;
+  interjeições; til, som nasal e plural; lã/lá; circunflexo; avô/avó;
+  sinônimos e antônimos.
+- O til e o circunflexo são obrigatórios nas questões próprias de digitação.
+  O erro continua recuperável e não libera a próxima questão antes da correção.
+- A revisão anterior de 40 questões da Mariana foi preservada como atividade
+  independente. O caderno particular não foi copiado para a aplicação.
+
+PERSISTÊNCIA E ISOLAMENTO
+- Alice: revisoesEscolares.alice.gramatica.hTilVocabulario.v1.
+- Mariana: revisoesEscolares.mariana.gramatica.hTilVocabulario.v1.
+- As duas revisões usam o mesmo conteúdo e painel, mas salvam respostas,
+  correções, pontos, etapa e conclusão em chaves diferentes.
+- A limpeza seletiva remove somente a chave do perfil e da atividade ativos.
+
+VALIDAÇÃO PROPORCIONAL
+- npm run build: PASSOU; o bundle principal foi regenerado pelas fontes.
+- npm run format:check e npm run lint: PASSARAM sem erros.
+- tests/gramatica-h-til-vocabulario.spec.js e tests/gramatica-mariana.spec.js:
+  14 de 14 cenários aprovados.
+- Teste direcionado do cadastro central: 1 de 1 aprovado, com 32 revisões e
+  chaves únicas válidas.
+- Existem 107 testes Playwright cadastrados no total. A suíte global não foi
+  executada nesta entrega, conforme solicitação expressa; ela ficou combinada
+  para a revisão global posterior.
+- Nenhum PDF para impressão, commit ou envio ao GitHub foi realizado.
+
+ATUALIZAÇÃO: 18/08/2026 - CONTAS DO DIA A DIA PARA ALICE E MARIANA
+==================================================================
+
+ESCOPO IMPLEMENTADO
+- Criada uma nova revisão de Matemática nos dois perfis, com conteúdo próprio:
+  15 questões para Alice e 20 questões para Mariana.
+- As cinco primeiras questões de cada criança usam somente unidades e números
+  de um algarismo. As seguintes avançam para adição e subtração com dezenas e
+  problemas contextualizados com números de dois algarismos.
+- As seis questões finais da Mariana são exclusivas: equivalências de centenas
+  com dezenas ou unidades e contas digitadas posteriores a 100.
+- Todas as respostas são escritas no teclado. Um erro oferece pista específica,
+  permanece corrigível e não libera a próxima questão até nova conferência.
+
+PERSISTÊNCIA E ISOLAMENTO
+- Alice: revisoesEscolares.alice.matematica.contasDiaADia.v1.
+- Mariana: revisoesEscolares.mariana.matematica.contasDiaADia.v1.
+- Questão, respostas, correções, pontuação e conclusão são restauradas ao
+  voltar e recarregar. A limpeza seletiva preserva a irmã e outras revisões.
+- O controlador é compartilhado, mas as sequências, chaves e situações são
+  independentes por perfil.
+
+VALIDAÇÃO PROPORCIONAL
+- npm run build: PASSOU; o bundle principal foi regenerado pelas fontes.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU, sem erros.
+- tests/matematica-operacoes.spec.js: 5 de 5 cenários aprovados, cobrindo
+  cadastro, progressão, erro e correção, avanço, retorno, recarga, conclusão,
+  centenas, teclado, isolamento, limpeza seletiva, celular, axe-core e file://.
+- Existem 100 testes Playwright cadastrados no total. A suíte global não foi
+  executada nesta entrega, conforme a validação proporcional solicitada para o
+  novo conteúdo; nenhum commit ou envio ao GitHub foi realizado.
+- Inspeção visual em servidor local: cartões corretos por perfil, fluxo de erro
+  e correção funcionando, console sem erros ou avisos e ausência de rolagem
+  horizontal em viewport móvel de 390 x 844.
+
+ATUALIZAÇÃO: 15/08/2026 - ALICE, UNIT 5: AT THE FARM
+=====================================================
+
+ESCOPO IMPLEMENTADO
+- Nova revisão independente para Alice, com chave versionada
+  revisoesEscolares.alice.ingles.atTheFarmUnidade5.v1.
+- A primeira página reúne 41 palavras e expressões em quatro grupos: animais da
+  fazenda; famílias e grupos; cuidados e alimentos; lugares e sons.
+- Cada cartão inicia a pronúncia normal em inglês por clique, toque, Enter ou
+  Espaço, usando somente o módulo compartilhado de áudio.
+- Depois das escutas, são liberadas 16 atividades com correção imediata,
+  feedback específico e avanço bloqueado até a resposta correta ser conferida.
+- O conteúdo foi elaborado após leitura visual integral das 20 páginas do
+  caderno Alice Inglês Agosto-26 OCR.pdf. O PDF e suas imagens não foram
+  incorporados ao ambiente nem preparados para publicação.
+- Foram acrescentados 29 SVGs locais derivados de Fluent Emoji Flat, já
+  licenciado no projeto. Uma inspeção visual detectou e corrigiu o viewBox dos
+  SVGs antes da entrega.
+
+VALIDAÇÃO PROPORCIONAL
+- npm run build: PASSOU.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU.
+- Testes direcionados At the Farm: 2 de 2 aprovados, cobrindo pronúncia direta,
+  erro, conferência, correção, avanço, retorno, recarga, conclusão, isolamento,
+  teclado, viewport 390 x 844, axe-core e ausência de rolagem horizontal.
+- Inspeção no navegador local: cartões, ícones, grupos e console sem erros ou
+  avisos graves.
+- A suíte global local não foi repetida: a entrega reutiliza infraestrutura já
+  estabilizada e altera somente conteúdo declarativo, cadastro, cartão, ícones
+  e testes próprios. A CI continuará executando a suíte global em eventual PR.
+
 ATUALIZAÇÃO: 15/08/2026 - PRONÚNCIA DIRETA NOS CARTÕES DE INGLÊS
 ================================================================
 
