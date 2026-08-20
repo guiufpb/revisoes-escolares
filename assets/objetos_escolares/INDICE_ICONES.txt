@@ -65,3 +65,35 @@ student.svg | aluno/aluna | fluent-emoji-flat:student | exato
 teacher.svg | professor/professora | fluent-emoji-flat:teacher | exato
 traffic-light.svg | semáforo | fluent-emoji-flat:vertical-traffic-light | exato
 tree.svg | árvore | fluent-emoji-flat:deciduous-tree | exato
+
+ICONES DA REVISAO AT THE FARM
+
+aquarium.svg | aquário | fluent-emoji-flat:tropical-fish | aproximado: peixe tropical representa o aquário
+baby-animals.svg | filhotes | fluent-emoji-flat:baby-symbol | aproximado: símbolo de bebê representa os filhotes
+bird.svg | pássaro | fluent-emoji-flat:bird | exato
+calf.svg | bezerro | fluent-emoji-flat:cow-face | aproximado: rosto de vaca representa o bezerro
+carrots.svg | cenouras | fluent-emoji-flat:carrot | exato
+cat.svg | gato | fluent-emoji-flat:cat | exato
+chick.svg | pintinho | fluent-emoji-flat:baby-chick | exato
+chicken.svg | galinha | fluent-emoji-flat:chicken | exato
+city.svg | cidade | fluent-emoji-flat:cityscape | exato
+cow.svg | vaca | fluent-emoji-flat:cow | exato
+dog.svg | cachorro | fluent-emoji-flat:dog | exato
+duck.svg | pato | fluent-emoji-flat:duck | exato
+duckling.svg | patinho | fluent-emoji-flat:front-facing-baby-chick | aproximado: ave filhote representa o patinho
+farm.svg | fazenda | fluent-emoji-flat:tractor | aproximado: trator representa a fazenda
+fish.svg | peixe | fluent-emoji-flat:fish | exato
+food.svg | comida | fluent-emoji-flat:bowl-with-spoon | exato
+goat.svg | cabra | fluent-emoji-flat:goat | exato
+grass.svg | grama | fluent-emoji-flat:herb | aproximado: erva representa a grama
+hay.svg | feno | fluent-emoji-flat:ear-of-corn | aproximado: espiga representa o alimento seco da fazenda
+home.svg | casa | fluent-emoji-flat:house-with-garden | exato
+horse.svg | cavalo | fluent-emoji-flat:horse | exato
+lamb.svg | cordeiro | fluent-emoji-flat:ewe | aproximado: ovelha representa o cordeiro
+milk.svg | leite | fluent-emoji-flat:glass-of-milk | exato
+mouse.svg | camundongo | fluent-emoji-flat:mouse | exato
+pig.svg | porco | fluent-emoji-flat:pig | exato
+piglet.svg | leitão | fluent-emoji-flat:pig-face | aproximado: rosto de porco representa o leitão
+pond.svg | lagoa | fluent-emoji-flat:water-wave | aproximado: onda representa a lagoa
+sheep.svg | ovelha | fluent-emoji-flat:ewe | exato
+water.svg | água | fluent-emoji-flat:droplet | exato

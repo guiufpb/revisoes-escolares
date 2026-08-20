@@ -2,10 +2,13 @@ RELATORIO DA BIBLIOTECA VISUAL
 Projeto: Revisoes escolares
 Pasta principal: Documentos/Codex/Revisoes escolares
 
-1. Quantos icones foram encontrados/salvos: 61
+1. Quantos icones foram encontrados/salvos: 90
    Pendentes: 0
 
 2. Objetos prontos:
+- 29 SVGs locais foram acrescentados para a revisão At the Farm, com animais,
+  filhotes, alimentos, necessidades e habitats. A origem e as aproximações estão
+  discriminadas em assets/objetos_escolares/INDICE_ICONES.txt.
 - backpack.svg (mochila) - fluent-emoji-flat:backpack
 - bakery.svg (padaria) - fluent-emoji-flat:bread - aproximado
 - ball.svg (bola) - fluent-emoji-flat:soccer-ball

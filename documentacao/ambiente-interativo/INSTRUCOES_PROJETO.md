@@ -76,6 +76,28 @@ errar → conferir → corrigir → conferir → avançar → voltar → recarre
 - Pontos e conquistas são concedidos uma única vez.
 - Voltar não duplica pontos, peças, listeners ou respostas.
 
+### Lacunas com resposta em aberto
+
+Quando uma lacuna exigir uma palavra que não possa ser deduzida com segurança apenas pelo texto
+visível — por depender de um texto anterior, de uma pista ampla ou da grafia/acentuação exata —,
+ofereça um **ditado opcional em português**:
+
+- use exclusivamente `ambiente_interativo/js/audio.js`, com voz local `pt-BR`;
+- associe um botão “Ouvir palavra” a cada lacuna, sem incluir a resposta escrita no botão, no texto
+  visível, em `aria-label` ou em atributo de dados;
+- reproduza somente após clique, toque, `Enter` ou `Espaço`; nunca fale automaticamente ao abrir;
+- preserve a sequência de aquecimento, “Atenção” e pausas contra corte da primeira palavra;
+- fale uma palavra por vez em velocidade natural de ditado (`rate = 0.78`), sem soletrar;
+- ofereça repetir a última palavra e parar, cancelando imediatamente a solicitação anterior;
+- cancele o ditado ao trocar de lacuna, questão, revisão ou tela;
+- mantenha uma região `aria-live` com espera, reprodução, conclusão, interrupção e erro;
+- o áudio não preenche o campo: a criança continua responsável por grafia e acentuação;
+- mantenha a atividade plenamente utilizável sem áudio e preserve correção, pontuação e progresso.
+
+Teste, no mínimo, ausência de reprodução automática, todas as palavras esperadas, idioma, velocidade,
+sequência “Atenção”→palavra, repetição, parada, cancelamento, teclado, outro perfil, viewport móvel,
+axe-core, console e `file://`.
+
 ### Arrasto
 
 - Use Pointer Events para mouse e toque.
@@ -96,6 +118,21 @@ errar → conferir → corrigir → conferir → avançar → voltar → recarre
 - Desfazer e recarregar preservam a representação anterior ou trocada.
 - No ábaco, declare se a tarefa é montar ou ler, mostre apenas hastes necessárias e descreva cada haste de modo acessível.
 - Use o modelo de nova revisão, atualize cartão, registro, chave, total, testes e inventário.
+
+### Operações digitadas
+
+- Reutilize `ambiente_interativo/js/matematica-operacoes.js` para revisões sequenciais de adição,
+  subtração, equivalências numéricas e respostas escritas no teclado.
+- Mantenha enunciados, respostas, pistas e progressão nos arquivos específicos de cada perfil em
+  `ambiente_interativo/revisoes/<perfil>/`; não coloque conteúdo infantil no controlador.
+- Informe a conta de forma visível e acessível, associe corretamente o rótulo ao campo numérico e
+  permita conferir também com Enter.
+- Depois de um erro, preserve a resposta para edição, anuncie uma pista específica por `aria-live`
+  e só libere “Próxima” depois da correção conferida.
+- Ao aumentar a dificuldade, registre a faixa de cada questão e teste a fronteira da progressão,
+  por exemplo das cinco primeiras questões de unidades para as questões seguintes de dezenas.
+- Conteúdos exclusivos, como centenas apenas para uma criança, permanecem no arquivo e na chave
+  desse perfil; o controlador compartilhado não deve inferir ou copiar perguntas entre perfis.
 
 ## 8. Ordenação de cartões
 

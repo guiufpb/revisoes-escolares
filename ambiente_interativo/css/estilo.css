@@ -898,6 +898,120 @@ footer {
   background: #ffe2ea;
 }
 
+.painel-ditado-gramatica {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 16px 18px;
+  border: 3px solid #dfd6fa;
+  border-radius: 18px;
+  background: #fffdf4;
+}
+
+.painel-ditado-gramatica p,
+.status-ditado-gramatica {
+  margin: 0;
+}
+
+.painel-ditado-gramatica p {
+  color: #403768;
+  font-weight: 800;
+}
+
+.controles-ditado-gramatica {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.controles-ditado-gramatica button,
+.botao-ouvir-palavra {
+  min-height: 48px;
+}
+
+.status-ditado-gramatica {
+  min-height: 24px;
+  color: #514a66;
+  font-weight: 800;
+}
+
+.campo-mariana-ditado {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 440px);
+}
+
+.campo-resposta-ditado {
+  display: grid;
+  grid-template-columns: minmax(120px, 220px) minmax(155px, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+
+.botao-ouvir-palavra {
+  width: 100%;
+  padding-inline: 12px;
+  white-space: nowrap;
+}
+
+.campo-gramatica-frase {
+  grid-template-columns: 1fr;
+}
+
+.campo-gramatica-frase input {
+  text-align: left;
+}
+
+.atividade-operacoes {
+  display: grid;
+  gap: 20px;
+}
+
+.problema-operacoes {
+  max-width: 780px;
+  margin: 0 auto;
+  font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+  font-weight: 800;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.conta-operacoes {
+  width: min(100%, 460px);
+  margin: 0 auto;
+  padding: 18px 22px;
+  border: 3px solid #d9cdf9;
+  border-radius: 20px;
+  background: #f5f1ff;
+  color: var(--roxo-escuro);
+  font-size: clamp(1.65rem, 5vw, 2.5rem);
+  font-weight: 1000;
+  text-align: center;
+}
+
+.campo-resposta-operacoes {
+  width: min(100%, 620px);
+  margin: 0 auto;
+}
+
+.lembrete-centenas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  border: 2px solid #efc965;
+  border-radius: 18px;
+  background: #fff7d8;
+  color: #503887;
+  font-weight: 900;
+}
+
+.lembrete-centenas span:not([aria-hidden='true']) {
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: white;
+}
+
 .acoes-atividade-mariana {
   display: flex;
   flex-wrap: wrap;
@@ -2846,6 +2960,14 @@ footer {
     grid-template-columns: 1fr;
   }
 
+  .campo-resposta-ditado {
+    grid-template-columns: 1fr;
+  }
+
+  .controles-ditado-gramatica button {
+    flex: 1 1 170px;
+  }
+
   .corrida-mariana {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -2858,6 +2980,10 @@ footer {
   .navegacao-etapas {
     position: sticky;
     bottom: 8px;
+  }
+
+  .tela-gramatica-mariana .navegacao-etapas {
+    position: static;
   }
 
   .cabecalho-biblioteca,

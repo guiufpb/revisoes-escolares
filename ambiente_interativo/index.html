@@ -90,7 +90,7 @@
           >
             <img src="../assets/objetos_escolares/calculator.svg" alt="" />
             <span>Matemática</span>
-            <small>Revisão ampla</small>
+            <small id="materia-matematica-descricao">Somar, subtrair e descobrir</small>
             <strong>Abrir trilha →</strong>
           </button>
           <button
@@ -110,6 +110,12 @@
             <small>Unit 5 · City Life</small>
             <strong>Nova revisão de inglês →</strong>
           </button>
+          <button class="cartao-materia ingles" id="abrir-ingles-at-the-farm" type="button" hidden>
+            <img src="../assets/objetos_escolares/farm.svg" alt="" />
+            <span>At the Farm</span>
+            <small>Unit 5 · Farm Animals</small>
+            <strong>Nova revisão de inglês →</strong>
+          </button>
           <button
             class="cartao-materia leitura"
             id="materia-leitura"
@@ -121,11 +127,69 @@
             <small>Histórias para descobrir</small>
             <strong>Escolher um livro →</strong>
           </button>
+          <button
+            class="cartao-materia gramatica"
+            id="abrir-gramatica-mariana"
+            type="button"
+            hidden
+          >
+            <img src="../assets/objetos_escolares/pencil.svg" alt="" />
+            <span>Gramática</span>
+            <small>40 questões de Português</small>
+            <strong>Começar ou continuar →</strong>
+          </button>
+          <button class="cartao-materia gramatica" id="abrir-gramatica-h-til" type="button">
+            <img src="../assets/objetos_escolares/pencil.svg" alt="" />
+            <span>H, til e vocabulário</span>
+            <small>25 questões de Gramática</small>
+            <strong>Começar ou continuar →</strong>
+          </button>
           <article class="cartao-materia em-breve">
             <img src="../assets/objetos_escolares/pencil.svg" alt="" />
             <span>Novas trilhas</span>
             <small>Mais conteúdos em breve</small>
           </article>
+        </div>
+      </section>
+
+      <section
+        class="tela tela-mariana-revisao tela-gramatica-mariana"
+        id="tela-gramatica-mariana"
+        aria-labelledby="gramatica-titulo-questao"
+        hidden
+      >
+        <nav class="migalhas" aria-label="Navegação da revisão de Gramática">
+          <button type="button" data-voltar-materias>
+            <span id="gramatica-nome-perfil">Mariana</span>
+          </button>
+          <span aria-hidden="true">›</span>
+          <strong>Gramática</strong>
+        </nav>
+        <div class="painel-progresso-mariana">
+          <div>
+            <span id="gramatica-contador">Questão 1 de 40</span>
+            <strong id="gramatica-pontos">0 de 40</strong>
+          </div>
+          <div
+            class="barra-progresso-mariana"
+            id="gramatica-progresso"
+            role="progressbar"
+            aria-label="Progresso da revisão de Gramática"
+            aria-valuemin="1"
+            aria-valuemax="40"
+            aria-valuenow="1"
+          >
+            <span id="gramatica-barra"></span>
+          </div>
+        </div>
+        <div id="gramatica-conteudo"></div>
+        <div class="navegacao-etapas">
+          <button class="botao-secundario botao-grande" id="gramatica-voltar" type="button">
+            ← Voltar
+          </button>
+          <button class="botao-principal botao-grande" id="gramatica-proxima" type="button">
+            Próxima →
+          </button>
         </div>
       </section>
 
@@ -677,7 +741,9 @@
         hidden
       >
         <nav class="migalhas" aria-label="Navegação da matéria">
-          <button type="button" data-voltar-materias>Mariana</button>
+          <button type="button" data-voltar-materias>
+            <span id="matematica-nome-perfil">Mariana</span>
+          </button>
           <span aria-hidden="true">›</span>
           <strong>Matemática</strong>
         </nav>
@@ -687,6 +753,12 @@
           <p>Uma aventura com números, problemas e formas.</p>
         </div>
         <div class="grade-materias">
+          <button class="cartao-materia matematica" type="button" id="abrir-operacoes-matematica">
+            <img src="../assets/objetos_escolares/calculator.svg" alt="" />
+            <span>Contas do dia a dia</span>
+            <small id="operacoes-matematica-descricao">20 questões para praticar</small>
+            <strong>Somar e subtrair →</strong>
+          </button>
           <button class="cartao-materia matematica" type="button" id="abrir-revisao-mariana">
             <img src="../assets/objetos_escolares/calculator.svg" alt="" />
             <span>Revisão ampla</span>
@@ -708,6 +780,49 @@
             <span>Novas trilhas</span>
             <small>Mais desafios em breve</small>
           </article>
+        </div>
+      </section>
+
+      <section
+        class="tela tela-mariana-revisao tela-matematica-operacoes"
+        id="tela-matematica-operacoes"
+        aria-labelledby="operacoes-titulo-questao"
+        hidden
+      >
+        <nav class="migalhas" aria-label="Navegação da atividade de operações">
+          <button type="button" data-voltar-materias>
+            <span id="operacoes-nome-perfil">Mariana</span>
+          </button>
+          <span aria-hidden="true">›</span>
+          <button type="button" data-voltar-trilha-matematica>Matemática</button>
+          <span aria-hidden="true">›</span>
+          <strong>Contas do dia a dia</strong>
+        </nav>
+        <div class="painel-progresso-mariana">
+          <div>
+            <span id="operacoes-contador">Questão 1 de 20</span>
+            <strong id="operacoes-pontos">0 de 20</strong>
+          </div>
+          <div
+            class="barra-progresso-mariana"
+            id="operacoes-progresso"
+            role="progressbar"
+            aria-label="Progresso da atividade de Matemática"
+            aria-valuemin="1"
+            aria-valuemax="20"
+            aria-valuenow="1"
+          >
+            <span id="operacoes-barra"></span>
+          </div>
+        </div>
+        <div id="operacoes-conteudo"></div>
+        <div class="navegacao-etapas">
+          <button class="botao-secundario botao-grande" id="operacoes-voltar" type="button">
+            ← Voltar
+          </button>
+          <button class="botao-principal botao-grande" id="operacoes-proxima" type="button">
+            Próxima →
+          </button>
         </div>
       </section>
 

@@ -119,7 +119,20 @@
     return idioma === 'en-US' ? 'Listen.' : 'Atenção.';
   }
 
-  function mensagemInicial(idioma) {
+  function contextoDaFala(configuracao) {
+    return {
+      ehDitado: configuracao && configuracao.contexto === 'ditado',
+      unidade: configuracao && configuracao.unidadeDitado === 'frase' ? 'frase' : 'palavra',
+    };
+  }
+
+  function mensagemInicial(idioma, configuracao) {
+    var contexto = contextoDaFala(configuracao);
+    if (idioma === 'pt-BR' && contexto.ehDitado) {
+      return (
+        'O ditado começará em 1 segundo. Você ouvirá “Atenção” antes da ' + contexto.unidade + '.'
+      );
+    }
     return idioma === 'en-US'
       ? 'O áudio começará em 1 segundo. Você ouvirá “Listen” antes do conteúdo em inglês.'
       : 'O áudio começará em 1 segundo. Você ouvirá “Atenção” antes da instrução.';
@@ -204,6 +217,7 @@
     );
     var aviso = configurarFala(avisoParaIdioma(idioma), idioma, 0.9, voz);
     var conteudo = configurarFala(texto, idioma, velocidade, voz);
+    var contexto = contextoDaFala(configuracao);
     var avisoAgendado = false;
     var conteudoAgendado = false;
 
@@ -218,7 +232,9 @@
         'pausa',
         idioma === 'en-US'
           ? 'Listen. O conteúdo em inglês começará depois de uma pequena pausa.'
-          : 'Atenção. A instrução começará depois de uma pequena pausa.',
+          : contexto.ehDitado
+            ? 'Atenção. A ' + contexto.unidade + ' começará depois de uma pequena pausa.'
+            : 'Atenção. A instrução começará depois de uma pequena pausa.',
         configuracao,
         { voz: nomeVoz }
       );
@@ -257,15 +273,22 @@
     aviso.onerror = agendarConteudo;
     conteudo.onstart = function () {
       if (!aindaValido()) return;
-      emitir('reproduzindo', 'Reproduzindo com ' + nomeVoz + '.', configuracao, {
-        voz: nomeVoz,
-      });
+      emitir(
+        'reproduzindo',
+        contexto.ehDitado
+          ? 'Reproduzindo a ' + contexto.unidade + ' com ' + nomeVoz + '.'
+          : 'Reproduzindo com ' + nomeVoz + '.',
+        configuracao,
+        { voz: nomeVoz }
+      );
     };
     conteudo.onend = function () {
       if (!aindaValido()) return;
       emitir(
         'concluido',
-        'Áudio concluído. Você pode repetir ou ouvir mais devagar.',
+        contexto.ehDitado
+          ? 'Ditado concluído. Agora digite o que você ouviu.'
+          : 'Áudio concluído. Você pode repetir ou ouvir mais devagar.',
         configuracao,
         {
           voz: nomeVoz,
@@ -279,7 +302,9 @@
       });
     };
 
-    emitir('aguardando', mensagemInicial(idioma), configuracao, { voz: nomeVoz });
+    emitir('aguardando', mensagemInicial(idioma, configuracao), configuracao, {
+      voz: nomeVoz,
+    });
     temporizador = window.setTimeout(function () {
       temporizador = null;
       if (!aindaValido()) return;
@@ -326,6 +351,8 @@
             idioma: ultimaSolicitacao.idioma,
             velocidade: ultimaSolicitacao.velocidade,
             origem: ultimaSolicitacao.origem,
+            contexto: ultimaSolicitacao.contexto,
+            unidadeDitado: ultimaSolicitacao.unidadeDitado,
           }
         : null;
     },

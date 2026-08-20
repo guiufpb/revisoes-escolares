@@ -2,7 +2,7 @@
 
 Esta pasta reúne a referência atual do projeto **Revisões Escolares** e separa as regras vigentes do histórico acumulado em relatórios antigos.
 
-Atualização de referência: **15 de agosto de 2026**.
+Atualização de referência: **18 de agosto de 2026**.
 
 ## Documentos principais
 
