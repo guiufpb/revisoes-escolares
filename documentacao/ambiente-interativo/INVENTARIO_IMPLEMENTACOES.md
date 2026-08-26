@@ -4,7 +4,7 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra a branch `codex/ditado-gramatica` em **20/08/2026**.
+Este inventário registra a branch `main` em **25/08/2026**.
 
 ## 2. Base da aplicação
 
@@ -52,6 +52,10 @@ Este inventário registra a branch `codex/ditado-gramatica` em **20/08/2026**.
 - `js/desenho.js`: canvas e persistência de desenho.
 - `js/leitura.js`, `js/leitor-dedicado.js` e `js/glossario.js`: biblioteca e leitor.
 - `js/matematica.js`, `js/matematica-cena.js` e `js/matematica-manipulaveis.js`: Matemática manipulativa.
+- `js/matematica-geometria-medidas.js`: formas originais em CSS, campos com unidade, seleção,
+  associação, mosaico, régua e balança dentro do mesmo contrato de Cena Matemática.
+- `js/matematica-operacoes.js`: operações digitadas, questões com vários campos e estudo
+  intermediário de tabuadas configuráveis com bloqueio persistente.
 
 ### Armazenamento seguro
 
@@ -97,6 +101,50 @@ Chaves:
 
 - `revisoesEscolares.alice.matematica.contasDiaADia.v1`
 - `revisoesEscolares.mariana.matematica.contasDiaADia.v1`
+
+### Alice e Mariana — Contas e tabuada
+
+- Nova rodada independente e idêntica nos dois perfis, com **18 questões** e progresso próprio.
+- Questões 1 a 5: adição e subtração somente com unidades e números de um algarismo.
+- Questões 6 a 13: problemas de adição e subtração com números de dois algarismos.
+- Depois da questão 13, uma etapa de estudo mostra em tabelas completas as tabuadas do 1 e do 2,
+  de `× 1` até `× 10`.
+- Ao acionar “Já estudei — começar as multiplicações”, o bloqueio é salvo: voltar, sair ou
+  recarregar não permite reabrir a tabela durante a mesma rodada.
+- Questões 14 a 18: cinco páginas de multiplicação, cada uma com quatro resultados digitados das
+  tabuadas do 1 e do 2.
+- A questão só é concluída quando todos os seus campos estão corretos. Campos vazios ou errados
+  permanecem editáveis, recebem indicação individual e podem ser conferidos novamente.
+- Respostas de vários campos, etapa de estudo, bloqueio, questão atual, pontos e conclusão são
+  persistidos; limpar remove somente a nova chave do perfil ativo e permite uma nova rodada.
+
+Chaves:
+
+- `revisoesEscolares.alice.matematica.contasETabuada.v1`
+- `revisoesEscolares.mariana.matematica.contasETabuada.v1`
+
+### Alice e Mariana — Mais contas e tabuada
+
+- Segunda rodada independente e idêntica nos dois perfis, com **18 questões**, números novos e
+  progresso separado da atividade anterior.
+- Questões 1 a 5: adição e subtração simples somente com unidades.
+- Questões 6 a 13: problemas de adição e subtração com números de dois algarismos, começando pelo
+  exemplo `16 + 17`.
+- Depois da questão 13, a etapa de estudo apresenta as tabuadas completas do 1, do 2 e do 3, de
+  `× 1` até `× 10`, em tabelas responsivas.
+- O controlador agora aceita a lista declarativa `estudoTabuada.fatores`; revisões anteriores sem
+  essa lista continuam usando as tabuadas do 1 e do 2.
+- Ao começar a questão 14, o bloqueio é persistido. Voltar, sair, avançar novamente ou recarregar
+  não reabre as tabelas durante a rodada.
+- Questões 14 a 18: cinco questionários com quatro multiplicações cada, cobrindo as tabuadas do 1,
+  do 2 e do 3, inclusive `3 × 4` e `3 × 8`.
+- Erros permanecem corrigíveis por campo; respostas parciais, acertos, bloqueio, questão e
+  conclusão são restaurados. Limpar remove somente a chave da nova revisão ativa.
+
+Chaves:
+
+- `revisoesEscolares.alice.matematica.maisContasETabuada.v1`
+- `revisoesEscolares.mariana.matematica.maisContasETabuada.v1`
 
 ### Mariana — Revisão ampla
 
@@ -149,6 +197,18 @@ Trocas explícitas:
 Etapas: apresentação; reconhecer 100; trocas U→D e D→C; montar 700; montar 800 e 641 no ábaco; ler 307; quadros 582 e 905; compor 734; decompor 420; ordem crescente; saltos de +25 e −50; reta em 675; formar 840; troca C→M; gráfico; encerramento.
 
 Chave: `revisoesEscolares.mariana.matematica.centenasEmAcao.v2`.
+
+### Mariana — Formas, mosaicos e medidas
+
+- Revisão exclusiva com 32 etapas: apresentação, 30 questões e encerramento.
+- Progressão: formas planas e não planas, lados e vértices, relações com objetos e mosaico de três
+  cores; comprimento em mm, cm e m; massa em g e kg; capacidade em mL e L; conversões e operações.
+- Contagem auxiliada por figuras selecionáveis, associações por listas, mosaico editável com metade
+  pronta, réguas originais, balança e campos numéricos com a unidade fora da digitação.
+- Erro corrigível, avanço bloqueado até o acerto, desfazer/limpar no mosaico, teclado, toque,
+  persistência visual e lógica e pontuação máxima de 30 conquistas.
+
+Chave: `revisoesEscolares.mariana.matematica.formasMosaicosMedidas.v1`.
 
 ## 6. Gramática
 
@@ -366,6 +426,8 @@ O eventual corte fica no aquecimento quase inaudível, não em “Listen” nem 
 - Áudio antigo é cancelado antes de uma nova pronúncia.
 - O início audível da pronúncia é protegido por aquecimento e pausas.
 - Lacunas ambíguas de Gramática oferecem ditado opcional sem expor a resposta escrita no controle.
+- A tabela de estudo da tabuada deixa de ser acessível de modo persistente quando começam as
+  questões avaliativas, sem impedir voltar às questões anteriores.
 
 Teste obrigatório: `errar → conferir → corrigir → conferir → avançar → voltar → recarregar`.
 
@@ -386,7 +448,7 @@ Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
 - Toda pull request para `main` continua executando a suíte global no GitHub Actions; a saída
   completa é consultada apenas quando houver falha ou necessidade de diagnóstico.
 
-Na data deste inventário existem **111 testes Playwright**:
+Na data deste inventário existem **125 testes Playwright**:
 
 - `tests/ambiente-interativo.spec.js`: fluxos centrais, revisões de Inglês de Alice e Mariana, Leitura, Matemática ampla, armazenamento, canvas e `file://`.
 - `tests/matematica-manipulativa.spec.js`: cenas, trocas, ábacos, clique no quadro, teclado, persistência e nova Centenas em ação.
@@ -399,6 +461,12 @@ Na data deste inventário existem **111 testes Playwright**:
 - `tests/matematica-operacoes.spec.js`: sequências próprias de 15 e 20 questões, progressão de
   unidades para dezenas, centenas exclusivas da Mariana, digitação, correção recuperável,
   persistência, isolamento, limpeza seletiva, celular, axe e `file://`.
+- `tests/matematica-contas-tabuada.spec.js`: 18 questões iguais com chaves próprias, tabela completa,
+  bloqueio persistente depois do início das multiplicações, quatro campos por questão, erro e
+  correção, retorno, recarga, isolamento, limpeza seletiva, celular, axe e `file://`.
+- `tests/matematica-mais-contas-tabuada.spec.js`: nova rodada com números próprios, tabuadas
+  configuráveis do 1 ao 3, bloqueio persistente, multiplicações por 3, correção, retorno, recarga,
+  isolamento da rodada anterior, limpeza seletiva, celular, axe e `file://`.
 
 A cobertura inclui isolamento, erro e correção antes do avanço em City Life e At the Farm,
 recarga, Pointer Events, teclado, dados corrompidos, `localStorage` bloqueado, áudio bilíngue,

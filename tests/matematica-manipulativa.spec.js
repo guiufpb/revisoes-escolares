@@ -570,12 +570,13 @@ test('continua utilizável em memória com localStorage bloqueado', async ({ bro
   await page.goto(CAMINHO);
   await abrirCentenas(page);
   await page.getByRole('button', { name: 'Começar a aventura' }).click();
-  await page.locator('[data-math-tool="D"]').click();
-  await page.locator('[data-math-place="D"]').click();
-  await expect(page.locator('[data-order="D"]')).toHaveCount(1);
+  await page.locator('[data-math-tool="C"]').click();
+  await page.locator('[data-math-place="C"]').click();
+  await expect(page.locator('[data-order="C"]')).toHaveCount(1);
+  await page.locator('[data-math-check]').click();
   await page.locator('#matematica-cena-proxima').click();
   await page.locator('#matematica-cena-voltar').click();
-  await expect(page.locator('[data-order="D"]')).toHaveCount(1);
+  await expect(page.locator('[data-order="C"]')).toHaveCount(1);
   await contexto.close();
 });
 

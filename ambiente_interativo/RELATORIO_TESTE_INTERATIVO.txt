@@ -1,6 +1,119 @@
 RELATORIO DE TESTE - AMBIENTE INTERATIVO
 =======================================
 
+ATUALIZAÇÃO: 25/08/2026 - FORMAS, MOSAICOS E MEDIDAS
+=====================================================
+
+ESCOPO IMPLEMENTADO
+- Nova revisão exclusiva da Mariana com 32 etapas e 30 questões avaliativas.
+- Conteúdo original inspirado na progressão do caderno privado: formas, mosaico,
+  comprimento, massa, capacidade, conversões e operações com reagrupamento.
+- A Cena Matemática ganhou tipos reutilizáveis para ilustração com campos,
+  seleção, associação e mosaico, além de régua e balança em HTML/CSS local.
+- O avanço de cenas avaliativas fica bloqueado até uma conferência correta.
+
+PERSISTÊNCIA E ACESSIBILIDADE
+- Chave: revisoesEscolares.mariana.matematica.formasMosaicosMedidas.v1.
+- Respostas, marcações de contagem, seleções e várias pinturas consecutivas do
+  mosaico são normalizadas e restauradas sem afetar outras revisões ou Alice.
+- Clique, toque, teclado, desfazer, limpeza da cena e mensagens aria-live foram
+  preservados. O PDF escolar permaneceu somente na pasta privada da Mariana.
+
+COBERTURA
+- Novo teste dirigido por dados confere 30 questões, 32 IDs únicos, respostas,
+  unidades, pontuação, chave, isolamento, erro e correção, volta, recarga,
+  mosaico, régua, massa, operação final, celular, axe-core e file://.
+- O teste compartilhado de Matemática foi alinhado ao novo bloqueio pedagógico
+  de avanço sem acerto. Resultados finais constam no relatório de entrega.
+- npm run build, npm run format:check e npm run lint: PASSARAM.
+- Testes direcionados da nova revisão e da infraestrutura compartilhada: 29 de
+  29 aprovados.
+- npm run test:interativo: 46 de 46 aprovados.
+- npm run test:a11y: 18 de 18 aprovados.
+- npm test: 130 de 130 testes Playwright aprovados em 7,9 minutos.
+- Inspeção final no navegador: contagem, lados/vértices, mosaico, réguas cm/mm,
+  massa, balança, capacidade e operações conferidas; console sem erros. Em
+  390 x 844, innerWidth 390 e scrollWidth 375, sem rolagem horizontal.
+- Nenhum commit, push, merge ou publicação foi realizado.
+
+ATUALIZAÇÃO: 21/08/2026 - MAIS CONTAS E TABUADA ATÉ 3
+======================================================
+
+ESCOPO IMPLEMENTADO
+- Criada uma nova revisão de 18 questões para Alice e Mariana, idêntica no
+  conteúdo e independente da rodada anterior.
+- As questões 1 a 5 trabalham adição e subtração somente com unidades. As
+  questões 6 a 13 usam novos problemas com números de dois algarismos, incluindo
+  16 + 17 = 33.
+- Depois da questão 13, três tabelas completas apresentam as tabuadas do 1, do
+  2 e do 3, de x 1 até x 10.
+- O controlador compartilhado passou a aceitar fatores declarativos na etapa de
+  estudo. A revisão anterior mantém automaticamente as tabuadas do 1 e do 2.
+- Depois de iniciar a questão 14, o bloqueio fica salvo: voltar, avançar outra
+  vez, sair ou recarregar não permite consultar as tabelas durante a rodada.
+- As questões 14 a 18 possuem quatro campos cada e cobrem as tabuadas do 1, 2 e
+  3, com correção individual e nova tentativa obrigatória antes do avanço.
+
+PERSISTÊNCIA E ISOLAMENTO
+- Alice: revisoesEscolares.alice.matematica.maisContasETabuada.v1.
+- Mariana: revisoesEscolares.mariana.matematica.maisContasETabuada.v1.
+- Questão, respostas parciais, correções, pontos, estudo, bloqueio e conclusão
+  ficam salvos. Limpar afeta somente a nova revisão do perfil ativo.
+- As duas revisões anteriores de operações e o progresso da irmã permanecem
+  intactos.
+
+VALIDAÇÃO FINAL
+- npm run build, npm run format:check e npm run lint: PASSARAM.
+- Testes direcionados da nova revisão: 7 de 7 aprovados.
+- Regressões direcionadas da atividade anterior e do registro: 5 de 5 aprovadas.
+- npm test: 125 de 125 testes Playwright PASSARAM em 7,3 minutos.
+- A cobertura inclui erro e correção, Enter, três tabelas completas, recarga
+  antes e depois do bloqueio, retorno sem reabrir a tabela, vários campos,
+  multiplicações por 3, conclusão, limpeza, isolamento, axe-core, viewport
+  390 x 844, ausência de overflow, console sem erros e file://.
+- A inspeção visual encontrou e corrigiu o contador que ainda dizia apenas
+  "tabuada de 1 e 2"; título, contador e tabelas agora mostram 1, 2 e 3.
+- Nenhum commit, push ou publicação no GitHub foi realizado nesta entrega.
+
+ATUALIZAÇÃO: 20/08/2026 - CONTAS E TABUADA PARA ALICE E MARIANA
+===============================================================
+
+ESCOPO IMPLEMENTADO
+- Criada uma segunda revisão de operações para os dois perfis, com 18 questões
+  idênticas e chaves independentes.
+- As questões 1 a 5 trabalham somente unidades; as questões 6 a 13 usam adição
+  e subtração com números de dois algarismos e novos resultados.
+- Depois da questão 13, duas tabelas apresentam as tabuadas completas do 1 e do
+  2. A etapa permanece restaurável enquanto a criança ainda está estudando.
+- Ao clicar em "Já estudei — começar as multiplicações", o bloqueio fica salvo.
+  Voltar à questão 13 e avançar novamente ignora a tabela; sair e recarregar
+  também não a reexibe.
+- As questões 14 a 18 possuem quatro multiplicações digitadas em cada página.
+  Campos vazios ou errados permanecem corrigíveis e a próxima questão só é
+  liberada quando os quatro resultados estão corretos.
+
+PERSISTÊNCIA E ISOLAMENTO
+- Alice: revisoesEscolares.alice.matematica.contasETabuada.v1.
+- Mariana: revisoesEscolares.mariana.matematica.contasETabuada.v1.
+- São persistidos questão, respostas de cada item, correções, pontos, etapa de
+  estudo, bloqueio da tabela e conclusão.
+- Limpar remove somente a nova chave do perfil ativo. A atividade anterior de
+  operações, a nova atividade da irmã e as demais matérias permanecem intactas.
+
+VALIDAÇÃO FINAL
+- npm run build, npm run format:check e npm run lint: PASSARAM.
+- Testes direcionados da nova atividade: 7 de 7 aprovados.
+- Regressões da atividade anterior de operações: 5 de 5 aprovadas.
+- A primeira passagem global encontrou somente a contagem antiga de 32
+  revisões no teste do registro central; a expectativa foi atualizada para as
+  34 revisões reais e o cenário direcionado passou.
+- npm test: 118 de 118 testes Playwright PASSARAM em 7,0 minutos.
+- A cobertura inclui erro e correção, várias digitações persistidas, tabela
+  completa, recarga antes e depois do bloqueio, retorno sem reabrir a tabela,
+  conclusão, limpeza seletiva, dois perfis, teclado, viewport 390 x 844,
+  axe-core, ausência de overflow, console sem erros graves e file://.
+- Nenhum commit, push ou publicação no GitHub foi realizado nesta entrega.
+
 ATUALIZAÇÃO: 20/08/2026 - DITADO NAS LACUNAS DE GRAMÁTICA
 ==========================================================
 
@@ -1100,3 +1213,12 @@ CONTINUACAO INTERATIVA DE INGLES EM 12/08/2026
 - npm run format:check: PASSOU.
 - npm run lint: PASSOU.
 - npm test: PASSOU, com 52 de 52 testes Playwright aprovados.
+
+ENCERRAMENTO EM USO REAL DE FORMAS, MOSAICOS E MEDIDAS EM 26/08/2026
+- Mariana concluiu integralmente a revisao em uso real.
+- O unico problema percebido no primeiro uso foi a ambiguidade visual da
+  bandeirinha e do cone de transito na Questao 7.
+- As duas ilustracoes foram corrigidas para comunicar claramente a flâmula
+  triangular e o volume do cone de transito.
+- Apos a correcao, Mariana concluiu a revisao sem novos problemas identificados.
+- O progresso real da revisao foi preservado durante a correcao.

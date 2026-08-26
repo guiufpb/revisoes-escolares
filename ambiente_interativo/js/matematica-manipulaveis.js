@@ -46,7 +46,7 @@
 
   function estadoInicial(configuracao) {
     var inicial = objeto(configuracao && configuracao.inicial);
-    return {
+    var base = {
       versao: 1,
       quantidades: normalizarQuantidades(inicial.quantidades || inicial, configuracao),
       respostas: {},
@@ -58,6 +58,10 @@
       tentativas: 0,
       dicas: 0,
     };
+    if (window.MatematicaGeometriaMedidas) {
+      Object.assign(base, window.MatematicaGeometriaMedidas.estadoInicial(configuracao));
+    }
+    return base;
   }
 
   function normalizarMapaNumerico(valor, chaves, maximo) {
@@ -117,6 +121,9 @@
     base.concluida = Boolean(valor.concluida);
     base.tentativas = inteiro(valor.tentativas, 0, 99, 0);
     base.dicas = inteiro(valor.dicas, 0, 9, 0);
+    if (window.MatematicaGeometriaMedidas) {
+      window.MatematicaGeometriaMedidas.normalizarEstado(base, valor, configuracao);
+    }
     return base;
   }
 
@@ -171,6 +178,10 @@
     var tipo = configuracao.tipo;
     var correta = false;
     var detalhe = '';
+
+    if (window.MatematicaGeometriaMedidas && window.MatematicaGeometriaMedidas.suporta(tipo)) {
+      return window.MatematicaGeometriaMedidas.validar(estado, configuracao);
+    }
 
     if (['material', 'quadro', 'abaco'].indexOf(tipo) >= 0 && configuracao.modo !== 'descobrir') {
       correta = valorTotal(estado.quantidades) === Number(configuracao.valorAlvo);

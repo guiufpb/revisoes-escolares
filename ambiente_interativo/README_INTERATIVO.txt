@@ -28,12 +28,17 @@ integrado, abra pelo atalho recomendado acima.
 TRILHAS DISPONÍVEIS
 - Alice > Ciências > Origem dos materiais.
 - Alice > Matemática > Contas do dia a dia, com 15 questões.
+- Alice > Matemática > Contas e tabuada, com 18 questões.
+- Alice > Matemática > Mais contas e tabuada, com 18 questões e tabuadas até 3.
 - Alice > Gramática > H, til e vocabulário, com 25 questões.
 - Alice > Inglês > English Review - Unit 3: At School.
 - Alice > Leitura > Primeiras Lições sobre Dinheiro.
 - Mariana > Matemática > Contas do dia a dia, com 20 questões.
+- Mariana > Matemática > Contas e tabuada, com 18 questões.
+- Mariana > Matemática > Mais contas e tabuada, com 18 questões e tabuadas até 3.
 - Mariana > Matemática > Revisão ampla.
 - Mariana > Matemática > Centenas em ação.
+- Mariana > Matemática > Formas, mosaicos e medidas, com 30 questões avaliativas.
 - Mariana > Gramática > H, til e vocabulário, com 25 questões.
 - Mariana > Inglês > English Review - Unit 3: At School.
 - Mariana > Leitura > Primeiras Lições sobre Dinheiro.
@@ -50,6 +55,35 @@ CONTAS DO DIA A DIA
   leia a pista, corrija o número e confira novamente antes de avançar.
 - Voltar ou recarregar preserva a questão, as respostas e os acertos. O botão
   de limpeza dentro da atividade reinicia somente a trilha e o perfil ativos.
+
+CONTAS E TABUADA
+- Alice e Mariana recebem as mesmas 18 questões, mas respostas e progresso são
+  guardados em chaves diferentes.
+- As questões 1 a 5 trabalham unidades. As questões 6 a 13 avançam para
+  problemas de adição e subtração com números de dois algarismos.
+- Depois da questão 13, aparecem duas tabelas completas para estudar as tabuadas
+  do 1 e do 2.
+- Ao clicar em "Já estudei — começar as multiplicações", a tabela é bloqueada
+  para o restante da rodada. Voltar ou recarregar não permite consultá-la de
+  novo, embora as questões anteriores continuem acessíveis.
+- Da questão 14 à 18, cada página traz quatro multiplicações para responder no
+  teclado. Todas precisam estar corretas antes de avançar.
+- Limpar somente esta atividade inicia outra rodada e volta a liberar o estudo
+  da tabela, sem apagar a atividade anterior nem o progresso da irmã.
+
+MAIS CONTAS E TABUADA
+- Esta é uma segunda rodada independente para Alice e Mariana, com números novos
+  e progresso separado da revisão Contas e tabuada.
+- As questões 1 a 5 usam somente unidades. As questões 6 a 13 apresentam novos
+  problemas de adição e subtração com números de dois algarismos.
+- Depois da questão 13, três tabelas completas mostram as tabuadas do 1, do 2 e
+  do 3. No celular, elas aparecem uma abaixo da outra.
+- Ao escolher começar as multiplicações, as tabelas ficam bloqueadas para o
+  restante da rodada, mesmo ao voltar, sair ou recarregar.
+- As questões 14 a 18 têm quatro contas por página e incluem multiplicações por
+  1, 2 e 3. Cada erro pode ser corrigido antes de avançar.
+- A limpeza reinicia somente esta rodada e o perfil atual, sem apagar nenhuma
+  das atividades de Matemática já existentes.
 
 DITADO NAS LACUNAS DE GRAMÁTICA
 - Nas questões com resposta aberta indicada no painel, cada lacuna possui o
@@ -335,9 +369,9 @@ visualizador, questionário, glossário, ditado e resultado.
   parada, desbloqueio após 27 áudios, 10 atividades, correção somente ao final,
   distribuição das alternativas, acessibilidade e largura móvel.
 - npm test: gera os dois bundles Vite e executa toda a suíte Playwright.
-- Validação mais recente: 84 de 84 testes Playwright aprovados, incluindo a
-  nova leitura, o áudio bilíngue, as atividades, a recompensa final, a
-  Matemática manipulativa e o isolamento dos perfis.
+- Validação mais recente: 125 de 125 testes Playwright aprovados, incluindo a
+  tabuada bloqueável, Matemática manipulativa, áudio, Gramática, Leitura,
+  acessibilidade e isolamento dos perfis.
 
 Os testes também cobrem abertura por file://, leitor em nova janela, retorno ao
 questionário, console, teclado, viewport móvel, canvas em alta densidade, PDFs
@@ -429,11 +463,10 @@ chave histórica v1 permanece intacta.
 INFRAESTRUTURA PARA ALICE
 ========================
 
-O núcleo aceita apenas U, D-U, números menores, limites reduzidos, trocas
-opcionais e ajuda ampliada, e isso é comprovado pelos testes isolados do
-componente. Nenhum arquivo de revisão de Matemática da Alice, entrada no
-registro, cartão ou chave de armazenamento foi criado nesta entrega. Abrir o
-perfil Alice continua sem criar progresso fictício de Matemática.
+O núcleo manipulativo aceita apenas U, D-U, números menores, limites reduzidos,
+trocas opcionais e ajuda ampliada, e isso é comprovado pelos testes isolados do
+componente. Alice possui revisões de operações digitadas, mas continua sem uma
+revisão manipulativa fictícia, cartão manipulativo ou chave de cena.
 
 CADASTRAR UMA REVISAO DE MATEMATICA
 ===================================

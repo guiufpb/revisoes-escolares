@@ -13,6 +13,10 @@ LEITURA OBRIGATORIA
 3. Cadastre o arquivo em js/app.entry.js e uma entrada em js/registro-revisoes.js.
 4. Não duplique js/matematica.js, js/matematica-cena.js ou
    js/matematica-manipulaveis.js.
+5. Para formas, mosaicos, réguas, massa, capacidade, seleção ou associação,
+   prefira os tipos declarativos de js/matematica-geometria-medidas.js.
+6. Em toda etapa avaliativa, mantenha Próxima bloqueada até Conferir retornar
+   acerto; preserve voltar e recarregar depois da conclusão.
 
 Ao renovar uma revisão existente para oferecer uma nova rodada de prática:
 - mantenha o ID apenas quando o mesmo cartão e a mesma trilha continuarem sendo

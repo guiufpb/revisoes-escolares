@@ -127,7 +127,10 @@
     barra.parentElement.setAttribute('aria-valuemax', total);
     barra.parentElement.setAttribute('aria-valuenow', atual);
     document.getElementById('matematica-cena-voltar').disabled = estado.etapaAtual === 0;
-    document.getElementById('matematica-cena-proxima').hidden = estado.etapaAtual === total - 1;
+    var proxima = document.getElementById('matematica-cena-proxima');
+    var etapa = revisaoAtiva.etapas[estado.etapaAtual];
+    proxima.hidden = estado.etapaAtual === total - 1;
+    proxima.disabled = etapa.tipo === 'cena' && estado.concluidas[etapa.id] !== true;
   }
 
   function renderizarApresentacao(etapa) {

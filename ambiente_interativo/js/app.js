@@ -3,6 +3,7 @@
 
   var ID_ALICE = 'alice-ciencias-origem-materiais';
   var ID_CENTENAS = 'mariana-matematica-centenas-em-acao';
+  var ID_FORMAS_MEDIDAS = 'mariana-matematica-formas-mosaicos-medidas';
   var ID_GRAMATICA = 'mariana-gramatica-revisao-ampla';
   var IDS_GRAMATICA_COMPARTILHADA = {
     alice: 'alice-gramatica-h-til-vocabulario',
@@ -11,6 +12,14 @@
   var IDS_OPERACOES = {
     alice: 'alice-matematica-contas-dia-a-dia',
     mariana: 'mariana-matematica-contas-dia-a-dia',
+  };
+  var IDS_OPERACOES_TABUADA = {
+    alice: 'alice-matematica-contas-e-tabuada',
+    mariana: 'mariana-matematica-contas-e-tabuada',
+  };
+  var IDS_MAIS_OPERACOES_TABUADA = {
+    alice: 'alice-matematica-mais-contas-e-tabuada',
+    mariana: 'mariana-matematica-mais-contas-e-tabuada',
   };
   var IDS_INGLES = {
     alice: 'alice-ingles-at-school-unidade-3',
@@ -230,17 +239,18 @@
       if (revisao.exibirEstadoNoCartao === false) return;
       var ehIngles = revisao.controladorCompartilhado === 'ingles';
       var ehOperacoes = revisao.controladorCompartilhado === 'matematica-operacoes';
+      var ehMatematicaManipulativa = revisao.controladorCompartilhado === 'matematica-manipulativa';
       var ehGramaticaCompartilhada = revisao.controladorCompartilhado === 'gramatica-questionarios';
       if (
-        (ehIngles || ehOperacoes || ehGramaticaCompartilhada) &&
+        (ehIngles || ehOperacoes || ehGramaticaCompartilhada || ehMatematicaManipulativa) &&
         (!alunoAtual || revisao.aluno !== alunoAtual)
       ) {
         return;
       }
       var situacao;
       if (revisao.id === ID_ALICE) situacao = situacaoAlice();
-      else if (revisao.id === ID_CENTENAS) {
-        situacao = window.MatematicaRevisoes.situacao(ID_CENTENAS);
+      else if (ehMatematicaManipulativa) {
+        situacao = window.MatematicaRevisoes.situacao(revisao.id);
       } else if (revisao.id === ID_GRAMATICA) {
         situacao = situacaoGramatica();
       } else if (ehGramaticaCompartilhada) {
@@ -295,10 +305,13 @@
         operacoesAtiva && window.MatematicaOperacoes.obterEstado(operacoesAtiva.id);
       resumo.textContent = estadoOperacoes
         ? (operacoesAtiva.perfil === 'alice' ? 'Alice' : 'Mariana') +
-          ' · Matemática: questão ' +
-          (estadoOperacoes.questaoAtual + 1) +
-          '/' +
-          operacoesAtiva.questoes.length +
+          ' · Matemática: ' +
+          (estadoOperacoes.estudoAberto && !estadoOperacoes.estudoConcluido
+            ? 'estudando a tabuada'
+            : 'questão ' +
+              (estadoOperacoes.questaoAtual + 1) +
+              '/' +
+              operacoesAtiva.questoes.length) +
           ' · ' +
           estadoOperacoes.pontos +
           ' acertos'
@@ -362,13 +375,14 @@
     document.getElementById('abrir-ingles-at-the-farm').hidden = aluno !== 'alice';
     document.getElementById('materia-matematica').hidden = false;
     document.getElementById('materia-matematica-descricao').textContent =
-      aluno === 'alice' ? '15 questões de adição e subtração' : 'Revisões e desafios com números';
+      aluno === 'alice' ? 'Contas, problemas e tabuada' : 'Revisões, problemas e tabuada';
     document.getElementById('matematica-nome-perfil').textContent =
       aluno === 'alice' ? 'Alice' : 'Mariana';
     document.getElementById('operacoes-matematica-descricao').textContent =
       aluno === 'alice' ? '15 questões para praticar' : '20 questões, incluindo centenas';
     document.getElementById('abrir-revisao-mariana').hidden = aluno !== 'mariana';
     document.getElementById('abrir-centenas-em-acao').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-formas-mosaicos-medidas').hidden = aluno !== 'mariana';
     document.getElementById('materia-leitura').hidden = false;
     document.getElementById('abrir-gramatica-mariana').hidden = aluno !== 'mariana';
     document.getElementById('limpar-progresso').hidden = false;
@@ -480,6 +494,14 @@
       window.MatematicaOperacoes.abrir(IDS_OPERACOES[alunoAtual]);
       atualizarResumo();
     });
+    document.getElementById('abrir-operacoes-tabuada').addEventListener('click', function () {
+      window.MatematicaOperacoes.abrir(IDS_OPERACOES_TABUADA[alunoAtual]);
+      atualizarResumo();
+    });
+    document.getElementById('abrir-mais-operacoes-tabuada').addEventListener('click', function () {
+      window.MatematicaOperacoes.abrir(IDS_MAIS_OPERACOES_TABUADA[alunoAtual]);
+      atualizarResumo();
+    });
     document.querySelector('[data-materia="leitura"]').addEventListener('click', function () {
       window.LeituraRevisoes.abrirBiblioteca(alunoAtual);
       atualizarResumo();
@@ -501,6 +523,10 @@
     });
     document.getElementById('abrir-centenas-em-acao').addEventListener('click', function () {
       window.MatematicaRevisoes.abrir(ID_CENTENAS);
+      atualizarResumo();
+    });
+    document.getElementById('abrir-formas-mosaicos-medidas').addEventListener('click', function () {
+      window.MatematicaRevisoes.abrir(ID_FORMAS_MEDIDAS);
       atualizarResumo();
     });
     document.querySelectorAll('[data-voltar-materias]').forEach(function (botao) {

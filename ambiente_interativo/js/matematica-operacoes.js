@@ -47,11 +47,53 @@
       if (!questao.id || ids[questao.id]) {
         throw new Error('As questões de ' + configuracao.id + ' precisam de IDs únicos.');
       }
-      if (!Number.isInteger(questao.resposta) || questao.resposta < 0) {
+      if (Array.isArray(questao.itens) && questao.itens.length) {
+        var idsItens = Object.create(null);
+        questao.itens.forEach(function (item) {
+          if (!item.id || idsItens[item.id]) {
+            throw new Error('Os itens de ' + questao.id + ' precisam de IDs únicos.');
+          }
+          if (!Number.isInteger(item.resposta) || item.resposta < 0) {
+            throw new Error(
+              'A resposta de ' + item.id + ' precisa ser um número inteiro positivo.'
+            );
+          }
+          idsItens[item.id] = true;
+        });
+      } else if (!Number.isInteger(questao.resposta) || questao.resposta < 0) {
         throw new Error('A resposta de ' + questao.id + ' precisa ser um número inteiro positivo.');
       }
       ids[questao.id] = true;
     });
+    if (configuracao.estudoTabuada) {
+      var indiceEstudo = configuracao.questoes.findIndex(function (questao) {
+        return questao.id === configuracao.estudoTabuada.aposQuestaoId;
+      });
+      if (indiceEstudo < 0 || indiceEstudo >= configuracao.questoes.length - 1) {
+        throw new Error(
+          'A etapa de estudo de ' + configuracao.id + ' precisa ficar entre questões.'
+        );
+      }
+      if (configuracao.estudoTabuada.fatores != null) {
+        if (
+          !Array.isArray(configuracao.estudoTabuada.fatores) ||
+          !configuracao.estudoTabuada.fatores.length
+        ) {
+          throw new Error('A etapa de estudo de ' + configuracao.id + ' precisa indicar fatores.');
+        }
+        var fatoresUnicos = Object.create(null);
+        configuracao.estudoTabuada.fatores.forEach(function (fator) {
+          if (!Number.isInteger(fator) || fator < 1 || fator > 10 || fatoresUnicos[fator]) {
+            throw new Error(
+              'Os fatores da etapa de estudo de ' +
+                configuracao.id +
+                ' precisam ser números únicos de 1 a 10.'
+            );
+          }
+          fatoresUnicos[fator] = true;
+        });
+      }
+    }
     revisoes[configuracao.id] = configuracao;
   }
 
@@ -62,8 +104,17 @@
       corrigidas: {},
       pontuadas: {},
       pontos: 0,
+      estudoAberto: false,
+      estudoConcluido: false,
       finalizada: false,
     };
+  }
+
+  function indiceEstudoDaRevisao(revisao) {
+    if (!revisao.estudoTabuada) return -1;
+    return revisao.questoes.findIndex(function (questao) {
+      return questao.id === revisao.estudoTabuada.aposQuestaoId;
+    });
   }
 
   function normalizadorDaRevisao(revisao) {
@@ -81,13 +132,30 @@
       base.corrigidas = {};
       base.pontuadas = {};
       revisao.questoes.forEach(function (questao) {
-        if (respostasRecebidas[questao.id] != null) {
+        if (Array.isArray(questao.itens) && questao.itens.length) {
+          var respostasDosItens = objeto(respostasRecebidas[questao.id]);
+          base.respostas[questao.id] = {};
+          questao.itens.forEach(function (item) {
+            if (respostasDosItens[item.id] != null) {
+              base.respostas[questao.id][item.id] = textoSeguro(respostasDosItens[item.id], 12);
+            }
+          });
+          if (!Object.keys(base.respostas[questao.id]).length) delete base.respostas[questao.id];
+        } else if (respostasRecebidas[questao.id] != null) {
           base.respostas[questao.id] = textoSeguro(respostasRecebidas[questao.id], 12);
         }
         if (corrigidasRecebidas[questao.id]) base.corrigidas[questao.id] = true;
         if (pontuadasRecebidas[questao.id]) base.pontuadas[questao.id] = true;
       });
       base.pontos = Object.keys(base.pontuadas).length;
+      var indiceEstudo = indiceEstudoDaRevisao(revisao);
+      base.estudoConcluido = indiceEstudo >= 0 && Boolean(valor.estudoConcluido);
+      base.estudoAberto =
+        indiceEstudo >= 0 &&
+        !base.estudoConcluido &&
+        Boolean(valor.estudoAberto) &&
+        base.questaoAtual === indiceEstudo &&
+        Boolean(base.corrigidas[revisao.questoes[indiceEstudo].id]);
       base.finalizada = Boolean(valor.finalizada) && Object.keys(base.corrigidas).length === total;
       return base;
     };
@@ -129,10 +197,14 @@
     var total = revisaoAtiva.questoes.length;
     var indice = estado.questaoAtual;
     var nome = nomePerfil(revisaoAtiva.perfil);
+    var estudando = estado.estudoAberto && !estado.estudoConcluido;
     document.getElementById('operacoes-nome-perfil').textContent = nome;
+    document.getElementById('operacoes-titulo-revisao').textContent = revisaoAtiva.titulo;
     document.getElementById('operacoes-contador').textContent = estado.finalizada
       ? total + ' questões concluídas'
-      : 'Questão ' + (indice + 1) + ' de ' + total;
+      : estudando
+        ? 'Estudo: tabuada de ' + listarFatores(fatoresDaTabuada())
+        : 'Questão ' + (indice + 1) + ' de ' + total;
     document.getElementById('operacoes-pontos').textContent = estado.pontos + ' de ' + total;
     document.getElementById('operacoes-barra').style.width =
       ((estado.finalizada ? total : indice + 1) / total) * 100 + '%';
@@ -144,8 +216,8 @@
     var voltar = document.getElementById('operacoes-voltar');
     voltar.disabled = !estado.finalizada && indice === 0;
     var proxima = document.getElementById('operacoes-proxima');
-    proxima.hidden = estado.finalizada;
-    proxima.disabled = !estado.corrigidas[revisaoAtiva.questoes[indice].id];
+    proxima.hidden = estado.finalizada || estudando;
+    proxima.disabled = estudando || !estado.corrigidas[revisaoAtiva.questoes[indice].id];
     proxima.textContent = indice === total - 1 ? 'Concluir atividade →' : 'Próxima →';
   }
 
@@ -211,8 +283,137 @@
     atualizarCabecalho();
   }
 
+  function respostasDaQuestaoMultipla(questao) {
+    var recebidas = objeto(estado.respostas[questao.id]);
+    return questao.itens.reduce(function (respostas, item) {
+      respostas[item.id] = textoSeguro(recebidas[item.id], 12);
+      return respostas;
+    }, {});
+  }
+
+  function invalidarCorrecaoMultipla(questao, input) {
+    if (estado.corrigidas[questao.id]) delete estado.corrigidas[questao.id];
+    input.classList.remove('campo-correto', 'campo-incorreto');
+    input.removeAttribute('aria-invalid');
+    var retorno = conteudo.querySelector('.retorno-operacoes');
+    retorno.className = 'retorno retorno-mariana retorno-operacoes';
+    retorno.textContent = '';
+    salvar();
+    atualizarCabecalho();
+  }
+
+  function conferirMultipla(questao) {
+    var respostas = {};
+    var faltando = 0;
+    var incorretas = 0;
+    questao.itens.forEach(function (item) {
+      var input = conteudo.querySelector('[data-item-multiplicacao="' + item.id + '"]');
+      var resposta = textoSeguro(input.value, 12);
+      respostas[item.id] = resposta;
+      input.classList.remove('campo-correto', 'campo-incorreto');
+      if (!resposta) {
+        faltando += 1;
+        input.classList.add('campo-incorreto');
+        input.setAttribute('aria-invalid', 'true');
+      } else if (respostaCorreta(resposta, item.resposta)) {
+        input.classList.add('campo-correto');
+        input.removeAttribute('aria-invalid');
+      } else {
+        incorretas += 1;
+        input.classList.add('campo-incorreto');
+        input.setAttribute('aria-invalid', 'true');
+      }
+    });
+    estado.respostas[questao.id] = respostas;
+
+    if (!faltando && !incorretas) {
+      estado.corrigidas[questao.id] = true;
+      estado.pontuadas[questao.id] = true;
+      salvar();
+      anunciar(questao, '✓ ' + questao.sucesso, true);
+      atualizarCabecalho();
+      return;
+    }
+
+    delete estado.corrigidas[questao.id];
+    salvar();
+    anunciar(
+      questao,
+      faltando
+        ? 'Complete todas as multiplicações destacadas antes de conferir.'
+        : '↻ Tente outra vez. ' + questao.dica,
+      false
+    );
+    atualizarCabecalho();
+  }
+
+  function renderizarQuestaoMultipla(questao) {
+    var respostas = respostasDaQuestaoMultipla(questao);
+    var itens = questao.itens
+      .map(function (item) {
+        var inputId = 'resposta-operacoes-' + questao.id + '-' + item.id;
+        return (
+          '<label class="item-multiplicacao" for="' +
+          inputId +
+          '"><span>' +
+          escapar(item.operacao) +
+          '</span><input id="' +
+          inputId +
+          '" data-item-multiplicacao="' +
+          escapar(item.id) +
+          '" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" value="' +
+          escapar(respostas[item.id]) +
+          '" autocomplete="off"></label>'
+        );
+      })
+      .join('');
+
+    conteudo.innerHTML =
+      '<article class="etapa-mariana etapa-operacoes"><div class="cabecalho-etapa-mariana"><div>' +
+      '<p class="etiqueta">' +
+      escapar(questao.bloco) +
+      '</p><h1 id="operacoes-titulo-questao">' +
+      escapar(questao.titulo) +
+      '</h1><p class="explicacao-mariana">Resolva cada multiplicação sem consultar a tabela.</p>' +
+      '</div><img class="icone-etapa" src="../assets/objetos_escolares/calculator.svg" alt=""></div>' +
+      '<div class="atividade-mariana atividade-operacoes"><p class="problema-operacoes">' +
+      escapar(questao.enunciado) +
+      '</p><fieldset class="lista-multiplicacoes"><legend>Escreva todos os resultados</legend>' +
+      itens +
+      '</fieldset><div class="acoes-atividade-mariana"><button class="botao-principal botao-grande" type="button" data-conferir-operacoes>Conferir todas</button>' +
+      '<div class="retorno retorno-mariana retorno-operacoes" role="status" aria-live="polite"></div></div></div></article>';
+
+    conteudo.querySelectorAll('[data-item-multiplicacao]').forEach(function (input) {
+      input.addEventListener('input', function () {
+        var atuais = objeto(estado.respostas[questao.id]);
+        atuais[input.dataset.itemMultiplicacao] = input.value;
+        estado.respostas[questao.id] = atuais;
+        invalidarCorrecaoMultipla(questao, input);
+      });
+      input.addEventListener('keydown', function (evento) {
+        if (evento.key !== 'Enter') return;
+        evento.preventDefault();
+        conferirMultipla(questao);
+      });
+    });
+    conteudo.querySelector('[data-conferir-operacoes]').addEventListener('click', function () {
+      conferirMultipla(questao);
+    });
+
+    if (estado.corrigidas[questao.id]) {
+      conteudo.querySelectorAll('[data-item-multiplicacao]').forEach(function (input) {
+        input.classList.add('campo-correto');
+      });
+      anunciar(questao, '✓ ' + questao.sucesso, true);
+    }
+  }
+
   function renderizarQuestao() {
     var questao = revisaoAtiva.questoes[estado.questaoAtual];
+    if (Array.isArray(questao.itens) && questao.itens.length) {
+      renderizarQuestaoMultipla(questao);
+      return;
+    }
     var resposta = estado.respostas[questao.id] || '';
     var inputId = 'resposta-operacoes-' + questao.id;
     conteudo.innerHTML =
@@ -261,6 +462,64 @@
     }
   }
 
+  function tabelaDaTabuada(numero) {
+    var linhas = '';
+    for (var fator = 1; fator <= 10; fator += 1) {
+      linhas +=
+        '<tr><th scope="row">' +
+        numero +
+        ' × ' +
+        fator +
+        '</th><td>' +
+        numero * fator +
+        '</td></tr>';
+    }
+    return (
+      '<table class="tabela-tabuada"><caption>Tabuada do ' +
+      numero +
+      '</caption><thead><tr><th scope="col">Conta</th><th scope="col">Resultado</th></tr></thead><tbody>' +
+      linhas +
+      '</tbody></table>'
+    );
+  }
+
+  function fatoresDaTabuada() {
+    var configurados = revisaoAtiva.estudoTabuada && revisaoAtiva.estudoTabuada.fatores;
+    return Array.isArray(configurados) && configurados.length ? configurados : [1, 2];
+  }
+
+  function listarFatores(fatores) {
+    if (fatores.length === 1) return String(fatores[0]);
+    return fatores.slice(0, -1).join(', ') + ' e ' + fatores[fatores.length - 1];
+  }
+
+  function renderizarEstudoTabuada() {
+    var fatores = fatoresDaTabuada();
+    var tabelas = fatores.map(tabelaDaTabuada).join('');
+    conteudo.innerHTML =
+      '<article class="etapa-mariana etapa-operacoes estudo-tabuada"><div class="cabecalho-etapa-mariana"><div>' +
+      '<p class="etiqueta">Momento de estudo</p><h1 id="operacoes-titulo-questao">Tabuada de ' +
+      escapar(listarFatores(fatores)) +
+      '</h1>' +
+      '<p class="explicacao-mariana">Observe, leia e procure os padrões antes de começar.</p></div>' +
+      '<img class="icone-etapa" src="../assets/objetos_escolares/calculator.svg" alt=""></div>' +
+      '<div class="atividade-mariana atividade-operacoes"><p class="aviso-bloqueio-tabuada"><strong>Atenção:</strong> depois de começar as questões de multiplicação, esta tabela não poderá ser aberta novamente nesta rodada.</p>' +
+      '<div class="grade-tabuadas">' +
+      tabelas +
+      '</div><div class="acoes-atividade-mariana"><button class="botao-principal botao-grande" type="button" data-comecar-multiplicacoes>Já estudei — começar as multiplicações →</button>' +
+      '<div class="retorno retorno-mariana retorno-operacoes" role="status" aria-live="polite">Use o tempo que precisar antes de continuar.</div></div></div></article>';
+    conteudo.querySelector('[data-comecar-multiplicacoes]').addEventListener('click', function () {
+      estado.estudoAberto = false;
+      estado.estudoConcluido = true;
+      estado.questaoAtual = Math.min(
+        revisaoAtiva.questoes.length - 1,
+        indiceEstudoDaRevisao(revisaoAtiva) + 1
+      );
+      salvar();
+      renderizar();
+    });
+  }
+
   function renderizarFinal() {
     var nome = nomePerfil(revisaoAtiva.perfil);
     var total = revisaoAtiva.questoes.length;
@@ -270,7 +529,7 @@
       nome +
       '!</h1><p class="explicacao-mariana">Você concluiu ' +
       total +
-      ' desafios de adição e subtração.</p></div>' +
+      ' desafios de Matemática.</p></div>' +
       '<img class="icone-etapa" src="../assets/objetos_escolares/calculator.svg" alt=""></div>' +
       '<div class="atividade-mariana"><p class="retorno sucesso" role="status">✓ As respostas ficaram salvas neste computador.</p>' +
       '<button class="botao-principal botao-grande" type="button" data-ir-trilha-operacoes>Voltar para Matemática</button></div></article>';
@@ -281,6 +540,7 @@
 
   function renderizar() {
     if (estado.finalizada) renderizarFinal();
+    else if (estado.estudoAberto && !estado.estudoConcluido) renderizarEstudoTabuada();
     else renderizarQuestao();
     atualizarCabecalho();
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -288,6 +548,7 @@
 
   function irPara(indice) {
     estado.finalizada = false;
+    estado.estudoAberto = false;
     estado.questaoAtual = Math.max(0, Math.min(revisaoAtiva.questoes.length - 1, indice));
     salvar();
     renderizar();
@@ -300,12 +561,22 @@
     estado = obterArmazenamento(revisao).carregar();
     conteudo = document.getElementById('operacoes-conteudo');
     document.getElementById('operacoes-voltar').onclick = function () {
-      if (estado.finalizada) irPara(revisaoAtiva.questoes.length - 1);
+      if (estado.estudoAberto && !estado.estudoConcluido) {
+        estado.estudoAberto = false;
+        salvar();
+        renderizar();
+      } else if (estado.finalizada) irPara(revisaoAtiva.questoes.length - 1);
       else irPara(estado.questaoAtual - 1);
     };
     document.getElementById('operacoes-proxima').onclick = function () {
       var questao = revisaoAtiva.questoes[estado.questaoAtual];
       if (!estado.corrigidas[questao.id]) return;
+      if (!estado.estudoConcluido && indiceEstudoDaRevisao(revisaoAtiva) === estado.questaoAtual) {
+        estado.estudoAberto = true;
+        salvar();
+        renderizar();
+        return;
+      }
       if (estado.questaoAtual === revisaoAtiva.questoes.length - 1) {
         estado.finalizada = true;
         salvar();
@@ -353,6 +624,8 @@
     if (atual.finalizada) return 'concluida';
     if (
       atual.questaoAtual > 0 ||
+      atual.estudoAberto ||
+      atual.estudoConcluido ||
       Object.keys(atual.respostas).length > 0 ||
       Object.keys(atual.corrigidas).length > 0
     ) {

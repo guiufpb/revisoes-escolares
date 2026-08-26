@@ -26,6 +26,12 @@ Não remova uma implementação para facilitar outra. Se a solicitação for uma
 
 Coloque comportamento reutilizável nos controladores e exemplos/perguntas nos arquivos da revisão. Não duplique um controlador inteiro apenas para trocar conteúdo.
 
+Para Matemática visual, reutilize `matematica-geometria-medidas.js` junto da Cena Matemática. Os
+tipos declarativos atuais cobrem campos com ilustração, seleção múltipla, associações e mosaico.
+Réguas, balanças, formas e unidades devem ficar na configuração da etapa; persistência, desfazer,
+correção e acessibilidade continuam no controlador compartilhado. Em etapas avaliativas da Cena
+Matemática, “Próxima” permanece bloqueado até uma conferência correta.
+
 ## 4. Arquivos gerados e privados
 
 Nunca edite manualmente:
@@ -133,6 +139,17 @@ axe-core, console e `file://`.
   por exemplo das cinco primeiras questões de unidades para as questões seguintes de dezenas.
 - Conteúdos exclusivos, como centenas apenas para uma criança, permanecem no arquivo e na chave
   desse perfil; o controlador compartilhado não deve inferir ou copiar perguntas entre perfis.
+- Para uma etapa de estudo que não pode ser consultada durante a avaliação, persista separadamente
+  os estados “estudo aberto” e “estudo concluído”. Depois do início das respostas, voltar, sair e
+  recarregar podem restaurar as questões anteriores, mas nunca a tabela bloqueada.
+- Declare em `estudoTabuada.fatores` quais tabuadas a revisão deve apresentar. O título, o contador
+  e as tabelas precisam refletir a mesma lista; mantenha o padrão `[1, 2]` para revisões antigas que
+  não declarem fatores.
+- Se uma questão tiver vários cálculos, cada item precisa de ID e resposta próprios. Salve cada
+  digitação, destaque individualmente campos vazios ou incorretos e só conclua a questão quando
+  todos estiverem corretos.
+- Teste o estudo antes do bloqueio, a recarga durante o estudo, o início da avaliação, o retorno à
+  questão anterior, o avanço que ignora a tabela já bloqueada e a recarga depois do bloqueio.
 
 ## 8. Ordenação de cartões
 

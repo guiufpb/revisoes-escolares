@@ -69,6 +69,9 @@
         return texto;
       }
       if (tipo === 'grafico') return 'Use os botões de cada barra para ajustar as quantidades.';
+      if (window.MatematicaGeometriaMedidas && window.MatematicaGeometriaMedidas.suporta(tipo)) {
+        return window.MatematicaGeometriaMedidas.resumo(configuracao, estado);
+      }
       return 'Sua construção fica salva nesta etapa.';
     }
 
@@ -477,6 +480,12 @@
       if (configuracao.tipo === 'dinheiro') return renderDinheiro();
       if (configuracao.tipo === 'grafico') return renderGrafico();
       if (configuracao.tipo === 'mini') return renderMini();
+      if (
+        window.MatematicaGeometriaMedidas &&
+        window.MatematicaGeometriaMedidas.suporta(configuracao.tipo)
+      ) {
+        return window.MatematicaGeometriaMedidas.renderizar(configuracao, estado, escapar);
+      }
       return '<p>Ferramenta matemática indisponível.</p>';
     }
 
@@ -673,6 +682,37 @@
             Math.min(20, (estado.barras[categoria] || 0) + delta)
           );
         }, 'ajustar-grafico');
+      } else if (alvo.dataset.mathVisualAid != null) {
+        var marcador = alvo.dataset.mathVisualAid;
+        alterar(function () {
+          var indiceMarcador = estado.marcadores.indexOf(marcador);
+          if (indiceMarcador >= 0) estado.marcadores.splice(indiceMarcador, 1);
+          else estado.marcadores.push(marcador);
+        }, 'marcar-contagem');
+      } else if (alvo.dataset.mathVisualChoice != null) {
+        var escolhaVisual = alvo.dataset.mathVisualChoice;
+        alterar(function () {
+          var indiceEscolha = estado.selecoes.indexOf(escolhaVisual);
+          if (indiceEscolha >= 0) estado.selecoes.splice(indiceEscolha, 1);
+          else estado.selecoes.push(escolhaVisual);
+        }, 'selecionar-item');
+      } else if (alvo.dataset.mathMosaicColor != null) {
+        estado.mosaico.cor = alvo.dataset.mathMosaicColor;
+        renderizar('Cor selecionada. Agora escolha uma célula editável.', '');
+        emitir('selecionar-cor');
+      } else if (alvo.dataset.mathMosaicCell != null) {
+        var celula = alvo.dataset.mathMosaicCell;
+        if (!estado.mosaico.cor) {
+          definirStatus('Primeiro escolha uma cor da paleta.', 'tente-novamente');
+        } else {
+          alterar(function () {
+            if (estado.mosaico.celulas[celula] === estado.mosaico.cor) {
+              delete estado.mosaico.celulas[celula];
+            } else {
+              estado.mosaico.celulas[celula] = estado.mosaico.cor;
+            }
+          }, 'pintar-mosaico');
+        }
       } else if (alvo.hasAttribute('data-math-undo')) {
         if (historico.length) {
           estado = historico.pop();
@@ -707,6 +747,16 @@
     }
 
     function aoDigitar(evento) {
+      var campoVisual = evento.target.closest(
+        '[data-math-visual-input], [data-math-visual-select]'
+      );
+      if (campoVisual) {
+        var idVisual = campoVisual.dataset.mathVisualInput || campoVisual.dataset.mathVisualSelect;
+        estado.escolhas[idVisual] = String(campoVisual.value).slice(0, 40);
+        estado.concluida = false;
+        emitir(campoVisual.dataset.mathVisualSelect != null ? 'selecionar-resposta' : 'digitar');
+        return;
+      }
       var campo = evento.target.closest('[data-math-input]');
       if (!campo) return;
       estado.respostas[campo.dataset.mathInput] = Math.max(
