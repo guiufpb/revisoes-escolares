@@ -84,6 +84,128 @@
     return '<span class="forma-geometrica forma-' + forma + '" aria-hidden="true"></span>';
   }
 
+  var TIPOS_RECIPIENTE = [
+    'jarra',
+    'copo',
+    'garrafa',
+    'caixa',
+    'galao',
+    'balde',
+    'xicara',
+    'frasco',
+  ];
+  var TIPOS_PRODUTO = ['pacote', 'caixa', 'lata', 'ovos'];
+
+  function tipoPermitido(tipo, permitidos, padrao) {
+    tipo = String(tipo || '');
+    return permitidos.indexOf(tipo) >= 0 ? tipo : padrao;
+  }
+
+  function recipienteVisual(tipo) {
+    tipo = tipoPermitido(tipo, TIPOS_RECIPIENTE, 'copo');
+    return (
+      '<span class="recipiente-visual recipiente-' +
+      tipo +
+      '" aria-hidden="true"><span></span><i></i><b></b></span>'
+    );
+  }
+
+  function produtoVisual(tipo) {
+    tipo = tipoPermitido(tipo, TIPOS_PRODUTO, 'pacote');
+    return (
+      '<span class="produto-visual produto-' +
+      tipo +
+      '" aria-hidden="true"><span></span><i></i><b></b></span>'
+    );
+  }
+
+  function renderCapacidade(visual, escapar) {
+    return (
+      '<div class="painel-capacidade" role="group" aria-label="' +
+      escapar(visual.rotuloAcessivel || 'Recipientes para comparar') +
+      '">' +
+      (visual.grupos || [])
+        .map(function (grupo) {
+          var quantidade = Math.max(1, Math.min(8, Math.trunc(Number(grupo.quantidade) || 1)));
+          return (
+            '<section class="grupo-capacidade"><div class="serie-recipientes">' +
+            Array.from({ length: quantidade })
+              .map(function () {
+                return recipienteVisual(grupo.tipo);
+              })
+              .join('') +
+            '</div><strong>' +
+            escapar(grupo.rotulo) +
+            '</strong>' +
+            (grupo.detalhe ? '<span>' + escapar(grupo.detalhe) + '</span>' : '') +
+            '</section>'
+          );
+        })
+        .join('') +
+      '</div>' +
+      (visual.equacao
+        ? '<p class="equacao-capacidade" aria-label="Relação de capacidade apresentada">' +
+          escapar(visual.equacao) +
+          '</p>'
+        : '')
+    );
+  }
+
+  function algarismosDU(numero) {
+    var valor = Math.max(0, Math.min(99, Math.trunc(Number(numero) || 0)));
+    return { D: Math.floor(valor / 10), U: valor % 10 };
+  }
+
+  function renderOperacaoDU(visual, escapar) {
+    var superior = algarismosDU(visual.superior);
+    var inferior = algarismosDU(visual.inferior);
+    var operador = visual.operador === '−' ? '−' : '+';
+    return (
+      '<div class="painel-operacao-du"><table aria-label="Conta organizada em dezenas e unidades"><caption>' +
+      escapar(visual.rotulo || 'Conta em dezenas e unidades') +
+      '</caption><thead><tr><th aria-label="Operação"></th><th scope="col">D</th><th scope="col">U</th></tr></thead><tbody><tr><td></td><td>' +
+      superior.D +
+      '</td><td>' +
+      superior.U +
+      '</td></tr><tr><th scope="row">' +
+      operador +
+      '</th><td>' +
+      inferior.D +
+      '</td><td>' +
+      inferior.U +
+      '</td></tr></tbody></table><p>' +
+      escapar(
+        visual.ajuda ||
+          (operador === '+'
+            ? 'Comece pelas unidades. Ao formar 10 unidades, troque por 1 dezena.'
+            : 'Comece pelas unidades e observe se uma dezena precisa ser transformada.')
+      ) +
+      '</p></div>'
+    );
+  }
+
+  function renderMercado(visual, escapar) {
+    return (
+      '<div class="painel-mercado" role="group" aria-label="' +
+      escapar(visual.rotuloAcessivel || 'Produtos e preços do carrinho') +
+      '">' +
+      (visual.itens || [])
+        .map(function (item) {
+          return (
+            '<article class="cartao-produto">' +
+            produtoVisual(item.tipo) +
+            '<strong>' +
+            escapar(item.nome) +
+            '</strong><span>R$ ' +
+            Math.max(0, Math.trunc(Number(item.preco) || 0)) +
+            '</span></article>'
+          );
+        })
+        .join('') +
+      '</div>'
+    );
+  }
+
   function renderContagem(configuracao, estado, escapar) {
     return (
       '<div class="painel-contagem-formas" role="group" aria-label="Figuras para contar. Toque em uma figura para marcá-la durante a contagem.">' +
@@ -170,6 +292,9 @@
     if (visual.tipo === 'forma') return renderForma(visual, escapar);
     if (visual.tipo === 'regua') return renderRegua(visual);
     if (visual.tipo === 'balanca') return renderBalanca(visual, escapar);
+    if (visual.tipo === 'capacidade') return renderCapacidade(visual, escapar);
+    if (visual.tipo === 'operacao-du') return renderOperacaoDU(visual, escapar);
+    if (visual.tipo === 'mercado') return renderMercado(visual, escapar);
     if (visual.texto) {
       return (
         '<div class="painel-visual-medidas" aria-hidden="true">' + escapar(visual.texto) + '</div>'
@@ -214,6 +339,8 @@
 
   function iconeItem(item) {
     if (item.forma) return formaVisual(item.forma);
+    if (item.recipiente) return recipienteVisual(item.recipiente);
+    if (item.produto) return produtoVisual(item.produto);
     return '<span class="simbolo-medida" aria-hidden="true">' + (item.simbolo || '◆') + '</span>';
   }
 

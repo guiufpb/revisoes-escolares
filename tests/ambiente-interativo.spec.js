@@ -186,8 +186,8 @@ test('carrega a tela inicial e registra todas as revisões sem chaves duplicadas
       ),
     }))
   );
-  expect(registro).toHaveLength(37);
-  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(37);
+  expect(registro).toHaveLength(38);
+  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(38);
   expect(registro.every((item) => item.elementosExistem)).toBe(true);
 });
 

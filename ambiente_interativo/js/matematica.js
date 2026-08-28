@@ -126,6 +126,7 @@
     barra.style.width = (atual / total) * 100 + '%';
     barra.parentElement.setAttribute('aria-valuemax', total);
     barra.parentElement.setAttribute('aria-valuenow', atual);
+    barra.parentElement.setAttribute('aria-label', 'Progresso de ' + revisaoAtiva.titulo);
     document.getElementById('matematica-cena-voltar').disabled = estado.etapaAtual === 0;
     var proxima = document.getElementById('matematica-cena-proxima');
     var etapa = revisaoAtiva.etapas[estado.etapaAtual];
@@ -226,6 +227,8 @@
     var revisao = revisoes[id];
     if (!revisao) throw new Error('Revisão de Matemática não encontrada: ' + id);
     revisaoAtiva = revisao;
+    var perfil = document.getElementById('matematica-cena-nome-perfil');
+    if (perfil) perfil.textContent = revisao.aluno === 'alice' ? 'Alice' : 'Mariana';
     obterEstado(id);
     mostrarTela('matematicaCena');
     renderizar();

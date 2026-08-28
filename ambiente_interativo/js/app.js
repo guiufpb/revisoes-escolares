@@ -4,6 +4,7 @@
   var ID_ALICE = 'alice-ciencias-origem-materiais';
   var ID_CENTENAS = 'mariana-matematica-centenas-em-acao';
   var ID_FORMAS_MEDIDAS = 'mariana-matematica-formas-mosaicos-medidas';
+  var ID_CAPACIDADE_ALICE = 'alice-matematica-capacidade-operacoes-numeros';
   var ID_GRAMATICA = 'mariana-gramatica-revisao-ampla';
   var IDS_GRAMATICA_COMPARTILHADA = {
     alice: 'alice-gramatica-h-til-vocabulario',
@@ -289,7 +290,8 @@
       var ativa = window.MatematicaRevisoes.obterAtiva();
       var estadoCentenas = ativa && window.MatematicaRevisoes.obterEstado(ativa.id);
       resumo.textContent = estadoCentenas
-        ? 'Mariana · ' +
+        ? (ativa.aluno === 'alice' ? 'Alice' : 'Mariana') +
+          ' · ' +
           ativa.titulo +
           ': etapa ' +
           (estadoCentenas.etapaAtual + 1) +
@@ -298,7 +300,7 @@
           ' · ' +
           estadoCentenas.pontos +
           ' conquistas'
-        : 'Mariana: vamos construir!';
+        : (alunoAtual === 'alice' ? 'Alice' : 'Mariana') + ': vamos construir!';
     } else if (telaAtualId === 'matematicaOperacoes' && window.MatematicaOperacoes) {
       var operacoesAtiva = window.MatematicaOperacoes.obterAtiva();
       var estadoOperacoes =
@@ -383,6 +385,7 @@
     document.getElementById('abrir-revisao-mariana').hidden = aluno !== 'mariana';
     document.getElementById('abrir-centenas-em-acao').hidden = aluno !== 'mariana';
     document.getElementById('abrir-formas-mosaicos-medidas').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-capacidade-operacoes-numeros').hidden = aluno !== 'alice';
     document.getElementById('materia-leitura').hidden = false;
     document.getElementById('abrir-gramatica-mariana').hidden = aluno !== 'mariana';
     document.getElementById('limpar-progresso').hidden = false;
@@ -529,6 +532,12 @@
       window.MatematicaRevisoes.abrir(ID_FORMAS_MEDIDAS);
       atualizarResumo();
     });
+    document
+      .getElementById('abrir-capacidade-operacoes-numeros')
+      .addEventListener('click', function () {
+        window.MatematicaRevisoes.abrir(ID_CAPACIDADE_ALICE);
+        atualizarResumo();
+      });
     document.querySelectorAll('[data-voltar-materias]').forEach(function (botao) {
       botao.addEventListener('click', function () {
         mostrarTela('trilhas');

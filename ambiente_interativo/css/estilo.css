@@ -245,6 +245,314 @@
   content: '';
 }
 
+.painel-capacidade,
+.painel-mercado {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  margin-bottom: 1rem;
+  padding: 1rem;
+  gap: 0.75rem;
+  border: 2px solid #ded5f7;
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, #fffaf0, #f1edff);
+}
+
+.grupo-capacidade,
+.cartao-produto {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  min-height: 124px;
+  padding: 0.75rem;
+  gap: 0.4rem;
+  border: 2px solid #e5dcfa;
+  border-radius: 1rem;
+  background: #fff;
+  color: #332568;
+  text-align: center;
+}
+
+.grupo-capacidade > span,
+.cartao-produto > span:last-child {
+  color: #66568d;
+  font-size: 0.92rem;
+}
+
+.serie-recipientes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: center;
+  min-height: 62px;
+  gap: 0.25rem;
+}
+
+.recipiente-visual {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 58px;
+  flex: 0 0 auto;
+}
+
+.recipiente-visual > span,
+.recipiente-visual > i,
+.recipiente-visual > b {
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+}
+
+.recipiente-copo > span {
+  inset: 11px 7px 3px;
+  border: 3px solid #4b75a7;
+  border-radius: 0.25rem 0.25rem 0.8rem 0.8rem;
+  background: linear-gradient(to top, #76ccef 0 55%, #eaf9ff 55%);
+  clip-path: polygon(4% 0, 96% 0, 83% 100%, 17% 100%);
+}
+
+.recipiente-jarra > span {
+  inset: 10px 7px 3px 5px;
+  border: 3px solid #4b75a7;
+  border-radius: 0.45rem 0.75rem 0.8rem 0.8rem;
+  background: linear-gradient(to top, #76ccef 0 58%, #eefaff 58%);
+  clip-path: polygon(0 14%, 78% 14%, 100% 0, 93% 100%, 6% 100%);
+}
+
+.recipiente-jarra > i {
+  top: 19px;
+  right: -1px;
+  width: 18px;
+  height: 28px;
+  border: 4px solid #4b75a7;
+  border-left: 0;
+  border-radius: 0 50% 50% 0;
+}
+
+.recipiente-garrafa > span,
+.recipiente-galao > span,
+.recipiente-frasco > span {
+  right: 8px;
+  bottom: 3px;
+  left: 8px;
+  height: 42px;
+  border: 3px solid #3f729e;
+  border-radius: 0.8rem 0.8rem 0.55rem 0.55rem;
+  background: linear-gradient(to top, #7fd6ee 0 62%, #effcff 62%);
+}
+
+.recipiente-garrafa > i,
+.recipiente-galao > i,
+.recipiente-frasco > i {
+  top: 3px;
+  left: 17px;
+  width: 15px;
+  height: 16px;
+  border: 3px solid #3f729e;
+  border-radius: 0.25rem 0.25rem 0 0;
+  background: #eefcff;
+}
+
+.recipiente-galao > span {
+  right: 2px;
+  left: 2px;
+  border-radius: 1rem 1rem 0.65rem 0.65rem;
+}
+
+.recipiente-galao > b {
+  top: 18px;
+  right: 7px;
+  width: 14px;
+  height: 18px;
+  border: 3px solid #3f729e;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.recipiente-caixa > span {
+  inset: 6px 7px 3px;
+  border: 3px solid #b05b66;
+  border-radius: 0.35rem;
+  background: linear-gradient(135deg, #ffb88f 0 48%, #ff8f9d 48%);
+  clip-path: polygon(12% 0, 88% 0, 100% 14%, 100% 100%, 0 100%, 0 14%);
+}
+
+.recipiente-caixa > i {
+  top: 0;
+  right: 9px;
+  width: 4px;
+  height: 19px;
+  transform: rotate(12deg);
+  border-radius: 999px;
+  background: #6d4c9f;
+}
+
+.recipiente-balde > span {
+  inset: 17px 4px 3px;
+  border: 3px solid #7250a4;
+  border-radius: 0.35rem 0.35rem 0.9rem 0.9rem;
+  background: linear-gradient(to top, #91d8f4 0 62%, #f1fbff 62%);
+  clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
+}
+
+.recipiente-balde > i {
+  top: 4px;
+  left: 8px;
+  width: 32px;
+  height: 25px;
+  border: 3px solid #7250a4;
+  border-bottom: 0;
+  border-radius: 50% 50% 0 0;
+}
+
+.recipiente-xicara > span {
+  inset: 18px 10px 5px 3px;
+  border: 3px solid #a85f69;
+  border-radius: 0.3rem 0.3rem 1rem 1rem;
+  background: linear-gradient(to top, #f2b877 0 68%, #fff8e8 68%);
+}
+
+.recipiente-xicara > i {
+  top: 23px;
+  right: 1px;
+  width: 16px;
+  height: 20px;
+  border: 4px solid #a85f69;
+  border-left: 0;
+  border-radius: 0 50% 50% 0;
+}
+
+.recipiente-frasco {
+  transform: scale(0.78);
+}
+
+.equacao-capacidade {
+  margin: 0 0 1rem;
+  padding: 0.8rem 1rem;
+  border: 2px dashed #8d73d6;
+  border-radius: 1rem;
+  background: #fff;
+  color: #3f2b91;
+  font-size: 1.08rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.painel-operacao-du {
+  display: grid;
+  grid-template-columns: minmax(190px, 260px) minmax(180px, 1fr);
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  gap: 1rem;
+  border: 2px solid #d9cff6;
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, #fff8dc, #f1edff);
+}
+
+.painel-operacao-du table {
+  width: 100%;
+  border: 3px solid #5940b2;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 0.8rem;
+  background: #fff;
+  color: #2f225f;
+  font-size: 1.35rem;
+  text-align: center;
+}
+
+.painel-operacao-du caption {
+  padding: 0.55rem;
+  color: #3f2b91;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.painel-operacao-du th,
+.painel-operacao-du td {
+  width: 33.33%;
+  padding: 0.45rem;
+  border-top: 1px solid #d9cff6;
+  border-left: 1px solid #d9cff6;
+}
+
+.painel-operacao-du tr > :first-child {
+  border-left: 0;
+}
+
+.painel-operacao-du p {
+  margin: 0;
+  color: #483778;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.cartao-produto {
+  min-height: 142px;
+}
+
+.produto-visual {
+  position: relative;
+  display: inline-block;
+  width: 58px;
+  height: 62px;
+}
+
+.produto-visual > span,
+.produto-visual > i,
+.produto-visual > b {
+  position: absolute;
+  display: block;
+  box-sizing: border-box;
+}
+
+.produto-pacote > span,
+.produto-caixa > span {
+  inset: 6px 8px 3px;
+  border: 3px solid #8654a8;
+  border-radius: 0.45rem;
+  background: linear-gradient(135deg, #ffd166 0 45%, #ef8fb6 45%);
+  clip-path: polygon(8% 0, 92% 0, 100% 10%, 95% 100%, 5% 100%, 0 10%);
+}
+
+.produto-pacote > i,
+.produto-caixa > i,
+.produto-lata > i {
+  top: 25px;
+  left: 17px;
+  width: 24px;
+  height: 14px;
+  border: 2px solid #fff;
+  border-radius: 999px;
+  background: #6f4bb2;
+}
+
+.produto-caixa > span {
+  background: linear-gradient(135deg, #9ee1c9 0 50%, #6fbce8 50%);
+  clip-path: polygon(12% 0, 88% 0, 100% 13%, 100% 100%, 0 100%, 0 13%);
+}
+
+.produto-lata > span {
+  inset: 8px 11px 3px;
+  border: 3px solid #486b91;
+  border-radius: 45% 45% 25% 25% / 12% 12% 8% 8%;
+  background: linear-gradient(90deg, #9fd4ef, #e8f8ff 48%, #79b5d8);
+}
+
+.produto-ovos > span {
+  right: 2px;
+  bottom: 7px;
+  left: 2px;
+  height: 30px;
+  border: 3px solid #9a713b;
+  border-radius: 0.8rem;
+  background:
+    radial-gradient(ellipse at 18% 40%, #fff3d5 0 13%, transparent 14%),
+    radial-gradient(ellipse at 50% 40%, #fff3d5 0 13%, transparent 14%),
+    radial-gradient(ellipse at 82% 40%, #fff3d5 0 13%, transparent 14%), #d9ab68;
+}
+
 .regua-interativa {
   position: relative;
   max-width: 100%;
@@ -442,6 +750,31 @@
 
   .balanca-visual {
     gap: 1rem;
+  }
+
+  .painel-capacidade,
+  .painel-mercado {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 0.65rem;
+  }
+
+  .grupo-capacidade,
+  .cartao-produto {
+    min-height: 116px;
+    padding: 0.55rem;
+  }
+
+  .recipiente-visual {
+    transform: scale(0.88);
+    margin: -3px;
+  }
+
+  .recipiente-frasco {
+    transform: scale(0.7);
+  }
+
+  .painel-operacao-du {
+    grid-template-columns: 1fr;
   }
 }
 
