@@ -53,7 +53,8 @@ Este inventário registra a branch `main` em **25/08/2026**.
 - `js/leitura.js`, `js/leitor-dedicado.js` e `js/glossario.js`: biblioteca e leitor.
 - `js/matematica.js`, `js/matematica-cena.js` e `js/matematica-manipulaveis.js`: Matemática manipulativa.
 - `js/matematica-geometria-medidas.js`: formas originais em CSS, campos com unidade, seleção,
-  associação, mosaico, régua e balança dentro do mesmo contrato de Cena Matemática.
+  associação, mosaico, régua, balança, recipientes de capacidade, continhas verticais D–U e
+  produtos de mercado dentro do mesmo contrato de Cena Matemática.
 - `js/matematica-operacoes.js`: operações digitadas, questões com vários campos e estudo
   intermediário de tabuadas configuráveis com bloqueio persistente.
 
@@ -81,6 +82,25 @@ Este inventário registra a branch `main` em **25/08/2026**.
 Chave: `revisoesEscolares.alice.ciencias.origemMateriais`.
 
 ## 5. Matemática
+
+### Alice — Capacidade, continhas e números
+
+- Revisão exclusiva com **32 etapas**: apresentação, **30 questões avaliativas** e encerramento.
+- Questões 1 a 7: capacidade de recipientes, comparações, equivalências entre litro e mililitro e
+  associação de objetos às unidades `L` e `mL`.
+- Questões 8 a 12: adições com reagrupamento, apoiadas por continhas verticais D–U.
+- Questões 13 a 17: subtrações com reagrupamento e decomposição visual da dezena, sem simular uma
+  troca manipulativa inversa que a biblioteca compartilhada não oferece.
+- Questões 18 a 22: sequências, nomes dos números e composição de 1 a 20 em dezenas e unidades.
+- Questões 23 a 26: dezenas exatas até 100, leitura, ordenação e quantidade de dezenas.
+- Questões 27 a 30: compras de supermercado, troco e dois mini simulados com várias respostas.
+- Recipientes, produtos e continhas são ilustrações originais em HTML/CSS, sem imagens ou recursos
+  obrigatórios da internet. Todos os campos continuam no contrato persistente da Cena Matemática.
+- Erro bloqueia o avanço sem apagar a resposta; a criança pode corrigir, conferir novamente,
+  avançar, voltar e recarregar. Clique, toque, teclado, `aria-live` e limpeza seletiva foram
+  preservados, com progresso isolado de todas as revisões anteriores de Alice e Mariana.
+
+Chave: `revisoesEscolares.alice.matematica.capacidadeOperacoesNumeros.v1`.
 
 ### Alice e Mariana — Contas do dia a dia
 

@@ -89,6 +89,17 @@
       possuiManipulaveis: true,
     },
     {
+      id: 'alice-matematica-capacidade-operacoes-numeros',
+      aluno: 'alice',
+      titulo: 'Capacidade, continhas e números',
+      cartaoId: 'abrir-capacidade-operacoes-numeros',
+      painelId: 'tela-matematica-cena',
+      chaveArmazenamento: 'revisoesEscolares.alice.matematica.capacidadeOperacoesNumeros.v1',
+      totalEtapas: 32,
+      controladorCompartilhado: 'matematica-manipulativa',
+      possuiManipulaveis: true,
+    },
+    {
       id: 'alice-matematica-contas-dia-a-dia',
       aluno: 'alice',
       titulo: 'Contas do dia a dia',

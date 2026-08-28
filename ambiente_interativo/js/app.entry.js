@@ -16,6 +16,7 @@ import './gramatica-questionarios.js';
 import '../revisoes/mariana/matematica-revisao-ampla.js';
 import '../revisoes/mariana/matematica-centenas-em-acao.js';
 import '../revisoes/mariana/matematica-formas-mosaicos-medidas.js';
+import '../revisoes/alice/matematica-capacidade-operacoes-numeros.js';
 import '../revisoes/alice/matematica-operacoes.js';
 import '../revisoes/mariana/matematica-operacoes.js';
 import '../revisoes/alice/matematica-contas-e-tabuada.js';

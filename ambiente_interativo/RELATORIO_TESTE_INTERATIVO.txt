@@ -1,6 +1,45 @@
 RELATORIO DE TESTE - AMBIENTE INTERATIVO
 =======================================
 
+ATUALIZAÇÃO: 26/08/2026 - CAPACIDADE, CONTINHAS E NÚMEROS
+==========================================================
+
+ESCOPO IMPLEMENTADO
+- Nova revisão exclusiva de Alice com 32 etapas: apresentação, 30 questões
+  avaliativas e encerramento.
+- A progressão reúne capacidade em L e mL, adições e subtrações com
+  reagrupamento, números de 1 a 20, dezenas exatas, supermercado e dois mini
+  simulados com várias atividades por questão.
+- A Cena Matemática ganhou ilustrações reutilizáveis e locais de recipientes,
+  continhas verticais D-U e produtos de mercado, sem novo controlador ou fonte
+  obrigatória da internet.
+- O cartão, o cabeçalho e o breadcrumb identificam Alice; a revisão não aparece
+  no perfil de Mariana.
+
+PERSISTÊNCIA E ACESSIBILIDADE
+- Chave: revisoesEscolares.alice.matematica.capacidadeOperacoesNumeros.v1.
+- Erro, correção, avanço, retorno, recarga, várias respostas, desfazer e limpeza
+  seletiva preservam o contrato da Cena Matemática e as demais chaves.
+- Clique, toque e teclado foram cobertos. Mensagens pedagógicas usam aria-live;
+  no viewport 390 x 844, innerWidth 390 e scrollWidth 375, sem rolagem
+  horizontal.
+- O PDF escolar privado não foi reaberto nem renderizado: a síntese pedagógica
+  fornecida no pedido foi suficiente e nenhum material escolar entrou no app.
+
+COBERTURA
+- O teste dirigido por dados confere as 30 questões, 32 IDs únicos, respostas,
+  distribuição pedagógica, chave, isolamento, correção recuperável, volta,
+  recarga, teclado, celular, axe-core, console e file://.
+- npm run build, npm run format:check e npm run lint: PASSARAM.
+- Teste completo da nova revisão: 7 de 7 aprovados.
+- Passe direcionado final da nova revisão e dos comportamentos compartilhados:
+  15 de 15 aprovados.
+- npm test: 138 de 138 testes Playwright aprovados em 8,1 minutos.
+- Inspeção visual no navegador: capacidade, continha D-U, supermercado e mini
+  simulado conferidos em desktop e 390 x 844; nenhuma figura cortada, nenhum
+  overflow horizontal e nenhum erro ou aviso no console.
+- Nenhum commit, push, merge ou publicação foi realizado.
+
 ATUALIZAÇÃO: 25/08/2026 - FORMAS, MOSAICOS E MEDIDAS
 =====================================================
 
@@ -1222,3 +1261,13 @@ ENCERRAMENTO EM USO REAL DE FORMAS, MOSAICOS E MEDIDAS EM 26/08/2026
   triangular e o volume do cone de transito.
 - Apos a correcao, Mariana concluiu a revisao sem novos problemas identificados.
 - O progresso real da revisao foi preservado durante a correcao.
+
+ENCERRAMENTO EM USO REAL DE CAPACIDADE, CONTINHAS E NÚMEROS EM 28/08/2026
+- Alice concluiu integralmente as 30 questões avaliativas em situação real de uso.
+- Nenhuma falha funcional foi identificada e nenhuma correção adicional foi necessária.
+- As ilustrações de capacidade e as atividades de L e mL foram compreendidas e funcionaram
+  adequadamente.
+- Adições e subtrações com reagrupamento, números de 1 a 20 e dezenas exatas puderam ser
+  realizados normalmente.
+- Supermercado e mini simulados funcionaram normalmente.
+- Navegação, voltar, correção e avanço funcionaram sem perda ou mistura de progresso.

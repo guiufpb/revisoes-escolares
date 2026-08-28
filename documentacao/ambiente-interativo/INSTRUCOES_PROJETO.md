@@ -27,9 +27,10 @@ Não remova uma implementação para facilitar outra. Se a solicitação for uma
 Coloque comportamento reutilizável nos controladores e exemplos/perguntas nos arquivos da revisão. Não duplique um controlador inteiro apenas para trocar conteúdo.
 
 Para Matemática visual, reutilize `matematica-geometria-medidas.js` junto da Cena Matemática. Os
-tipos declarativos atuais cobrem campos com ilustração, seleção múltipla, associações e mosaico.
-Réguas, balanças, formas e unidades devem ficar na configuração da etapa; persistência, desfazer,
-correção e acessibilidade continuam no controlador compartilhado. Em etapas avaliativas da Cena
+tipos declarativos atuais cobrem campos com ilustração, seleção múltipla, associações, mosaico,
+recipientes de capacidade, continhas verticais D–U e produtos de mercado. Réguas, balanças,
+formas, objetos e unidades devem ficar na configuração da etapa; persistência, desfazer, correção
+e acessibilidade continuam no controlador compartilhado. Em etapas avaliativas da Cena
 Matemática, “Próxima” permanece bloqueado até uma conferência correta.
 
 ## 4. Arquivos gerados e privados
