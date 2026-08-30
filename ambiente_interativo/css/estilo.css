@@ -2646,6 +2646,85 @@ footer {
   font-size: 1.28rem;
 }
 
+.pratica-escrita-ingles {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 24px;
+  padding: 18px;
+  border: 3px solid #c9b9f5;
+  border-radius: 20px;
+  background: #f8f5ff;
+}
+
+.pratica-escrita-ingles[hidden] {
+  display: none;
+}
+
+.cabecalho-pratica-escrita {
+  display: flex;
+  gap: 16px;
+  align-items: end;
+  justify-content: space-between;
+}
+
+.cabecalho-pratica-escrita h3 {
+  margin: 4px 0 0;
+  color: #4f34ad;
+}
+
+.progresso-grupo-ingles {
+  margin: 0;
+  color: #355264;
+  font-weight: 800;
+}
+
+.pratica-escrita-ingles label {
+  font-weight: 800;
+}
+
+.controles-pratica-escrita {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+}
+
+.controles-pratica-escrita input {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 3px solid #9f8adc;
+  border-radius: 14px;
+  color: #272046;
+  background: white;
+  font: inherit;
+  font-size: 1.05rem;
+}
+
+.controles-pratica-escrita input:focus-visible {
+  outline: 4px solid #ffd56a;
+  outline-offset: 2px;
+}
+
+.controles-pratica-escrita input.correto {
+  border-color: #398d63;
+  background: #eefaf4;
+}
+
+.controles-pratica-escrita input.incorreto {
+  border-color: #bf3c57;
+  background: #fff2f5;
+}
+
+.status-escrita-ingles {
+  min-height: 48px;
+  margin: 0;
+  padding: 12px 14px;
+  border-left: 5px solid #6f52c7;
+  border-radius: 10px;
+  background: white;
+  font-weight: 800;
+}
+
 .grade-palavras-ingles {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -2967,6 +3046,142 @@ footer {
   background: #edf7f2;
 }
 
+/*
+ * Capacidade opt-in para revisões que aproveitam monitores desktop largos.
+ * A classe é aplicada pelo controlador somente quando a unidade declara
+ * layout.desktopAmplo, preservando integralmente as revisões legadas.
+ */
+@media (min-width: 1120px) {
+  .tela-ingles.layout-desktop-amplo {
+    --espaco-desktop-amplo: clamp(20px, 2vw, 34px);
+    --coluna-estudo-desktop-amplo: clamp(330px, 25vw, 430px);
+
+    width: min(2360px, 94vw);
+  }
+
+  .layout-desktop-amplo .cabecalho-ingles > div > p:last-child {
+    max-width: 1000px;
+  }
+
+  .layout-desktop-amplo .painel-audio-ingles {
+    display: grid;
+    grid-template-areas:
+      'titulo vozes'
+      'controles status';
+    grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.75fr);
+    gap: 18px var(--espaco-desktop-amplo);
+  }
+
+  .layout-desktop-amplo .cabecalho-painel-audio {
+    display: contents;
+  }
+
+  .layout-desktop-amplo .cabecalho-painel-audio > div {
+    grid-area: titulo;
+  }
+
+  .layout-desktop-amplo .vozes-locais {
+    grid-area: vozes;
+    max-width: none;
+  }
+
+  .layout-desktop-amplo .controles-audio-ingles {
+    grid-area: controles;
+    align-content: start;
+  }
+
+  .layout-desktop-amplo .status-audio-ingles {
+    grid-area: status;
+    align-self: stretch;
+    margin-top: 0;
+  }
+
+  .layout-desktop-amplo .grupos-ingles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  }
+
+  .layout-desktop-amplo .aba-grupo-ingles {
+    width: 100%;
+  }
+
+  .layout-desktop-amplo .conteudo-grupo-ingles {
+    display: grid;
+    grid-template-areas:
+      'resumo grade'
+      'escrita grade';
+    grid-template-columns: var(--coluna-estudo-desktop-amplo) minmax(0, 1fr);
+    gap: 18px var(--espaco-desktop-amplo);
+    align-items: start;
+  }
+
+  .layout-desktop-amplo .cabecalho-grupo-ingles {
+    grid-area: resumo;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-bottom: 0;
+  }
+
+  .layout-desktop-amplo .pratica-escrita-ingles {
+    grid-area: escrita;
+    margin-bottom: 0;
+  }
+
+  .layout-desktop-amplo .grade-palavras-ingles {
+    grid-area: grade;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .layout-desktop-amplo #ingles-cartao-questao.com-apoio-visual {
+    display: grid;
+    grid-template-areas:
+      'cabecalho cabecalho'
+      'pergunta imagens'
+      'traducao imagens'
+      'alternativas imagens'
+      'status status'
+      'navegacao navegacao';
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.38fr);
+    column-gap: var(--espaco-desktop-amplo);
+    align-items: start;
+  }
+
+  .layout-desktop-amplo #ingles-cartao-questao.com-apoio-visual .cabecalho-atividade-ingles {
+    grid-area: cabecalho;
+  }
+
+  .layout-desktop-amplo #ingles-cartao-questao.com-apoio-visual .imagens-enunciado-ingles {
+    grid-area: imagens;
+    align-self: stretch;
+    align-content: center;
+    margin: 0;
+  }
+
+  .layout-desktop-amplo #ingles-cartao-questao.com-apoio-visual #ingles-pergunta-atividade {
+    grid-area: pergunta;
+  }
+
+  .layout-desktop-amplo #ingles-cartao-questao.com-apoio-visual .traducao-pergunta-ingles {
+    grid-area: traducao;
+  }
+
+  .layout-desktop-amplo #ingles-cartao-questao.com-apoio-visual .alternativas-atividade-ingles {
+    grid-area: alternativas;
+  }
+
+  .layout-desktop-amplo #ingles-cartao-questao.com-apoio-visual .status-atividade-ingles {
+    grid-area: status;
+  }
+
+  .layout-desktop-amplo #ingles-cartao-questao.com-apoio-visual .navegacao-atividade-ingles {
+    grid-area: navegacao;
+  }
+
+  .layout-desktop-amplo #ingles-lista-revisao {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 700px) {
   .cabecalho-ingles {
     grid-template-columns: 1fr;
@@ -3005,6 +3220,16 @@ footer {
 
   .cabecalho-grupo-ingles {
     grid-template-columns: 1fr;
+  }
+
+  .cabecalho-pratica-escrita,
+  .controles-pratica-escrita {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .controles-pratica-escrita button {
+    width: 100%;
   }
 
   .alternativas-atividade-ingles {

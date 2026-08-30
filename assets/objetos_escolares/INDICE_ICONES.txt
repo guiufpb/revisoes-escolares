@@ -97,3 +97,16 @@ piglet.svg | leitão | fluent-emoji-flat:pig-face | aproximado: rosto de porco r
 pond.svg | lagoa | fluent-emoji-flat:water-wave | aproximado: onda representa a lagoa
 sheep.svg | ovelha | fluent-emoji-flat:ewe | exato
 water.svg | água | fluent-emoji-flat:droplet | exato
+
+ICONES DA REVISAO CITY LIFE - VERSAO 2
+
+family.svg | família | fluent-emoji-flat:people-hugging | aproximado: pessoas abraçadas representam família
+flag.svg | país | fluent-emoji-flat:triangular-flag | aproximado: bandeira representa o país
+friend.svg | amigo/amiga | fluent-emoji-flat:people-hugging | aproximado: pessoas abraçadas representam amizade
+heart.svg | respeito/parte favorita | fluent-emoji-flat:red-heart | aproximado: coração representa afeto e respeito
+hospital.svg | hospital | fluent-emoji-flat:hospital | exato
+passport.svg | passaporte | fluent-emoji-flat:identification-card | aproximado: documento de identificação representa passaporte
+plane.svg | avião | fluent-emoji-flat:airplane | exato
+shield.svg | coragem/proteção | fluent-emoji-flat:shield | aproximado: escudo representa proteção
+soldier.svg | soldado | fluent-emoji-flat:guard | aproximado: guarda representa soldado
+star.svg | incrível/especial | fluent-emoji-flat:star | aproximado: estrela representa algo especial

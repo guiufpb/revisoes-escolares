@@ -1271,3 +1271,67 @@ ENCERRAMENTO EM USO REAL DE CAPACIDADE, CONTINHAS E NÚMEROS EM 28/08/2026
   realizados normalmente.
 - Supermercado e mini simulados funcionaram normalmente.
 - Navegação, voltar, correção e avanço funcionaram sem perda ou mistura de progresso.
+
+EVOLUÇÃO DA CITY LIFE PARA A VERSÃO 2 EM 28/08/2026
+=====================================================
+
+ESCOPO IMPLEMENTADO
+- O ID mariana-ingles-city-life-unidade-5, o cartão e a unidade city-life-unidade-5 foram
+  preservados. A chave ativa passou a ser
+  revisoesEscolares.mariana.ingles.cityLifeUnidade5.v2; a chave v1 permanece intacta.
+- Os 44 itens anteriores foram preservados e 29 foram acrescentados, totalizando 73 palavras e
+  expressões em sete grupos. O conteúdo novo cobre viagem e férias, Dia do Soldado, escola e dias
+  especiais, além de hospital no grupo de lugares.
+- As 16 competências anteriores foram reformuladas e intercaladas com 14 questões novas,
+  totalizando 30 atividades bilíngues com correção imediata recuperável.
+- Dez SVGs locais da biblioteca Fluent Emoji Flat foram adicionados. Nenhum PDF, imagem do caderno,
+  CDN, API ou recurso obrigatório da internet foi usado.
+
+ESCRITA COMPARTILHADA
+- js/ingles.js recebeu prática optativa de escrita. City Life v2 ativa o recurso e Unit 3 e At the
+  Farm continuam exatamente no fluxo anterior.
+- Um único campo ligado ao item selecionado salva texto parcial, aceita Enter, normaliza caixa e
+  espaços, mantém erro editável e invalida um acerto se a resposta for alterada.
+- Selos textuais, contadores por grupo e resumo global distinguem áudio de escrita. As 30 atividades
+  só são liberadas quando os 73 áudios e as 73 escritas estiverem completos.
+- Respostas e conferências são normalizadas por IDs válidos; limpeza remove somente a chave v2.
+
+VALIDAÇÃO CONCLUÍDA
+- npm run build, npm run format:check e npm run lint: PASSARAM.
+- Regressão City Life: 4 de 4 testes aprovados para estrutura, áudio real simulado, escrita,
+  persistência, portão, isolamento, atividades, teclado, celular, axe-core e rolagem horizontal.
+- npm test: PASSOU, com 140 de 140 testes Playwright aprovados em 8,4 minutos.
+- Inspeção no navegador local em 390 x 844: innerWidth 390 e scrollWidth 375, campo e botão em
+  coluna, selo e mensagem bilíngue visíveis e console sem erros ou avisos.
+- O navegador de inspeção não tinha voz inglesa local. A sequência en-US a 0,62 passou com voz
+  simulada nos testes automatizados e permanece inteiramente local no computador principal.
+
+LAYOUT DESKTOP AMPLO OPT-IN EM 29/08/2026
+==========================================
+
+CAPACIDADE IMPLEMENTADA
+- O controlador compartilhado de Inglês passou a reconhecer a declaração
+  layout: { desktopAmplo: true } e a aplicar a classe genérica layout-desktop-amplo somente na
+  unidade optante. A classe é removida ao abrir qualquer unidade sem a declaração.
+- City Life v2 é o piloto exclusivo. Unit 3 de Alice e Mariana e At the Farm continuam no layout
+  legado, sem alteração de conteúdo, chave, progresso, áudio, escrita ou correção.
+- A partir de 1120 px, City Life usa 94% da viewport, com máximo de 2360 px. Áudio, vozes, status,
+  abas, resumo, escrita, cartões, alternativas e resultado foram redistribuídos por áreas de grade.
+- Questões com imagem recebem uma classe estrutural própria; questões sem imagem não reservam
+  coluna vazia. Todas as regras visuais novas estão sob layout-desktop-amplo.
+
+REGRESSÃO E INSPEÇÃO
+- Dois testes Playwright novos cobrem 1366 x 768 e 1920 x 1080, largura proporcional, áudio em duas
+  áreas, vocabulário dividido, escrita à esquerda, cartões à direita, clique e áudio depois da troca
+  City Places -> Travel & Vacation -> Soldier's Day, questões, erro recuperável, alternativas,
+  resultado em duas colunas, cabeçalho e ausência de rolagem horizontal.
+- O mesmo fluxo abre em seguida Mariana Unit 3 e Alice At the Farm e confirma a remoção da classe
+  opt-in, evitando vazamento entre revisão e perfil.
+- Regressão direcionada: 7 de 7 testes aprovados para Inglês compartilhado, City Life e At the Farm.
+- npm run build, npm run format:check e npm run lint: PASSARAM.
+- npm test: PASSOU, com 142 de 142 testes Playwright aprovados em 8,3 minutos.
+- Inspeção visual no navegador local: em 1366 x 768, tela com 1285 px e quatro colunas de cartões; em
+  1920 x 1080, tela com 1805 px e seis colunas. Resumo e escrita permaneceram à esquerda, cartões à
+  direita, sem rolagem horizontal, erros ou avisos no console.
+- O navegador de inspeção não tinha voz inglesa local. O áudio por clique após a troca de grupos foi
+  validado com voz local simulada em en-US a 0,62 nos testes automatizados.

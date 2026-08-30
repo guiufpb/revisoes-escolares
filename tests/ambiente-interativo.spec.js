@@ -30,7 +30,8 @@ const CHAVE_FORMIGA_ESPECIAL_ALICE = 'revisoesEscolares.alice.leitura.umaFormiga
 const CHAVE_FORMIGA_ESPECIAL_MARIANA = 'revisoesEscolares.mariana.leitura.umaFormigaEspecial.v1';
 const CHAVE_INGLES_ALICE = 'revisoesEscolares.alice.ingles.atSchoolUnidade3.v1';
 const CHAVE_INGLES_MARIANA = 'revisoesEscolares.mariana.ingles.atSchoolUnidade3.v1';
-const CHAVE_INGLES_CITY_LIFE = 'revisoesEscolares.mariana.ingles.cityLifeUnidade5.v1';
+const CHAVE_INGLES_CITY_LIFE_V1 = 'revisoesEscolares.mariana.ingles.cityLifeUnidade5.v1';
+const CHAVE_INGLES_CITY_LIFE = 'revisoesEscolares.mariana.ingles.cityLifeUnidade5.v2';
 const CHAVE_INGLES_FAZENDA = 'revisoesEscolares.alice.ingles.atTheFarmUnidade5.v1';
 const CHAVE_ANTIGA = 'revisoes-escolares-progresso-v1';
 const LIVRO_DINHEIRO = 'primeiras-licoes-dinheiro';
@@ -88,7 +89,9 @@ const CHAVES_DOS_TESTES = [
   CHAVE_FORMIGA_ESPECIAL_MARIANA,
   CHAVE_INGLES_ALICE,
   CHAVE_INGLES_MARIANA,
+  CHAVE_INGLES_CITY_LIFE_V1,
   CHAVE_INGLES_CITY_LIFE,
+  CHAVE_INGLES_FAZENDA,
   CHAVE_ANTIGA,
 ];
 
@@ -369,12 +372,204 @@ test('libera 10 atividades após os 27 áudios, corrige somente ao final e separ
   ).toBeNull();
 });
 
-test('City Life exige 44 pronúncias e permite corrigir cada atividade antes de avançar', async ({
+test('City Life v2 registra 73 itens, 30 atividades e escrita opcional sem alterar revisões antigas', async ({
   page,
 }) => {
+  const estrutura = await page.evaluate(() => {
+    const unidade = window.RegistroIngles.obter('city-life-unidade-5');
+    const itens = unidade.grupos.flatMap((grupo) => grupo.itens);
+    const idsObrigatorios = [
+      'hospital',
+      'trip',
+      'vacation',
+      'passport',
+      'i-went-to',
+      'plane',
+      'family',
+      'amazing',
+      'favorite-part',
+      'soldier',
+      'brave',
+      'courage',
+      'protect',
+      'duty',
+      'respect',
+      'country',
+      'student',
+      'book',
+      'pencil',
+      'backpack',
+      'teacher',
+      'classroom',
+      'school',
+      'learn',
+      'friend',
+      'dad',
+      'favorite-color',
+      'favorite-food',
+      'special',
+    ];
+    return {
+      versao: unidade.versao,
+      layout: unidade.layout,
+      pratica: unidade.praticaEscrita,
+      grupos: unidade.grupos.map((grupo) => [grupo.id, grupo.itens.length]),
+      itens: itens.length,
+      itensUnicos: new Set(itens.map((item) => item.id)).size,
+      novosPresentes: idsObrigatorios.every((id) => itens.some((item) => item.id === id)),
+      atividades: unidade.atividades.length,
+      atividadesUnicas: new Set(unidade.atividades.map((item) => item.id)).size,
+      respostasValidas: unidade.atividades.every((questao) =>
+        questao.alternativas.some((alternativa) => alternativa.id === questao.respostaCorreta)
+      ),
+      instrucoesPortugues: unidade.atividades.every((questao) =>
+        Boolean(questao.instrucaoPortugues)
+      ),
+      escritaUnit3: window.RegistroIngles.obter('at-school-unidade-3').praticaEscrita || null,
+      escritaFazenda: window.RegistroIngles.obter('at-the-farm-unidade-5').praticaEscrita || null,
+      cadastro: window.RegistroRevisoes.obter('mariana-ingles-city-life-unidade-5'),
+    };
+  });
+
+  expect(estrutura).toMatchObject({
+    versao: 2,
+    layout: { desktopAmplo: true },
+    pratica: { habilitada: true, obrigatoriaParaAtividades: true },
+    grupos: [
+      ['lugares-cidade', 14],
+      ['posicoes-cidade', 9],
+      ['materiais-propriedades', 14],
+      ['predios-formas', 8],
+      ['viagem-ferias', 8],
+      ['dia-soldado', 7],
+      ['escola-dias-especiais', 13],
+    ],
+    itens: 73,
+    itensUnicos: 73,
+    novosPresentes: true,
+    atividades: 30,
+    atividadesUnicas: 30,
+    respostasValidas: true,
+    instrucoesPortugues: true,
+    escritaUnit3: null,
+    escritaFazenda: null,
+    cadastro: {
+      chaveArmazenamento: CHAVE_INGLES_CITY_LIFE,
+      totalEtapas: 103,
+    },
+  });
+});
+
+test('City Life ativa o layout desktop amplo em 1366 e 1920 e o remove nas revisões legadas', async ({
+  page,
+}) => {
+  await page.evaluate(() => {
+    window.__falasLayoutAmplo = [];
+    window.SpeechSynthesisUtterance = function (texto) {
+      this.text = texto;
+    };
+    window.speechSynthesis.getVoices = function () {
+      return [{ name: 'Microsoft Zira Desktop', lang: 'en-US', localService: true }];
+    };
+    window.speechSynthesis.cancel = function () {};
+    window.speechSynthesis.resume = function () {};
+    window.speechSynthesis.speak = function (fala) {
+      window.__falasLayoutAmplo.push({
+        texto: fala.text,
+        idioma: fala.lang,
+        velocidade: fala.rate,
+      });
+      if (typeof fala.onstart === 'function') fala.onstart();
+      if (typeof fala.onend === 'function') fala.onend();
+    };
+    window.AudioRevisoes.atualizarVozes();
+  });
+
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await page.locator('#abrir-ingles-city-life').click();
+  await expect(page.locator('#tela-ingles')).toHaveClass(/layout-desktop-amplo/);
+
+  const conferirDistribuicao = async (largura) => {
+    const medidas = await page.evaluate(() => {
+      const tela = document.getElementById('tela-ingles');
+      const conteudo = document.querySelector('.conteudo-grupo-ingles');
+      const resumo = document.querySelector('.cabecalho-grupo-ingles');
+      const escrita = document.getElementById('ingles-pratica-escrita');
+      const grade = document.getElementById('ingles-grade-itens');
+      const tituloAudio = document.querySelector('.cabecalho-painel-audio > div');
+      const vozes = document.getElementById('ingles-vozes-locais');
+      const controles = document.querySelector('.controles-audio-ingles');
+      const status = document.getElementById('ingles-status-audio');
+      const posicoesDosCartoes = Array.from(grade.children).map((cartao) =>
+        Math.round(cartao.getBoundingClientRect().left)
+      );
+      return {
+        proporcaoTela: tela.getBoundingClientRect().width / window.innerWidth,
+        colunasConteudo: window.getComputedStyle(conteudo).gridTemplateColumns.split(' ').length,
+        gradeADireita: grade.getBoundingClientRect().left > resumo.getBoundingClientRect().left,
+        escritaNaColunaEsquerda:
+          Math.abs(escrita.getBoundingClientRect().left - resumo.getBoundingClientRect().left) < 2,
+        colunasDeCartoes: new Set(posicoesDosCartoes).size,
+        audioEmDuasAreas:
+          vozes.getBoundingClientRect().left > tituloAudio.getBoundingClientRect().left &&
+          status.getBoundingClientRect().left > controles.getBoundingClientRect().left,
+        semRolagemHorizontal: document.documentElement.scrollWidth <= window.innerWidth,
+        cabecalhoGlobalVisivel:
+          window.getComputedStyle(document.querySelector('header')).display !== 'none' &&
+          document.querySelector('header').getBoundingClientRect().height > 0,
+      };
+    });
+    expect(medidas.proporcaoTela).toBeGreaterThanOrEqual(0.9);
+    expect(medidas.colunasConteudo).toBe(2);
+    expect(medidas.gradeADireita).toBe(true);
+    expect(medidas.escritaNaColunaEsquerda).toBe(true);
+    expect(medidas.colunasDeCartoes).toBeGreaterThanOrEqual(largura === 1366 ? 4 : 5);
+    expect(medidas.audioEmDuasAreas).toBe(true);
+    expect(medidas.semRolagemHorizontal).toBe(true);
+    expect(medidas.cabecalhoGlobalVisivel).toBe(true);
+  };
+
+  await conferirDistribuicao(1366);
+  await page.locator('[data-grupo-ingles="viagem-ferias"]').click();
+  await expect(page.locator('[data-item-ingles="trip"]')).toHaveClass(/selecionado/);
+  await page.locator('[data-item-ingles="trip"]').click();
+  await expect
+    .poll(() => page.evaluate(() => window.__falasLayoutAmplo.at(-1)?.texto))
+    .toBe('trip');
+  await page.locator('[data-grupo-ingles="dia-soldado"]').click();
+  await expect(page.locator('[data-item-ingles="soldier"]')).toHaveClass(/selecionado/);
+  await page.locator('[data-item-ingles="soldier"]').click();
+  await expect
+    .poll(() => page.evaluate(() => window.__falasLayoutAmplo.at(-1)?.texto))
+    .toBe('soldier');
+
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await conferirDistribuicao(1920);
+
+  await page.getByRole('button', { name: 'Voltar ao início' }).click();
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await page.locator('[data-materia="ingles"]').click();
+  await expect(page.locator('#tela-ingles')).not.toHaveClass(/layout-desktop-amplo/);
+  expect(
+    await page
+      .locator('#tela-ingles')
+      .evaluate((tela) => tela.getBoundingClientRect().width / window.innerWidth)
+  ).toBeLessThan(0.7);
+
+  await page.getByRole('button', { name: 'Voltar ao início' }).click();
+  await page.getByRole('button', { name: /Alice/ }).click();
+  await page.locator('#abrir-ingles-at-the-farm').click();
+  await expect(page.locator('#tela-ingles')).not.toHaveClass(/layout-desktop-amplo/);
+});
+
+test('City Life usa questões sem coluna vazia e resultado em duas colunas no desktop amplo', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1920, height: 1080 });
   await page.evaluate((chave) => {
     const unidade = window.RegistroIngles.obter('city-life-unidade-5');
-    const itensOuvidos = unidade.grupos.flatMap((grupo) => grupo.itens.map((item) => item.id));
+    const itens = unidade.grupos.flatMap((grupo) => grupo.itens);
     localStorage.setItem(
       chave,
       JSON.stringify({
@@ -382,13 +577,117 @@ test('City Life exige 44 pronúncias e permite corrigir cada atividade antes de 
         versao: unidade.versao,
         grupoAtual: unidade.grupos[0].id,
         itemAtual: unidade.grupos[0].itens[0].id,
-        itensOuvidos,
-        reproducoes: itensOuvidos.length,
+        itensOuvidos: itens.map((item) => item.id),
+        respostasEscrita: Object.fromEntries(itens.map((item) => [item.id, item.ingles])),
+        conferenciasEscrita: Object.fromEntries(itens.map((item) => [item.id, 'correta'])),
         iniciado: true,
       })
     );
   }, CHAVE_INGLES_CITY_LIFE);
   await page.reload();
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await page.locator('#abrir-ingles-city-life').click();
+  await page.getByRole('button', { name: 'Começar as 30 atividades →' }).click();
+
+  await expect(page.locator('#ingles-cartao-questao')).not.toHaveClass(/com-apoio-visual/);
+  await expect(page.locator('#ingles-imagens-enunciado')).toBeHidden();
+  const layoutQuestao = await page.evaluate(() => {
+    const cartao = document.getElementById('ingles-cartao-questao');
+    const alternativas = document.getElementById('ingles-alternativas-atividade');
+    return {
+      cartaoSemGradeVazia: window.getComputedStyle(cartao).display !== 'grid',
+      colunasAlternativas: window.getComputedStyle(alternativas).gridTemplateColumns.split(' ')
+        .length,
+      semRolagemHorizontal: document.documentElement.scrollWidth <= window.innerWidth,
+    };
+  });
+  expect(layoutQuestao).toEqual({
+    cartaoSemGradeVazia: true,
+    colunasAlternativas: 2,
+    semRolagemHorizontal: true,
+  });
+
+  const primeira = await page.evaluate(() => {
+    const questao = window.RegistroIngles.obter('city-life-unidade-5').atividades[0];
+    return {
+      correta: questao.respostaCorreta,
+      errada: questao.alternativas.find((alternativa) => alternativa.id !== questao.respostaCorreta)
+        .id,
+    };
+  });
+  await page.locator(`[data-alternativa-atividade-ingles="${primeira.errada}"]`).click();
+  await page.getByRole('button', { name: 'Conferir resposta' }).click();
+  await expect(page.getByRole('button', { name: 'Próxima →' })).toBeDisabled();
+  await page.locator(`[data-alternativa-atividade-ingles="${primeira.correta}"]`).click();
+  await page.getByRole('button', { name: 'Conferir resposta' }).click();
+  await expect(page.getByRole('button', { name: 'Próxima →' })).toBeEnabled();
+
+  await page.evaluate((chave) => {
+    const salvo = JSON.parse(localStorage.getItem(chave));
+    const atividades = window.RegistroIngles.obter('city-life-unidade-5').atividades;
+    salvo.questaoAtual = atividades.length - 1;
+    salvo.respostasAtividades = Object.fromEntries(
+      atividades.map((questao) => [questao.id, questao.respostaCorreta])
+    );
+    salvo.conferenciasAtividades = Object.fromEntries(
+      atividades.map((questao) => [questao.id, 'correta'])
+    );
+    salvo.atividadeIniciada = true;
+    salvo.atividadeFinalizada = true;
+    salvo.tentativasAtividade = atividades.length;
+    localStorage.setItem(chave, JSON.stringify(salvo));
+  }, CHAVE_INGLES_CITY_LIFE);
+  await page.reload();
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await page.locator('#abrir-ingles-city-life').click();
+  await page.getByRole('button', { name: 'Ver resultado das atividades →' }).click();
+  await expect(page.locator('.item-revisao-ingles')).toHaveCount(30);
+  expect(
+    await page.locator('#ingles-lista-revisao').evaluate((lista) => ({
+      colunas: window.getComputedStyle(lista).gridTemplateColumns.split(' ').length,
+      semRolagemHorizontal: document.documentElement.scrollWidth <= window.innerWidth,
+    }))
+  ).toEqual({ colunas: 2, semRolagemHorizontal: true });
+});
+
+test('City Life salva, normaliza e exige as 73 escritas junto dos áudios antes das atividades', async ({
+  page,
+}) => {
+  await page.evaluate(
+    ({ chaveV1, chaveV2, chaveUnit3 }) => {
+      localStorage.setItem(chaveV1, JSON.stringify({ marcador: 'preservar-v1' }));
+      localStorage.setItem(chaveUnit3, JSON.stringify({ marcador: 'preservar-unit3' }));
+      localStorage.setItem(
+        chaveV2,
+        JSON.stringify({
+          respostasEscrita: { town: 'town', city: 123, 'item-inexistente': 'ghost' },
+          conferenciasEscrita: {
+            town: 'correta',
+            city: 'correta',
+            'item-inexistente': 'correta',
+          },
+        })
+      );
+    },
+    {
+      chaveV1: CHAVE_INGLES_CITY_LIFE_V1,
+      chaveV2: CHAVE_INGLES_CITY_LIFE,
+      chaveUnit3: CHAVE_INGLES_MARIANA,
+    }
+  );
+  expect(
+    await page.evaluate(() => {
+      const normalizado = window.InglesRevisoes.obterEstado(
+        'mariana',
+        'mariana-ingles-city-life-unidade-5'
+      );
+      return {
+        respostas: normalizado.respostasEscrita,
+        conferencias: normalizado.conferenciasEscrita,
+      };
+    })
+  ).toEqual({ respostas: { town: 'town' }, conferencias: { town: 'correta' } });
+  await page.evaluate((chave) => localStorage.removeItem(chave), CHAVE_INGLES_CITY_LIFE);
   await page.evaluate(() => {
     window.__falasCityLife = [];
     window.SpeechSynthesisUtterance = function (texto) {
@@ -407,37 +706,146 @@ test('City Life exige 44 pronúncias e permite corrigir cada atividade antes de 
     window.AudioRevisoes.atualizarVozes();
   });
 
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await page.locator('#abrir-ingles-city-life').click();
+  await expect(page.locator('#ingles-progresso-texto')).toHaveText('0/73 áudios · 0/73 escritas');
+  await expect(page.getByText(/Faltam 73 áudios e 73 escritas/)).toBeVisible();
+  const campo = page.getByLabel('Digite a palavra ou expressão em inglês');
+  await expect(campo).toHaveAttribute('autocomplete', 'off');
+  await expect(campo).toHaveAttribute('autocapitalize', 'off');
+  await expect(campo).toHaveAttribute('spellcheck', 'false');
+
+  await page.locator('[data-item-ingles="supermarket"]').click();
+  await expect.poll(() => page.evaluate(() => window.__falasCityLife.length)).toBe(3);
+  expect(await page.evaluate(() => window.__falasCityLife[2])).toMatchObject({
+    texto: 'supermarket',
+    idioma: 'en-US',
+    velocidade: 0.62,
+  });
+  await campo.fill('supermaket');
+  await campo.press('Enter');
+  await expect(page.locator('#ingles-status-escrita')).toHaveText(
+    '↻ Quase! Compare as letras com a palavra acima e tente novamente.'
+  );
+  await expect(campo).toHaveAttribute('aria-invalid', 'true');
+  await campo.fill('  SuPeRmArKeT  ');
+  await campo.press('Enter');
+  await expect(page.locator('#ingles-status-escrita')).toContainText(
+    'Great! You typed "supermarket" correctly.'
+  );
+  await expect(page.locator('[data-item-ingles="supermarket"]')).toContainText('✓ Escrito');
+
+  await campo.press('End');
+  await campo.type('x');
+  await expect(page.locator('[data-item-ingles="supermarket"]')).not.toContainText('✓ Escrito');
+  await campo.fill('super');
+  await page.reload();
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await page.locator('#abrir-ingles-city-life').click();
+  await expect(campo).toHaveValue('super');
+  await campo.fill('supermarket');
+  await page.getByRole('button', { name: 'Conferir escrita' }).click();
+  await page.reload();
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await page.locator('#abrir-ingles-city-life').click();
+  await expect(page.locator('[data-item-ingles="supermarket"]')).toContainText('✓ Escrito');
+
+  const configurarPortao = async (audiosCompletos, escritasCompletas) => {
+    await page.evaluate(
+      ({ chave, audios, escritas }) => {
+        const unidade = window.RegistroIngles.obter('city-life-unidade-5');
+        const itens = unidade.grupos.flatMap((grupo) => grupo.itens);
+        localStorage.setItem(
+          chave,
+          JSON.stringify({
+            unidadeId: unidade.id,
+            versao: unidade.versao,
+            grupoAtual: unidade.grupos[0].id,
+            itemAtual: unidade.grupos[0].itens[0].id,
+            itensOuvidos: audios ? itens.map((item) => item.id) : [],
+            respostasEscrita: escritas
+              ? Object.fromEntries(itens.map((item) => [item.id, item.ingles]))
+              : {},
+            conferenciasEscrita: escritas
+              ? Object.fromEntries(itens.map((item) => [item.id, 'correta']))
+              : {},
+            iniciado: true,
+          })
+        );
+      },
+      { chave: CHAVE_INGLES_CITY_LIFE, audios: audiosCompletos, escritas: escritasCompletas }
+    );
+    await page.reload();
+    await page.getByRole('button', { name: /Mariana/ }).click();
+    await page.locator('#abrir-ingles-city-life').click();
+  };
+
+  await configurarPortao(true, false);
+  await expect(page.getByText(/Faltam 0 áudios e 73 escritas/)).toBeVisible();
+  await expect(page.locator('#ingles-iniciar-atividades')).toBeDisabled();
+  await configurarPortao(false, true);
+  await expect(page.getByText(/Faltam 73 áudios e 0 escritas/)).toBeVisible();
+  await expect(page.locator('#ingles-iniciar-atividades')).toBeDisabled();
+  await configurarPortao(true, true);
+  await expect(page.locator('#ingles-progresso-texto')).toHaveText('73/73 áudios · 73/73 escritas');
+  await expect(page.getByRole('button', { name: 'Começar as 30 atividades →' })).toBeEnabled();
+
+  page.once('dialog', (dialog) => dialog.accept());
+  await page.locator('#limpar-progresso').click();
+  expect(
+    await page.evaluate(
+      ({ chaveV2, chaveV1, chaveUnit3 }) => ({
+        v2: localStorage.getItem(chaveV2),
+        v1: JSON.parse(localStorage.getItem(chaveV1)).marcador,
+        unit3: JSON.parse(localStorage.getItem(chaveUnit3)).marcador,
+        situacao: window.InglesRevisoes.obterSituacao(
+          'mariana',
+          'mariana-ingles-city-life-unidade-5'
+        ),
+      }),
+      {
+        chaveV2: CHAVE_INGLES_CITY_LIFE,
+        chaveV1: CHAVE_INGLES_CITY_LIFE_V1,
+        chaveUnit3: CHAVE_INGLES_MARIANA,
+      }
+    )
+  ).toEqual({ v2: null, v1: 'preservar-v1', unit3: 'preservar-unit3', situacao: 'nao-iniciada' });
+  await page.getByRole('button', { name: 'Voltar ao início' }).click();
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await page.getByRole('button', { name: /^Inglês/ }).click();
+  await expect(page.locator('#ingles-pratica-escrita')).toBeHidden();
+});
+
+test('City Life permite erro, correção, retorno, recarga e conclusão das 30 atividades sem pontuação duplicada', async ({
+  page,
+}) => {
+  await page.evaluate((chave) => {
+    const unidade = window.RegistroIngles.obter('city-life-unidade-5');
+    const itens = unidade.grupos.flatMap((grupo) => grupo.itens);
+    localStorage.setItem(
+      chave,
+      JSON.stringify({
+        unidadeId: unidade.id,
+        versao: unidade.versao,
+        grupoAtual: unidade.grupos[0].id,
+        itemAtual: unidade.grupos[0].itens[0].id,
+        itensOuvidos: itens.map((item) => item.id),
+        respostasEscrita: Object.fromEntries(itens.map((item) => [item.id, item.ingles])),
+        conferenciasEscrita: Object.fromEntries(itens.map((item) => [item.id, 'correta'])),
+        iniciado: true,
+      })
+    );
+  }, CHAVE_INGLES_CITY_LIFE);
+  await page.reload();
   await page.getByRole('button', { name: /Alice/ }).click();
   await expect(page.locator('#abrir-ingles-city-life')).toBeHidden();
   await page.getByRole('button', { name: 'Voltar ao início' }).click();
   await page.getByRole('button', { name: /Mariana/ }).click();
-  await expect(page.locator('#abrir-ingles-city-life')).toBeVisible();
   await page.locator('#abrir-ingles-city-life').click();
+  await expect(page.locator('#ingles-grupos').getByRole('button')).toHaveCount(7);
+  await page.getByRole('button', { name: 'Começar as 30 atividades →' }).click();
+  await expect(page.getByText('Atividade 1 de 30')).toBeVisible();
 
-  await expect(page.getByRole('heading', { name: 'English Review - Unit 5' })).toBeVisible();
-  await expect(page.getByText('44 de 44 palavras e frases ouvidas')).toBeVisible();
-  await expect(page.locator('#ingles-grupos').getByRole('button')).toHaveCount(4);
-  await page.locator('[data-item-ingles="town"]').click();
-  await expect(page.locator('[data-item-ingles="town"]')).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.getByRole('status')).toContainText('começará em 1 segundo');
-  await expect.poll(() => page.evaluate(() => window.__falasCityLife.length)).toBe(3);
-  expect(await page.evaluate(() => window.__falasCityLife[2])).toMatchObject({
-    texto: 'town',
-    idioma: 'en-US',
-    velocidade: 0.62,
-  });
-  await page.locator('[data-item-ingles="city"]').focus();
-  await page.keyboard.press('Space');
-  await expect(page.locator('[data-item-ingles="city"]')).toHaveAttribute('aria-pressed', 'true');
-  await expect.poll(() => page.evaluate(() => window.__falasCityLife.length)).toBe(6);
-  expect(await page.evaluate(() => window.__falasCityLife[5])).toMatchObject({
-    texto: 'city',
-    idioma: 'en-US',
-    velocidade: 0.62,
-  });
-
-  await page.getByRole('button', { name: 'Começar as 16 atividades →' }).click();
-  await expect(page.getByText('Atividade 1 de 16')).toBeVisible();
   const primeira = await page.evaluate(() => {
     const questao = window.RegistroIngles.obter('city-life-unidade-5').atividades[0];
     return {
@@ -452,18 +860,11 @@ test('City Life exige 44 pronúncias e permite corrigir cada atividade antes de 
   await page.getByRole('button', { name: 'Conferir resposta' }).click();
   await expect(page.getByRole('status').filter({ hasText: primeira.feedbackErro })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Próxima →' })).toBeDisabled();
-  await expect(
-    page.locator(`[data-alternativa-atividade-ingles="${primeira.errada}"]`)
-  ).toHaveClass(/incorreta/);
-
   await page.locator(`[data-alternativa-atividade-ingles="${primeira.correta}"]`).click();
   await page.getByRole('button', { name: 'Conferir resposta' }).click();
   await expect(page.getByRole('status').filter({ hasText: primeira.explicacao })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Próxima →' })).toBeEnabled();
   await page.getByRole('button', { name: 'Próxima →' }).click();
-  await expect(page.getByText('Atividade 2 de 16')).toBeVisible();
   await page.getByRole('button', { name: '← Anterior' }).click();
-  await expect(page.getByText('Atividade 1 de 16')).toBeVisible();
   await expect(
     page.locator(`[data-alternativa-atividade-ingles="${primeira.correta}"]`)
   ).toHaveClass(/correta/);
@@ -472,34 +873,37 @@ test('City Life exige 44 pronúncias e permite corrigir cada atividade antes de 
   await page.getByRole('button', { name: /Mariana/ }).click();
   await page.locator('#abrir-ingles-city-life').click();
   await page.getByRole('button', { name: 'Continuar atividades →' }).click();
-  await expect(page.getByText('Atividade 2 de 16')).toBeVisible();
+  await expect(page.getByText('Atividade 2 de 30')).toBeVisible();
 
-  for (let indice = 1; indice < 16; indice += 1) {
+  for (let indice = 1; indice < 30; indice += 1) {
     const correta = await page.evaluate(() => {
-      const estado = window.InglesRevisoes.obterEstado();
-      return window.RegistroIngles.obter('city-life-unidade-5').atividades[estado.questaoAtual]
-        .respostaCorreta;
+      const atual = window.InglesRevisoes.obterEstado().questaoAtual;
+      return window.RegistroIngles.obter('city-life-unidade-5').atividades[atual].respostaCorreta;
     });
     await page.locator(`[data-alternativa-atividade-ingles="${correta}"]`).click();
     await page.getByRole('button', { name: 'Conferir resposta' }).click();
     await page
-      .getByRole('button', { name: indice === 15 ? 'Concluir revisão ✓' : 'Próxima →' })
+      .getByRole('button', { name: indice === 29 ? 'Concluir revisão ✓' : 'Próxima →' })
       .click();
   }
 
-  await expect(page.getByText('Mariana, você acertou 16 de 16 atividades.')).toBeVisible();
-  const salvo = await page.evaluate(
+  await expect(page.getByText('Mariana, você acertou 30 de 30 atividades.')).toBeVisible();
+  const salvoAntes = await page.evaluate(
     (chave) => JSON.parse(localStorage.getItem(chave)),
     CHAVE_INGLES_CITY_LIFE
   );
-  expect(salvo.atividadeFinalizada).toBe(true);
-  expect(Object.values(salvo.conferenciasAtividades)).toEqual(
-    expect.arrayContaining(Array(16).fill('correta'))
+  expect(salvoAntes.atividadeFinalizada).toBe(true);
+  expect(Object.values(salvoAntes.conferenciasAtividades)).toEqual(
+    expect.arrayContaining(Array(30).fill('correta'))
   );
-  expect(salvo.tentativasAtividade).toBe(17);
-  expect(
-    await page.evaluate((chave) => localStorage.getItem(chave), CHAVE_INGLES_MARIANA)
-  ).toBeNull();
+  expect(salvoAntes.tentativasAtividade).toBe(31);
+  await page.reload();
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await page.locator('#abrir-ingles-city-life').click();
+  await page.getByRole('button', { name: 'Ver resultado das atividades →' }).click();
+  expect(await page.evaluate(() => window.InglesRevisoes.obterEstado().tentativasAtividade)).toBe(
+    31
+  );
 });
 
 test('At the Farm exige 41 pronúncias e preserva correção, recarga e isolamento', async ({

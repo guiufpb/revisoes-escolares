@@ -33,6 +33,44 @@
     return Array.isArray(unidade.atividades) ? unidade.atividades : [];
   }
 
+  function praticaEscritaAtiva(unidade) {
+    return Boolean(unidade && unidade.praticaEscrita && unidade.praticaEscrita.habilitada);
+  }
+
+  function praticaEscritaObrigatoria(unidade) {
+    return Boolean(
+      praticaEscritaAtiva(unidade) && unidade.praticaEscrita.obrigatoriaParaAtividades
+    );
+  }
+
+  function normalizarRespostaEscrita(valor) {
+    return String(valor || '')
+      .trim()
+      .replace(/\s+/g, ' ')
+      .toLocaleLowerCase('en-US');
+  }
+
+  function respostasAceitasParaEscrita(item) {
+    return [item.ingles]
+      .concat(Array.isArray(item.variantesEscrita) ? item.variantesEscrita : [])
+      .map(normalizarRespostaEscrita)
+      .filter(function (resposta, indice, lista) {
+        return resposta && lista.indexOf(resposta) === indice;
+      });
+  }
+
+  function respostaEscritaCorreta(item, resposta) {
+    return respostasAceitasParaEscrita(item).indexOf(normalizarRespostaEscrita(resposta)) >= 0;
+  }
+
+  function quantidadeEscritasCorretas(estadoDoPerfil) {
+    return Object.keys(objeto(estadoDoPerfil && estadoDoPerfil.conferenciasEscrita)).filter(
+      function (id) {
+        return estadoDoPerfil.conferenciasEscrita[id] === 'correta';
+      }
+    ).length;
+  }
+
   function localizarGrupo(id) {
     return unidadeAtual.grupos.find(function (grupo) {
       return grupo.id === id;
@@ -64,6 +102,8 @@
       itemAtual: unidade.grupos[0].itens[0].id,
       itensOuvidos: [],
       reproducoes: 0,
+      respostasEscrita: {},
+      conferenciasEscrita: {},
       iniciado: false,
       questaoAtual: 0,
       respostasAtividades: {},
@@ -84,10 +124,27 @@
       return item.id;
     });
     var atividades = todasAsAtividades(unidade);
+    var itens = todosOsItens(unidade);
     var respostasRecebidas = objeto(valor.respostasAtividades);
     var respostasValidas = {};
     var conferenciasRecebidas = objeto(valor.conferenciasAtividades);
     var conferenciasValidas = {};
+    var respostasEscritaRecebidas = objeto(valor.respostasEscrita);
+    var respostasEscritaValidas = {};
+    var conferenciasEscritaRecebidas = objeto(valor.conferenciasEscrita);
+    var conferenciasEscritaValidas = {};
+
+    itens.forEach(function (item) {
+      if (typeof respostasEscritaRecebidas[item.id] !== 'string') return;
+      respostasEscritaValidas[item.id] = respostasEscritaRecebidas[item.id].slice(0, 200);
+      if (
+        ['correta', 'incorreta'].indexOf(conferenciasEscritaRecebidas[item.id]) >= 0 &&
+        (conferenciasEscritaRecebidas[item.id] !== 'correta' ||
+          respostaEscritaCorreta(item, respostasEscritaValidas[item.id]))
+      ) {
+        conferenciasEscritaValidas[item.id] = conferenciasEscritaRecebidas[item.id];
+      }
+    });
 
     atividades.forEach(function (atividade) {
       var idsAlternativas = atividade.alternativas.map(function (alternativa) {
@@ -119,6 +176,8 @@
       }
     );
     base.reproducoes = Math.max(0, Math.trunc(Number(valor.reproducoes) || 0));
+    base.respostasEscrita = respostasEscritaValidas;
+    base.conferenciasEscrita = conferenciasEscritaValidas;
     base.questaoAtual = Math.max(
       0,
       Math.min(atividades.length - 1, Math.trunc(Number(valor.questaoAtual) || 0))
@@ -136,11 +195,17 @@
           return conferenciasValidas[atividade.id] === 'correta';
         }));
     base.tentativasAtividade = Math.max(0, Math.trunc(Number(valor.tentativasAtividade) || 0));
-    base.iniciado =
-      Boolean(valor.iniciado) ||
+    var possuiConteudoIniciado =
       base.itensOuvidos.length > 0 ||
       base.reproducoes > 0 ||
+      Object.keys(respostasEscritaValidas).some(function (id) {
+        return respostasEscritaValidas[id].length > 0;
+      }) ||
+      Object.keys(conferenciasEscritaValidas).length > 0 ||
       base.atividadeIniciada;
+    base.iniciado = praticaEscritaAtiva(unidade)
+      ? possuiConteudoIniciado
+      : Boolean(valor.iniciado) || possuiConteudoIniciado;
     base.atualizadoEm =
       typeof valor.atualizadoEm === 'string' && valor.atualizadoEm ? valor.atualizadoEm : null;
     return base;
@@ -207,6 +272,10 @@
     if (
       estadoDoPerfil.iniciado ||
       estadoDoPerfil.itensOuvidos.length > 0 ||
+      Object.keys(objeto(estadoDoPerfil.respostasEscrita)).some(function (id) {
+        return estadoDoPerfil.respostasEscrita[id].length > 0;
+      }) ||
+      Object.keys(objeto(estadoDoPerfil.conferenciasEscrita)).length > 0 ||
       estadoDoPerfil.atividadeIniciada
     ) {
       return 'em-andamento';
@@ -227,7 +296,11 @@
   }
 
   function atividadesLiberadas() {
-    return estado.itensOuvidos.length === todosOsItens(unidadeAtual).length;
+    var total = todosOsItens(unidadeAtual).length;
+    return (
+      estado.itensOuvidos.length === total &&
+      (!praticaEscritaObrigatoria(unidadeAtual) || quantidadeEscritasCorretas(estado) === total)
+    );
   }
 
   function correcaoPorQuestao() {
@@ -248,6 +321,19 @@
     botao.disabled = !liberada;
     if (!liberada) {
       var restantes = total - quantidade;
+      if (praticaEscritaObrigatoria(unidadeAtual)) {
+        var escritasRestantes = total - quantidadeEscritasCorretas(estado);
+        mensagem.textContent =
+          'Continue estudando as palavras. Faltam ' +
+          restantes +
+          ' áudios e ' +
+          escritasRestantes +
+          ' escritas para liberar as ' +
+          atividades.length +
+          ' atividades.';
+        botao.textContent = '🔒 Complete áudios e escritas primeiro';
+        return;
+      }
       mensagem.textContent =
         'Ouça mais ' +
         restantes +
@@ -277,13 +363,44 @@
   function atualizarProgresso() {
     var total = todosOsItens(unidadeAtual).length;
     var quantidade = estado.itensOuvidos.length;
-    elemento('ingles-progresso-texto').textContent =
-      quantidade + ' de ' + total + ' palavras e frases ouvidas';
+    var escritas = quantidadeEscritasCorretas(estado);
+    elemento('ingles-progresso-texto').textContent = praticaEscritaAtiva(unidadeAtual)
+      ? quantidade + '/' + total + ' áudios · ' + escritas + '/' + total + ' escritas'
+      : quantidade + ' de ' + total + ' palavras e frases ouvidas';
     var barra = elemento('ingles-progresso');
-    barra.setAttribute('aria-valuemax', total);
-    barra.setAttribute('aria-valuenow', quantidade);
-    barra.querySelector('span').style.width = (quantidade / total) * 100 + '%';
+    var maximo = praticaEscritaAtiva(unidadeAtual) ? total * 2 : total;
+    var valor = praticaEscritaAtiva(unidadeAtual) ? quantidade + escritas : quantidade;
+    barra.setAttribute('aria-valuemax', maximo);
+    barra.setAttribute('aria-valuenow', valor);
+    barra.setAttribute('aria-valuetext', elemento('ingles-progresso-texto').textContent);
+    barra.querySelector('span').style.width = (valor / maximo) * 100 + '%';
     atualizarContinuidade();
+  }
+
+  function atualizarProgressoDoGrupo() {
+    var recipiente = elemento('ingles-progresso-grupo');
+    if (!praticaEscritaAtiva(unidadeAtual)) {
+      recipiente.hidden = true;
+      recipiente.textContent = '';
+      return;
+    }
+    var itens = grupoAtual().itens;
+    var ouvidos = itens.filter(function (item) {
+      return estado.itensOuvidos.indexOf(item.id) >= 0;
+    }).length;
+    var escritos = itens.filter(function (item) {
+      return estado.conferenciasEscrita[item.id] === 'correta';
+    }).length;
+    recipiente.hidden = false;
+    recipiente.textContent =
+      ouvidos +
+      '/' +
+      itens.length +
+      ' ouvidos · ' +
+      escritos +
+      '/' +
+      itens.length +
+      ' escritos corretamente';
   }
 
   function marcarItemOuvido(id) {
@@ -315,12 +432,87 @@
     elemento('ingles-item-portugues').textContent = item.portugues;
   }
 
-  function selecionarItem(id) {
-    estado.itemAtual = id;
+  function mensagemDeEscrita(item) {
+    var conferencia = estado.conferenciasEscrita[item.id];
+    if (conferencia === 'correta') {
+      return (
+        '✓ Great! You typed "' +
+        item.ingles +
+        '" correctly. Muito bem! Você escreveu "' +
+        item.ingles +
+        '" corretamente.'
+      );
+    }
+    if (conferencia === 'incorreta') {
+      return '↻ Quase! Compare as letras com a palavra acima e tente novamente.';
+    }
+    return 'Copie a palavra ou expressão acima e confira quando terminar.';
+  }
+
+  function atualizarPraticaEscrita() {
+    var painel = elemento('ingles-pratica-escrita');
+    if (!praticaEscritaAtiva(unidadeAtual)) {
+      painel.hidden = true;
+      return;
+    }
+    var item = itemAtual();
+    var conferencia = estado.conferenciasEscrita[item.id];
+    var campo = elemento('ingles-campo-escrita');
+    painel.hidden = false;
+    elemento('ingles-palavra-copia').textContent = item.ingles;
+    campo.value = estado.respostasEscrita[item.id] || '';
+    campo.classList.toggle('correto', conferencia === 'correta');
+    campo.classList.toggle('incorreto', conferencia === 'incorreta');
+    campo.setAttribute('aria-invalid', String(conferencia === 'incorreta'));
+    elemento('ingles-status-escrita').textContent = mensagemDeEscrita(item);
+    atualizarProgressoDoGrupo();
+  }
+
+  function aoDigitarEscrita(evento) {
+    if (!praticaEscritaAtiva(unidadeAtual)) return;
+    var item = itemAtual();
+    var resposta = evento.target.value.slice(0, 200);
+    if (resposta) estado.respostasEscrita[item.id] = resposta;
+    else delete estado.respostasEscrita[item.id];
+    delete estado.conferenciasEscrita[item.id];
+    estado.iniciado = estado.iniciado || resposta.length > 0;
+    salvarEstado();
+    evento.target.classList.remove('correto', 'incorreto');
+    evento.target.setAttribute('aria-invalid', 'false');
+    elemento('ingles-status-escrita').textContent = 'Resposta em edição. Confira quando terminar.';
+    renderizarItens();
+    atualizarProgressoDoGrupo();
+    atualizarProgresso();
+  }
+
+  function conferirEscrita(evento) {
+    if (evento) evento.preventDefault();
+    if (!praticaEscritaAtiva(unidadeAtual)) return;
+    var item = itemAtual();
+    var resposta = estado.respostasEscrita[item.id] || '';
+    if (!normalizarRespostaEscrita(resposta)) {
+      elemento('ingles-status-escrita').textContent =
+        'Digite a palavra ou expressão antes de conferir.';
+      elemento('ingles-campo-escrita').focus();
+      return;
+    }
+    estado.conferenciasEscrita[item.id] = respostaEscritaCorreta(item, resposta)
+      ? 'correta'
+      : 'incorreta';
     estado.iniciado = true;
     salvarEstado();
     renderizarItens();
+    atualizarPraticaEscrita();
+    atualizarProgresso();
+  }
+
+  function selecionarItem(id) {
+    estado.itemAtual = id;
+    if (!praticaEscritaAtiva(unidadeAtual)) estado.iniciado = true;
+    salvarEstado();
+    renderizarItens();
     atualizarItemSelecionado();
+    atualizarPraticaEscrita();
     ouvirIngles(false);
   }
 
@@ -334,12 +526,14 @@
       var ingles = document.createElement('strong');
       var portugues = document.createElement('span');
       var ouvido = estado.itensOuvidos.indexOf(item.id) >= 0;
+      var escrito = estado.conferenciasEscrita[item.id] === 'correta';
       botao.type = 'button';
       botao.className = 'cartao-palavra-ingles';
       botao.dataset.itemIngles = item.id;
       botao.setAttribute('aria-pressed', String(estado.itemAtual === item.id));
       botao.classList.toggle('selecionado', estado.itemAtual === item.id);
       botao.classList.toggle('ouvido', ouvido);
+      botao.classList.toggle('escrito', escrito);
       imagem.src = '../assets/objetos_escolares/' + item.imagem;
       imagem.alt = '';
       ingles.lang = 'en-US';
@@ -351,11 +545,17 @@
         marca.textContent = '✓ Ouvido';
         botao.appendChild(marca);
       }
+      if (escrito) {
+        var marcaEscrita = document.createElement('small');
+        marcaEscrita.textContent = '✓ Escrito';
+        botao.appendChild(marcaEscrita);
+      }
       botao.addEventListener('click', function () {
         selecionarItem(item.id);
       });
       grade.appendChild(botao);
     });
+    atualizarProgressoDoGrupo();
   }
 
   function escolherGrupo(id) {
@@ -363,7 +563,7 @@
     if (!grupo) return;
     estado.grupoAtual = grupo.id;
     estado.itemAtual = grupo.itens[0].id;
-    estado.iniciado = true;
+    if (!praticaEscritaAtiva(unidadeAtual)) estado.iniciado = true;
     salvarEstado();
     renderizar();
   }
@@ -474,6 +674,10 @@
 
   function renderizarImagensDoEnunciado(questao) {
     var recipiente = elemento('ingles-imagens-enunciado');
+    elemento('ingles-cartao-questao').classList.toggle(
+      'com-apoio-visual',
+      Boolean(questao.imagemEnunciado)
+    );
     recipiente.innerHTML = '';
     if (!questao.imagemEnunciado) return;
     var repeticoes = Math.max(1, Number(questao.repeticoesImagem) || 1);
@@ -756,6 +960,10 @@
 
   function renderizar() {
     var grupo = grupoAtual();
+    elemento('tela-ingles').classList.toggle(
+      'layout-desktop-amplo',
+      Boolean(unidadeAtual.layout && unidadeAtual.layout.desktopAmplo)
+    );
     elemento('ingles-nome-perfil').textContent = perfilAtual === 'alice' ? 'Alice' : 'Mariana';
     elemento('ingles-titulo-unidade').textContent = unidadeAtual.subtitulo;
     elemento('ingles-subtitulo-unidade').textContent = unidadeAtual.titulo;
@@ -771,6 +979,7 @@
     renderizarGrupos();
     renderizarItens();
     atualizarItemSelecionado();
+    atualizarPraticaEscrita();
     atualizarProgresso();
     atualizarVozesNaTela();
     elemento('ingles-status-audio').textContent =
@@ -814,6 +1023,8 @@
       window.AudioRevisoes.parar({ origem: 'ingles' });
       elemento('ingles-status-audio').textContent = 'Áudio interrompido.';
     });
+    elemento('ingles-pratica-escrita').addEventListener('submit', conferirEscrita);
+    elemento('ingles-campo-escrita').addEventListener('input', aoDigitarEscrita);
     elemento('ingles-iniciar-atividades').addEventListener('click', abrirAtividades);
     elemento('ingles-ouvir-pergunta').addEventListener('click', ouvirPerguntaAtual);
     elemento('ingles-conferir-atividade').addEventListener('click', conferirRespostaAtividade);
@@ -835,6 +1046,23 @@
     var totalAudios = todosOsItens(unidade).length;
     var totalAtividades = todasAsAtividades(unidade).length;
     var resumo = estadoDoPerfil.itensOuvidos.length + '/' + totalAudios + ' áudios';
+    if (praticaEscritaAtiva(unidade)) {
+      resumo +=
+        ' · ' + quantidadeEscritasCorretas(estadoDoPerfil) + '/' + totalAudios + ' escritas';
+      if (
+        praticaEscritaObrigatoria(unidade) &&
+        estadoDoPerfil.itensOuvidos.length === totalAudios &&
+        quantidadeEscritasCorretas(estadoDoPerfil) === totalAudios
+      ) {
+        resumo +=
+          ' · ' +
+          Object.keys(estadoDoPerfil.respostasAtividades).length +
+          '/' +
+          totalAtividades +
+          ' atividades';
+      }
+      return resumo;
+    }
     if (estadoDoPerfil.itensOuvidos.length === totalAudios) {
       resumo +=
         ' · ' +

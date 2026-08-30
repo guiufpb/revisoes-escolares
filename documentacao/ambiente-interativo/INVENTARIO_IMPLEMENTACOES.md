@@ -4,7 +4,7 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra a branch `main` em **25/08/2026**.
+Este inventário registra o estado de trabalho em **28/08/2026**.
 
 ## 2. Base da aplicação
 
@@ -295,18 +295,33 @@ Chaves:
 
 ### Mariana — Unit 5: City Life
 
-- Nova revisão independente, disponível somente no perfil da Mariana.
-- **44 palavras e expressões com pronúncia local** antes das atividades.
-- Quatro grupos: lugares da cidade; posições; materiais e propriedades; prédios e formas.
-- **16 atividades** baseadas no caderno de agosto de 2026, sem publicar o PDF ou suas imagens.
-- Conteúdo sobre `city`, `town`, `village`, estabelecimentos, `there is`/`there are`,
-  preposições, materiais, propriedades e formas tridimensionais.
+- A revisão existente evoluiu para a versão 2, preservando o mesmo ID, cartão e unidade somente no
+  perfil da Mariana. A chave v1 não é lida, migrada ou removida.
+- **73 palavras e expressões** com pronúncia local e prática de escrita: os 44 itens anteriores foram
+  preservados e receberam exatamente 29 acréscimos.
+- Sete grupos em ordem: lugares da cidade; posições; materiais e propriedades; prédios e formas;
+  viagens e férias; Dia do Soldado; escola e dias especiais.
+- Cada cartão continua iniciando a pronúncia normal por clique, toque, `Enter` ou `Espaço`. Um único
+  campo abaixo do item selecionado permite copiar, conferir, corrigir e retomar a escrita.
+- Áudio e escrita têm selos e contadores separados. As **30 atividades** são liberadas somente
+  depois dos 73 áudios e das 73 escritas conferidas corretamente.
+- As atividades intercalam os 16 eixos pedagógicos anteriores com 14 questões novas sobre viagem,
+  férias, passaporte, `I went to`, perguntas de viagem, Dia do Soldado, escola, preferências e
+  lugares da cidade. Todas usam instrução bilíngue e correção imediata recuperável.
 - Correção imediata por questão: um erro mostra uma pista específica, mantém as alternativas
   ativas e bloqueia o avanço somente até a resposta ser corrigida e conferida novamente.
-- Voltar e recarregar restauram a resposta, a conferência, a questão atual e o progresso de áudio.
-- O cartão antigo da Unidade 3 permanece acessível e mantém sua chave e seu comportamento.
+- Voltar e recarregar restauram áudio, texto parcial, conferência de escrita, resposta, conferência de
+  atividade, questão atual e pontuação sem duplicação.
+- É o piloto da capacidade declarativa `layout.desktopAmplo`: em monitores com pelo menos 1120 px,
+  ocupa 94% da viewport e distribui áudio, grupos, resumo/escrita, cartões, atividades e resultado em
+  áreas proporcionais. Em larguras menores, conserva o fluxo responsivo existente.
+- Unit 3 e At the Farm não ativam escrita e preservam suas chaves e seus comportamentos anteriores.
+- Dez SVGs locais da biblioteca Fluent Emoji Flat foram incluídos para os conceitos novos; nenhum
+  PDF, imagem escolar ou recurso da internet foi incorporado.
 
-Chave: `revisoesEscolares.mariana.ingles.cityLifeUnidade5.v1`.
+Chave ativa: `revisoesEscolares.mariana.ingles.cityLifeUnidade5.v2`.
+
+Chave histórica preservada: `revisoesEscolares.mariana.ingles.cityLifeUnidade5.v1`.
 
 ### Alice — Unit 5: At the Farm
 
@@ -336,6 +351,29 @@ As melhorias foram concentradas em `js/audio.js` e consumidas por `js/ingles.js`
   revisões de Inglês de Alice e Mariana.
 - Os botões “Ouvir em inglês”, “Ouvir devagar”, “Repetir” e “Parar” permanecem disponíveis.
 - Abrir uma revisão ou apenas trocar o grupo de vocabulário não dispara áudio.
+
+#### Prática optativa de escrita
+
+- `js/ingles.js` oferece um módulo de escrita ativado por `praticaEscrita`, sem implementação própria
+  dentro de cada conteúdo e sem alterar unidades que não optaram pelo recurso.
+- O estado compartilhado usa `respostasEscrita` e `conferenciasEscrita`, aceita variações explícitas
+  por item, normaliza caixa e espaços e invalida o acerto quando o texto é editado.
+- A interface usa campo único com rótulo real, envio por `Enter`, navegação natural por `Tab`,
+  mensagens bilíngues em `aria-live`, selos textuais e contadores derivados do conteúdo.
+- Quando a escrita é obrigatória, o portão das atividades combina os áudios concluídos com todas as
+  escritas corretas. O resumo do cabeçalho também apresenta os dois progressos.
+
+#### Layout desktop amplo opt-in
+
+- `js/ingles.js` aplica a classe genérica `.layout-desktop-amplo` somente quando a unidade declara
+  `layout: { desktopAmplo: true }` e a remove automaticamente ao abrir outra unidade.
+- `css/estilo.css` mantém todas as regras sob a classe e o breakpoint de 1120 px. O contêiner chega
+  a 94% da viewport, com teto de 2360 px, sem transformar a tela em uma única coluna esticada.
+- O áudio separa título/controles de vozes/status; o vocabulário separa resumo e escrita da grade de
+  cartões; questões só ganham área visual quando possuem imagem; alternativas e resultado usam duas
+  colunas quando há espaço.
+- City Life v2 é a única revisão optante. Unit 3 de Alice e Mariana e At the Farm continuam no layout
+  legado, inclusive depois de serem abertas na mesma sessão do piloto.
 
 #### Seleção inteligente da voz
 
@@ -468,7 +506,7 @@ Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
 - Toda pull request para `main` continua executando a suíte global no GitHub Actions; a saída
   completa é consultada apenas quando houver falha ou necessidade de diagnóstico.
 
-Na data deste inventário existem **125 testes Playwright**:
+Na data deste inventário existem **142 testes Playwright**:
 
 - `tests/ambiente-interativo.spec.js`: fluxos centrais, revisões de Inglês de Alice e Mariana, Leitura, Matemática ampla, armazenamento, canvas e `file://`.
 - `tests/matematica-manipulativa.spec.js`: cenas, trocas, ábacos, clique no quadro, teclado, persistência e nova Centenas em ação.
@@ -491,6 +529,14 @@ Na data deste inventário existem **125 testes Playwright**:
 A cobertura inclui isolamento, erro e correção antes do avanço em City Life e At the Farm,
 recarga, Pointer Events, teclado, dados corrompidos, `localStorage` bloqueado, áudio bilíngue,
 leitor, ditados, canvas, console, arquivo local e viewport móvel.
+
+City Life v2 acrescenta regressão estrutural para 73 itens e 30 atividades, escrita com erro e nova
+tentativa, caixa alta e espaços, edição após acerto, recarga parcial e correta, portão áudio/escrita
+nas quatro combinações, chave v1 preservada, limpeza seletiva, fluxo completo das 30 atividades,
+teclado, viewport 390 × 844, axe-core e ausência de rolagem horizontal. A capacidade desktop amplo
+também é verificada em 1366 × 768 e 1920 × 1080, incluindo distribuição em áreas, áudio após troca
+de grupos, questões sem coluna vazia, resultado em duas colunas e remoção da classe nas unidades
+legadas.
 
 ## 11. GitHub e automações
 

@@ -12,7 +12,7 @@ const CHAVE_BELA_ALICE = 'revisoesEscolares.alice.leitura.belaDesadormecida.v1';
 const CHAVE_JOANINHA_ALICE = 'revisoesEscolares.alice.leitura.joaninhaPerdeuPintinhas.v1';
 const CHAVE_FORMIGA_ESPECIAL_ALICE = 'revisoesEscolares.alice.leitura.umaFormigaEspecial.v1';
 const CHAVE_INGLES_MARIANA = 'revisoesEscolares.mariana.ingles.atSchoolUnidade3.v1';
-const CHAVE_INGLES_CITY_LIFE = 'revisoesEscolares.mariana.ingles.cityLifeUnidade5.v1';
+const CHAVE_INGLES_CITY_LIFE = 'revisoesEscolares.mariana.ingles.cityLifeUnidade5.v2';
 const CHAVE_INGLES_FAZENDA = 'revisoesEscolares.alice.ingles.atTheFarmUnidade5.v1';
 
 async function verificarAcessibilidade(page, nomeDaTela) {
@@ -106,12 +106,28 @@ test('City Life da Mariana funciona por teclado e sem rolagem horizontal no celu
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.getByRole('button', { name: /Mariana/ }).click();
+  await page.locator('#abrir-ingles-city-life').click();
+  await expect(page.getByRole('heading', { name: 'English Review - Unit 5' })).toBeVisible();
+  const campo = page.getByLabel('Digite a palavra ou expressão em inglês');
+  await campo.fill('city');
+  await campo.press('Tab');
+  await expect(page.getByRole('button', { name: 'Conferir escrita' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#ingles-status-escrita')).toContainText(
+    'Great! You typed "city" correctly.'
+  );
+  await verificarAcessibilidade(page, 'Vocabulário e escrita de City Life da Mariana');
+
   await page.evaluate((chave) => {
     const unidade = window.RegistroIngles.obter('city-life-unidade-5');
+    const itens = unidade.grupos.flatMap((grupo) => grupo.itens);
     localStorage.setItem(
       chave,
       JSON.stringify({
-        itensOuvidos: unidade.grupos.flatMap((grupo) => grupo.itens.map((item) => item.id)),
+        itensOuvidos: itens.map((item) => item.id),
+        respostasEscrita: Object.fromEntries(itens.map((item) => [item.id, item.ingles])),
+        conferenciasEscrita: Object.fromEntries(itens.map((item) => [item.id, 'correta'])),
         iniciado: true,
       })
     );
@@ -119,8 +135,7 @@ test('City Life da Mariana funciona por teclado e sem rolagem horizontal no celu
   await page.reload();
   await page.getByRole('button', { name: /Mariana/ }).click();
   await page.locator('#abrir-ingles-city-life').click();
-  await expect(page.getByRole('heading', { name: 'English Review - Unit 5' })).toBeVisible();
-  await page.getByRole('button', { name: 'Começar as 16 atividades →' }).click();
+  await page.getByRole('button', { name: 'Começar as 30 atividades →' }).click();
   const alternativa = page.locator('[data-alternativa-atividade-ingles]').first();
   await alternativa.focus();
   await page.keyboard.press('Enter');

@@ -212,6 +212,53 @@ Essa sequência absorve o corte inicial do Chromium/Windows antes da palavra est
 
 Nova solicitação invalida a anterior para impedir sobreposição. Preserve mensagens acessíveis de espera, aviso, pausa, reprodução, conclusão, parada e erro.
 
+### Prática compartilhada de escrita
+
+- Revisões novas de Inglês com página de vocabulário devem ativar no conteúdo
+  `praticaEscrita: { habilitada: true, obrigatoriaParaAtividades: true }`. Revisões antigas sem a
+  configuração preservam integralmente o fluxo anterior e continuam liberando atividades apenas
+  pelos áudios.
+- A implementação pertence exclusivamente a `js/ingles.js`; não crie campos, conferência ou
+  persistência próprios no arquivo declarativo da revisão.
+- Exiba um único campo abaixo do item selecionado. A palavra visível continua disponível para cópia;
+  o objetivo é associação entre som, forma escrita e significado, não ditado oculto.
+- Use `label` real, `input type="text"`, `autocomplete="off"`, `autocapitalize="off"` e
+  `spellcheck="false"`. `Enter` confere, `Tab` mantém a ordem natural e digitar nunca dispara áudio.
+- Normalize apenas maiúsculas/minúsculas, espaços externos e espaços internos duplicados. A grafia
+  deve ser exata; variações pedagógicas explícitas ficam em `variantesEscrita` no item.
+- Persista `respostasEscrita` e `conferenciasEscrita` a cada edição. Alterar uma resposta já correta
+  remove sua conferência até nova validação; dados corrompidos e IDs inexistentes são ignorados.
+- Mostre os selos textuais `✓ Ouvido` e `✓ Escrito`, os contadores por grupo e o resumo global de
+  áudios e escritas. Não codifique o total de itens no controlador.
+- Quando `obrigatoriaParaAtividades` estiver ativa, libere as atividades somente após todos os áudios
+  e todas as escritas corretas. A mensagem bloqueada deve informar separadamente os dois totais
+  restantes.
+- Uma revisão com escrita optativa só fica “em andamento” quando há áudio concluído, texto digitado
+  ou conferido, ou atividade iniciada; apenas selecionar cartão ou grupo não conta como início.
+- Teste erro recuperável, `Enter`, caixa alta, espaços, edição após acerto, texto parcial e correto
+  após recarga, quatro combinações do portão áudio/escrita, isolamento, limpeza seletiva, teclado,
+  390 × 844, axe-core e ausência de rolagem horizontal.
+
+### Layout desktop amplo opt-in
+
+- O controlador compartilhado de Inglês oferece a capacidade declarativa
+  `layout: { desktopAmplo: true }`. Use-a somente em uma revisão cujo conteúdo tenha sido conferido
+  nas larguras desktop oficiais; a ausência da declaração mantém integralmente o layout legado.
+- A classe genérica `.layout-desktop-amplo` deve ser aplicada e removida pelo controlador ao abrir
+  cada unidade. Nunca deixe a classe de uma revisão ampla vazar para outra revisão ou perfil.
+- Todas as regras visuais da capacidade devem permanecer sob `.layout-desktop-amplo` e um breakpoint
+  desktop. Preserve o fallback estreito e não altere o HTML global ou o comportamento pedagógico
+  para ativar o recurso.
+- Em desktop largo, use aproximadamente 92–96% da viewport com limite máximo alto e redistribua o
+  conteúdo por grade ou flex: áudio em duas áreas, grupos ocupando a largura e vocabulário com
+  resumo/escrita à esquerda e cartões à direita.
+- Questões com apoio visual podem usar duas áreas; questões sem imagem não devem reservar coluna
+  vazia. Alternativas podem usar duas colunas e a revisão final pode usar duas colunas quando houver
+  espaço suficiente.
+- Antes de ativar em uma revisão, teste pelo menos 1366 × 768 e 1920 × 1080, ausência de rolagem
+  horizontal, cabeçalho global, clique/teclado/áudio, escrita, troca de grupos, atividades, resultado
+  e remoção da classe ao abrir revisões legadas.
+
 ### Privacidade e escopo pedagógico
 
 - Sem microfone, gravação, reconhecimento, avaliação automática da fala, upload ou API.
@@ -234,7 +281,7 @@ errar → conferir → corrigir → conferir → avançar.
 - Verifique “Repetir”.
 - Confirme que clique, toque, `Enter` e `Espaço` no cartão iniciam a pronúncia normal do item e que
   cliques rápidos cancelam a sequência anterior.
-- Cubra os 27 itens, desbloqueio, persistência e isolamento.
+- Cubra o total declarado pela unidade, desbloqueio, persistência e isolamento.
 - Audite controles por teclado e em 390 × 844.
 - Não dependa da voz específica instalada na máquina de CI.
 

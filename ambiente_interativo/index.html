@@ -296,6 +296,38 @@
               </div>
             </article>
           </div>
+          <form class="pratica-escrita-ingles" id="ingles-pratica-escrita" hidden>
+            <div class="cabecalho-pratica-escrita">
+              <div>
+                <p class="etiqueta">Write in English · Escreva em inglês</p>
+                <h3>Copie: <span id="ingles-palavra-copia" lang="en-US">pencil</span></h3>
+              </div>
+              <p id="ingles-progresso-grupo" class="progresso-grupo-ingles" hidden></p>
+            </div>
+            <label for="ingles-campo-escrita">Digite a palavra ou expressão em inglês</label>
+            <div class="controles-pratica-escrita">
+              <input
+                id="ingles-campo-escrita"
+                name="resposta-escrita-ingles"
+                type="text"
+                maxlength="200"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+              />
+              <button class="botao-secundario" id="ingles-conferir-escrita" type="submit">
+                Conferir escrita
+              </button>
+            </div>
+            <p
+              id="ingles-status-escrita"
+              class="status-escrita-ingles"
+              role="status"
+              aria-live="polite"
+            >
+              Copie a palavra ou expressão acima e confira quando terminar.
+            </p>
+          </form>
           <div
             class="grade-palavras-ingles"
             id="ingles-grade-itens"
