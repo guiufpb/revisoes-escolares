@@ -1,143 +1,219 @@
-MODELO DE NOVA REVISAO COM CENA MATEMATICA
-==========================================
+MODELO PARA NOVAS REVISOES DO AMBIENTE INTERATIVO
+==================================================
 
-LEITURA OBRIGATORIA
-- Antes de usar este modelo, leia:
-  documentacao/ambiente-interativo/INSTRUCOES_PROJETO.md
-- Consulte o que ja existe para evitar duplicacao:
-  documentacao/ambiente-interativo/INVENTARIO_IMPLEMENTACOES.md
-- As regras resumidas para futuras alteracoes ficam no AGENTS.md da raiz.
+1. LEITURA OBRIGATORIA
 
-1. Crie apenas o arquivo de conteúdo em revisoes/<perfil>/.
-2. Use uma ID e uma chave localStorage exclusivas e versionadas.
-3. Cadastre o arquivo em js/app.entry.js e uma entrada em js/registro-revisoes.js.
-4. Não duplique js/matematica.js, js/matematica-cena.js ou
-   js/matematica-manipulaveis.js.
-5. Para formas, mosaicos, réguas, massa, capacidade, seleção ou associação,
-   prefira os tipos declarativos de js/matematica-geometria-medidas.js.
-6. Em toda etapa avaliativa, mantenha Próxima bloqueada até Conferir retornar
-   acerto; preserve voltar e recarregar depois da conclusão.
+Leia AGENTS.md e as partes pertinentes de:
+- documentacao/ambiente-interativo/INSTRUCOES_PROJETO.md
+- documentacao/ambiente-interativo/INVENTARIO_IMPLEMENTACOES.md
 
-Ao renovar uma revisão existente para oferecer uma nova rodada de prática:
-- mantenha o ID apenas quando o mesmo cartão e a mesma trilha continuarem sendo
-  o destino correto;
-- avance a versão da chave localStorage, por exemplo de v1 para v2;
-- use IDs de etapa novos e não apague nem migre silenciosamente a chave antiga;
-- atualize total de etapas no registro, cartão, progresso e testes;
-- teste que o progresso antigo permanece intacto e que a rodada nova começa
-  sem o estado Concluída.
+Consulte o inventário antes de criar infraestrutura nova. Este modelo é um guia
+operacional; em caso de divergência, siga AGENTS.md, as instruções e a implementação
+atual. Os caminhos js/, revisoes/ e leituras/ abaixo partem de ambiente_interativo/;
+<perfil> e <slug> são marcadores a substituir, não diretórios literais.
 
-Exemplo mínimo declarativo:
+2. REGRAS GERAIS PARA TODA NOVA REVISAO
+
+- Reutilize o controlador existente antes de criar comportamento novo. Mantenha
+  conteúdo específico em revisoes/<perfil>/ quando aplicável.
+- Defina perfil, matéria, ID exclusivo, título, cartão, painel e total correto.
+- Use chave localStorage exclusiva e versionada:
+  revisoesEscolares.<perfil>.<materia>.<revisao>.v<versao>.
+- Faça import em js/app.entry.js e cadastro em js/registro-revisoes.js conforme
+  a arquitetura da matéria; use registros específicos quando existentes.
+- Preserve revisões e progressos anteriores, isolados por perfil, matéria e revisão.
+  Nunca use localStorage.clear(); limpe somente a chave da revisão ativa.
+- Reutilize js/armazenamento.js: carregue com tolerância a dados ausentes, JSON
+  inválido, versão/etapa incompatível e localStorage bloqueado, com fallback em memória.
+- Não edite js/app.bundle.js nem js/pdfjs.bundle.mjs manualmente; altere as fontes
+  e gere os bundles pelo build quando houver mudança de código.
+- Preserve execução local sem recursos obrigatórios da internet, por servidor e,
+  para a aplicação principal, por file:// com o bundle gerado.
+- Não publique PDFs escolares reais, prints, pastas das alunas ou dados privados.
+
+Toda atividade editável deve preservar o ciclo:
+errar -> conferir -> corrigir -> conferir -> avancar -> voltar -> recarregar
+
+3. ESCOLHA DO CONTROLADOR
+
+Identifique primeiro o tipo de revisão e consulte no inventário um caso semelhante.
+
+GRAMATICA
+- Use js/gramatica-questionarios.js e conteúdo declarativo em revisoes/<perfil>/
+  quando exclusivo. Preserve as revisões antigas e configure campos/opções no conteúdo.
+- Evite questões abertas com várias respostas pedagogicamente válidas se houver
+  somente uma resposta cadastrada. Prefira, quando aplicável, alternativas, banco
+  fechado, transformação determinada ou ditado.
+- Para lacuna cuja palavra não seja dedutível com segurança, ofereça ditado opcional
+  por js/gramatica-ditado.js e js/audio.js. A unidade padrão é palavra; frase curta
+  exige ditado: true e unidadeDitado: 'frase' na questão.
+- Use voz local pt-BR, somente após ação da criança, com “Atenção”, repetir, parar e
+  cancelamento ao trocar de campo/etapa. Não revele a resposta nos controles, no DOM
+  visível ou no rótulo acessível; o áudio não preenche a resposta.
+- Nos campos que precisarem, declare maiusculasObrigatorias: true,
+  acentuacaoObrigatoria: true, fraseCompleta: true e inserirTravessao: true.
+  O travessão inserido continua editável e removível.
+- layout.desktopAmplo é opt-in: remova sua classe ao abrir revisão sem a configuração
+  ou desativar o controlador; não reserve coluna para texto de leitura inexistente.
+
+INGLES
+- Reutilize js/ingles.js e js/audio.js; não implemente speechSynthesis paralelo.
+  Use vozes locais pt-BR para instruções e en-US para palavras/frases estudadas.
+- Áudio exige ação da criança. Na página inicial de vocabulário, clique/toque ou
+  Enter/Espaço no item seleciona e pronuncia imediatamente em en-US a 0,62.
+  Abrir a revisão ou trocar de grupo não inicia áudio.
+- Preserve Ouvir em inglês (0,62), Ouvir devagar (0,50), Repetir, Parar, cancelamento
+  da sequência anterior, aquecimento, pausas e retorno acessível do áudio.
+- praticaEscrita é capacidade opt-in compartilhada em js/ingles.js para revisões
+  novas que precisem dela. Para novas páginas de vocabulário, siga a orientação
+  das INSTRUCOES_PROJETO.md e declare:
+  praticaEscrita: { habilitada: true, obrigatoriaParaAtividades: true }.
+  Não recrie campos, correção ou persistência no conteúdo da revisão.
+- layout: { desktopAmplo: true } também é opt-in; remova a classe ao abrir unidade
+  sem a opção. Preserve o fluxo e o layout das revisões antigas sem esses recursos.
+
+MATEMATICA VISUAL / MANIPULATIVA
+- Registre conteúdo por MatematicaRevisoes; reutilize js/matematica.js,
+  js/matematica-cena.js e js/matematica-manipulaveis.js (Cena Matemática).
+- Tipos de cena disponíveis:
+  material: base dez, cubinho, barra, placa e cubo de milhar, com trocas explícitas;
+  quadro: U, D-U, C-D-U ou M-C-D-U; abaco: montar ou ler números;
+  composicao: parcelas, números e palavras; sequencia: crescente/decrescente;
+  reta: marcadores e saltos; dinheiro: fichas fictícias e trocas equivalentes;
+  grafico: tabela acessível e barras ajustáveis; mini: respostas numéricas.
+- Para formas, mosaicos, réguas, massa, capacidade, seleção e associação, use os
+  tipos declarativos de js/matematica-geometria-medidas.js. Objetos, unidades e
+  enunciados ficam na configuração; persistência e interação ficam no controlador.
+- Arrastar nunca é o único meio: ofereça clique/toque e teclado. Toda colocação
+  pode ser desfeita ou retirada. Após selecionar a peça, a área grande da coluna
+  aceita clique; ordens incompatíveis são recusadas sem alterar o estado.
+- Trocas exigem 10 peças e preservam o valor (10 U -> 1 D, 10 D -> 1 C, 10 C -> 1 M).
+  Em etapas avaliativas, Próxima só é liberada após conferência correta.
+- A Cena Matemática expõe montar, obterEstado, restaurar, reiniciar, validar,
+  adicionar, remover, trocar e destruir. O controlador salva estado pequeno,
+  serializável e normalizado; nunca DOM, eventos, funções ou HTML no localStorage.
+- Para 1º ano, prefira U ou D-U, limites menores, instruções curtas, trocas opcionais
+  e nivelAjuda: 'ampliada'. Cadastre cartão somente para revisão real completa.
+
+MATEMATICA DIGITADA / TABUADA
+- Use js/matematica-operacoes.js; mantenha contas, enunciados, respostas e pistas no
+  arquivo específico do perfil em revisoes/<perfil>/, sem recriar o controlador.
+- A infraestrutura aceita vários cálculos/respostas por questão: cada item tem ID
+  e resposta próprios; persista cada digitação e confira todos os campos para concluir.
+- Reutilize o estudo de tabuada e seu bloqueio persistente durante a avaliação.
+  estudoTabuada.fatores configura as tabuadas; a ausência mantém o padrão legado.
+  Voltar, sair ou recarregar não pode reabrir a tabela depois do bloqueio.
+
+LEITURA
+- Novos livros/textos usam js/registro-leituras.js, js/leitura.js,
+  js/leitor-dedicado.js e js/glossario.js. Não crie outro leitor de PDF.
+- Cadastre metadados e, quando aplicáveis, questionário, ditado e glossário;
+  recursos publicáveis ficam em leituras/<slug>/.
+- Separe progresso por perfil/livro, persista a página e preserve PDF.js local,
+  sincronização e cancelamento de renderizações antigas.
+- O PDF escolar real permanece privado e fora do Git. Para cadastro de livros,
+  siga também as instruções de páginas e recursos de CI no documento principal.
+
+4. RECURSOS OPT-IN
+
+Capacidades novas não devem alterar revisões antigas automaticamente. Configure
+somente no controlador que as suporta, por exemplo:
+- layout: { desktopAmplo: true } em Gramática/Inglês;
+- praticaEscrita em Inglês;
+- ditados e unidadeDitado nos questionários compatíveis;
+- requisitos estritos de maiúsculas/acentuação nos campos de Gramática.
+
+A ausência da configuração preserva o comportamento legado. Valide também a troca
+para revisão sem opt-in; para desktopAmplo, confira 1366 × 768, 1920 × 1080 e celular.
+
+5. RENOVACAO DE UMA REVISAO
+
+- Mantenha o ID apenas se o mesmo cartão e a mesma trilha continuarem corretos.
+- Avance a versão da chave (v1 -> v2) quando a rodada deve começar do zero, etapas
+  mudarem de significado ou respostas anteriores puderem ser mal interpretadas.
+- Use novos IDs para etapas da nova rodada; não apague nem migre silenciosamente
+  o progresso anterior.
+- Atualize totais no registro, cartão, progresso e testes.
+- Teste isolamento: a chave antiga fica intacta e a nova rodada começa sem Concluída.
+
+6. CONTRATO DE INTERACAO E ACESSIBILIDADE
+
+- Ofereça teclado, mouse e toque, rótulos claros, foco visível e tabulação lógica.
+  Não dependa somente de cor; anuncie erro, sucesso e estado por aria-live com
+  mensagens pedagógicas específicas.
+- Resposta errada continua corrigível na mesma etapa. Manipuláveis oferecem
+  desfazer/retirar/reposicionar; arrasto tem alternativas por clique/toque e teclado.
+- Persista várias ações consecutivas, não apenas a primeira. Voltar/recarregar
+  restaura estado visual, estado lógico, respostas, etapa e pontuação juntos,
+  tanto em tentativa incompleta quanto depois do acerto.
+- Pontos não duplicam; reabrir/restaurar não duplica listeners nem ações.
+- Limpar afeta somente a revisão ativa; outros perfis/revisões permanecem intactos.
+- Quando aplicável, confira 390 × 844, áreas de toque confortáveis, ausência de
+  rolagem horizontal, axe-core e console sem erros graves.
+
+7. CADENCIA DE VALIDACAO
+
+A política é a do AGENTS.md (Qualidade proporcional ao risco), sem regra paralela.
+Para toda mudança de código, execute na raiz:
+  npm run build
+  npm run format:check
+  npm run lint
+
+Acrescente regressão e execute testes Playwright direcionados à revisão, controlador
+ou tela afetada, cobrindo o contrato da seção 6: caminho feliz, primeira tentativa
+errada, correção sem pular, desfazer, avançar/voltar, recarga, várias ações persistidas,
+isolamento, teclado/ponteiro, celular e acessibilidade quando aplicáveis. Preserve
+as verificações de áudio e file:// exigidas pelas instruções para o fluxo alterado.
+
+Execute npm test global nos gatilhos do AGENTS.md:
+- a cada três novas revisões ou conjuntos independentes sobre infraestrutura
+  estabilizada; perguntas/etapas da mesma revisão contam como um único conjunto;
+- imediatamente ao mudar comportamento de navegação, registros compartilhados,
+  armazenamento, áudio, controladores compartilhados, CSS estrutural, HTML global,
+  build, bundle, PDF.js, file://, pontuação, conclusão, limpeza ou restauração;
+- antes de consolidar na main um lote ainda não validado pela suíte global.
+Antecipe npm test se houver dúvida de alcance, falha inesperada ou interferência
+entre perfis. Inclusão somente declarativa, inclusive import/cartão/cadastro central
+sem mudança de comportamento, pode ficar nos testes direcionados, respeitando a cadência.
+
+PR para main passa pela suíte global do GitHub Actions e aguarda o check
+“Formatação, lint e testes”. Conteúdo já coberto localmente por testes direcionados
+não exige repetir a global local antes da CI, salvo nos gatilhos acima. Consolide
+commits antes do push quando possível, sempre respeitando a autorização do usuário.
+Documentação pura: confira links/caminhos e execute somente git diff --check.
+
+8. CHECKLIST FINAL PARA NOVA REVISAO
+
+[ ] Perfil e matéria/controlador corretos; infraestrutura existente reutilizada.
+[ ] ID exclusivo, chave versionada, import/registro, cartão/painel e total corretos.
+[ ] Progresso isolado e anterior preservado; limpeza somente da revisão ativa.
+[ ] Erro corrigível, desfazer quando aplicável, avançar/voltar e reload completos.
+[ ] Teclado, mouse/toque, foco, celular e acessibilidade conferidos.
+[ ] Regressão/testes direcionados e cadência global cumpridos conforme AGENTS.md.
+[ ] Documentação atualizada quando conteúdo, arquitetura ou contratos mudarem.
+[ ] Nenhum arquivo privado incluído; nenhum bundle editado manualmente.
+
+9. EXEMPLOS
+
+Recorte mínimo de registro para Matemática visual, não modelo universal nem revisão
+pronta para cadastro. Substitua os marcadores e complete a trilha e seus metadados:
 
 window.MatematicaRevisoes.registrar({
   id: 'perfil-matematica-dezenas-divertidas',
   aluno: 'perfil',
   titulo: 'Dezenas divertidas',
   chaveArmazenamento: 'revisoesEscolares.perfil.matematica.dezenasDivertidas.v1',
-  etapas: [
-    {
-      id: 'inicio',
-      tipo: 'apresentacao',
-      titulo: 'Dezenas divertidas',
-      texto: 'Vamos construir números com peças.',
+  etapas: [{
+    id: 'monte-14', tipo: 'cena', titulo: 'Uma dezena e quatro unidades',
+    objetivo: 'Monte 14 no quadro de ordens.',
+    cena: {
+      tipo: 'quadro', titulo: 'Monte 14',
+      instrucao: 'Coloque 1 dezena e 4 unidades.', ordens: 'D-U',
+      valorAlvo: 14, representacaoAlvo: { D: 1, U: 4 },
+      limites: { D: 2, U: 9 }, trocas: false, nivelAjuda: 'ampliada',
     },
-    {
-      id: 'monte-14',
-      tipo: 'cena',
-      titulo: 'Uma dezena e quatro unidades',
-      objetivo: 'Monte 14 no quadro de ordens.',
-      cena: {
-        tipo: 'quadro',
-        titulo: 'Monte 14',
-        instrucao: 'Coloque 1 dezena e 4 unidades.',
-        ordens: 'D-U',
-        valorAlvo: 14,
-        representacaoAlvo: { D: 1, U: 4 },
-        limites: { D: 2, U: 9 },
-        trocas: false,
-        nivelAjuda: 'ampliada',
-        dicas: ['A barra vale 10.', 'Depois coloque 4 cubinhos.'],
-      },
-    },
-    {
-      id: 'fim',
-      tipo: 'final',
-      titulo: 'Você conseguiu!',
-      texto: 'Sua construção ficou pronta.',
-    },
-  ],
+  }],
 });
 
-Tipos disponíveis em cena.tipo:
-- material: cubinho, barra, placa e cubo de milhar, com trocas explícitas;
-- quadro: ordens U, D-U, C-D-U ou M-C-D-U;
-- abaco: montar ou descobrir um número;
-- composicao: cartões de parcelas, número e palavras;
-- sequencia: cartões para espaços em sequências crescentes ou decrescentes;
-- reta: marcadores grandes e saltos configuráveis;
-- dinheiro: fichas fictícias, combinações e trocas equivalentes;
-- grafico: tabela acessível e barras ajustáveis;
-- mini: pequeno conjunto de respostas numéricas.
-
-A Cena Matemática expõe montar, obterEstado, restaurar, reiniciar, validar,
-adicionar, remover, trocar e destruir. O estado retornado é pequeno, serializável
-e normalizado; o controlador da revisão salva esse estado. Não salve DOM, eventos,
-funções ou HTML no localStorage.
-
-Para conteúdo de 1º ano, use somente U ou D-U, limites menores, instruções curtas,
-trocas opcionais e nivelAjuda: 'ampliada'. A infraestrutura aceita esse nível,
-mas um novo cartão só deve ser cadastrado quando houver uma revisão real completa.
-
-CONTRATO DE INTERACAO E TESTES
-==============================
-
-Toda atividade manipulativa deve permitir o ciclo completo:
-errar -> conferir -> corrigir -> conferir novamente -> avancar -> voltar -> recarregar.
-
-Antes de cadastrar uma nova atividade, confirme:
-- toda inclusao pode ser desfeita, retirada ou reposicionada;
-- varias acoes consecutivas ficam persistidas, e nao apenas a primeira;
-- uma resposta errada nao bloqueia os controles nem obriga a avancar;
-- arrastar possui alternativa por clique/toque e, quando aplicavel, por teclado;
-- o estado salvo e pequeno e corresponde exatamente ao que aparece na tela;
-- ao voltar ou recarregar, pecas e cartoes reaparecem nas mesmas posicoes;
-- restaurar ou reabrir nao duplica eventos nem acoes;
-- limpar afeta somente a cena atual;
-- mensagens explicam como corrigir uma tentativa;
-- ordens incompatíveis sao recusadas sem alterar o estado.
-
-O teste Playwright da nova atividade deve cobrir, no minimo:
-1. resposta correta na primeira tentativa;
-2. resposta errada e nova tentativa;
-3. retirada ou reposicionamento do item errado;
-4. conclusao correta depois do erro;
-5. avancar e voltar com a tentativa preservada;
-6. recarregar com tentativa incompleta e com resposta concluida;
-7. interacao por clique e teclado, alem do arrastar quando existir;
-8. viewport movel, acessibilidade e ausencia de erros no console.
-
-CADENCIA DE VALIDACAO
-====================
-
-- Para cada nova revisao, execute build, formatacao, lint e os testes direcionados
-  deste contrato.
-- Varias perguntas ou etapas desta mesma revisao contam como um unico conjunto.
-- Execute a suite global a cada tres novas revisoes ou conjuntos independentes de
-  atividades baseados em infraestrutura estabilizada.
-- Antecipe a suite global quando alterar navegacao, registros, armazenamento,
-  audio, controlador compartilhado, CSS/HTML estrutural, build, bundle, file://,
-  pontuacao, conclusao, limpeza ou restauracao.
-- Toda pull request para main continua aguardando a validacao global da CI.
-- Consulte a matriz completa em:
-  documentacao/ambiente-interativo/INSTRUCOES_PROJETO.md
-
-PADRAO PARA REVISOES DE INGLES
-==============================
-
-- Cadastre palavras e frases no conteudo da revisao e reutilize js/ingles.js e
-  js/audio.js; nao crie sintese de voz propria.
-- Na primeira pagina, o cartao da palavra deve selecionar o item e iniciar a
-  pronuncia normal em en-US com um unico clique, toque, Enter ou Espaco.
-- Preserve Ouvir em ingles, Ouvir devagar, Repetir e Parar como alternativas.
-- Trocar de grupo ou abrir a revisao nao inicia audio sozinho.
-- Teste a acao direta em ambos os perfis quando a revisao for compartilhada.
+Para as demais matérias, parta de uma revisão declarativa equivalente indicada no
+inventário e use somente as opções necessárias descritas nas seções 3 e 4.
