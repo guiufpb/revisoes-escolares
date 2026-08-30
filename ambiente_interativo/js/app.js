@@ -329,11 +329,16 @@
           gramaticaAtiva.id
         );
         resumo.textContent = estadoGramaticaCompartilhada.finalizada
-          ? gramaticaAtiva.nome + ' · Gramática: 25 questões concluídas ✓'
+          ? gramaticaAtiva.nome +
+            ' · Gramática: ' +
+            gramaticaAtiva.questoes.length +
+            ' questões concluídas ✓'
           : gramaticaAtiva.nome +
             ' · Gramática: questão ' +
             (estadoGramaticaCompartilhada.questaoAtual + 1) +
-            '/25 · ' +
+            '/' +
+            gramaticaAtiva.questoes.length +
+            ' · ' +
             estadoGramaticaCompartilhada.pontos +
             ' acertos';
       } else if (window.RevisaoGramaticaMariana) {
@@ -388,6 +393,7 @@
     document.getElementById('abrir-capacidade-operacoes-numeros').hidden = aluno !== 'alice';
     document.getElementById('materia-leitura').hidden = false;
     document.getElementById('abrir-gramatica-mariana').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-gramatica-contos').hidden = aluno !== 'mariana';
     document.getElementById('limpar-progresso').hidden = false;
     atualizarResumo();
     mostrarTela('trilhas');
@@ -517,6 +523,11 @@
     });
     document.getElementById('abrir-gramatica-h-til').addEventListener('click', function () {
       window.GramaticaQuestionarios.abrir(IDS_GRAMATICA_COMPARTILHADA[alunoAtual]);
+      atualizarResumo();
+    });
+    document.getElementById('abrir-gramatica-contos').addEventListener('click', function () {
+      if (alunoAtual !== 'mariana') return;
+      window.GramaticaQuestionarios.abrir('mariana-gramatica-contos-ortografia-pontuacao');
       atualizarResumo();
     });
     document.getElementById('abrir-revisao-mariana').addEventListener('click', function () {

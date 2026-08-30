@@ -170,6 +170,16 @@
       controladorCompartilhado: 'gramatica-questionarios',
     },
     {
+      id: 'mariana-gramatica-contos-ortografia-pontuacao',
+      aluno: 'mariana',
+      titulo: 'Contos, ortografia e pontuação',
+      cartaoId: 'abrir-gramatica-contos',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento: 'revisoesEscolares.mariana.gramatica.contosOrtografiaPontuacao.v1',
+      totalEtapas: 30,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
       id: 'alice-gramatica-h-til-vocabulario',
       aluno: 'alice',
       titulo: 'H, til e vocabulário',

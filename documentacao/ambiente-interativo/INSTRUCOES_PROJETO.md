@@ -105,6 +105,29 @@ Teste, no mínimo, ausência de reprodução automática, todas as palavras espe
 sequência “Atenção”→palavra, repetição, parada, cancelamento, teclado, outro perfil, viewport móvel,
 axe-core, console e `file://`.
 
+### Questionários de Gramática e ditados de frases
+
+- Para novas revisões, use conteúdo declarativo em `revisoes/<perfil>/` com
+  `js/gramatica-questionarios.js`; preserve a revisão ampla legada e suas 40 questões.
+- Quando a tarefa avaliar maiúsculas, declare `maiusculasObrigatorias: true` no campo. Use também
+  `acentuacaoObrigatoria: true` e `fraseCompleta: true` quando aplicáveis. Sem essas declarações,
+  a normalização das revisões anteriores permanece inalterada.
+- Um ditado curto de frase usa `ditado: true` e `unidadeDitado: 'frase'` na questão. Mantenha a
+  resposta apenas no conteúdo declarativo; os rótulos e controles não podem revelá-la. O módulo
+  compartilhado oferece Ouvir frase, Repetir última frase e Parar sem alterar `audio.js`.
+- A criança pode usar `inserirTravessao: true` em um campo que exija esse sinal. O botão deve
+  inserir somente o travessão no cursor, salvar a edição e permitir apagá-lo normalmente.
+- Enter confere campos no controlador compartilhado, sem interceptar composição de caracteres.
+  Além das cores, a correção deve identificar no texto os itens a rever e marcar `aria-invalid`.
+- A revisão pode declarar `layout: { desktopAmplo: true }`. O controlador aplica a classe na
+  tela compartilhada e a remove ao abrir uma revisão sem opt-in ou desativar o controlador.
+  A declaração `leitura` cria um painel de texto sem HTML arbitrário. Não reserve espaço para
+  leitura inexistente e mantenha os campos de frase amplos e o celular em uma coluna.
+- Antes de ativar, valide 1366 × 768, 1920 × 1080 e 390 × 844, incluindo troca para a revisão
+  ampla legada e H/til nos dois perfis, ausência de overflow, teclado, toque e axe-core.
+- Preserve os ditados de palavra existentes: a unidade padrão continua sendo `palavra`, com
+  voz local, velocidade 0,78, aquecimento, aviso, pausas e cancelamento já estabelecidos.
+
 ### Arrasto
 
 - Use Pointer Events para mouse e toque.

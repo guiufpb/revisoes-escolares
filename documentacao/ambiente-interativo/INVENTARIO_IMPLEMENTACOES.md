@@ -4,7 +4,7 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra o estado de trabalho em **28/08/2026**.
+Este inventário registra o estado de trabalho em **30/08/2026**.
 
 ## 2. Base da aplicação
 
@@ -231,6 +231,42 @@ Chave: `revisoesEscolares.mariana.matematica.centenasEmAcao.v2`.
 Chave: `revisoesEscolares.mariana.matematica.formasMosaicosMedidas.v1`.
 
 ## 6. Gramática
+
+### Mariana — Contos, ortografia e pontuação
+
+- Nova revisão independente com **30 questões**, baseada na síntese pedagógica da prova de 31/08.
+- Questões 1–4: contos, conto de fadas, começo/problema/desfecho e suspense infantil; 5–10: NH e CH;
+  11–14: antônimos e sinônimos; 15–23: frase declarativa, ponto-final, interrogação, exclamação,
+  travessão e dois-pontos; 24–28: S/SS, separação silábica e S com som de Z; 29–30: pontuação integrada.
+- Conteúdo original e declarativo em `revisoes/mariana/gramatica-contos-ortografia-pontuacao.js`,
+  reutilizando `js/gramatica-questionarios.js`. Não substitui as revisões de 40 e 25 questões.
+- Sete ditados opcionais: Q7, Q10 e Q28 com palavras; Q17, Q21, Q23 e Q30 com frases curtas.
+  `js/gramatica-ditado.js` aceita `unidadeDitado: 'frase'`, mantendo palavras como padrão legado.
+  Usa exclusivamente `js/audio.js`, voz local pt-BR a 0,78, aquecimento, Atenção, repetir, parar e
+  cancelamento. Nenhuma resposta é exposta nos controles ou preenchida pelo áudio.
+- Campos podem declarar `maiusculasObrigatorias`, junto de `acentuacaoObrigatoria` e
+  `fraseCompleta`. Enter confere no controlador compartilhado. `inserirTravessao` oferece um botão
+  para inserir apenas esse sinal no cursor, com edição e exclusão normais por teclado ou toque.
+- Erros continuam editáveis, com nomes dos itens a rever no retorno acessível e `aria-invalid`
+  nos campos. Pontos são concedidos uma única vez. Progresso e limpeza usam somente a chave nova.
+- Primeira revisão de Gramática com `layout: { desktopAmplo: true }`: 94vw, teto de 2360px e
+  breakpoint de 1120px. `leitura` cria um painel de texto ao lado das respostas; questões sem texto
+  não reservam coluna vazia. Campos podem ocupar duas colunas e frases usam a largura disponível.
+  Em 390 × 844 tudo volta a uma coluna. Abrir H/til ou a revisão ampla remove a classe opt-in.
+- O resumo global deriva o total do conteúdo ativo; as revisões antigas mantêm seus totais.
+- Nenhum PDF ou print de referência foi aberto, convertido, submetido a OCR ou renderizado para
+  esta implementação. Sem recursos obrigatórios da internet e com suporte ao bundle `file://`.
+
+Chave: `revisoesEscolares.mariana.gramatica.contosOrtografiaPontuacao.v1`.
+
+Validação em 30/08/2026: build, formatação e lint aprovados; 30/30 testes direcionados de
+Gramática, 1/1 de cadastro e suíte global `npm test` com 160/160 aprovados em 10,1 minutos.
+Capturas da aplicação conferidas nos dois desktops e no celular. Áudio validado com vozes locais
+simuladas, sem audição humana; detalhes em `ambiente_interativo/RELATORIO_TESTE_INTERATIVO.txt`.
+
+Mariana concluiu a revisão completa em uso real, com funcionamento correto confirmado pelo responsável.
+A execução local de 160 testes incluía seis testes de outra implementação não incluída neste PR;
+a suíte versionada desta entrega contém 154 testes.
 
 ### Mariana — revisão ampla de Gramática
 
@@ -506,13 +542,18 @@ Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
 - Toda pull request para `main` continua executando a suíte global no GitHub Actions; a saída
   completa é consultada apenas quando houver falha ou necessidade de diagnóstico.
 
-Na data deste inventário existem **142 testes Playwright**:
+Na data deste inventário existem **154 testes Playwright**:
 
 - `tests/ambiente-interativo.spec.js`: fluxos centrais, revisões de Inglês de Alice e Mariana, Leitura, Matemática ampla, armazenamento, canvas e `file://`.
 - `tests/matematica-manipulativa.spec.js`: cenas, trocas, ábacos, clique no quadro, teclado, persistência e nova Centenas em ação.
 - `tests/acessibilidade.spec.js`: axe e responsividade das telas principais.
 - `tests/gramatica-mariana.spec.js`: 40 questões, erro e correção, digitação, teclado, persistência,
   isolamento, limpeza seletiva, conclusão, ditado nas questões 5/7/22, celular, axe e `file://`.
+- `tests/gramatica-contos-ortografia-pontuacao.spec.js`: 12 testes novos para cadastro exclusivo,
+  sequência de 30 questões, maiúsculas/acentos/grafia/pontuação, travessão editável, ditados locais
+  sem vazamento de respostas, repetir/parar/cancelar, várias edições persistidas, limpeza isolada,
+  desktop 1366 × 768 e 1920 × 1080, celular com toque, axe, console, armazenamento indisponível
+  ou corrompido, isolamento visual e execução sem rede em `file://`.
 - `tests/gramatica-h-til-vocabulario.spec.js`: conteúdo idêntico com chaves distintas, erro e
   correção, teclado, exigência de sinais gráficos, retorno, recarga, isolamento, limpeza seletiva,
   conclusão, ditado compartilhado da questão 17, celular, axe e `file://`.
