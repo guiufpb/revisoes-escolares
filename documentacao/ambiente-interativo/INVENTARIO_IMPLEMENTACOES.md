@@ -232,6 +232,43 @@ Chave: `revisoesEscolares.mariana.matematica.formasMosaicosMedidas.v1`.
 
 ## 6. Gramática
 
+### Alice — Contos, dígrafos e vocabulário
+
+- Revisão exclusiva da Alice com **30 questões** no controlador `gramatica-questionarios`,
+  sem alterar controladores, áudio ou CSS compartilhados.
+- ID: `alice-gramatica-contos-digrafos-vocabulario`. Conteúdo em
+  `revisoes/alice/gramatica-contos-digrafos-vocabulario.js` e cartão próprio ao lado de H/til.
+- Q1–Q4 reaproveitam integralmente os quatro contos originais da revisão da Mariana.
+  Q5–Q18 praticam CH/LH/NH, famílias, recuperação da grafia, sílabas e transformação com H;
+  Q19–Q24 trabalham sinônimos e antônimos; Q25 ordena uma frase; Q26–Q27 reforçam S com som de Z
+  e RR; Q28 usa banco fechado; Q29 dita uma frase integradora; Q30 reúne oito itens de revisão.
+- Q5 oculta os dígrafos em seis palavras; Q15 combina oito pistas com palavras incompletas;
+  os três itens de CH/LH/NH da Q30 também usam lacunas, sem expor as palavras completas.
+- **Cinco ditados:** Q8 (CH), Q11 (NH), Q14 (LH), Q18 (mistura) e Q29 (frase).
+  Reutilizam `gramatica-ditado.js` e `audio.js`, com voz local pt-BR, ação explícita,
+  aquecimento, Atenção, repetir, parar e cancelamento. Sem revelar ou preencher respostas.
+- Q17 exige o til de “chão”; Q25 exige maiúscula na alternativa; Q29 exige grafia, maiúscula
+  inicial e ponto-final em “A galinha achou o milho.”. Sinônimos e antônimos usam alternativas.
+- Desktop Amplo ativado somente por `layout: { desktopAmplo: true }`, com suporte a
+  1366 × 768, 1920 × 1080, celular 390 × 844 e bundle `file://`.
+- Respostas, correções, etapa, pontos e conclusão ficam isolados na chave nova. Limpar não
+  afeta H/til da Alice nem as revisões da Mariana. Nenhuma migração de progresso.
+- Conteúdo baseado somente na síntese Markdown e nas revisões existentes; nenhum PDF/print
+  escolar foi aberto, convertido, renderizado ou incluído.
+
+Chave: `revisoesEscolares.alice.gramatica.contosDigrafosVocabulario.v1`.
+
+Validação em 30/08/2026: build, formatação e lint aprovados; **13/13** testes em
+`tests/gramatica-alice-contos-digrafos-vocabulario.spec.js` (1,4 min) e **1/1** teste central
+de cadastro, com 40 IDs/chaves distintos. Cobertura de conclusão, correção, persistência,
+limpeza seletiva, ditados, teclado/toque, layouts, axe, console e `file://`.
+Capturas da aplicação conferidas; voz local simulada, sem audição humana. `npm test` dispensado
+nesta inclusão declarativa, sem alteração de comportamento compartilhado ou regressão;
+a suíte global permanece obrigatória na CI do futuro PR. Detalhes no relatório de testes.
+
+Alice concluiu integralmente a revisão em uso real, inclusive após a correção pedagógica
+de Q5, Q15 e Q30, com funcionamento correto confirmado pelo responsável.
+
 ### Mariana — Contos, ortografia e pontuação
 
 - Nova revisão independente com **30 questões**, baseada na síntese pedagógica da prova de 31/08.

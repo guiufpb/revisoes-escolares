@@ -1403,3 +1403,75 @@ VALIDAÇÃO EM USO REAL E ESCOPO DO COMMIT
   At the Farm v2 que permanecem fora deste commit. A suíte versionada deste PR tem 154 testes.
 - Encerramento local limitado à revisão do diff, seleção de arquivos/trechos e git diff --check;
   a validação remota obrigatória será realizada pelo check Formatação, lint e testes.
+
+ALICE — CONTOS, DÍGRAFOS E VOCABULÁRIO — 30/08/2026
+===================================================
+
+IMPLEMENTAÇÃO
+- Nova revisão exclusiva da Alice (1º ano), com 30 questões e cartão próprio de Gramática.
+- ID: alice-gramatica-contos-digrafos-vocabulario.
+- Chave: revisoesEscolares.alice.gramatica.contosDigrafosVocabulario.v1.
+- Q1–Q4 reaproveitam os quatro contos da Mariana, sem alterar a revisão de origem.
+- CH, NH, LH, famílias silábicas, classificação, separação silábica e transformação com H;
+  sinônimos, antônimos, frase ordenada, reforço curto de S com som de Z e RR, banco fechado
+  e mini simulado de oito subitens. Sem respostas subjetivas avaliadas por gabarito único.
+- Cinco ditados: Q8, Q11, Q14, Q18 e Q29. Q29: A galinha achou o milho.
+- Q17 exige o til de chão; Q25 declara maiúsculas obrigatórias na alternativa;
+  Q29 exige maiúscula inicial, grafia e ponto-final.
+- Desktop Amplo por opt-in, reutilizando o painel tela-gramatica-mariana.
+- Nenhuma alteração em gramatica-questionarios.js, gramatica-ditado.js, audio.js ou CSS.
+
+ARQUIVOS
+- Criados: ambiente_interativo/revisoes/alice/gramatica-contos-digrafos-vocabulario.js
+  e tests/gramatica-alice-contos-digrafos-vocabulario.spec.js.
+- Alterados: ambiente_interativo/index.html, js/app.entry.js, js/app.js,
+  js/registro-revisoes.js, tests/ambiente-interativo.spec.js, inventário e este relatório.
+- Teste central atualizado de 39 para 40 revisões/chaves e verificação explícita de IDs únicos.
+- Bundles regenerados somente por npm run build; nenhuma edição manual ou dependência alterada.
+
+VALIDAÇÃO REALIZADA
+- npm run build: PASSOU.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU.
+- npx playwright test tests/gramatica-alice-contos-digrafos-vocabulario.spec.js:
+  PASSOU, 12/12 testes em 1,3 minuto, sem falhas.
+- npx playwright test tests/ambiente-interativo.spec.js --grep
+  "carrega a tela inicial e registra todas as revisões sem chaves duplicadas"
+  --output test-results/cadastro-alice: PASSOU, 1/1 em 3,1 segundos.
+- Cobertura: cartão exclusivo e estados Não iniciada/Em andamento/Concluída; quatro contos;
+  cinco ditados; erro, correção, Enter/Espaço, avanço, retorno, recarga e várias digitações;
+  pontos sem duplicação; conclusão pelo fluxo das 30 questões e limpeza só da chave nova;
+  armazenamento corrompido/bloqueado; H/til nos dois perfis e revisões da Mariana preservadas.
+- Layout em 1366 x 768 e 1920 x 1080; retirada do opt-in em H/til e revisão ampla;
+  manutenção do opt-in na revisão de contos da Mariana; 390 x 844 com toque, sem overflow;
+  axe-core sem violações graves/críticas; console sem erros graves; bundle file:// sem rede.
+- Capturas da aplicação inspecionadas nos dois desktops e no celular, incluindo classificação
+  extensa e ditado de frase. Capturas temporárias permanecem na pasta de testes ignorada.
+- Áudio validado com vozes locais simuladas: pt-BR, 0,78, aquecimento, Atenção, repetir,
+  parar, cancelar ao trocar palavra/questão/tela e reabrir sem duplicar ações. Sem reprodução
+  automática, exposição de respostas ou preenchimento automático. Sem audição humana da voz real.
+- npm test NÃO executado: inclusão declarativa com import/cartão/cadastro, sem alteração de
+  infraestrutura compartilhada ou regressão. A CI do futuro PR continua responsável pela suíte global.
+
+PRESERVAÇÃO E PRIVACIDADE
+- Testes em contextos temporários do Playwright, sem tocar no navegador pessoal das crianças.
+- H/til da Alice e todas as revisões da Mariana mantidas; nenhuma chave antiga migrada ou apagada.
+- PDF e prints escolares não foram abertos, OCRizados, renderizados nem reprocessados.
+- Somente a síntese Markdown e os modelos técnicos existentes foram usados.
+- PROMPT_ALICE_GRAMATICA_PROVA_31_08.md permanece local, sem alteração e sem inclusão no Git.
+- Stash preservado: dd5623a8d3db5cbb0f699d13d2af34b8afc39590; não aplicado/removido/recriado.
+- Sem commit, push, merge, PR ou publicação.
+
+CORREÇÃO PEDAGÓGICA E VALIDAÇÃO EM USO REAL
+- Q5: seis palavras com o dígrafo oculto e alternativas CH/LH/NH.
+- Q15: oito pistas objetivas com palavras incompletas e alternativas CH/LH/NH.
+- Q30: três itens de recuperação ortográfica com lacunas, mantendo conto, sinônimo,
+  antônimo, S com som de Z e RR. O exemplo de conto usa gato para não revelar coelho.
+- Teste de regressão verifica lacunas e ausência das palavras completas na própria questão.
+- Após a correção: build, formatação, lint e git diff --check aprovados; 13/13 testes
+  direcionados em 1,4 minuto e 1/1 teste de cadastro em 3,0 segundos, sem suíte global local.
+- ID, chave v1, 30 questões, Q1–Q4, cinco ditados, Desktop Amplo e infraestrutura preservados.
+- O responsável confirmou que Alice concluiu integralmente a revisão em uso real e que
+  ela funcionou corretamente, inclusive após a correção de Q5, Q15 e Q30.
+- Fechamento Git autorizado, sem nova alteração funcional nem repetição dos testes locais;
+  a suíte global é responsabilidade do check Formatação, lint e testes no PR.
