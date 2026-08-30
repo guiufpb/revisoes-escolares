@@ -1335,3 +1335,71 @@ REGRESSÃO E INSPEÇÃO
   direita, sem rolagem horizontal, erros ou avisos no console.
 - O navegador de inspeção não tinha voz inglesa local. O áudio por clique após a troca de grupos foi
   validado com voz local simulada em en-US a 0,62 nos testes automatizados.
+
+CONTOS, ORTOGRAFIA E PONTUAÇÃO — MARIANA — 30/08/2026
+===================================================
+
+IMPLEMENTAÇÃO
+- Nova revisão exclusiva de Mariana com exatamente 30 questões, ID
+  mariana-gramatica-contos-ortografia-pontuacao e chave independente
+  revisoesEscolares.mariana.gramatica.contosOrtografiaPontuacao.v1.
+- Contos originais (incluindo fadas e suspense leve), NH, CH, antônimos, sinônimos,
+  frase declarativa, ponto-final, interrogação, exclamação, travessão, dois-pontos,
+  S/SS, separação silábica, S com som de Z e pontuação integrada.
+- Ditados em Q7, Q10, Q17, Q21, Q23, Q28 e Q30. O módulo de Gramática aceita
+  unidadeDitado: 'frase' sem criar outro sintetizador nem alterar audio.js.
+- Normalização estrita de maiúsculas opt-in; exigência de acentos e pontuação nas
+  frases; Enter para conferir; botão para inserir somente o travessão no cursor.
+  O sinal inserido é editável, removível e persistido como qualquer digitação.
+- Retorno de erro cita os itens a rever e os campos recebem aria-invalid, além
+  da cor. Erros permanecem corrigíveis e a pontuação não duplica.
+- Desktop Amplo opt-in no controlador: 94vw, teto de 2360px, breakpoint 1120px,
+  leitura ao lado das respostas, ditado/itens distribuídos e frases sem coluna vazia.
+  Celular em uma coluna. Revisões antigas não herdam a classe.
+- Cabeçalho global usa o total do conteúdo; cartão novo não substitui os antigos.
+- Revisão ampla de 40 questões, H/til de 25 e alterações locais de At the Farm
+  preservadas. Nenhuma chave antiga foi migrada, removida ou reutilizada.
+
+ARQUIVOS DESTA IMPLEMENTAÇÃO
+- Criados: ambiente_interativo/revisoes/mariana/gramatica-contos-ortografia-pontuacao.js
+  e tests/gramatica-contos-ortografia-pontuacao.spec.js.
+- Alterados: ambiente_interativo/index.html, ambiente_interativo/css/estilo.css,
+  ambiente_interativo/js/app.entry.js, app.js, registro-revisoes.js,
+  gramatica-questionarios.js e gramatica-ditado.js; inventário, instruções e este relatório.
+- tests/ambiente-interativo.spec.js: somente a contagem do registro global passou de
+  38 para 39 revisões/chaves únicas, preservando as alterações locais anteriores no arquivo.
+- Bundles regenerados exclusivamente por npm run build; nenhuma edição manual.
+
+INSPEÇÃO E LIMITES
+- Inspeção das capturas reais do Chromium nos testes: 1366 x 768, 1920 x 1080 e
+  390 x 844. Textos, controles, ditado e navegação legíveis, sem overflow horizontal.
+- Testes executados em contextos temporários do Playwright no computador principal,
+  sem tocar no armazenamento do navegador pessoal usado pelas crianças.
+- Vozes pt-BR locais simuladas validam a sequência Preparando -> Atenção -> conteúdo,
+  velocidade 0,78, repetição, parada e cancelamento. Sem audição humana da voz real.
+- O PDF e os prints de referência não foram abertos, convertidos, re-OCRizados ou
+  re-renderizados para produzir a revisão. Usada somente a síntese do Markdown.
+- Sem commit, push, merge, PR ou publicação.
+
+VALIDAÇÃO CONCLUÍDA
+- npm run build: PASSOU; bundles local e PDF.js regenerados pelas ferramentas existentes.
+- npm run format:check e npm run lint: PASSARAM.
+- npx playwright test tests/gramatica-contos-ortografia-pontuacao.spec.js
+  tests/gramatica-h-til-vocabulario.spec.js tests/gramatica-mariana.spec.js:
+  PASSOU, 30 de 30 testes em 2,2 minutos.
+- Teste direcionado do cadastro global: PASSOU, 1 de 1, com 39 revisões e chaves únicas.
+- npm test: PASSOU, 160 de 160 testes em 10,1 minutos, abrangendo todas as revisões atuais.
+- git diff --check: PASSOU. Referências dos arquivos novos e alterados conferidas no projeto.
+- Cobertura inclui conclusão real das 30 questões, primeira tentativa errada, correção, edição
+  após acerto, várias respostas persistidas, retorno/recarga, pontos sem duplicação, limpeza
+  seletiva, campos de frase com acentos e maiúsculas, travessão removível, vozes locais simuladas,
+  ausência de áudio automático e resposta exposta, repetir/parar/cancelar, teclado, toque,
+  desktop amplo, celular, axe sem violações graves/críticas, console e file:// sem rede.
+
+VALIDAÇÃO EM USO REAL E ESCOPO DO COMMIT
+- O responsável confirmou que Mariana concluiu a revisão completa em uso real e que
+  ela funcionou corretamente. Não houve nova alteração funcional para o encerramento.
+- Mantidos os resultados locais já obtidos: 160/160 testes, incluindo seis testes de
+  At the Farm v2 que permanecem fora deste commit. A suíte versionada deste PR tem 154 testes.
+- Encerramento local limitado à revisão do diff, seleção de arquivos/trechos e git diff --check;
+  a validação remota obrigatória será realizada pelo check Formatação, lint e testes.

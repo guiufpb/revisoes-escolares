@@ -1,26 +1,40 @@
 (function () {
   'use strict';
 
-  function painelHtml() {
+  function painelHtml(unidade) {
+    var frase = unidade === 'frase';
     return (
       '<section class="painel-ditado-gramatica" aria-label="Ditado em português">' +
-      '<p>Se a palavra da lacuna não estiver clara, ouça o ditado e escreva o que você ouviu.</p>' +
+      '<p>' +
+      (frase
+        ? 'Ouça a frase e escreva com atenção às letras e aos sinais de pontuação.'
+        : 'Se a palavra da lacuna não estiver clara, ouça o ditado e escreva o que você ouviu.') +
+      '</p>' +
       '<div class="controles-ditado-gramatica">' +
-      '<button class="botao-secundario" type="button" data-repetir-ditado-gramatica disabled>↻ Repetir última palavra</button>' +
+      '<button class="botao-secundario" type="button" data-repetir-ditado-gramatica disabled>↻ Repetir última ' +
+      (frase ? 'frase' : 'palavra') +
+      '</button>' +
       '<button class="botao-secundario" type="button" data-parar-ditado-gramatica>■ Parar</button>' +
-      '</div><div class="status-ditado-gramatica" role="status" aria-live="polite">Escolha uma lacuna e clique em Ouvir palavra.</div>' +
+      '</div><div class="status-ditado-gramatica" role="status" aria-live="polite">Escolha uma lacuna e clique em Ouvir ' +
+      (frase ? 'frase' : 'palavra') +
+      '.</div>' +
       '</section>'
     );
   }
 
-  function botaoHtml(indice) {
+  function botaoHtml(indice, unidade) {
+    var nome = unidade === 'frase' ? 'frase' : 'palavra';
     return (
       '<button class="botao-secundario botao-ouvir-palavra" type="button" ' +
       'data-ouvir-ditado-gramatica="' +
       indice +
-      '" aria-label="Ouvir a palavra da lacuna ' +
+      '" aria-label="Ouvir a ' +
+      nome +
+      ' da lacuna ' +
       (indice + 1) +
-      '">🔊 Ouvir palavra</button>'
+      '">🔊 Ouvir ' +
+      nome +
+      '</button>'
     );
   }
 
@@ -53,7 +67,7 @@
           velocidade: 0.78,
           origem: 'gramatica',
           contexto: 'ditado',
-          unidadeDitado: 'palavra',
+          unidadeDitado: item.unidadeDitado === 'frase' ? 'frase' : 'palavra',
           aoEstado: atualizarStatus,
         });
         repetir.disabled = !iniciou;
@@ -62,7 +76,7 @@
 
     repetir.addEventListener('click', function () {
       if (!window.AudioRevisoes.repetir()) {
-        atualizarStatus({ mensagem: 'Escolha primeiro uma palavra para ouvir.' });
+        atualizarStatus({ mensagem: 'Escolha primeiro uma lacuna para ouvir.' });
       }
     });
     pararBotao.addEventListener('click', function () {

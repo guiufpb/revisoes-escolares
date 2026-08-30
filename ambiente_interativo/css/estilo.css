@@ -1727,6 +1727,89 @@ footer {
   text-align: left;
 }
 
+.leitura-gramatica {
+  margin-bottom: 22px;
+  padding: clamp(18px, 3vw, 32px);
+  border: 3px solid #e5dcfa;
+  border-radius: 22px;
+  background: #fffdf4;
+  font-size: 1.3rem;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+
+.leitura-gramatica p {
+  margin: 0;
+}
+
+.campo-gramatica-frase .campo-resposta-ditado {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.campo-mariana-ditado.campo-gramatica-frase input {
+  padding-inline: 12px;
+  min-width: 0;
+}
+
+@media (min-width: 1120px) {
+  .tela-gramatica-mariana.layout-desktop-amplo {
+    width: min(2360px, 94vw);
+  }
+
+  .layout-desktop-amplo .gramatica-com-leitura {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(24px, 3vw, 48px);
+    align-items: start;
+  }
+
+  .layout-desktop-amplo .leitura-gramatica {
+    margin-bottom: 0;
+    font-size: clamp(1.3rem, 1.5vw, 1.65rem);
+  }
+
+  .layout-desktop-amplo .respostas-gramatica {
+    min-width: 0;
+  }
+
+  .layout-desktop-amplo .respostas-gramatica .opcoes-mariana {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .layout-desktop-amplo .lista-campos-mariana {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .layout-desktop-amplo .campo-mariana {
+    min-width: 0;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .layout-desktop-amplo .campo-gramatica-frase {
+    grid-column: 1 / -1;
+  }
+
+  .layout-desktop-amplo .campo-resposta-ditado {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .layout-desktop-amplo .painel-ditado-gramatica {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .layout-desktop-amplo .status-ditado-gramatica {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .campo-gramatica-frase .campo-resposta-ditado {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .atividade-operacoes {
   display: grid;
   gap: 20px;
