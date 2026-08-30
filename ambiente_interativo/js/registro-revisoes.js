@@ -180,6 +180,16 @@
       controladorCompartilhado: 'gramatica-questionarios',
     },
     {
+      id: 'alice-gramatica-contos-digrafos-vocabulario',
+      aluno: 'alice',
+      titulo: 'Contos, dígrafos e vocabulário',
+      cartaoId: 'abrir-gramatica-contos-digrafos-alice',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento: 'revisoesEscolares.alice.gramatica.contosDigrafosVocabulario.v1',
+      totalEtapas: 30,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
       id: 'alice-gramatica-h-til-vocabulario',
       aluno: 'alice',
       titulo: 'H, til e vocabulário',

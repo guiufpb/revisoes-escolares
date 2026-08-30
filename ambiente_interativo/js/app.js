@@ -394,6 +394,7 @@
     document.getElementById('materia-leitura').hidden = false;
     document.getElementById('abrir-gramatica-mariana').hidden = aluno !== 'mariana';
     document.getElementById('abrir-gramatica-contos').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-gramatica-contos-digrafos-alice').hidden = aluno !== 'alice';
     document.getElementById('limpar-progresso').hidden = false;
     atualizarResumo();
     mostrarTela('trilhas');
@@ -530,6 +531,13 @@
       window.GramaticaQuestionarios.abrir('mariana-gramatica-contos-ortografia-pontuacao');
       atualizarResumo();
     });
+    document
+      .getElementById('abrir-gramatica-contos-digrafos-alice')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'alice') return;
+        window.GramaticaQuestionarios.abrir('alice-gramatica-contos-digrafos-vocabulario');
+        atualizarResumo();
+      });
     document.getElementById('abrir-revisao-mariana').addEventListener('click', function () {
       window.RevisaoMatematicaMariana.abrir();
       mostrarTela('marianaRevisao');
