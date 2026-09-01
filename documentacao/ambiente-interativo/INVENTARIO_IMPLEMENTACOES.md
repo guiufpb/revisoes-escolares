@@ -4,7 +4,7 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra o estado de trabalho em **30/08/2026**.
+Este inventário registra o estado de trabalho em **31/08/2026**.
 
 ## 2. Base da aplicação
 
@@ -69,7 +69,71 @@ Este inventário registra o estado de trabalho em **30/08/2026**.
 - Limpeza limitada à revisão ativa; não existe `localStorage.clear()`.
 - Restauração de etapa, respostas, pontuação, canvas, página e cenas manipulativas.
 
-## 4. Ciências
+## 4. História e Ciências
+
+### Alice — História: Famílias e objetos: ontem e hoje
+
+- Revisão exclusiva do 1º ano com **20 questões numeradas e 20 pontos**, baseada na síntese das
+  páginas 66–90, com ênfase reforçada nas páginas 70–75. Os dois PDFs privados não foram abertos,
+  renderizados, extraídos nem submetidos a OCR nesta implementação.
+- Diversidade familiar, parentesco fictício, rotinas, quantidade de crianças, fotografias e
+  entrevista como fontes, mudanças nas famílias, direitos e proteção; objetos, fases da vida,
+  povos Karajá, Baniwa e Timbira, antigo/atual, museus e preservação.
+- Todas as 20 telas têm quadro “Leia para aprender” e fonte de estudo. Histórias, entrevista,
+  relações de parentesco e situações necessárias à resposta aparecem integralmente na questão.
+  Q14 tem um ditado de frase; Q20 tem três frases e só pontua quando todas estiverem corretas.
+- Reutiliza `QuestionariosRevisoes`, `gramatica-ditado.js`, `audio.js` e o painel compartilhado.
+  A extensão opt-in `tipo: 'misto'` combina alternativa, seleção e ordenação sem duplicar
+  controlador. As ações são reversíveis por clique, toque e teclado e têm normalização estrita.
+- `layout.desktopAmplo` organiza leitura e respostas lado a lado no desktop e mantém uma coluna no
+  celular. Dois SVGs originais e acessíveis representam famílias de épocas diferentes e objetos
+  domésticos antigos/atuais; nenhuma imagem do caderno foi copiada.
+- Testes: `tests/historia-alice-familias-objetos.spec.js` (13 casos), incluindo percurso completo,
+  questões mistas, ditado local, isolamento, armazenamento corrompido/bloqueado, `file://`,
+  390 × 844, 1366 × 768, 1920 × 1080, axe-core e console. Cadastro central: 42 revisões.
+
+ID: `alice-historia-familias-objetos-agosto-2026`.
+
+Chave: `revisoesEscolares.alice.historia.familiasObjetosAgosto2026.v1`.
+
+Conteúdo: `ambiente_interativo/revisoes/alice/historia-familias-objetos.js`.
+
+### Mariana — História: Convivência nos transportes: ontem e hoje
+
+- Nova revisão exclusiva de História, 2º ano, com **30 questões numeradas e 30 pontos**.
+- Fonte inicial: síntese fornecida das páginas 50–61. Após validação em uso real, o responsável
+  autorizou uma nova conferência do PDF por OCR e inspeção visual local das 12 páginas. O PDF e os
+  arquivos temporários não integram o projeto.
+- Cada uma das 30 questões exibe antes da atividade um quadro “Leia para aprender”, com explicação
+  adaptada autossuficiente e indicação da página ou do material complementar. A revisão pode ser
+  feita sem manter o caderno aberto; Q10–Q14 têm regressão específica para as fontes que motivaram
+  a correção.
+- Trens/maria-fumaça e classes; bondes e convivência; ônibus, demora e superlotação;
+  automóveis, cronologia e congestionamento; barcos/piroga, fontes históricas e preservação.
+  Complementos moderados: classificação dos transportes, convivência, diferenças e memória.
+- Seleção múltipla, alternativa única, classificação, associação, V/F, ordenação reversível,
+  escrita curta e ditados. Escrita: Q11 (1908), Q17 (1886), Q24 (palavra) e Q30 (três frases).
+- Ditados Q24 e Q30 reutilizam exclusivamente `gramatica-ditado.js`/`audio.js`, em pt-BR local,
+  sem início automático, com aquecimento, Atenção, repetir, parar e cancelamento por subitem/tela.
+- Motor existente `gramatica-questionarios.js`, também exposto como `QuestionariosRevisoes`;
+  `questionarios-interacoes.js` oferece seleção múltipla e ordenação opcionais. Nenhum controlador
+  duplicado. Painel e registro legados mantidos, com matéria configurável e retorno a Gramática.
+- Subitens precisam estar todos corretos para ganhar um ponto. Edição invalida a conferência;
+  acertos já conquistados não duplicam. Respostas, tentativas erradas, conferências, etapa e
+  pontos persistem. Normalização estrita opcional, fallback em memória e limpeza somente da chave.
+- Ícones locais existentes e três SVGs originais (trem, bonde e canoa), sem ilustrações do livro.
+- Testes: `tests/historia-mariana-transportes.spec.js` (16 casos), incluindo gabarito independente
+  para o percurso completo, isolamento, corrupção/bloqueio do armazenamento, teclado, toque,
+  390 × 844, desktops, axe-core, console e `file://` sem rede. Cadastro central preservado em 42
+  revisões após a inclusão da História da Alice.
+
+ID: `mariana-historia-convivencia-transportes-agosto-2026`.
+
+Chave atual: `revisoesEscolares.mariana.historia.convivenciaTransportesAgosto2026.v2`. A chave
+`v1` permanece intocada para preservar o progresso da primeira versão, enquanto a rodada corrigida
+começa do zero.
+
+Conteúdo: `ambiente_interativo/revisoes/mariana/historia-convivencia-transportes.js`.
 
 ### Alice — Origem dos materiais
 

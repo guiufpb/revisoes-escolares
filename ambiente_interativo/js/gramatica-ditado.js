@@ -51,6 +51,23 @@
     var status = conteudo.querySelector('.status-ditado-gramatica');
     var repetir = conteudo.querySelector('[data-repetir-ditado-gramatica]');
     var pararBotao = conteudo.querySelector('[data-parar-ditado-gramatica]');
+    if (item.cancelarAoTrocarCampo) {
+      var campoAtivo = null;
+      // O formulário é recriado a cada questão; não acumule listeners no painel persistente.
+      conteudo
+        .querySelector('.lista-campos-mariana')
+        .addEventListener('focusin', function (evento) {
+          var alvo = evento.target;
+          var indice = alvo.getAttribute('data-resposta-gramatica');
+          if (indice === null) indice = alvo.getAttribute('data-ouvir-ditado-gramatica');
+          if (indice === null) return;
+          if (campoAtivo !== null && campoAtivo !== indice) {
+            parar(false);
+            repetir.disabled = true;
+          }
+          campoAtivo = indice;
+        });
+    }
 
     function atualizarStatus(detalhe) {
       if (status && status.isConnected) status.textContent = detalhe.mensagem;

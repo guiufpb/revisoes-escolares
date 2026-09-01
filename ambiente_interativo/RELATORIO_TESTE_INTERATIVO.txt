@@ -1475,3 +1475,178 @@ CORREÇÃO PEDAGÓGICA E VALIDAÇÃO EM USO REAL
   ela funcionou corretamente, inclusive após a correção de Q5, Q15 e Q30.
 - Fechamento Git autorizado, sem nova alteração funcional nem repetição dos testes locais;
   a suíte global é responsabilidade do check Formatação, lint e testes no PR.
+
+HISTÓRIA DA MARIANA — CONVIVÊNCIA NOS TRANSPORTES — 31/08/2026
+============================================================
+
+IMPLEMENTAÇÃO
+- Branch: codex/mariana-historia-transportes, criada a partir da main local.
+- Fonte pedagógica: PROMPT_CODEX_MARIANA_HISTORIA_TRANSPORTES_AGOSTO_2026.md,
+  preservado como arquivo local não rastreado. Nenhum PDF/print foi aberto ou reprocessado.
+- Revisão exclusiva de Mariana (2º ano), com exatamente 30 questões numeradas e 30 pontos.
+- ID: mariana-historia-convivencia-transportes-agosto-2026.
+- Chave: revisoesEscolares.mariana.historia.convivenciaTransportesAgosto2026.v1.
+- Escrita: Q11 (1908), Q17 (1886), Q24 (piroga) e Q30 (três frases).
+- Ditados: Q24 palavra e Q30 frases; voz local pt-BR, velocidade 0,78,
+  aquecimento, Atenção, repetir/parar e cancelamento por campo, questão e tela.
+- Motor gramatica-questionarios.js reutilizado por alias QuestionariosRevisoes.
+  Sem cópia do controlador. Matéria configurável, com restauração dos rótulos de Gramática.
+- Novo questionarios-interacoes.js: seleção múltipla por conjunto e ordenação por cartões
+  reversíveis, sem exigir arrasto; alternativas/associações também podem ser desmarcadas.
+- Normalização e restauração de tentativas erradas opt-in. Todas as subquestões precisam
+  estar corretas para conceder um ponto. Voltar/reabrir/recarregar não duplica pontos.
+- Eventos de foco ligados ao formulário recriado, sem acumular listeners no painel persistente.
+- Pontuação de frases flexível; caixa, espaços e acentos não são avaliados com rigor de Gramática.
+- SVGs originais history-train.svg, history-tram.svg e history-canoe.svg e ícones locais.
+- Todas as revisões e chaves anteriores preservadas; cadastro central agora tem 41 revisões.
+
+VALIDAÇÃO
+- tests/historia-mariana-transportes.spec.js: 15 casos, com gabarito independente das 30 questões.
+- Cobertura de erro/correção, seleções consecutivas, associações parciais, retirar/limpar sequência,
+  avanço/retorno/recarga, pontos, conclusão, isolamento e limpeza seletiva.
+- Armazenamento bloqueado, JSON/versão inválidos, etapas fora do intervalo e estados incompatíveis.
+- Áudio simulado com vozes locais e uma voz online descartada; sem reprodução automática,
+  sem respostas em controles/atributos, sem preenchimento automático e sem eventos duplicados.
+- Interface inspecionada no navegador; 390 × 844 com toque, desktops 1366 × 768 e 1920 × 1080,
+  axe-core sem violações graves/críticas nas telas estáveis e sem rolagem horizontal.
+- file:// validado com rede bloqueada; console sem erros graves.
+- Nenhuma audição humana da voz real: a pronúncia depende de voz pt-BR instalada no Windows.
+- A primeira rodada de testes revelou um seletor de teste ambíguo e auditoria durante animação;
+  seletor corrigido e tela estabilizada conforme padrão dos testes existentes.
+- A primeira execução global foi interrompida para corrigir o listener de foco encontrado na
+  inspeção do diff; a suíte é reiniciada depois da regressão de três reaberturas do ditado.
+
+PRIVACIDADE
+- Testes funcionais em contextos temporários do Playwright, sem alterar progresso real das alunas.
+- Navegador do aplicativo usado somente para inspeção; nenhuma resposta/progresso pessoal alterado.
+- Nenhum OCR, renderização ou extração do PDF de História. Nenhum arquivo privado adicionado ao Git.
+- Sem commit, push, merge, PR ou publicação.
+
+GIT STATUS --SHORT (M = alterado; ?? = não rastreado)
+
+ M ambiente_interativo/RELATORIO_TESTE_INTERATIVO.txt
+ M ambiente_interativo/css/estilo.css
+ M ambiente_interativo/index.html
+ M ambiente_interativo/js/app.entry.js
+ M ambiente_interativo/js/app.js
+ M ambiente_interativo/js/gramatica-ditado.js
+ M ambiente_interativo/js/gramatica-questionarios.js
+ M ambiente_interativo/js/registro-revisoes.js
+ M assets/creditos/LICENCAS_E_CREDITOS.txt
+ M documentacao/ambiente-interativo/INSTRUCOES_PROJETO.md
+ M documentacao/ambiente-interativo/INVENTARIO_IMPLEMENTACOES.md
+ M tests/ambiente-interativo.spec.js
+?? PROMPT_CODEX_MARIANA_HISTORIA_TRANSPORTES_AGOSTO_2026.md
+?? ambiente_interativo/js/questionarios-interacoes.js
+?? ambiente_interativo/revisoes/mariana/historia-convivencia-transportes.js
+?? assets/objetos_escolares/history-canoe.svg
+?? assets/objetos_escolares/history-train.svg
+?? assets/objetos_escolares/history-tram.svg
+?? tests/historia-mariana-transportes.spec.js
+
+Os seis arquivos novos da implementação são o conteúdo, o módulo de interações, três SVGs e os testes. O Markdown de entrada já existia e foi preservado. Os doze arquivos alterados estão listados acima. app.bundle.js foi regenerado pelo build e continua ignorado; pdfjs.bundle.mjs não teve alteração de conteúdo.
+
+RESULTADO FINAL DA VALIDAÇÃO
+- npm run build: PASSOU; bundles gerados somente pelo build.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU.
+- npx playwright test tests/historia-mariana-transportes.spec.js: PASSOU, 15/15 em 1,5 minuto.
+- npm test: PASSOU, 182/182 em 13,0 minutos, após a correção final do listener.
+- 390 × 844 com toque e desktops 1366 × 768 / 1920 × 1080: aprovados.
+- axe-core sem violações graves/críticas, sem overflow horizontal e sem erros graves de console.
+- git diff --check: PASSOU.
+- Nenhum arquivo staged; sem commit, push, merge ou publicação.
+
+CORREÇÃO DA HISTÓRIA DA MARIANA — LEITURA AUTOSSUFICIENTE — 31/08/2026
+=======================================================================
+
+PROBLEMA ENCONTRADO EM USO REAL
+- A primeira versão cobrava informações de textos, notícia, charge e legendas que não estavam
+  disponíveis na própria tela. A síntese tinha sido usada para criar as respostas, mas não como
+  material de estudo visível para Mariana.
+- O responsável interrompeu a revisão nas questões 10–14 e autorizou expressamente uma nova
+  conferência do PDF `12 Mariana História/Mariana História Agosto.pdf`.
+
+CORREÇÃO PEDAGÓGICA
+- O PDF de 12 páginas, sem camada de texto útil, foi conferido localmente por renderização, OCR e
+  inspeção visual. O procedimento confirmou os conteúdos das páginas 50–61 e os detalhes que
+  motivaram a interrupção: usos dos bondes, cronologia dos ônibus, notícia de 1954 e charge de 2016.
+- Todas as 30 questões agora começam com um quadro visível “Leia para aprender”. Cada quadro traz
+  uma explicação adaptada suficiente para responder e identifica a página do caderno ou o material
+  complementar usado. A revisão não exige que o caderno permaneça aberto fora do ambiente.
+- Q24 e Q30 mantêm a proteção dos ditados: o apoio orienta a audição sem exibir a palavra ou as
+  frases exatas que serão pronunciadas.
+- Em desktop, leitura e atividade aparecem lado a lado; em celular, aparecem em uma coluna.
+- A rodada corrigida usa a chave
+  `revisoesEscolares.mariana.historia.convivenciaTransportesAgosto2026.v2`. A chave v1 não foi
+  migrada, sobrescrita nem apagada; portanto, a nova rodada começa do zero e o progresso anterior
+  permanece preservado.
+
+VALIDAÇÃO FINAL
+- `npm run build`, `npm run format:check` e `npm run lint`: PASSARAM.
+- `npx playwright test tests/historia-mariana-transportes.spec.js`: 16/16 PASSARAM em 1,7 minuto.
+- Regressão específica confirma na própria tela as fontes necessárias de Q10 a Q14.
+- Percurso completo das 30 questões, erro e correção, retorno, recarga, persistência, limpeza
+  seletiva, isolamento da chave v1, teclado, toque, ditados e `file://`: PASSARAM.
+- 390 × 844, 1366 × 768 e 1920 × 1080: sem rolagem horizontal; axe-core sem violações graves ou
+  críticas nas telas auditadas. Capturas temporárias foram inspecionadas visualmente.
+- `npm test`: 183/183 testes Playwright PASSARAM em 13,2 minutos.
+- `git diff --check`: PASSOU.
+
+PRIVACIDADE E GIT
+- PDF, páginas renderizadas, OCR e capturas de teste não foram adicionados ao Git. Os arquivos
+  temporários da conferência foram removidos após a validação.
+- Nenhum progresso real das crianças foi usado nos testes; Playwright trabalhou em contextos
+  temporários.
+- Nenhum arquivo foi staged. Sem commit, push, merge, PR ou publicação.
+
+HISTÓRIA DA ALICE — FAMÍLIAS E OBJETOS: ONTEM E HOJE — 31/08/2026
+==================================================================
+
+IMPLEMENTAÇÃO
+- Fonte pedagógica: PROMPT_CODEX_ALICE_HISTORIA_FAMILIAS_OBJETOS_01-09-2026.md. As sínteses
+  já fornecidas das páginas 66–90, com ênfase nas páginas 70–75, foram usadas sem abrir,
+  renderizar, extrair ou aplicar OCR aos dois PDFs da Alice.
+- Revisão exclusiva de Alice (1º ano), com exatamente 20 questões numeradas e 20 pontos.
+- Título: Famílias e objetos: ontem e hoje.
+- ID: alice-historia-familias-objetos-agosto-2026.
+- Chave: revisoesEscolares.alice.historia.familiasObjetosAgosto2026.v1.
+- Todas as questões exibem na própria tela o texto, relato, entrevista, comparação ou explicação
+  necessário para estudar e responder, acompanhado da identificação da fonte pedagógica.
+- Q14 contém uma frase ditada e Q20 contém três frases ditadas. O apoio usa voz local pt-BR,
+  Atenção, repetir, parar e cancelamento, sem mostrar a resposta nem preencher os campos.
+- O controlador compartilhado gramatica-questionarios.js foi reutilizado. O módulo
+  questionarios-interacoes.js recebeu suporte opt-in a subitens mistos de alternativa, seleção e
+  ordenação; revisões anteriores preservam seu comportamento.
+- Interações de seleção, associação e ordenação aceitam clique, toque e teclado, permitem desfazer
+  e persistem várias ações consecutivas. Erros podem ser corrigidos sem pular a questão.
+- Layout Desktop Amplo em duas colunas, com retorno automático a uma coluna no celular.
+- SVGs originais history-families-old-new.svg e history-objects-old-new.svg, com descrição textual,
+  ilustram comparações entre famílias e objetos antigos e atuais. Nenhum elemento foi copiado dos
+  PDFs.
+- Cadastro central atualizado para 42 revisões. Perfis, matérias, revisões e chaves anteriores
+  foram preservados.
+
+VALIDAÇÃO
+- tests/historia-alice-familias-objetos.spec.js: 13/13 casos PASSARAM em 1,6 minuto.
+- Cobertura direcionada: cadastro, 20 questões, 20 pontos, todos os textos visíveis, percurso
+  completo, primeira tentativa errada, correção, desfazer, avanço, retorno, recarga, conclusão,
+  associações, ordenação, várias ações persistidas e limpeza seletiva.
+- Também foram verificados isolamento entre Alice e Mariana, JSON/versão/etapa inválidos,
+  localStorage bloqueado, ausência de listeners duplicados, áudio local, cancelamento e ausência de
+  vazamento das respostas dos ditados.
+- 390 × 844 com toque e desktops 1366 × 768 / 1920 × 1080: aprovados, sem rolagem horizontal.
+  axe-core não encontrou violações graves ou críticas nas telas auditadas; capturas temporárias de
+  Q4, Q18 e Q20 foram inspecionadas visualmente.
+- file:// foi validado com a rede bloqueada, mantendo seleção, ordenação, persistência e ditado.
+- npm run build: PASSOU; app.bundle.js foi regenerado somente pelo build.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU.
+- npm test: PASSOU, 196/196 testes Playwright em 14,3 minutos.
+
+PRIVACIDADE E GIT
+- Os PDFs da Alice não foram abertos nem processados. Nenhum PDF, página renderizada, OCR ou
+  captura de teste foi adicionado ao Git.
+- Os testes usaram contextos temporários do Playwright e não alteraram o progresso real das
+  crianças.
+- Sem commit, push, merge, PR ou publicação.

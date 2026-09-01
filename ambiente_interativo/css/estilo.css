@@ -1601,6 +1601,29 @@ footer {
   gap: 12px;
 }
 
+.ordem-questionario ol {
+  display: grid;
+  gap: 12px;
+  padding-left: 30px;
+}
+
+.ordem-questionario li {
+  min-height: 58px;
+  padding: 8px;
+  border: 2px dashed #78649e;
+  border-radius: 12px;
+}
+
+.ordem-questionario button {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.ordem-questionario [data-limpar-ordem] {
+  margin-top: 16px;
+}
+
 .opcao-mariana {
   min-height: 62px;
   padding: 13px 16px;
@@ -1742,6 +1765,38 @@ footer {
   margin: 0;
 }
 
+.leitura-gramatica .titulo-leitura-questionario {
+  margin-bottom: 10px;
+  color: #5335ae;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.leitura-gramatica .texto-leitura-questionario {
+  color: #27213d;
+}
+
+.leitura-gramatica .fonte-estudo-questionario {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 2px solid #eee6cb;
+  color: #655c75;
+  font-size: 0.95rem;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.ilustracao-leitura-questionario {
+  display: block;
+  width: min(100%, 620px);
+  max-height: 320px;
+  margin: 18px auto 0;
+  object-fit: contain;
+}
+
 .campo-gramatica-frase .campo-resposta-ditado {
   grid-template-columns: minmax(0, 1fr) auto;
 }
@@ -1766,6 +1821,11 @@ footer {
   .layout-desktop-amplo .leitura-gramatica {
     margin-bottom: 0;
     font-size: clamp(1.3rem, 1.5vw, 1.65rem);
+  }
+
+  .layout-desktop-amplo .leitura-gramatica .titulo-leitura-questionario,
+  .layout-desktop-amplo .leitura-gramatica .fonte-estudo-questionario {
+    font-size: 1rem;
   }
 
   .layout-desktop-amplo .respostas-gramatica {

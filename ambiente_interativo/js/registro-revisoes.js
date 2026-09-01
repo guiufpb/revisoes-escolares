@@ -3,6 +3,28 @@
 
   var revisoes = [
     {
+      id: 'alice-historia-familias-objetos-agosto-2026',
+      aluno: 'alice',
+      titulo: 'Famílias e objetos: ontem e hoje',
+      cartaoId: 'abrir-historia-familias-objetos',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento: 'revisoesEscolares.alice.historia.familiasObjetosAgosto2026.v1',
+      totalEtapas: 20,
+      possuiAudio: true,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
+      id: 'mariana-historia-convivencia-transportes-agosto-2026',
+      aluno: 'mariana',
+      titulo: 'Convivência nos transportes: ontem e hoje',
+      cartaoId: 'abrir-historia-transportes',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento: 'revisoesEscolares.mariana.historia.convivenciaTransportesAgosto2026.v2',
+      totalEtapas: 30,
+      possuiAudio: true,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
       id: 'alice-ciencias-origem-materiais',
       aluno: 'alice',
       titulo: 'Origem dos materiais',

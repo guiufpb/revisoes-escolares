@@ -12,6 +12,10 @@ Bibliotecas efetivamente usadas nesta primeira biblioteca:
 - openmoji (pacote @iconify-json/openmoji; licenca informada no package.json: CC-BY-SA-4.0)
 
 Observacoes:
+- history-train.svg, history-tram.svg e history-canoe.svg: ilustrações vetoriais originais
+  criadas para a revisão de História (31/08/2026), sem copiar imagens do caderno.
+- history-families-old-new.svg e history-objects-old-new.svg: ilustrações vetoriais originais
+  criadas para a revisão de História da Alice (01/09/2026), sem copiar imagens dos PDFs.
 - Os SVGs foram exportados a partir dos pacotes Iconify instalados localmente em node_modules.
 - Os icones devem respeitar as respectivas licencas dos conjuntos originais.
 - Fluent Emoji Flat deriva do conjunto Microsoft Fluent Emoji; consulte a licenca do pacote e do projeto original antes de redistribuir fora do uso escolar/local.

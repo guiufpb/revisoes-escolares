@@ -128,6 +128,40 @@ axe-core, console e `file://`.
 - Preserve os ditados de palavra existentes: a unidade padrão continua sendo `palavra`, com
   voz local, velocidade 0,78, aquecimento, aviso, pausas e cancelamento já estabelecidos.
 
+### Questionários de História e outras matérias
+
+- `window.QuestionariosRevisoes` é o mesmo motor de `GramaticaQuestionarios`, não um controlador
+  duplicado. Cadastre o conteúdo em `revisoes/<perfil>/`, informe `materia` e mantenha o registro
+  central com `controladorCompartilhado: 'gramatica-questionarios'`. Os IDs internos do painel
+  continuam legados; rótulos, resumo e limpeza usam a matéria ativa e voltam a Gramática quando
+  uma revisão dessa matéria é aberta.
+- `js/questionarios-interacoes.js` acrescenta tipos opcionais `selecao` (conjunto completo de
+  respostas no primeiro subitem), `ordenacao` (cartões únicos e uma resposta por posição) e
+  `misto` (alternativa, seleção e/ou ordenação em subitens da mesma questão). Clique, toque e
+  teclado colocam/retiram cartões; limpar sequência afeta somente aquela questão. No tipo misto,
+  declare `tipo` no subitem de seleção ou ordenação e mantenha alternativas simples com `opcoes`.
+- `opcoesReversiveis: true` permite desmarcar alternativas e associações, com indicação textual.
+  Uma questão com vários itens só recebe seu ponto depois de todos os acertos conferidos.
+- `validacaoEstritaEstado: true` normaliza os novos tipos, versão, IDs, opções e duplicatas;
+  revalida conferências corretas e restaura também a tentativa errada. Não ative retroativamente
+  sem avaliar o armazenamento da revisão legada.
+- `pontuacaoFlexivel: true` nos campos de História flexibiliza os sinais do ditado sem mudar
+  campos de Gramática. A revisão pode usar caixa, acentos e espaços normalizados, sem exigir
+  maiúscula inicial e ponto final. O conteúdo mantém as frases corretas para a pronúncia.
+- Ditados reutilizam `gramatica-ditado.js` e `audio.js`. `cancelarAoTrocarCampo: true` cancela
+  também ao mover o foco para outro subitem e desabilita a repetição da solicitação anterior.
+- `ilustracaoLeitura` acrescenta uma imagem local ao quadro de leitura; informe também
+  `descricaoIlustracao` significativa. Use apenas recursos originais ou licenciados, sem copiar
+  páginas, fotografias ou personagens do material privado.
+- História da Mariana tem 30 questões sobre convivência nos transportes; escrita em Q11, Q17,
+  Q24 e Q30, ditados em Q24 e Q30. Cada questão traz na própria tela uma leitura adaptada e a
+  identificação da página ou do material complementar que fornece o conteúdo necessário para
+  responder. A criança não deve depender do caderno aberto fora do ambiente interativo. Testes:
+  `tests/historia-mariana-transportes.spec.js`.
+- Não reextraia um PDF quando o usuário já tiver fornecido a síntese pedagógica como fonte, salvo
+  se ele pedir expressamente uma nova conferência do documento. Mesmo nessa exceção, não publique
+  o PDF, as páginas renderizadas nem os arquivos temporários de OCR.
+
 ### Arrasto
 
 - Use Pointer Events para mouse e toque.
