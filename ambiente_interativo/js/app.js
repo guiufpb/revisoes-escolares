@@ -161,7 +161,8 @@
             : id === 'matematicaOperacoes'
               ? 'Limpar esta atividade de Matemática'
               : id === 'gramaticaMariana'
-                ? 'Limpar progresso de Gramática'
+                ? 'Limpar progresso de ' +
+                  ((window.GramaticaQuestionarios.obterAtiva() || {}).materia || 'Gramática')
                 : 'Limpar progresso';
     if (id === 'marianaRevisao') {
       window.requestAnimationFrame(window.DesenhoRevisoes.ajustarTodos);
@@ -330,11 +331,15 @@
         );
         resumo.textContent = estadoGramaticaCompartilhada.finalizada
           ? gramaticaAtiva.nome +
-            ' · Gramática: ' +
+            ' · ' +
+            (gramaticaAtiva.materia || 'Gramática') +
+            ': ' +
             gramaticaAtiva.questoes.length +
             ' questões concluídas ✓'
           : gramaticaAtiva.nome +
-            ' · Gramática: questão ' +
+            ' · ' +
+            (gramaticaAtiva.materia || 'Gramática') +
+            ': questão ' +
             (estadoGramaticaCompartilhada.questaoAtual + 1) +
             '/' +
             gramaticaAtiva.questoes.length +
@@ -393,6 +398,8 @@
     document.getElementById('abrir-capacidade-operacoes-numeros').hidden = aluno !== 'alice';
     document.getElementById('materia-leitura').hidden = false;
     document.getElementById('abrir-gramatica-mariana').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-historia-familias-objetos').hidden = aluno !== 'alice';
+    document.getElementById('abrir-historia-transportes').hidden = aluno !== 'mariana';
     document.getElementById('abrir-gramatica-contos').hidden = aluno !== 'mariana';
     document.getElementById('abrir-gramatica-contos-digrafos-alice').hidden = aluno !== 'alice';
     document.getElementById('limpar-progresso').hidden = false;
@@ -522,6 +529,18 @@
       mostrarTela('gramaticaMariana');
       atualizarResumo();
     });
+    document.getElementById('abrir-historia-transportes').addEventListener('click', function () {
+      if (alunoAtual !== 'mariana') return;
+      window.QuestionariosRevisoes.abrir('mariana-historia-convivencia-transportes-agosto-2026');
+      atualizarResumo();
+    });
+    document
+      .getElementById('abrir-historia-familias-objetos')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'alice') return;
+        window.QuestionariosRevisoes.abrir('alice-historia-familias-objetos-agosto-2026');
+        atualizarResumo();
+      });
     document.getElementById('abrir-gramatica-h-til').addEventListener('click', function () {
       window.GramaticaQuestionarios.abrir(IDS_GRAMATICA_COMPARTILHADA[alunoAtual]);
       atualizarResumo();

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" role="img" aria-labelledby="title desc">
+  <title id="title">Objetos domésticos antigos e atuais</title>
+  <desc id="desc">Comparação ilustrada entre geladeiras, televisores e guarda-roupas antigos e atuais.</desc>
+  <rect width="960" height="430" rx="34" fill="#fffdf5"/>
+  <text x="255" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#63462f">Antigos</text>
+  <text x="705" y="58" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#315a6e">Atuais</text>
+  <g stroke-width="7">
+    <g stroke="#63462f" fill="#d9b28c">
+      <rect x="80" y="92" width="110" height="160" rx="12"/><line x1="80" y1="158" x2="190" y2="158"/><circle cx="170" cy="132" r="6" fill="#63462f"/>
+      <rect x="210" y="112" width="130" height="96" rx="22"/><rect x="231" y="130" width="72" height="54" rx="8" fill="#f8e8c8"/><circle cx="320" cy="143" r="7" fill="#63462f"/><circle cx="320" cy="173" r="7" fill="#63462f"/>
+      <rect x="360" y="86" width="105" height="190" rx="8"/><line x1="412" y1="86" x2="412" y2="276"/><circle cx="400" cy="178" r="5" fill="#63462f"/><circle cx="425" cy="178" r="5" fill="#63462f"/>
+    </g>
+    <g stroke="#315a6e" fill="#a7d8e8">
+      <rect x="535" y="82" width="115" height="190" rx="18"/><line x1="535" y1="145" x2="650" y2="145"/><rect x="552" y="101" width="48" height="22" rx="5" fill="#315a6e"/>
+      <rect x="680" y="112" width="145" height="88" rx="8"/><rect x="694" y="126" width="117" height="60" rx="4" fill="#dff5fb"/><path d="M753 200v28m-40 0h80" fill="none"/>
+      <rect x="845" y="78" width="85" height="205" rx="8"/><line x1="887" y1="78" x2="887" y2="283"/><path d="M876 174h-8m38 0h-8"/>
+    </g>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="23" text-anchor="middle">
+    <text x="135" y="314" fill="#63462f">geladeira</text><text x="275" y="314" fill="#63462f">televisor</text><text x="412" y="314" fill="#63462f">guarda-roupa</text>
+    <text x="592" y="314" fill="#315a6e">geladeira</text><text x="752" y="314" fill="#315a6e">televisor</text><text x="887" y="314" fill="#315a6e">guarda-roupa</text>
+  </g>
+  <path d="M480 78v245" stroke="#d7cceb" stroke-width="6" stroke-dasharray="12 14"/>
+  <text x="480" y="386" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="700" fill="#5536aa">Os objetos mudam ao longo do tempo.</text>
+</svg>

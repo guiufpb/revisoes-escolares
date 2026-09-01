@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img" aria-labelledby="title desc">
+  <title id="title">Duas famílias fictícias em épocas diferentes</title>
+  <desc id="desc">À esquerda, um exemplo de 1930 com seis crianças. À direita, um exemplo atual com duas crianças.</desc>
+  <rect width="960" height="360" rx="34" fill="#fffaf0"/>
+  <rect x="30" y="30" width="430" height="300" rx="28" fill="#f4e8d5" stroke="#6f4a35" stroke-width="6"/>
+  <rect x="500" y="30" width="430" height="300" rx="28" fill="#e9f7f2" stroke="#315f59" stroke-width="6"/>
+  <text x="245" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#4b3428">Exemplo A · 1930</text>
+  <text x="715" y="78" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#244c48">Exemplo B · atual</text>
+  <g fill="#8c5b43" stroke="#4b3428" stroke-width="5">
+    <circle cx="115" cy="150" r="28"/><circle cx="205" cy="150" r="28"/><circle cx="295" cy="150" r="28"/><circle cx="385" cy="150" r="28"/>
+    <circle cx="160" cy="245" r="28"/><circle cx="250" cy="245" r="28"/>
+  </g>
+  <g fill="#54b8a4" stroke="#244c48" stroke-width="5">
+    <circle cx="650" cy="190" r="43"/><circle cx="780" cy="190" r="43"/>
+  </g>
+  <text x="245" y="310" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" fill="#4b3428">várias crianças</text>
+  <text x="715" y="286" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" fill="#244c48">menos crianças</text>
+</svg>

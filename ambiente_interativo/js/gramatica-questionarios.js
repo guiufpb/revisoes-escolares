@@ -26,6 +26,8 @@
   function normalizadorDaRevisao(revisao) {
     return function (valor, base) {
       valor = objeto(valor);
+      if (revisao.validacaoEstritaEstado && valor.versao != null && valor.versao !== 1) valor = {};
+      if (revisao.validacaoEstritaEstado) base.versao = 1;
       base.questaoAtual = Math.max(
         0,
         Math.min(revisao.questoes.length - 1, Math.trunc(Number(valor.questaoAtual) || 0))
@@ -37,6 +39,50 @@
         if (objeto(valor.corrigidas)[item.id]) base.corrigidas[item.id] = true;
         if (objeto(valor.pontuadas)[item.id]) base.pontuadas[item.id] = true;
       });
+      if (revisao.validacaoEstritaEstado) {
+        base.respostas = {};
+        base.conferidas = {};
+        revisao.questoes.forEach(function (item) {
+          if (objeto(valor.conferidas)[item.id] === true) base.conferidas[item.id] = true;
+          var entrada = objeto(valor.respostas)[item.id];
+          if (Array.isArray(entrada)) {
+            base.respostas[item.id] = item.itens.map(function (subitem, indice) {
+              if (
+                item.tipo === 'selecao' ||
+                (item.tipo === 'misto' && subitem.tipo === 'selecao')
+              ) {
+                return Array.isArray(entrada[indice])
+                  ? subitem.opcoes.filter(function (opcao) {
+                      return entrada[indice].indexOf(opcao) >= 0;
+                    })
+                  : [];
+              }
+              if (item.tipo === 'misto' && subitem.tipo === 'ordenacao') {
+                var ordem = Array.isArray(entrada[indice]) ? entrada[indice] : [];
+                return ordem
+                  .filter(function (cartao, posicao) {
+                    return (
+                      typeof cartao === 'string' &&
+                      subitem.cartoes.indexOf(cartao) >= 0 &&
+                      ordem.indexOf(cartao) === posicao
+                    );
+                  })
+                  .slice(0, subitem.respostas.length);
+              }
+              var texto = typeof entrada[indice] === 'string' ? entrada[indice].slice(0, 1000) : '';
+              if (subitem.opcoes && subitem.opcoes.indexOf(texto) < 0) return '';
+              if (
+                item.tipo === 'ordenacao' &&
+                (item.cartoes.indexOf(texto) < 0 || entrada.indexOf(texto) !== indice)
+              )
+                return '';
+              return texto;
+            });
+          }
+          if (!avaliar(item, base.respostas[item.id] || []).every(Boolean))
+            delete base.corrigidas[item.id];
+        });
+      }
       base.pontos = Object.keys(base.pontuadas).length;
       base.finalizada =
         Boolean(valor.finalizada) &&
@@ -47,10 +93,10 @@
 
   function registrar(configuracao) {
     if (!configuracao || !configuracao.id || revisoes[configuracao.id]) {
-      throw new Error('Cadastro de revisão de Gramática inválido ou repetido.');
+      throw new Error('Cadastro de questionário inválido ou repetido.');
     }
     if (!Array.isArray(configuracao.questoes) || configuracao.questoes.length === 0) {
-      throw new Error('A revisão de Gramática precisa ter questões.');
+      throw new Error('O questionário precisa ter questões.');
     }
     revisoes[configuracao.id] = configuracao;
   }
@@ -96,7 +142,11 @@
       subitem.acentuacaoObrigatoria,
       subitem.maiusculasObrigatorias
     );
+    if (subitem.pontuacaoFlexivel)
+      normalizada = normalizada.replace(/[.,!?;:—-]/g, '').replace(/\s+/g, ' ');
     return subitem.respostas.some(function (resposta) {
+      if (subitem.pontuacaoFlexivel)
+        resposta = resposta.replace(/[.,!?;:—-]/g, '').replace(/\s+/g, ' ');
       return (
         normalizarResposta(
           resposta,
@@ -173,6 +223,16 @@
     );
   }
 
+  function respostaPreenchida(item, subitem, resposta) {
+    if (item.tipo === 'misto' && subitem.tipo === 'ordenacao') {
+      return Array.isArray(resposta) && resposta.length === subitem.respostas.length;
+    }
+    if (item.tipo === 'selecao' || (item.tipo === 'misto' && subitem.tipo === 'selecao')) {
+      return Array.isArray(resposta) && resposta.length > 0;
+    }
+    return normalizarResposta(resposta, subitem.acentuacaoObrigatoria) !== '';
+  }
+
   function montarOpcoes(item, respostas) {
     return item.itens
       .map(function (subitem, indice) {
@@ -193,6 +253,9 @@
                 '" aria-pressed="' +
                 String(selecionada) +
                 '">' +
+                (item.opcoesReversiveis
+                  ? '<span aria-hidden="true">' + (selecionada ? '✓ ' : '○ ') + '</span>'
+                  : '') +
                 escapar(opcao) +
                 '</button>'
               );
@@ -234,6 +297,7 @@
 
   function invalidarCorrecao(item) {
     if (estado.corrigidas[item.id]) delete estado.corrigidas[item.id];
+    if (estado.conferidas) delete estado.conferidas[item.id];
     conteudo.querySelectorAll('.campo-correto, .campo-incorreto').forEach(function (elemento) {
       elemento.classList.remove('campo-correto', 'campo-incorreto');
       elemento.removeAttribute('aria-invalid');
@@ -249,7 +313,20 @@
   }
 
   function configurarInteracoes(item) {
-    if (item.tipo === 'campos') {
+    if (window.QuestionariosInteracoes.aceita(item)) {
+      window.QuestionariosInteracoes.configurar(
+        conteudo,
+        item,
+        function () {
+          return respostasDaQuestao(item);
+        },
+        function (respostas) {
+          estado.respostas[item.id] = respostas;
+          invalidarCorrecao(item);
+        },
+        escapar
+      );
+    } else if (item.tipo === 'campos') {
       conteudo.querySelectorAll('[data-resposta-gramatica]').forEach(function (input) {
         input.addEventListener('input', function () {
           var respostas = respostasDaQuestao(item);
@@ -280,12 +357,16 @@
           var grupo = botao.closest('[data-item-gramatica]');
           var indice = Number(grupo.dataset.itemGramatica);
           var respostas = respostasDaQuestao(item);
-          respostas[indice] = botao.dataset.opcaoGramatica;
+          var retirar =
+            item.opcoesReversiveis && respostas[indice] === botao.dataset.opcaoGramatica;
+          respostas[indice] = retirar ? '' : botao.dataset.opcaoGramatica;
           estado.respostas[item.id] = respostas;
           grupo.querySelectorAll('[data-opcao-gramatica]').forEach(function (outra) {
-            var selecionada = outra === botao;
+            var selecionada = !retirar && outra === botao;
             outra.classList.toggle('selecionada', selecionada);
             outra.setAttribute('aria-pressed', String(selecionada));
+            if (item.opcoesReversiveis)
+              outra.querySelector('span').textContent = selecionada ? '✓ ' : '○ ';
           });
           invalidarCorrecao(item);
         });
@@ -315,13 +396,24 @@
     }
   }
 
-  function conferir(item) {
-    var respostas = respostasDaQuestao(item);
-    var acertos = item.itens.map(function (subitem, indice) {
+  function avaliar(item, respostas) {
+    if (window.QuestionariosInteracoes.aceita(item))
+      return window.QuestionariosInteracoes.acertos(item, respostas);
+    return item.itens.map(function (subitem, indice) {
       return respostaCorreta(respostas[indice], subitem);
     });
+  }
+
+  function conferir(item) {
+    var respostas = respostasDaQuestao(item);
+    var acertos = avaliar(item, respostas);
+    if (revisaoAtiva.validacaoEstritaEstado) {
+      estado.conferidas = estado.conferidas || {};
+      estado.conferidas[item.id] = true;
+      salvar();
+    }
     var completos = item.itens.map(function (subitem, indice) {
-      return normalizarResposta(respostas[indice], subitem.acentuacaoObrigatoria) !== '';
+      return respostaPreenchida(item, subitem, respostas[indice]);
     });
     marcarResultado(item, acertos);
     if (
@@ -369,18 +461,43 @@
       escapar(item.titulo) +
       '</h1><p class="explicacao-mariana">' +
       escapar(item.instrucao) +
-      '</p></div><img class="icone-etapa" src="../assets/objetos_escolares/pencil.svg" alt=""></div>' +
+      '</p></div><img class="icone-etapa" src="' +
+      escapar(item.icone || '../assets/objetos_escolares/pencil.svg') +
+      '" alt=""></div>' +
       '<div class="atividade-mariana' +
       (item.leitura ? ' gramatica-com-leitura' : '') +
       '">' +
       (item.leitura
-        ? '<div class="leitura-gramatica" role="region" aria-label="Texto para leitura"><p>' +
+        ? '<div class="leitura-gramatica" role="region" aria-label="' +
+          escapar(item.leituraTitulo || 'Leia para aprender') +
+          '"><p class="titulo-leitura-questionario">📖 ' +
+          escapar(item.leituraTitulo || 'Leia para aprender') +
+          '</p><p class="texto-leitura-questionario">' +
           escapar(item.leitura) +
-          '</p></div>'
+          '</p>' +
+          (item.fonteEstudo
+            ? '<p class="fonte-estudo-questionario">Fonte de estudo: ' +
+              escapar(item.fonteEstudo) +
+              '</p>'
+            : '') +
+          (item.ilustracaoLeitura
+            ? '<img class="ilustracao-leitura-questionario" src="' +
+              escapar(item.ilustracaoLeitura) +
+              '" alt="' +
+              escapar(item.descricaoIlustracao || '') +
+              '">'
+            : '') +
+          '</div>'
         : '') +
       '<div class="respostas-gramatica">' +
       (item.ditado ? window.GramaticaDitado.painelHtml(item.unidadeDitado) : '') +
-      (item.tipo === 'campos' ? montarCampos(item, respostas) : montarOpcoes(item, respostas)) +
+      (window.QuestionariosInteracoes.aceita(item)
+        ? '<div data-interacao-questionario>' +
+          window.QuestionariosInteracoes.montar(item, respostas, escapar) +
+          '</div>'
+        : item.tipo === 'campos'
+          ? montarCampos(item, respostas)
+          : montarOpcoes(item, respostas)) +
       '<div class="acoes-atividade-mariana"><button class="botao-principal botao-grande" type="button" data-conferir-gramatica>Conferir</button>' +
       '<div class="retorno retorno-mariana retorno-gramatica" role="status" aria-live="polite"></div></div></div></div></article>';
     configurarInteracoes(item);
@@ -392,6 +509,10 @@
         })
       );
       anunciar(item, '✓ ' + item.sucesso, true);
+    } else if (estado.conferidas && estado.conferidas[item.id]) {
+      var acertos = avaliar(item, respostas);
+      marcarResultado(item, acertos);
+      anunciar(item, '↻ Confira e corrija sua tentativa. ' + item.dica, false);
     }
   }
 
@@ -416,6 +537,11 @@
     else renderizarQuestao();
     atualizarNavegacao();
     window.scrollTo({ top: 0, behavior: 'auto' });
+    if (revisaoAtiva.materia) {
+      var titulo = conteudo.querySelector('h1');
+      titulo.tabIndex = -1;
+      titulo.focus({ preventScroll: true });
+    }
   }
 
   function irPara(indice) {
@@ -427,8 +553,17 @@
 
   function abrir(id) {
     var revisao = revisoes[id];
-    if (!revisao) throw new Error('Revisão de Gramática não cadastrada: ' + id);
+    if (!revisao) throw new Error('Questionário não cadastrado: ' + id);
     revisaoAtiva = revisao;
+    var materia = revisao.materia || 'Gramática';
+    var painel = document.getElementById('tela-gramatica-mariana');
+    painel.querySelector('.migalhas strong').textContent = materia;
+    painel
+      .querySelector('.migalhas')
+      .setAttribute('aria-label', 'Navegação da revisão de ' + materia);
+    document
+      .getElementById('gramatica-progresso')
+      .setAttribute('aria-label', 'Progresso da revisão de ' + materia);
     document
       .getElementById('tela-gramatica-mariana')
       .classList.toggle(
@@ -463,7 +598,11 @@
     if (
       pedirConfirmacao &&
       !window.confirm(
-        'Limpar apenas o progresso desta revisão de Gramática de ' + revisao.nome + '?'
+        'Limpar apenas o progresso desta revisão de ' +
+          (revisao.materia || 'Gramática') +
+          ' de ' +
+          revisao.nome +
+          '?'
       )
     ) {
       return false;
@@ -515,6 +654,14 @@
     desativar: function () {
       window.GramaticaDitado.parar();
       document.getElementById('tela-gramatica-mariana').classList.remove('layout-desktop-amplo');
+      var painel = document.getElementById('tela-gramatica-mariana');
+      painel.querySelector('.migalhas strong').textContent = 'Gramática';
+      painel
+        .querySelector('.migalhas')
+        .setAttribute('aria-label', 'Navegação da revisão de Gramática');
+      document
+        .getElementById('gramatica-progresso')
+        .setAttribute('aria-label', 'Progresso da revisão de Gramática');
       revisaoAtiva = null;
       estado = null;
     },
@@ -522,4 +669,6 @@
       return revisoes[id] || null;
     },
   };
+  // Mesmo motor e painel; o nome antigo permanece para todas as revisões legadas.
+  window.QuestionariosRevisoes = window.GramaticaQuestionarios;
 })();
