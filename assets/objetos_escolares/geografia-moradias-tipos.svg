@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="300" viewBox="0 0 720 300" role="img" aria-labelledby="titulo descricao">
+  <title id="titulo">Três tipos de moradia</title>
+  <desc id="descricao">Uma casa térrea, um sobrado de dois andares e um prédio de apartamentos, desenhados de forma simples.</desc>
+  <rect width="720" height="300" rx="24" fill="#e8f6ff"/>
+  <path d="M28 250h664" stroke="#79b77a" stroke-width="12" stroke-linecap="round"/>
+  <g stroke="#375b81" stroke-width="6" stroke-linejoin="round">
+    <path d="M60 160 145 88l85 72v88H60Z" fill="#ffd369"/>
+    <path d="M52 160h186" fill="none"/>
+    <rect x="126" y="190" width="34" height="58" fill="#f49d6e"/>
+    <rect x="76" y="180" width="32" height="28" fill="#fff"/>
+    <rect x="180" y="180" width="32" height="28" fill="#fff"/>
+    <path d="M280 150 355 74l75 76v98H280Z" fill="#ffb57a"/>
+    <path d="M273 150h164M290 190h130" fill="none"/>
+    <rect x="338" y="212" width="34" height="36" fill="#f7e7b5"/>
+    <rect x="300" y="160" width="26" height="22" fill="#fff"/>
+    <rect x="384" y="160" width="26" height="22" fill="#fff"/>
+    <rect x="490" y="62" width="160" height="186" rx="4" fill="#9bd6ef"/>
+    <path d="M480 62h180M520 104h100M520 150h100M520 196h100" fill="none"/>
+    <g fill="#fff"><rect x="526" y="76" width="22" height="18"/><rect x="570" y="76" width="22" height="18"/><rect x="614" y="76" width="22" height="18"/><rect x="526" y="122" width="22" height="18"/><rect x="570" y="122" width="22" height="18"/><rect x="614" y="122" width="22" height="18"/><rect x="526" y="168" width="22" height="18"/><rect x="570" y="168" width="22" height="18"/><rect x="614" y="168" width="22" height="18"/></g>
+  </g>
+  <g fill="#294766" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle"><text x="145" y="282">Casa térrea</text><text x="355" y="282">Sobrado</text><text x="570" y="282">Prédio</text></g>
+</svg>

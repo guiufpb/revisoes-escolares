@@ -1381,6 +1381,62 @@ INSPEÇÃO E LIMITES
   re-renderizados para produzir a revisão. Usada somente a síntese do Markdown.
 - Sem commit, push, merge, PR ou publicação.
 
+GEOGRAFIA DA ALICE — MORADIAS, LUGARES E CÔMODOS — 02/09/2026
+===================================================================
+
+IMPLEMENTAÇÃO
+- Nova revisão exclusiva de Geografia para Alice (1º ano), com 25 questões e 25 pontos.
+- ID: alice-geografia-moradias-lugares-interior-setembro-2026.
+- Chave: revisoesEscolares.alice.geografia.moradiasLugaresInteriorSetembro2026.v1.
+- Conteúdo: ambiente_interativo/revisoes/alice/geografia-moradias-lugares-interior.js.
+- Conteúdo principal: páginas 64–69, com moradia, endereço fictício, arredores, lugares de brincar,
+  tipos de moradia, interior/cômodos e organização; materiais aparecem somente como ampliação leve.
+- Endereços e a turma da atividade são inteiramente fictícios. Nenhum endereço real de Alice é
+  solicitado ou armazenado.
+- As 25 telas têm leitura autossuficiente e fonte adaptada. Há ilustrações SVG originais dos tipos
+  de moradia, da cena de frente/lado e de uma casa fictícia com quatro cômodos.
+- Desktop Amplo, QuestionariosRevisoes, persistência, seleção reversível e ditado final reutilizam
+  exclusivamente a infraestrutura compartilhada já existente, sem controlador novo.
+
+VALIDAÇÃO
+- tests/geografia-alice-moradias-interior.spec.js: 7/7 PASSARAM, cobrindo gabarito, erro/correção,
+  persistência, isolamento, ditado, JSON inválido, fallback, acessibilidade, touch e file://.
+
+PRIVACIDADE E GIT
+- Nenhum PDF, print, OCR, endereço pessoal ou arquivo temporário foi adicionado. OCR e renderização
+  geral não foram repetidos.
+- Nenhum commit, push, merge, PR ou publicação.
+
+GEOGRAFIA DA MARIANA — MEIOS DE TRANSPORTE E COMUNICAÇÃO — 02/09/2026
+===========================================================================
+
+IMPLEMENTAÇÃO
+- Nova revisão exclusiva de Geografia para Mariana (2º ano), com 30 questões e 30 pontos.
+- ID: mariana-geografia-transportes-comunicacao-setembro-2026.
+- Chave: revisoesEscolares.mariana.geografia.transportesComunicacaoSetembro2026.v1.
+- Conteúdo: ambiente_interativo/revisoes/mariana/geografia-transportes-comunicacao.js.
+- Conteúdo baseado na síntese das páginas 58–69 e materiais complementares: transporte,
+  classificação, segurança, meios de comunicação, evolução temporal e segurança na internet.
+- Todas as questões têm quadro autossuficiente “Leia para aprender” e fonte pedagógica adaptada.
+  Hidroviário e dutoviário são explicados antes da classificação; Q21–Q22 usam ordenação reversível;
+  Q28 usa texto, símbolo e cor para Seguro, Cuidado e Perigo.
+- Q30 usa ditado de três frases, somente com voz local pt-BR e infraestrutura compartilhada de
+  áudio, com Atenção, repetir, parar e cancelamento, sem expor respostas nos controles.
+- Reutilizados QuestionariosRevisoes, questionarios-interacoes, armazenamento e painel existentes;
+  sem controlador paralelo. Desktop Amplo é opt-in e o cartão aparece apenas para Mariana.
+
+VALIDAÇÃO
+- npx playwright test tests/geografia-mariana-transportes-comunicacao.spec.js: PASSOU, 7/7.
+- Cobertura: percurso completo independente, primeira tentativa errada e correção, persistência,
+  retorno, seleção e ordenação reversíveis, ditado, limpeza seletiva, isolamento, JSON corrompido,
+  armazenamento bloqueado, teclado, toque, 390 × 844, 1366 × 768, 1920 × 1080, axe-core,
+  console e file:// sem rede.
+
+PRIVACIDADE E GIT
+- Não houve OCR, renderização geral, extração ou nova análise do caderno. Nenhum PDF, print ou
+  arquivo temporário foi adicionado.
+- Nenhum commit, push, merge, PR ou publicação.
+
 VALIDAÇÃO CONCLUÍDA
 - npm run build: PASSOU; bundles local e PDF.js regenerados pelas ferramentas existentes.
 - npm run format:check e npm run lint: PASSARAM.
