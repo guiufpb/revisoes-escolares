@@ -400,6 +400,8 @@
     document.getElementById('abrir-gramatica-mariana').hidden = aluno !== 'mariana';
     document.getElementById('abrir-historia-familias-objetos').hidden = aluno !== 'alice';
     document.getElementById('abrir-historia-transportes').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-geografia-transportes-comunicacao').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-geografia-moradias-lugares-interior').hidden = aluno !== 'alice';
     document.getElementById('abrir-gramatica-contos').hidden = aluno !== 'mariana';
     document.getElementById('abrir-gramatica-contos-digrafos-alice').hidden = aluno !== 'alice';
     document.getElementById('limpar-progresso').hidden = false;
@@ -534,6 +536,24 @@
       window.QuestionariosRevisoes.abrir('mariana-historia-convivencia-transportes-agosto-2026');
       atualizarResumo();
     });
+    document
+      .getElementById('abrir-geografia-transportes-comunicacao')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'mariana') return;
+        window.QuestionariosRevisoes.abrir(
+          'mariana-geografia-transportes-comunicacao-setembro-2026'
+        );
+        atualizarResumo();
+      });
+    document
+      .getElementById('abrir-geografia-moradias-lugares-interior')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'alice') return;
+        window.QuestionariosRevisoes.abrir(
+          'alice-geografia-moradias-lugares-interior-setembro-2026'
+        );
+        atualizarResumo();
+      });
     document
       .getElementById('abrir-historia-familias-objetos')
       .addEventListener('click', function () {

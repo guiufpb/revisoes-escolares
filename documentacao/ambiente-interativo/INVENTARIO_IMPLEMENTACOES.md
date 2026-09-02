@@ -69,7 +69,7 @@ Este inventário registra o estado de trabalho em **31/08/2026**.
 - Limpeza limitada à revisão ativa; não existe `localStorage.clear()`.
 - Restauração de etapa, respostas, pontuação, canvas, página e cenas manipulativas.
 
-## 4. História e Ciências
+## 4. História, Geografia e Ciências
 
 ### Alice — História: Famílias e objetos: ontem e hoje
 
@@ -134,6 +134,60 @@ Chave atual: `revisoesEscolares.mariana.historia.convivenciaTransportesAgosto202
 começa do zero.
 
 Conteúdo: `ambiente_interativo/revisoes/mariana/historia-convivencia-transportes.js`.
+
+### Mariana — Geografia: Meios de transporte e comunicação
+
+- Revisão exclusiva do 2º ano com **30 questões numeradas e 30 pontos**, baseada na síntese das
+  páginas 58–69 e nos materiais complementares, sem reabrir ou reprocessar material privado.
+- Q1–Q15 tratam de deslocamento até a escola, bicicleta, crianças ribeirinhas, classificação ampla
+  e por caminhos, qualidade do ar, segurança, pedestre e leitura de dados fictícios. Hidroviário e
+  dutoviário são explicados antes de serem cobrados.
+- Q16–Q30 tratam de telefone, rádio, jornal, televisão, Libras, jornal impresso/digital, evolução
+  temporal da comunicação, cuidados com telas e situações práticas de segurança na internet.
+- Todas as telas mostram “Leia para aprender” e a fonte pedagógica adaptada. Q21–Q22 usam
+  ordenação reversível; Q28 usa símbolos e rótulos textuais de Seguro, Cuidado e Perigo, sem
+  depender apenas de cor.
+- Q30 é um ditado final de três frases, usando somente `gramatica-ditado.js` e `audio.js` com voz
+  local pt-BR, aquecimento, Atenção, repetir, parar e cancelamento. As respostas não aparecem nos
+  controles.
+- Reutiliza `QuestionariosRevisoes`, com estado estritamente normalizado, limpeza seletiva e
+  fallback em memória. `layout.desktopAmplo` mantém leitura e atividade lado a lado no desktop e
+  uma coluna no celular. Não há controlador paralelo.
+- Testes: `tests/geografia-mariana-transportes-comunicacao.spec.js` (7 cenários), cobrindo gabarito
+  independente, erro/correção, persistência, ordenação, ditado, isolamento, armazenamento
+  corrompido ou bloqueado, 390 × 844, 1366 × 768, 1920 × 1080, axe-core e `file://` sem rede.
+
+ID: `mariana-geografia-transportes-comunicacao-setembro-2026`.
+
+Chave: `revisoesEscolares.mariana.geografia.transportesComunicacaoSetembro2026.v1`.
+
+Conteúdo: `ambiente_interativo/revisoes/mariana/geografia-transportes-comunicacao.js`.
+
+### Alice — Geografia: Moradias, lugares e cômodos
+
+- Revisão exclusiva do 1º ano, para a prova de 02/09/2026, com **25 questões numeradas e 25
+  pontos**, baseada na síntese das páginas 64–69 sem reprocessar o material privado.
+- Moradia, endereço e arredores são apresentados em cenas e dados totalmente fictícios; a revisão
+  não pede, exibe como resposta nem armazena endereço real de Alice.
+- Abrange lugares de brincar, casa térrea, sobrado, apartamento, palafita, oca, iglu, dados de uma
+  turma fictícia, cômodos, objetos e organização da moradia. Materiais aparecem apenas como uma
+  ampliação leve, sem transformar o conteúdo em revisão de construção.
+- Todas as telas têm “Leia para aprender” e fonte de estudo; três SVGs originais descrevem tipos
+  de moradia, uma casa com árvore/praça e o interior de uma casa fictícia com quatro cômodos.
+- Q25 é um ditado final de três frases, usando somente `gramatica-ditado.js` e `audio.js` com voz
+  local pt-BR, Atenção, repetir, parar e cancelamento, sem expor respostas nos controles.
+- Reutiliza `QuestionariosRevisoes`, com normalização estrita, limpeza seletiva e fallback em
+  memória. `layout.desktopAmplo` organiza leitura e atividade lado a lado no desktop, mantendo uma
+  coluna no celular; não há controlador paralelo.
+- Testes: `tests/geografia-alice-moradias-interior.spec.js`, com gabarito independente, correção,
+  persistência, isolamento, ditado, armazenamento corrompido/bloqueado, 390 × 844, desktops,
+  axe-core e `file://` sem rede.
+
+ID: `alice-geografia-moradias-lugares-interior-setembro-2026`.
+
+Chave: `revisoesEscolares.alice.geografia.moradiasLugaresInteriorSetembro2026.v1`.
+
+Conteúdo: `ambiente_interativo/revisoes/alice/geografia-moradias-lugares-interior.js`.
 
 ### Alice — Origem dos materiais
 

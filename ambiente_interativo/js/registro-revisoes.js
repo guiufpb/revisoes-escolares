@@ -25,6 +25,30 @@
       controladorCompartilhado: 'gramatica-questionarios',
     },
     {
+      id: 'mariana-geografia-transportes-comunicacao-setembro-2026',
+      aluno: 'mariana',
+      titulo: 'Meios de transporte e comunicação',
+      cartaoId: 'abrir-geografia-transportes-comunicacao',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento:
+        'revisoesEscolares.mariana.geografia.transportesComunicacaoSetembro2026.v1',
+      totalEtapas: 30,
+      possuiAudio: true,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
+      id: 'alice-geografia-moradias-lugares-interior-setembro-2026',
+      aluno: 'alice',
+      titulo: 'Moradias, lugares e cômodos',
+      cartaoId: 'abrir-geografia-moradias-lugares-interior',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento:
+        'revisoesEscolares.alice.geografia.moradiasLugaresInteriorSetembro2026.v1',
+      totalEtapas: 25,
+      possuiAudio: true,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
       id: 'alice-ciencias-origem-materiais',
       aluno: 'alice',
       titulo: 'Origem dos materiais',

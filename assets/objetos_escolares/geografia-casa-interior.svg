@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-labelledby="titulo descricao">
+  <title id="titulo">Casa fictícia vista por dentro</title>
+  <desc id="descricao">Casa cortada em quatro cômodos: sala com sofá, cozinha com fogão, quarto com cama e banheiro com chuveiro.</desc>
+  <rect width="640" height="360" rx="24" fill="#f7f1df"/>
+  <path d="M55 170 320 36l265 134" fill="#e96d62" stroke="#874a45" stroke-width="8" stroke-linejoin="round"/><rect x="70" y="166" width="500" height="154" fill="#fff" stroke="#694f73" stroke-width="8"/>
+  <path d="M320 166v154M70 243h500" stroke="#694f73" stroke-width="7"/>
+  <g font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#3d3550"><text x="118" y="195">Sala</text><text x="372" y="195">Cozinha</text><text x="112" y="274">Quarto</text><text x="360" y="274">Banheiro</text></g>
+  <rect x="115" y="206" width="118" height="26" rx="8" fill="#84b8d9"/><path d="M125 205v-17m98 17v-17" stroke="#517e9c" stroke-width="8"/><rect x="434" y="203" width="78" height="34" rx="5" fill="#9da5ad"/><circle cx="452" cy="220" r="5" fill="#e65f52"/><circle cx="475" cy="220" r="5" fill="#e65f52"/>
+  <rect x="108" y="289" width="138" height="24" rx="6" fill="#e4b980"/><rect x="120" y="273" width="64" height="20" rx="6" fill="#fff"/><path d="M450 278v-26h42m-21 0v20" fill="none" stroke="#4e9bc7" stroke-width="9" stroke-linecap="round"/>
+</svg>
