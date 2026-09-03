@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">Planta completa</title>
+  <desc id="desc">Desenho original de uma planta com flor, folhas, caule, fruto e raízes visíveis.</desc>
+  <rect width="640" height="360" rx="28" fill="#e9f8ff"/>
+  <circle cx="535" cy="72" r="42" fill="#ffd65a" stroke="#c78513" stroke-width="6"/>
+  <rect y="245" width="640" height="115" fill="#b77b45"/>
+  <path d="M320 270V104" fill="none" stroke="#297a45" stroke-width="20" stroke-linecap="round"/>
+  <path d="M315 170C250 117 208 145 218 194c42 9 74 1 97-24Z" fill="#71d6a5" stroke="#23663d" stroke-width="6"/>
+  <path d="M326 205c65-48 107-17 91 30-42 4-72-7-91-30Z" fill="#53bd7f" stroke="#23663d" stroke-width="6"/>
+  <circle cx="369" cy="156" r="25" fill="#ff8fb8" stroke="#b53e72" stroke-width="6"/>
+  <path d="m320 108-28-32 28-26 28 26Z" fill="#ff8fb8" stroke="#b53e72" stroke-width="6"/>
+  <circle cx="320" cy="79" r="15" fill="#ffd65a"/>
+  <path d="M320 265c-18 31-43 50-76 70m76-70c12 35 38 57 78 72m-78-72c-1 42-4 61-10 78m10-54c-27 13-43 25-53 42m65-48c24 12 39 25 48 40" fill="none" stroke="#6c4428" stroke-width="9" stroke-linecap="round"/>
+  <path d="M0 245h640" stroke="#79512f" stroke-width="7" stroke-dasharray="16 10"/>
+</svg>

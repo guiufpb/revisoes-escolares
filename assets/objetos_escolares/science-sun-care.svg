@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" role="img" aria-labelledby="title desc">
+  <title id="title">Cuidados em dia de Sol</title>
+  <desc id="desc">Cena original com criança de boné bebendo água perto de plantas, animais e um frasco de protetor solar.</desc>
+  <rect width="720" height="360" rx="28" fill="#ccefff"/>
+  <circle cx="625" cy="67" r="45" fill="#ffd65a" stroke="#c78513" stroke-width="6"/>
+  <path d="M0 272c178-62 369-56 720 0v88H0Z" fill="#71d6a5"/>
+  <g transform="translate(280 68)"><circle cx="80" cy="63" r="40" fill="#ffd18c" stroke="#34266d" stroke-width="5"/><path d="M36 50c18-48 82-50 94 0Z" fill="#6546c4"/><path d="M74 104v105m-57 76 57-76 59 76M18 147l56 41 82-74" stroke="#34266d" stroke-width="10" fill="none" stroke-linecap="round"/><path d="m150 75 42 9-9 76-42-9Z" fill="#5ec7f2" stroke="#34266d" stroke-width="5"/><text x="166" y="126" text-anchor="middle" font-family="Arial" font-size="17" font-weight="700">ÁGUA</text></g>
+  <g transform="translate(85 173)"><path d="M74 105V34" stroke="#287b45" stroke-width="12"/><circle cx="74" cy="28" r="47" fill="#53bd7f"/><path d="M74 105c-13 18-25 29-42 38m42-38c14 18 27 29 45 39" stroke="#6c4428" stroke-width="6"/></g>
+  <g transform="translate(530 188)"><rect width="85" height="112" rx="18" fill="#fff" stroke="#472d9c" stroke-width="5"/><rect x="22" y="-18" width="41" height="26" rx="7" fill="#6546c4"/><circle cx="42" cy="54" r="23" fill="#ffd65a"/><text x="42" y="96" text-anchor="middle" font-family="Arial" font-size="14" font-weight="700">PROTEÇÃO</text></g>
+  <path d="M190 300c25-55 83-56 111-2" fill="#b77b45"/><ellipse cx="224" cy="273" rx="31" ry="20" fill="#fff" stroke="#34266d" stroke-width="4"/><circle cx="250" cy="267" r="14" fill="#fff" stroke="#34266d" stroke-width="4"/><path d="m263 267 17 7-17 7Z" fill="#f2a13b"/>
+</svg>

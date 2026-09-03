@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">Seta para uma parte da planta</title>
+  <desc id="desc">Uma planta original com uma seta grossa apontando para sua parte central vertical.</desc>
+  <rect width="640" height="360" rx="28" fill="#f0fbff"/>
+  <rect y="274" width="640" height="86" fill="#b77b45"/>
+  <path d="M375 285V105" stroke="#287b45" stroke-width="22" stroke-linecap="round"/>
+  <path d="M365 165c-69-54-115-18-96 37 46 2 78-11 96-37Zm20 54c71-49 113-9 89 43-45-2-75-17-89-43Z" fill="#71d6a5" stroke="#23663d" stroke-width="6"/>
+  <path d="m375 110-35-37 35-30 35 30Z" fill="#ff8fb8" stroke="#b53e72" stroke-width="6"/>
+  <circle cx="375" cy="76" r="16" fill="#ffd65a"/>
+  <path d="M375 280c-23 28-47 45-74 59m74-59c17 27 38 45 65 58" fill="none" stroke="#6c4428" stroke-width="9" stroke-linecap="round"/>
+  <path d="M92 196h178" stroke="#472d9c" stroke-width="18" stroke-linecap="round"/>
+  <path d="m252 158 48 38-48 38" fill="#472d9c"/>
+  <text x="80" y="150" fill="#34266d" font-family="Arial, sans-serif" font-size="26" font-weight="700">Observe a seta</text>
+</svg>

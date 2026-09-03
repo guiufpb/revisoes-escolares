@@ -236,6 +236,47 @@
   function montarOpcoes(item, respostas) {
     return item.itens
       .map(function (subitem, indice) {
+        var mapa = indice === 0 ? item.mapaVisual : null;
+        if (mapa) {
+          return (
+            '<fieldset class="questao-mariana questao-mapa-visual" data-item-gramatica="' +
+            indice +
+            '"><legend>' +
+            escapar(subitem.pergunta) +
+            '</legend><div class="mapa-visual-questionario" role="group" aria-label="' +
+            escapar(mapa.rotulo || subitem.pergunta) +
+            '"><img src="' +
+            escapar(mapa.imagem) +
+            '" alt="' +
+            escapar(mapa.descricao || '') +
+            '">' +
+            mapa.pontos
+              .map(function (ponto) {
+                var selecionada = respostas[indice] === ponto.opcao;
+                return (
+                  '<button type="button" class="ponto-mapa-visual opcao-mariana' +
+                  (selecionada ? ' selecionada' : '') +
+                  '" style="--mapa-x:' +
+                  Math.max(0, Math.min(100, Number(ponto.x) || 0)) +
+                  '%;--mapa-y:' +
+                  Math.max(0, Math.min(100, Number(ponto.y) || 0)) +
+                  '%" data-opcao-gramatica="' +
+                  escapar(ponto.opcao) +
+                  '" aria-pressed="' +
+                  String(selecionada) +
+                  '" aria-label="' +
+                  escapar(ponto.rotulo || ponto.opcao) +
+                  '"><span aria-hidden="true">' +
+                  (selecionada ? '✓' : '○') +
+                  '</span><span class="rotulo-ponto-mapa">' +
+                  escapar(ponto.opcao) +
+                  '</span></button>'
+                );
+              })
+              .join('') +
+            '</div></fieldset>'
+          );
+        }
         return (
           '<fieldset class="questao-mariana" data-item-gramatica="' +
           indice +

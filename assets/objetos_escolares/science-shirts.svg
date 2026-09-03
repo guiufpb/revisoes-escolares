@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" role="img" aria-labelledby="title desc">
+  <title id="title">Camisetas clara e escura sob o Sol</title>
+  <desc id="desc">Duas camisetas idênticas, uma branca com rótulo CLARA e outra preta com rótulo ESCURA, recebem a mesma luz solar.</desc>
+  <rect width="720" height="360" rx="28" fill="#fff8dc"/>
+  <circle cx="360" cy="64" r="44" fill="#ffd65a" stroke="#c78513" stroke-width="7"/>
+  <g stroke="#f0a51f" stroke-width="8" stroke-linecap="round"><path d="m327 104-156 91"/><path d="m393 104 156 91"/></g>
+  <g transform="translate(88 75)"><path d="m0 45 78-40 70 40-31 64v118H31V109Z" fill="#fff" stroke="#34266d" stroke-width="7"/><rect x="16" y="236" width="116" height="46" rx="18" fill="#fff" stroke="#34266d" stroke-width="4"/><text x="74" y="267" text-anchor="middle" font-family="Arial" font-size="25" font-weight="700" fill="#28304a">CLARA</text></g>
+  <g transform="translate(484 75)"><path d="m0 45 78-40 70 40-31 64v118H31V109Z" fill="#28304a" stroke="#000" stroke-width="7"/><rect x="12" y="236" width="124" height="46" rx="18" fill="#28304a" stroke="#000" stroke-width="4"/><text x="74" y="267" text-anchor="middle" font-family="Arial" font-size="25" font-weight="700" fill="#fff">ESCURA</text></g>
+</svg>
