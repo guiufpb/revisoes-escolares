@@ -383,6 +383,7 @@
     document.getElementById('saudacao-aluno').textContent =
       aluno === 'alice' ? 'Olá, Alice!' : 'Olá, Mariana!';
     document.getElementById('materia-ciencias').hidden = aluno !== 'alice';
+    document.getElementById('abrir-ciencias-plantas-sol').hidden = aluno !== 'mariana';
     document.getElementById('materia-ingles').hidden = false;
     document.getElementById('abrir-ingles-city-life').hidden = aluno !== 'mariana';
     document.getElementById('abrir-ingles-at-the-farm').hidden = aluno !== 'alice';
@@ -496,6 +497,11 @@
     document
       .querySelector('[data-materia="ciencias"]')
       .addEventListener('click', abrirRevisaoAlice);
+    document.getElementById('abrir-ciencias-plantas-sol').addEventListener('click', function () {
+      if (alunoAtual !== 'mariana') return;
+      window.QuestionariosRevisoes.abrir('mariana-ciencias-plantas-sol-setembro-2026');
+      atualizarResumo();
+    });
     document.querySelector('[data-materia="ingles"]').addEventListener('click', function () {
       window.InglesRevisoes.abrir(alunoAtual, IDS_INGLES[alunoAtual]);
       atualizarResumo();

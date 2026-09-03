@@ -153,6 +153,10 @@ axe-core, console e `file://`.
 - `ilustracaoLeitura` acrescenta uma imagem local ao quadro de leitura; informe também
   `descricaoIlustracao` significativa. Use apenas recursos originais ou licenciados, sem copiar
   páginas, fotografias ou personagens do material privado.
+- `mapaVisual` é uma capacidade opt-in para uma alternativa ser escolhida diretamente sobre uma
+  ilustração. Declare imagem, descrição e pontos percentuais associados a opções já existentes;
+  cada ponto deve continuar sendo um botão nomeado, grande e acionável por clique, toque e teclado.
+  O acerto precisa ganhar símbolo e rótulo textual, sem depender apenas de cor.
 - História da Mariana tem 30 questões sobre convivência nos transportes; escrita em Q11, Q17,
   Q24 e Q30, ditados em Q24 e Q30. Cada questão traz na própria tela uma leitura adaptada e a
   identificação da página ou do material complementar que fornece o conteúdo necessário para

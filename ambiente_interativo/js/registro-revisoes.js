@@ -59,6 +59,17 @@
       possuiDesenho: true,
     },
     {
+      id: 'mariana-ciencias-plantas-sol-setembro-2026',
+      aluno: 'mariana',
+      titulo: 'Plantas, seres vivos e a luz do Sol',
+      cartaoId: 'abrir-ciencias-plantas-sol',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento: 'revisoesEscolares.mariana.ciencias.plantasSolSetembro2026.v1',
+      totalEtapas: 30,
+      possuiAudio: true,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
       id: 'alice-ingles-at-school-unidade-3',
       aluno: 'alice',
       titulo: 'English Review – Unit 3: At School',

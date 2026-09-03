@@ -1381,6 +1381,50 @@ INSPEÇÃO E LIMITES
   re-renderizados para produzir a revisão. Usada somente a síntese do Markdown.
 - Sem commit, push, merge, PR ou publicação.
 
+CIÊNCIAS DA MARIANA — PLANTAS, SERES VIVOS E A LUZ DO SOL — 03/09/2026
+=======================================================================
+
+IMPLEMENTAÇÃO
+- Fonte pedagógica: PROMPT_CODEX_MARIANA_CIENCIAS_PLANTAS_SOL_SETEMBRO_2026.md, preservado como
+  arquivo local não rastreado. A síntese do Markdown foi usada diretamente; nenhum PDF, print,
+  OCR ou material privado foi reaberto, renderizado ou reprocessado.
+- Revisão exclusiva de Mariana (2º ano), com 30 questões e 30 pontos. Q1–Q15 tratam de plantas
+  e outros seres vivos; Q16–Q30 tratam de Sol, luz e calor.
+- ID: mariana-ciencias-plantas-sol-setembro-2026.
+- Chave: revisoesEscolares.mariana.ciencias.plantasSolSetembro2026.v1.
+- Cinco ditados: Q8 RAIZ, Q14 FOLHA, Q20 SOL, Q25 LUZ e Q30 A LUZ DO SOL É IMPORTANTE PARA A
+  VIDA. A Q30 usa unidadeDitado frase e exige maiúsculas, acentuação e ponto-final.
+- Foram reutilizados QuestionariosRevisoes, questionarios-interacoes.js, gramatica-ditado.js,
+  audio.js, ArmazenamentoRevisoes e o painel compartilhado. A única capacidade nova é mapaVisual,
+  opt-in e usada pela Q1: pontos sobre a ilustração são botões nomeados com clique, toque e
+  teclado; o acerto mostra símbolo e rótulo, sem depender apenas de cor. Revisões sem a declaração
+  mantêm o HTML e o comportamento anteriores.
+- Dez SVGs originais e locais foram criados para plantas, partes, folha, flor/fruto/sementes,
+  seres vivos e solo, dia/noite, Sol e calor, camisetas, materiais e cuidados ao ar livre.
+- Cadastro central atualizado para 46 revisões, com ID, cartão e chave exclusivos. A revisão
+  legada de Ciências da Alice e todos os progressos anteriores permanecem preservados.
+
+VALIDAÇÃO
+- npm run build: PASSOU; os bundles foram gerados somente pelo build.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU.
+- tests/ciencias-mariana-plantas-sol.spec.js: 7/7 PASSARAM em 48,5 segundos.
+- Cobertura direcionada: cadastro e divisão 15+15, percurso completo e 30 pontos, primeira
+  tentativa errada, correção, destaque do mapa, associações, ordenação reversível, retorno,
+  recarga, pontos únicos, cinco ditados sem revelação/preenchimento, repetir/parar/cancelar,
+  reabertura sem listeners duplicados, limpeza seletiva, JSON inválido e armazenamento bloqueado.
+- Teclado, toque, 390 × 844, 1366 × 768 e 1920 × 1080: PASSARAM sem overflow horizontal.
+  axe-core não encontrou violações graves/críticas; Q1 e Q27 foram inspecionadas visualmente.
+- file:// foi validado com rede bloqueada e preservou resposta e pontuação após recarga.
+- A primeira tentativa global foi interrompida ao encontrar duas expectativas antigas de contagem
+  central (45). Depois da correção para 46 IDs/chaves, npm test PASSOU com 225/225 testes em
+  17,5 minutos.
+
+PRIVACIDADE E GIT
+- Nenhum PDF, print, OCR, captura de validação, test-results ou material pessoal foi incluído no
+  lote. Os testes usaram contextos temporários e não acessaram progresso real das crianças.
+- Sem commit, push, merge, PR ou publicação.
+
 GEOGRAFIA DA ALICE — MORADIAS, LUGARES E CÔMODOS — 02/09/2026
 ===================================================================
 

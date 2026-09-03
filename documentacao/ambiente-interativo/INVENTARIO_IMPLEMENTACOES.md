@@ -4,7 +4,7 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra o estado de trabalho em **31/08/2026**.
+Este inventário registra o estado de trabalho em **03/09/2026**.
 
 ## 2. Base da aplicação
 
@@ -48,7 +48,7 @@ Este inventário registra o estado de trabalho em **31/08/2026**.
 - `js/armazenamento.js`: persistência segura.
 - `js/audio.js`: síntese de voz local bilíngue.
 - `js/gramatica-questionarios.js` e `js/gramatica-ditado.js`: questionários sequenciais de
-  Gramática e apoio auditivo por lacuna.
+  Gramática e outras matérias, mapa visual opt-in e apoio auditivo por lacuna.
 - `js/desenho.js`: canvas e persistência de desenho.
 - `js/leitura.js`, `js/leitor-dedicado.js` e `js/glossario.js`: biblioteca e leitor.
 - `js/matematica.js`, `js/matematica-cena.js` e `js/matematica-manipulaveis.js`: Matemática manipulativa.
@@ -198,6 +198,31 @@ Conteúdo: `ambiente_interativo/revisoes/alice/geografia-moradias-lugares-interi
 - Isolamento em relação às atividades de Mariana.
 
 Chave: `revisoesEscolares.alice.ciencias.origemMateriais`.
+
+### Mariana — Ciências: Plantas, seres vivos e a luz do Sol
+
+- Revisão exclusiva do 2º ano com **30 questões numeradas e 30 pontos**: Q1–Q15 abordam
+  partes e funções das plantas, frutos, sementes, necessidades, alimentação e proteção do solo;
+  Q16–Q30 abordam dia/noite, animais, luz, calor, materiais e cuidados sob Sol forte.
+- Cinco ditados locais em pt-BR: Q8 `RAIZ`, Q14 `FOLHA`, Q20 `SOL`, Q25 `LUZ` e Q30 com a frase
+  `A LUZ DO SOL É IMPORTANTE PARA A VIDA.`. A resposta não aparece nem é preenchida pelo áudio;
+  a frase final exige maiúsculas, acentuação e pontuação.
+- Reutiliza `QuestionariosRevisoes`, `questionarios-interacoes.js`, `gramatica-ditado.js` e
+  `audio.js`. A Q1 ativa o novo `mapaVisual` declarativo para tocar diretamente na raiz, com botões
+  posicionados também operáveis por teclado; associações usam subitens de alternativas e a
+  ordenação permite retirar e limpar cartões.
+- Dez SVGs originais e locais ilustram plantas, folha, sequência flor/fruto/sementes, seres vivos,
+  solo, dia/noite, calor, materiais e proteção. Nenhum PDF, print, OCR ou recurso da internet foi
+  reprocessado ou incorporado.
+- Testes direcionados: `tests/ciencias-mariana-plantas-sol.spec.js`, incluindo gabarito completo,
+  erro e correção, mapa visual, subitens, cinco ditados, persistência, isolamento, limpeza,
+  armazenamento adverso, teclado/toque, layouts, axe-core, console e `file://`.
+
+ID: `mariana-ciencias-plantas-sol-setembro-2026`.
+
+Chave: `revisoesEscolares.mariana.ciencias.plantasSolSetembro2026.v1`.
+
+Conteúdo: `ambiente_interativo/revisoes/mariana/ciencias-plantas-sol-setembro-2026.js`.
 
 ## 5. Matemática
 
@@ -708,9 +733,12 @@ Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
 - Toda pull request para `main` continua executando a suíte global no GitHub Actions; a saída
   completa é consultada apenas quando houver falha ou necessidade de diagnóstico.
 
-Na data deste inventário existem **154 testes Playwright**:
+Na data deste inventário existem **225 testes Playwright**:
 
 - `tests/ambiente-interativo.spec.js`: fluxos centrais, revisões de Inglês de Alice e Mariana, Leitura, Matemática ampla, armazenamento, canvas e `file://`.
+- `tests/ciencias-mariana-plantas-sol.spec.js`: 30 questões, mapa visual, gabarito completo,
+  associações, ordenação, cinco ditados, persistência, isolamento, armazenamento adverso,
+  teclado/toque, layouts, axe-core, console e `file://`.
 - `tests/matematica-manipulativa.spec.js`: cenas, trocas, ábacos, clique no quadro, teclado, persistência e nova Centenas em ação.
 - `tests/acessibilidade.spec.js`: axe e responsividade das telas principais.
 - `tests/gramatica-mariana.spec.js`: 40 questões, erro e correção, digitação, teclado, persistência,

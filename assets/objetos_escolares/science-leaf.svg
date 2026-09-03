@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">Folha</title>
+  <desc id="desc">Desenho original de uma folha verde grande com nervuras.</desc>
+  <rect width="640" height="360" rx="28" fill="#eaf8ff"/>
+  <path d="M116 280C132 92 316 23 526 78c-31 194-220 264-410 202Z" fill="#71d6a5" stroke="#287b45" stroke-width="9"/>
+  <path d="M104 309c127-81 227-133 365-197M254 225l-4-96m68 62 25-105m30 77 67-63" fill="none" stroke="#287b45" stroke-width="8" stroke-linecap="round"/>
+</svg>
