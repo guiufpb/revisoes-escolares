@@ -348,6 +348,17 @@ Chave: `revisoesEscolares.mariana.matematica.centenasEmAcao.v2`.
 
 Chave: `revisoesEscolares.mariana.matematica.formasMosaicosMedidas.v1`.
 
+### Mariana — Formas e medidas — revisão 03/09
+
+- Revisão exclusiva da Mariana com 32 etapas: apresentação, 30 questões avaliativas e encerramento.
+- ID: `mariana-matematica-formas-medidas-setembro-2026`.
+- Chave: `revisoesEscolares.mariana.matematica.formasMedidasSetembro2026.v1`.
+- Progressão: formas e mosaico; comprimento em mm, cm e m; massa em g e kg; capacidade em mL e L;
+  cinco operações com reagrupamento entre dezenas e unidades.
+- Reutiliza integralmente a infraestrutura matemática existente: associações, seleção reversível,
+  contagem, mosaico, régua, balança, recipientes de capacidade, campos e operação D-U.
+- A revisão anterior Formas, mosaicos e medidas e os respectivos progressos permanecem intactos.
+
 ## 6. Gramática
 
 ### Alice — Contos, dígrafos e vocabulário

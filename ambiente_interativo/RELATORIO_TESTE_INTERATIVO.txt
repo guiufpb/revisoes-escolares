@@ -1518,6 +1518,15 @@ PRESERVAÇÃO E PRIVACIDADE
 - Stash preservado: dd5623a8d3db5cbb0f699d13d2af34b8afc39590; não aplicado/removido/recriado.
 - Sem commit, push, merge, PR ou publicação.
 
+ENCERRAMENTO EM USO REAL DAS ATIVIDADES DE MATEMÁTICA — 03/09/2026
+=====================================================================
+
+- Alice concluiu sua atividade de Matemática em uso real; Mariana concluiu a revisão
+  Formas e medidas — revisão 03/09 em uso real.
+- Ambas foram concluídas sem problemas funcionais identificados.
+- Navegação, correção, avanço, retorno e preservação do progresso funcionaram normalmente.
+- Nenhuma correção adicional foi necessária após a realização das atividades.
+
 CORREÇÃO PEDAGÓGICA E VALIDAÇÃO EM USO REAL
 - Q5: seis palavras com o dígrafo oculto e alternativas CH/LH/NH.
 - Q15: oito pistas objetivas com palavras incompletas e alternativas CH/LH/NH.

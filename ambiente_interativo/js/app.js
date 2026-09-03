@@ -4,6 +4,7 @@
   var ID_ALICE = 'alice-ciencias-origem-materiais';
   var ID_CENTENAS = 'mariana-matematica-centenas-em-acao';
   var ID_FORMAS_MEDIDAS = 'mariana-matematica-formas-mosaicos-medidas';
+  var ID_FORMAS_MEDIDAS_SETEMBRO = 'mariana-matematica-formas-medidas-setembro-2026';
   var ID_CAPACIDADE_ALICE = 'alice-matematica-capacidade-operacoes-numeros';
   var ID_GRAMATICA = 'mariana-gramatica-revisao-ampla';
   var IDS_GRAMATICA_COMPARTILHADA = {
@@ -395,6 +396,7 @@
     document.getElementById('abrir-revisao-mariana').hidden = aluno !== 'mariana';
     document.getElementById('abrir-centenas-em-acao').hidden = aluno !== 'mariana';
     document.getElementById('abrir-formas-mosaicos-medidas').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-formas-medidas-setembro').hidden = aluno !== 'mariana';
     document.getElementById('abrir-capacidade-operacoes-numeros').hidden = aluno !== 'alice';
     document.getElementById('materia-leitura').hidden = false;
     document.getElementById('abrir-gramatica-mariana').hidden = aluno !== 'mariana';
@@ -588,6 +590,10 @@
     });
     document.getElementById('abrir-formas-mosaicos-medidas').addEventListener('click', function () {
       window.MatematicaRevisoes.abrir(ID_FORMAS_MEDIDAS);
+      atualizarResumo();
+    });
+    document.getElementById('abrir-formas-medidas-setembro').addEventListener('click', function () {
+      window.MatematicaRevisoes.abrir(ID_FORMAS_MEDIDAS_SETEMBRO);
       atualizarResumo();
     });
     document

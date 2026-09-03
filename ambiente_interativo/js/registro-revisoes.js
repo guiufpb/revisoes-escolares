@@ -135,6 +135,17 @@
       possuiManipulaveis: true,
     },
     {
+      id: 'mariana-matematica-formas-medidas-setembro-2026',
+      aluno: 'mariana',
+      titulo: 'Formas e medidas — revisão 03/09',
+      cartaoId: 'abrir-formas-medidas-setembro',
+      painelId: 'tela-matematica-cena',
+      chaveArmazenamento: 'revisoesEscolares.mariana.matematica.formasMedidasSetembro2026.v1',
+      totalEtapas: 32,
+      controladorCompartilhado: 'matematica-manipulativa',
+      possuiManipulaveis: true,
+    },
+    {
       id: 'alice-matematica-capacidade-operacoes-numeros',
       aluno: 'alice',
       titulo: 'Capacidade, continhas e números',
