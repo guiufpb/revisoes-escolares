@@ -21,6 +21,7 @@ import '../revisoes/alice/geografia-moradias-lugares-interior.js';
 import '../revisoes/mariana/matematica-revisao-ampla.js';
 import '../revisoes/mariana/matematica-centenas-em-acao.js';
 import '../revisoes/mariana/matematica-formas-mosaicos-medidas.js';
+import '../revisoes/mariana/matematica-formas-medidas-setembro-2026.js';
 import '../revisoes/alice/matematica-capacidade-operacoes-numeros.js';
 import '../revisoes/alice/matematica-operacoes.js';
 import '../revisoes/mariana/matematica-operacoes.js';
