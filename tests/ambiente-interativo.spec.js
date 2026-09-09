@@ -104,7 +104,7 @@ async function limparSomenteChavesDoAmbiente(page) {
 
 async function abrirAlice(page) {
   await page.getByRole('button', { name: /Alice/ }).click();
-  await page.getByRole('button', { name: /Ciências/ }).click();
+  await page.locator('#materia-ciencias').click();
   await expect(page.getByRole('heading', { name: 'Origem dos materiais' })).toBeVisible();
 }
 
@@ -189,9 +189,9 @@ test('carrega a tela inicial e registra todas as revisões sem chaves duplicadas
       ),
     }))
   );
-  expect(registro).toHaveLength(46);
-  expect(new Set(registro.map((item) => item.id)).size).toBe(46);
-  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(46);
+  expect(registro).toHaveLength(47);
+  expect(new Set(registro.map((item) => item.id)).size).toBe(47);
+  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(47);
   expect(registro.every((item) => item.elementosExistem)).toBe(true);
 });
 

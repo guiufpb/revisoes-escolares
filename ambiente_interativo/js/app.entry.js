@@ -18,6 +18,7 @@ import '../revisoes/alice/historia-familias-objetos.js';
 import '../revisoes/mariana/historia-convivencia-transportes.js';
 import '../revisoes/mariana/geografia-transportes-comunicacao.js';
 import '../revisoes/mariana/ciencias-plantas-sol-setembro-2026.js';
+import '../revisoes/alice/ciencias-objetos-emocoes-alimentacao-setembro-2026.js';
 import '../revisoes/alice/geografia-moradias-lugares-interior.js';
 import '../revisoes/mariana/matematica-revisao-ampla.js';
 import '../revisoes/mariana/matematica-centenas-em-acao.js';

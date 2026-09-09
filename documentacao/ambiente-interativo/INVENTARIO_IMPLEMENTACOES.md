@@ -199,6 +199,21 @@ Conteúdo: `ambiente_interativo/revisoes/alice/geografia-moradias-lugares-interi
 
 Chave: `revisoesEscolares.alice.ciencias.origemMateriais`.
 
+### Alice — Ciências: Objetos, emoções e alimentação
+
+- Revisão exclusiva do 1º ano com **30 questões e 30 pontos**: materiais e reaproveitamento,
+  sentimentos e atitudes respeitosas, alimentação variada e cuidados com os dentes.
+- Dois ditados locais em pt-BR: `FELIZ` e `SAÚDE`, sem revelar ou preencher a resposta.
+- Reutiliza o questionário declarativo compartilhado, com associações, seleção reversível,
+  persistência, teclado, toque e cinco SVGs originais locais. A revisão antiga de Ciências da Alice
+  permanece disponível no cartão próprio.
+
+ID: `alice-ciencias-objetos-emocoes-alimentacao-setembro-2026`.
+
+Chave: `revisoesEscolares.alice.ciencias.objetosEmocoesAlimentacaoSetembro2026.v1`.
+
+Conteúdo: `ambiente_interativo/revisoes/alice/ciencias-objetos-emocoes-alimentacao-setembro-2026.js`.
+
 ### Mariana — Ciências: Plantas, seres vivos e a luz do Sol
 
 - Revisão exclusiva do 2º ano com **30 questões numeradas e 30 pontos**: Q1–Q15 abordam
@@ -733,7 +748,7 @@ Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
 - Toda pull request para `main` continua executando a suíte global no GitHub Actions; a saída
   completa é consultada apenas quando houver falha ou necessidade de diagnóstico.
 
-Na data deste inventário existem **225 testes Playwright**:
+Na data deste inventário existem **230 testes Playwright**:
 
 - `tests/ambiente-interativo.spec.js`: fluxos centrais, revisões de Inglês de Alice e Mariana, Leitura, Matemática ampla, armazenamento, canvas e `file://`.
 - `tests/ciencias-mariana-plantas-sol.spec.js`: 30 questões, mapa visual, gabarito completo,
