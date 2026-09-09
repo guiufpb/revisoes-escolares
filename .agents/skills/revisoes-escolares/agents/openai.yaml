@@ -1,0 +1,6 @@
+interface:
+  display_name: "Revisoes Escolares v2"
+  short_description: "Revisoes com analise pedagogica e reuso tecnico."
+  default_prompt: "Use $revisoes-escolares para analisar os materiais, concluir o gate pedagogico e implementar com reuso tecnico e testes proporcionais ao risco."
+policy:
+  allow_implicit_invocation: true

@@ -26,6 +26,10 @@ Não remova uma implementação para facilitar outra. Se a solicitação for uma
 
 Coloque comportamento reutilizável nos controladores e exemplos/perguntas nos arquivos da revisão. Não duplique um controlador inteiro apenas para trocar conteúdo.
 
+Para produzir ou futuramente integrar cartilhas de Computação, leia primeiro
+`../computacao/README.md`. Essa matéria tem continuidade narrativa, visual e bibliográfica própria;
+o PDF editorial deve ser aprovado antes de qualquer integração ao ambiente.
+
 Para Matemática visual, reutilize `matematica-geometria-medidas.js` junto da Cena Matemática. Os
 tipos declarativos atuais cobrem campos com ilustração, seleção múltipla, associações, mosaico,
 recipientes de capacidade, continhas verticais D–U e produtos de mercado. Réguas, balanças,
