@@ -59,6 +59,18 @@
       possuiDesenho: true,
     },
     {
+      id: 'alice-ciencias-objetos-emocoes-alimentacao-setembro-2026',
+      aluno: 'alice',
+      titulo: 'Objetos, emoções e alimentação',
+      cartaoId: 'abrir-ciencias-alice-objetos-emocoes-alimentacao',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento:
+        'revisoesEscolares.alice.ciencias.objetosEmocoesAlimentacaoSetembro2026.v1',
+      totalEtapas: 30,
+      possuiAudio: true,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
       id: 'mariana-ciencias-plantas-sol-setembro-2026',
       aluno: 'mariana',
       titulo: 'Plantas, seres vivos e a luz do Sol',

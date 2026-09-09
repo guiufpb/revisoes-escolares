@@ -59,7 +59,7 @@ test('tela inicial e navegação completa por teclado', async ({ page }) => {
 
 test('revisão da Alice e mensagens de estado', async ({ page }) => {
   await page.getByRole('button', { name: /Alice/ }).click();
-  await page.getByRole('button', { name: /Ciências/ }).click();
+  await page.locator('#materia-ciencias').click();
   await verificarAcessibilidade(page, 'Revisão da Alice');
   await page.getByRole('button', { name: /Madeira de árvores/ }).click();
   await page.getByRole('button', { name: 'Conferir resposta' }).click();

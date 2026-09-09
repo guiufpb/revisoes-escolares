@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" role="img" aria-labelledby="t d">
+  <title id="t">Objetos e materiais</title><desc id="d">Garrafa, panela, caderno e mesa em desenho simples.</desc>
+  <rect width="640" height="320" rx="28" fill="#e8f7ff"/><path d="M95 82h45v25l14 24v112H81V131l14-24z" fill="#7ad4f5" stroke="#166a8f" stroke-width="8"/><text x="116" y="280" text-anchor="middle" font-size="24" font-family="Arial" fill="#17435c">garrafa</text>
+  <path d="M250 130h130v86H250zM270 110h90" fill="#aab7c3" stroke="#40515e" stroke-width="9"/><path d="M380 153h70" stroke="#40515e" stroke-width="14" stroke-linecap="round"/><text x="320" y="280" text-anchor="middle" font-size="24" font-family="Arial" fill="#17435c">panela</text>
+  <path d="M455 90h120v135H455z" fill="#fff7d1" stroke="#bb7e20" stroke-width="8"/><path d="M475 115h80M475 145h80M475 175h60" stroke="#bb7e20" stroke-width="6"/><text x="515" y="260" text-anchor="middle" font-size="24" font-family="Arial" fill="#17435c">caderno</text>
+  <path d="M220 300h210M245 235v65M405 235v65" stroke="#825331" stroke-width="16" stroke-linecap="round"/><path d="M205 210h240v35H205z" fill="#c98b55" stroke="#825331" stroke-width="8"/>
+</svg>
