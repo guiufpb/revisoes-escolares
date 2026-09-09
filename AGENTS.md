@@ -50,6 +50,13 @@ Estas regras valem para todo o repositório. O projeto é um ambiente escolar lo
 - Preserve digitação, acentuação, correção recuperável e progresso; o ditado é apoio auditivo, não preenchimento automático.
 - Teste teclado, cancelamento da fala anterior, troca de etapa, voz local, celular, axe-core e `file://`.
 
+## Computação
+
+- Antes de criar ou alterar um volume, leia `documentacao/computacao/README.md`, o histórico, a trilha, a bibliografia e o padrão editorial da coleção.
+- Preserve personagens, identidade visual e continuidade entre volumes. Antes de fechar um novo volume, examine novos trechos relevantes das obras-base e atualize o mapa comparativo.
+- Mantenha o fluxo **história → conceito → aplicação cotidiana → aplicação computacional → questões**, com texto e ilustrações originais; não publique PDFs, scans, OCR ou imagens das obras consultadas.
+- Em futura integração ao ambiente, reutilize a infraestrutura existente de Leitura/PDF e questionários, sem criar leitor paralelo, e mantenha o progresso de Alice e Mariana isolado.
+
 ## Qualidade proporcional ao risco
 
 Para toda mudança de código, execute na raiz:
