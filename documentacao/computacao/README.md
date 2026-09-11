@@ -9,6 +9,7 @@ Esta pasta é a memória pedagógica e editorial permanente da coleção de Comp
 - [Trilha de volumes](TRILHA_DE_VOLUMES.md): progressão e estado de cada volume.
 - [Bibliografia e mapa de fontes](BIBLIOGRAFIA_E_MAPA_DE_FONTES.md): fontes utilizadas, contribuições, lacunas e mapa acumulativo.
 - [Padrão editorial e visual](PADRAO_EDITORIAL_VISUAL.md): continuidade, processo, ilustração, acessibilidade, privacidade e direitos autorais.
+- [Checklist de lógica visual](CHECKLIST_LOGICA_VISUAL.md): gate operacional para páginas críticas de lógica computacional.
 - [Governança e ajuste da Skill v2](PROPOSTA_AJUSTE_SKILL_V2.md): origem, escopo oficial, auditoria de privacidade e rota de Computação aplicada.
 
 ## Ordem obrigatória antes de um novo volume
@@ -21,6 +22,8 @@ Esta pasta é a memória pedagógica e editorial permanente da coleção de Comp
 6. Examinar novos trechos relevantes das fontes daquele volume.
 7. Atualizar o mapa comparativo, distinguindo evidência, lacuna e hipótese.
 8. Somente então escrever o roteiro do novo volume.
+
+Antes de aprovar o PDF, classifique as páginas de lógica visual no roteiro ou briefing, identifique as críticas e revise suas renderizações individualmente com o checklist. O padrão editorial define os princípios amplos; o checklist transforma esses princípios em verificações operacionais.
 
 ## Dois ciclos diferentes
 

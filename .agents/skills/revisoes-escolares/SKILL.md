@@ -91,6 +91,16 @@ Para Computacao, consulte a trilha, o historico, a bibliografia/mapa de fontes e
 
 **fontes → mapa comparativo → lacunas → ideia central → roteiro → texto → direcao visual → briefings → questoes → ativos → PDF → validacao → integracao**
 
+### Logica visual obrigatoria em Computacao
+
+Antes de diagramar, classifique no roteiro ou briefing cada pagina planejada como uma ou mais: `N` narrativa, `C` conceito visual, `S` sequencia de comandos/passos, `X` comparacao, `D` depuracao/diagnostico, `R` repeticao/loop, `A` arquitetura/fluxo interno, `Q` questao/atividade ou `G` gabarito. A classificacao serve ao processo editorial e nao precisa aparecer no PDF.
+
+Considere critica uma pagina que introduz vocabulario ou conceito novo, mostra a primeira execucao, erro, correcao, repeticao/loop, arquitetura/fluxo, uma questao integrada final ou uma comparacao necessaria para entender o resultado. Pagina critica exige renderizacao e revisao visual ampliada com o `documentacao/computacao/CHECKLIST_LOGICA_VISUAL.md`.
+
+Em paginas que ensinam logica computacional, a prioridade e: **clareza logica e pedagogica > beleza cenica > ornamentacao**. Uma pagina bonita, sem cortes, erros tipograficos ou conflito de paleta nao esta aprovada se a relacao que ensina nao puder ser inferida visualmente.
+
+Ao corrigir, preserve paginas aprovadas e altere apenas as problematicas quando tecnicamente possivel. Renderize novamente, compare antes/depois e registre uma verificacao deterministica (hash, render ou comparacao de imagem) de que paginas fora do escopo permaneceram inalteradas.
+
 Preserve a arquitetura **historia → conceito → aplicacao cotidiana → aplicacao computacional → questoes**, Lina, Nino e a identidade visual. Produza conteudo e ilustracoes originais e nao re-OCRize nem rerenderize material ja sintetizado sem necessidade. Mantenha cartilha e questoes comuns a Alice e Mariana. Na futura integracao, reutilize Leitura/PDF e questionarios existentes, sem leitor paralelo, e isole o progresso por perfil, materia, revisao e chave.
 
 Conteudo especifico fica em `ambiente_interativo/revisoes/<perfil>/` quando aplicavel. Comportamento reutilizavel fica em controlador compartilhado somente quando a capacidade realmente precisa ser geral. Nao reconstrua o ambiente nem crie controlador paralelo para trocar conteudo. Preserve revisoes antigas e nunca edite bundles gerados manualmente.
