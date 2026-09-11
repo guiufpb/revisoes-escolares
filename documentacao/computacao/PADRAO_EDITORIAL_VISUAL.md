@@ -42,6 +42,30 @@ O Volume 1 estabeleceu cartilha ilustrada, narrativa, atividade pós-leitura e i
 - Usar mapas, diagramas, sequências, comparações e antes/depois quando ajudarem a compreender.
 - Guardar briefings e procedência dos ativos, sem publicar referências privadas ou protegidas.
 
+## Lógica visual em Computação
+
+### Prioridade editorial
+
+Em páginas que ensinam lógica computacional, a prioridade é: **clareza lógica e pedagógica > beleza cênica > ornamentação**. A cena deve apoiar a aprendizagem; quando a relação central for ordem, fluxo, estado, comparação, causa e efeito ou repetição, ela precisa de uma representação visual legível.
+
+### Representar relações abstratas
+
+Use representações originais que tornem observável a relação ensinada, por exemplo: intenção × instrução; comando × ação; esperado × aconteceu; antes × depois; passo correto × primeira divergência; código incompleto × código corrigido; repetição longa × bloco de loop; entrada × processamento × saída; estado 0 × estado 1. A imagem deve permitir inferir a relação antes ou junto do termo técnico.
+
+### Cena, diagrama ou combinação
+
+Use cena para emoção, missão, descoberta e contexto. Use diagrama para ordem, fluxo, comparação, estados, comando, causa e efeito, repetição, arquitetura e questões lógicas. Combine cena e diagrama quando o enredo trouxer o problema, mas a criança precisar enxergar a relação para resolvê-lo.
+
+Evite repetir erros editoriais: substituir comando e ação por um mapa genérico; sobrepor esperado e aconteceu até confundir; sinalizar um bug só com um ícone, sem localizar a divergência; corrigir sem retestar; desenhar loop sem delimitar comandos internos e quantidade de repetições; trocar uma sequência de uma a quatro ações por “repita” antes de mostrar a repetição longa; transformar questão visual integrada em texto; mudar a geometria do mapa, personagens, robôs, esquerda/direita, quantidades, cores ou padrões sem necessidade; ou depender só de cor para comunicar diferença.
+
+### Experiência antes do vocabulário
+
+Mantenha a progressão experiência → comparação → investigação → termo técnico. Um resultado inesperado pode conduzir à investigação e então ao conceito de bug; corrigir e testar novamente conduz à depuração; uma repetição visível conduz ao padrão e então ao loop. O termo técnico nomeia algo que a criança já conseguiu observar.
+
+### Ativos de continuidade
+
+Mantenha ficha de personagens, mapa mestre, biblioteca de comandos e símbolos, versões de estado e regras de reutilização. Personagens, robôs, geometrias, orientação espacial, significados de ícones e cartões, quantidades e códigos de cor/padrão devem permanecer consistentes entre páginas, especialmente quando servem de evidência para uma questão.
+
 ## Direitos autorais e privacidade
 
 - Obras comerciais são fontes pedagógicas, não material para reprodução.

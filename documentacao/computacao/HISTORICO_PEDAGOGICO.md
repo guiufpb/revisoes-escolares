@@ -39,5 +39,11 @@ Esta é a memória acumulativa da coleção. Atualize-a depois de cada volume e 
 - **Questões:** 10 questões comuns aos dois perfis, cada uma valendo um ponto, com subquestões, seleção, associação, ordenação, mapa, comparação e aplicação computacional.
 - **Personagens e recursos visuais:** Lina e Nino preservados; turma do bairro; mundo de blocos original; cartões de pistas; grade de algoritmo; um mapa-mestre com cinco variações consistentes. Foram produzidas ilustrações originais, sem assets oficiais de Minecraft.
 - **Validação editorial:** relatório confirma abertura e análise do PDF, 31 páginas A4, renderização e inspeção visual das 31 páginas, texto pesquisável e ausência detectada de cortes, sobreposições ou texto ilegível.
-- **Ponte para o próximo volume:** a página 17 anuncia “Máquinas precisam de instruções” e apresenta algoritmo. O Volume 3 continua apenas planejado e exige nova análise das fontes antes do roteiro.
+- **Ponte para o próximo volume:** a página 17 anuncia “Máquinas precisam de instruções” e apresenta algoritmo. O Volume 3 transformou essa ponte em investigação sobre instruções, comandos, erros e repetições.
 - **Uso real:** não registrado. Portanto, os conceitos acima foram apresentados e praticados na cartilha, mas não devem ser descritos como aprendidos ou dominados por Alice ou Mariana.
+
+## Volume 3 — “Máquinas precisam de instruções”
+
+O terceiro volume foi produzido como PDF editorial, mantendo Lina e Nino e o percurso história → conceito → aplicação cotidiana → aplicação computacional → questões. Seu trabalho visual passou por correções seletivas para tornar explícitas relações que não podem depender apenas de uma cena bonita: intenção e instrução, comando e execução, esperado e aconteceu, primeira divergência, antes e depois da correção, ciclo de depuração, bloco de repetição e questão final integrada.
+
+A lição editorial registrada para os próximos volumes é que uma página visualmente agradável pode continuar pedagogicamente insuficiente quando o conceito exige sequência, comparação, causa e efeito, estado ou repetição. Nesses casos, diagramas e painéis comparativos fazem parte da explicação. A aprovação deve usar um gate próprio de lógica visual, e toda correção deve preservar as páginas já aprovadas, ser rerenderizada e comparada. Este histórico registra decisão editorial; não afirma aplicação com alunas nem resultado de aprendizagem.
