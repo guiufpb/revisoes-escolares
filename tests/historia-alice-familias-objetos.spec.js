@@ -324,10 +324,8 @@ test('Q4 ordena, retira, limpa, restaura e exige também a alternativa 4B', asyn
   await expect(page.locator('[data-retirar-ordem-misto]')).toHaveCount(4);
 });
 
-test('Q3, Q8, Q9, Q16, Q17 e Q18 exigem todos os subitens e restauram associações', async ({
-  page,
-}) => {
-  for (const numero of [3, 8, 9, 16, 17, 18]) {
+for (const numero of [3, 8, 9, 16, 17, 18]) {
+  test(`Q${numero} exige todos os subitens e restaura as associações`, async ({ page }) => {
     await preparar(page, numero);
     const escolhas = OPCOES[numero];
     for (let indice = 0; indice < escolhas.length - 1; indice++)
@@ -339,8 +337,8 @@ test('Q3, Q8, Q9, Q16, Q17 e Q18 exigem todos os subitens e restauram associaç�
     await escolherNoItem(page, escolhas.length - 1, escolhas.at(-1));
     await conferir(page);
     await expect(page.locator('#gramatica-proxima')).toBeEnabled();
-  }
-});
+  });
+}
 
 test('Q14 e Q20 usam ditado local sem revelar respostas, com repetir, parar e cancelar', async ({
   page,
