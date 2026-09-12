@@ -20,19 +20,19 @@
     "test": "npm run test:e2e"
   },
   "dependencies": {
-    "@iconify-json/fluent-emoji-flat": "^1.2.5",
-    "@iconify-json/openmoji": "^1.2.27",
+    "@iconify-json/fluent-emoji-flat": "^1.2.6",
+    "@iconify-json/openmoji": "^1.2.29",
     "@iconify-json/twemoji": "^1.2.5",
-    "@iconify/utils": "^3.1.3",
-    "pdfjs-dist": "^6.2.108"
+    "@iconify/utils": "^3.1.7",
+    "pdfjs-dist": "^6.3.289"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.11.3",
-    "@playwright/test": "^1.60.0",
-    "eslint": "^10.4.1",
-    "playwright": "^1.60.0",
-    "playwright-core": "^1.60.0",
-    "prettier": "^3.8.3",
-    "vite": "^8.0.16"
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
+    "eslint": "^10.10.0",
+    "playwright": "^1.63.0",
+    "playwright-core": "^1.63.0",
+    "prettier": "^3.9.6",
+    "vite": "^8.3.0"
   }
 }
