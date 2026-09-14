@@ -84,3 +84,30 @@ Para cada página crítica, confirme antes da aprovação:
 2. A lógica foi verificada por este checklist, não apenas por acabamento visual.
 3. Problemas foram corrigidos, rerenderizados e revisados.
 4. Páginas fora da correção seletiva foram comparadas por render, hash ou comparação determinística de imagem para comprovar que permaneceram inalteradas.
+
+## F. Contrato e wireframe
+
+Antes da arte final:
+
+- Existe Contrato Visual para a página crítica?
+- A pergunta de teste visual é clara?
+- O wireframe foi produzido?
+- O wireframe foi comparado ao contrato?
+- A geometria pedagógica foi bloqueada depois da aprovação?
+
+## G. Revisão cega
+
+- O render foi aberto antes de consultar o gerador?
+- Houve descrição objetiva do que a página comunica?
+- Essa descrição coincide com o contrato?
+- Apareceu interpretação concorrente?
+- A página ainda funciona sem depender do parágrafo para “consertar” o desenho?
+
+## H. Validação estrutural
+
+- As verificações determinísticas aplicáveis foram executadas?
+- Os elementos obrigatórios estão presentes?
+- As relações proibidas estão ausentes?
+- Nenhuma sobreposição, tamanho ou posição compromete o significado?
+
+Consulte o [Protocolo de Revisão Visual](PROTOCOLO_REVISAO_VISUAL.md) para a ordem completa do processo e o [Modelo de Contrato Visual](MODELO_CONTRATO_VISUAL.md) para registrar a evidência.

@@ -17,21 +17,32 @@
 5. escrever o roteiro página por página;
 6. fechar o texto da cartilha;
 7. definir a direção visual;
-8. preparar o briefing de cada ilustração;
-9. montar a matriz das 10 questões e suas subquestões;
-10. preparar a biblioteca de ativos;
-11. produzir ilustrações finais;
-12. diagramar;
-13. gerar o PDF;
-14. renderizar todas as páginas;
-15. fazer revisão visual completa;
-16. integrar ao ambiente somente depois da aprovação editorial.
+8. classificar páginas críticas e preparar seus contratos visuais;
+9. produzir, auditar e aprovar wireframes das páginas críticas;
+10. bloquear a geometria pedagógica aprovada;
+11. preparar o briefing de cada ilustração;
+12. montar a matriz das 10 questões e suas subquestões;
+13. preparar a biblioteca de ativos;
+14. produzir ilustrações finais e diagramas determinísticos quando aplicável;
+15. diagramar;
+16. gerar o PDF;
+17. renderizar todas as páginas;
+18. fazer revisão cega e validação estrutural das páginas críticas, com correção seletiva;
+19. integrar ao ambiente somente depois da aprovação editorial.
 
 O fluxo pedagógico dentro do volume é:
 
 > **história → conceito → aplicação cotidiana → aplicação computacional → questões**
 
 O Volume 1 estabeleceu cartilha ilustrada, narrativa, atividade pós-leitura e identidade própria. O Volume 2 tornou explícitos roteiro, texto final, direção visual, briefings, sequência pedagógica de 10 questões, biblioteca de ativos, PDF, renderização e revisão visual. Esse processo refinado é o padrão dos próximos volumes.
+
+## Contrato visual e prototipação
+
+Toda página crítica precisa de contrato visual antes da arte final, seguindo o [Protocolo de Revisão Visual](PROTOCOLO_REVISAO_VISUAL.md) e o [Modelo de Contrato Visual](MODELO_CONTRATO_VISUAL.md). O wireframe precede a arte, prova a semântica e, depois de aprovado, congela a relação pedagógica: fluxo, posições, agrupamentos, ordem, estados, quantidades e decisões não mudam sem reabrir o contrato.
+
+Diagramas lógicos devem ser determinísticos sempre que possível; arte narrativa pode ser artística. A revisão final começa pelo render, não pelo gerador: descreva primeiro o que a imagem comunica e só depois compare com o contrato.
+
+> **Não usar acabamento artístico para mascarar uma estrutura lógica ainda não validada.**
 
 ## Ilustrações e ativos
 
