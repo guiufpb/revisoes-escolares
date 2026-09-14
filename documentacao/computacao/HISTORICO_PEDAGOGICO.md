@@ -48,6 +48,28 @@ O terceiro volume foi produzido como PDF editorial, mantendo Lina e Nino e o per
 
 A lição editorial registrada para os próximos volumes é que uma página visualmente agradável pode continuar pedagogicamente insuficiente quando o conceito exige sequência, comparação, causa e efeito, estado ou repetição. Nesses casos, diagramas e painéis comparativos fazem parte da explicação. A aprovação deve usar um gate próprio de lógica visual, e toda correção deve preservar as páginas já aprovadas, ser rerenderizada e comparada. Este histórico registra decisão editorial; não afirma aplicação com alunas nem resultado de aprendizagem.
 
+## Volume 4 — “Por dentro do computador”
+
+- **Status:** PDF produzido e validado editorialmente; não integrado ao ambiente; não há confirmação
+  de estudo ou conclusão pelas crianças.
+- **Período verificável:** setembro de 2026; PDF final produzido em 13 de setembro de 2026.
+- **Estrutura:** 31 páginas A4 verticais; páginas 1–17 narrativas/editoriais; revisão na página 18;
+  10 questões nas páginas 19–29; questão 10 nas páginas 28–29 e valendo um ponto; gabarito nas
+  páginas 30–31.
+- **Conceitos apresentados:** hardware, software, entrada/processamento/saída, CPU/processador, RAM,
+  armazenamento, sistema operacional, GPU, informação em uso, versão salva e cooperação.
+- **Conceitos praticados:** distinção hardware/software; fluxo funcional; execução pela CPU;
+  diferença RAM/armazenamento; persistência; sistema operacional; cooperação CPU/GPU; modelo
+  simplificado; situação integradora de clique, processamento, exibição, salvamento e reabertura.
+- **Personagens e continuidade:** Lina, Nino, Tico e Sala de Tecnologia reutilizados do Volume 3.
+  Nenhum personagem foi redesenhado. O cartaz “Noite das Luzes — Jardim das Ideias” mantém a ponte
+  narrativa com a missão anterior.
+- **Validação editorial:** 31 páginas renderizadas a 144 dpi; duas pranchas gerais e uma prancha das
+  12 páginas críticas; checklist de lógica visual aplicado; correções seletivas verificadas por hash;
+  camada textual pesquisável e formato A4 confirmados.
+- **Uso real:** não registrado. Os conceitos foram apresentados e praticados na cartilha, mas não
+  devem ser descritos como aprendidos ou dominados por Alice ou Mariana.
+
 ## Evolução editorial após os Volumes 3 e 4
 
 O Volume 3 revelou a necessidade de um gate explícito de lógica visual. No Volume 4, esse gate melhorou a revisão, mas permaneceu possível haver divergência entre briefing e render. Por isso, a coleção passa a usar Contrato Visual, Wireframe, Revisão Cega e Validação Estrutural para encontrar divergências antes da arte final e reduzir correções tardias. Esta é uma decisão editorial de processo, não evidência de aprendizagem ou de conclusão de um volume por Alice ou Mariana.

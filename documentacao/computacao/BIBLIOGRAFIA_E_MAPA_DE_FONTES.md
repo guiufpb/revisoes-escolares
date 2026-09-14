@@ -55,13 +55,24 @@ As obras abaixo foram usadas para extrair princípios pedagógicos. Nenhum texto
 | Algoritmo | planejamento e instruções como preparação | sequência e execução como preparação | ponte entre instrução e máquina | definição inicial no V2 | aprofundar somente após novo mapa comparativo |
 | Código e execução | candidato a investigar | força já identificada | ponte já identificada | comandos `/say` e `/tp` apresentados no V2 | examinar novas páginas antes do Volume 3 |
 | Repetição e loops | candidato a investigar | força já identificada | candidato a investigar | ainda não ensinados | examinar novas páginas antes do Volume 3 |
-| Hardware e interior do computador | não registrado como força principal | não registrado como força principal | hardware, E/S, CPU, memória, armazenamento, bits | ainda não ensinados | dosar para o Volume 4 após nova análise |
+| Hardware e interior do computador | não registrado como força principal | não registrado como força principal | hardware, E/S, CPU, memória, armazenamento, GPU e representação | V4 | consolidar o que foi apresentado; selecionar novas fontes antes de definir o próximo volume; bits e representação exigem análise própria |
 
 “Não registrada como força principal” descreve somente a evidência disponível neste ciclo; não afirma ausência do conceito na obra.
 
-## Mapa a atualizar antes do Volume 3
+## Registro editorial dos Volumes 3 e 4
 
-Antes do roteiro do Volume 3, analisar **novas páginas relevantes das três fontes principais** para algoritmo, código, execução, bug, depuração, repetição e loops. Registrar, para cada obra, páginas examinadas, força pedagógica, conceito extraído, relação com os Volumes 1 e 2, lacuna e decisão editorial.
+O Volume 3 examinou e aplicou as forças já registradas para instrução, execução, erro, depuração,
+repetição e loops. O Volume 4 usou a síntese pedagógica local aprovada e o mapa acumulativo para
+dosar hardware, software, entrada/processamento/saída, CPU, RAM, armazenamento, sistema operacional
+e GPU.
+
+Um conjunto local de 21 páginas de *Olá, Ruby: Uma aventura pela programação* foi inspecionado
+durante o preflight do Volume 4. Seus capítulos tratam de raciocínio, decomposição, repetição e
+condições e não acrescentaram evidência específica para o interior do computador; por isso não
+foram incorporados ao Volume 4.
+
+Para os próximos volumes, novos trechos deverão ser selecionados conforme o conceito em estudo e
+as lacunas identificadas. Bits e representação continuam sujeitos a análise própria.
 
 Não antecipar esse mapa por suposição. A sequência obrigatória é:
 

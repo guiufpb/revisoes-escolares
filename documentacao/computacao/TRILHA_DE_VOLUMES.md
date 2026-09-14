@@ -24,16 +24,28 @@ A ponte explícita para a próxima aventura é “Máquinas precisam de instruç
 
 ## Volume 3 — “Máquinas precisam de instruções”
 
-**Status: planejado; não iniciado.**
+**Status: PDF concluído e validado; não integrado ao ambiente interativo.**
 
-Escopo preliminar: algoritmo, código, execução, bugs, correção/depuração, repetição e loops.
+O volume apresenta algoritmo, código, execução literal, resultado esperado e acontecido, bug,
+correção, novo teste, depuração, repetição, padrão e loop. A revisão visual recebeu correções
+seletivas de lógica e preservou as páginas já aprovadas por comparação determinística.
 
-> O Volume 3 **não deve ser roteirizado apenas com base na memória dos Volumes 1 e 2**. Antes de fechar seu conteúdo, devem ser examinadas novas páginas relevantes das três obras principais e criado novo mapa comparativo.
+Estrutura real: 31 páginas A4 verticais; 17 páginas narrativas/editoriais; revisão na página 18;
+10 questões nas páginas 19–29; questão 10 em duas páginas e valendo um ponto; gabarito comentado
+nas páginas 30–31.
 
 ## Volume 4 — “Por dentro do computador”
 
-**Status: planejado.**
+**Status: PDF concluído e validado; não integrado ao ambiente interativo.**
 
-Escopo preliminar: entrada, processamento, saída, CPU, memória, armazenamento, hardware e software, com dosagem infantil dos conceitos internos.
+O volume apresenta hardware, software, entrada, processamento, saída, CPU/processador, RAM,
+armazenamento, sistema operacional e GPU, com ênfase na cooperação e na diferença entre informação
+em uso e arquivo salvo. A permanência depois de desligar é ensinada sem representar salvar como
+simples transferência da RAM para o armazenamento.
+
+Estrutura real: 31 páginas A4 verticais; 17 páginas narrativas/editoriais; revisão na página 18;
+10 questões nas páginas 19–29; questão 10 integradora nas páginas 28–29 e valendo um ponto;
+gabarito comentado nas páginas 30–31. As 12 páginas críticas passaram pelo checklist de lógica
+visual e por auditoria individual a 144 dpi.
 
 Não congelar volumes posteriores além do necessário. A trilha deve responder às fontes, aos pré-requisitos e ao aprendizado real informado sobre Alice e Mariana.
