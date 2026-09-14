@@ -87,15 +87,17 @@ Consulte primeiro o inventario e uma revisao equivalente. Depois roteie:
 - **Computacao**: leia primeiro `documentacao/computacao/README.md` e siga o ciclo editorial abaixo antes de qualquer integracao.
 - **Outra materia futura**: inventario/modelo e extensao opt-in; nao presuma biblioteca ou controlador inexistente.
 
-Para Computacao, consulte a trilha, o historico, a bibliografia/mapa de fontes e o padrao editorial indicados no README. Antes de cada novo volume, examine novas paginas relevantes das obras-base e atualize o mapa comparativo. Use obrigatoriamente:
+Para Computacao, consulte a trilha, o historico, a bibliografia/mapa de fontes e o padrao editorial indicados no README, alem de `documentacao/computacao/PROTOCOLO_REVISAO_VISUAL.md` e `documentacao/computacao/MODELO_CONTRATO_VISUAL.md`. Antes de cada novo volume, examine novas paginas relevantes das obras-base e atualize o mapa comparativo. Use obrigatoriamente:
 
-**fontes → mapa comparativo → lacunas → ideia central → roteiro → texto → direcao visual → briefings → questoes → ativos → PDF → validacao → integracao**
+**fontes → mapa comparativo → lacunas → ideia central → roteiro → texto → direcao visual → classificacao → contratos visuais → wireframes → auditoria dos wireframes → bloqueio da geometria pedagogica → ativos/arte final → diagramacao → render → revisao cega → validacao estrutural → correcao seletiva → PDF aprovado → integracao**
 
 ### Logica visual obrigatoria em Computacao
 
 Antes de diagramar, classifique no roteiro ou briefing cada pagina planejada como uma ou mais: `N` narrativa, `C` conceito visual, `S` sequencia de comandos/passos, `X` comparacao, `D` depuracao/diagnostico, `R` repeticao/loop, `A` arquitetura/fluxo interno, `Q` questao/atividade ou `G` gabarito. A classificacao serve ao processo editorial e nao precisa aparecer no PDF.
 
 Considere critica uma pagina que introduz vocabulario ou conceito novo, mostra a primeira execucao, erro, correcao, repeticao/loop, arquitetura/fluxo, uma questao integrada final ou uma comparacao necessaria para entender o resultado. Pagina critica exige renderizacao e revisao visual ampliada com o `documentacao/computacao/CHECKLIST_LOGICA_VISUAL.md`.
+
+**Pagina critica de Computacao nao deve saltar do briefing para a arte final.** Preencha o contrato visual e aprove o wireframe antes do acabamento; depois, bloqueie a geometria pedagogica. Na revisao do render, descreva primeiro o que esta visualmente presente; depois compare com o contrato. Diagramas logicos devem ser deterministicos quando possivel, e validacao estrutural complementa, sem substituir, a revisao visual.
 
 Em paginas que ensinam logica computacional, a prioridade e: **clareza logica e pedagogica > beleza cenica > ornamentacao**. Uma pagina bonita, sem cortes, erros tipograficos ou conflito de paleta nao esta aprovada se a relacao que ensina nao puder ser inferida visualmente.
 
