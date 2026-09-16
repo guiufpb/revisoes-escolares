@@ -1934,6 +1934,348 @@ footer {
   gap: 20px;
 }
 
+.apoio-matematico {
+  width: min(100%, 860px);
+  margin: 0 auto;
+  padding: 18px;
+  border: 2px solid #d9cdf9;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #fffdf4, #f5f1ff);
+  color: var(--roxo-escuro);
+}
+
+.grupo-base-dez {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: center;
+  gap: 18px;
+}
+
+.barras-dez,
+.cubinhos-unidade {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: center;
+  gap: 8px;
+}
+
+.barra-dez {
+  display: block;
+  width: 34px;
+  height: 132px;
+  border: 3px solid #a86508;
+  border-radius: 8px;
+  background: repeating-linear-gradient(to bottom, #ffd166 0 10px, #b9780b 10px 12px);
+  box-shadow: inset 4px 0 rgb(255 255 255 / 35%);
+}
+
+.cubinhos-unidade {
+  max-width: 132px;
+}
+
+.cubinho-unidade {
+  display: block;
+  width: 32px;
+  height: 32px;
+  border: 3px solid #9a650c;
+  border-radius: 7px;
+  background: #ffd166;
+  box-shadow: inset 4px 4px rgb(255 255 255 / 38%);
+}
+
+.faixa-sequencia {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(26px, 1fr));
+  gap: 6px;
+}
+
+.celula-sequencia {
+  display: grid;
+  min-height: 50px;
+  place-items: center;
+  border: 2px solid #9882d5;
+  border-radius: 10px;
+  background: #fff;
+  font-size: clamp(0.92rem, 3.4vw, 1.3rem);
+  font-weight: 1000;
+}
+
+.lacuna-sequencia {
+  border-style: dashed;
+  background: #fff8d8;
+  color: #795c07;
+}
+
+.lista-vizinhos {
+  display: grid;
+  gap: 10px;
+}
+
+.linha-vizinhos {
+  display: grid;
+  grid-template-columns: minmax(52px, 1fr) auto minmax(52px, 1fr) auto minmax(52px, 1fr);
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.linha-vizinhos > strong,
+.vizinho-anterior,
+.vizinho-posterior {
+  display: grid;
+  min-height: 48px;
+  place-items: center;
+  border: 2px solid #9882d5;
+  border-radius: 12px;
+  background: #fff;
+  font-size: 1.25rem;
+}
+
+.linha-vizinhos > strong {
+  background: #e9e1ff;
+}
+
+.vizinho-anterior,
+.vizinho-posterior {
+  border-style: dashed;
+  background: #fff8d8;
+}
+
+.abaco-du {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(100px, 170px));
+  justify-content: center;
+  gap: 24px;
+}
+
+.haste-abaco {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.haste-abaco > strong {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--roxo);
+  color: #fff;
+  font-size: 1.25rem;
+}
+
+.trilho-abaco {
+  position: relative;
+  display: flex;
+  min-width: 92px;
+  min-height: 230px;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 14px 10px;
+  gap: 5px;
+  border-bottom: 8px solid #815c2d;
+}
+
+.trilho-abaco::before {
+  position: absolute;
+  inset: 0 auto 0 50%;
+  z-index: 0;
+  width: 5px;
+  transform: translateX(-50%);
+  border-radius: 99px;
+  background: #9b784c;
+  content: '';
+}
+
+.peca-abaco {
+  z-index: 1;
+  width: 70px;
+  height: 24px;
+  border: 3px solid #96501c;
+  border-radius: 50%;
+  background: #ff9f43;
+  box-shadow: inset 0 5px rgb(255 255 255 / 32%);
+}
+
+.haste-abaco[data-ordem-abaco='U'] .peca-abaco {
+  border-color: #2c6b8e;
+  background: #66c2e5;
+}
+
+.fichas-dinheiro {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.ficha-dinheiro {
+  display: grid;
+  min-width: 92px;
+  min-height: 70px;
+  place-items: center;
+  padding: 10px;
+  border: 3px dashed #2d7258;
+  border-radius: 50%;
+  background: #dff8e8;
+  color: #164c39;
+  font-size: 1.25rem;
+  font-weight: 1000;
+}
+
+.formando-dezena {
+  display: grid;
+  grid-template-columns: minmax(210px, 300px) minmax(120px, 1fr);
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.quadro-dez {
+  display: grid;
+  grid-template-columns: repeat(5, 38px);
+  justify-content: center;
+  gap: 7px;
+  padding: 14px;
+  border: 4px solid #5b439a;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.pecas-restantes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px;
+  padding: 14px;
+  border: 2px dashed #bc7b11;
+  border-radius: 16px;
+  background: #fff9dc;
+}
+
+.peca-contagem {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #32688d;
+  border-radius: 9px;
+  background: #69bce3;
+}
+
+.peca-contagem.amarela {
+  border-color: #9a650c;
+  background: #ffd166;
+}
+
+.peca-contagem.usada {
+  outline: 3px solid #fff;
+  outline-offset: -7px;
+}
+
+.decomposicao-visual {
+  display: grid;
+  gap: 12px;
+}
+
+.decomposicao-visual section {
+  display: grid;
+  grid-template-columns: minmax(60px, 1fr) auto minmax(60px, 1fr) auto minmax(60px, 1fr);
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.decomposicao-visual section > strong,
+.decomposicao-visual section > span:not([aria-hidden='true']) {
+  padding: 12px;
+  border: 2px solid #9882d5;
+  border-radius: 12px;
+  background: #fff;
+  font-size: 1.2rem;
+}
+
+.reagrupamento-visual,
+.troca-subtracao {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+}
+
+.reagrupamento-visual > section,
+.troca-subtracao > section {
+  display: grid;
+  align-self: stretch;
+  align-content: start;
+  padding: 12px;
+  gap: 12px;
+  border: 2px solid #e1d8f8;
+  border-radius: 16px;
+  background: #fff;
+  text-align: center;
+}
+
+.reagrupamento-visual .barra-dez,
+.troca-subtracao .barra-dez {
+  width: 24px;
+  height: 96px;
+  background: repeating-linear-gradient(to bottom, #ffd166 0 7px, #b9780b 7px 9px);
+}
+
+.reagrupamento-visual .cubinho-unidade,
+.troca-subtracao .cubinho-unidade {
+  width: 24px;
+  height: 24px;
+}
+
+.reagrupamento-visual > p,
+.troca-subtracao > p {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 12px;
+  border: 2px dashed #7d64c4;
+  border-radius: 14px;
+  background: #fff;
+  font-weight: 900;
+  text-align: center;
+}
+
+.operador-visual,
+.seta-troca {
+  font-size: 2rem;
+  font-weight: 1000;
+}
+
+.comparacao-dinheiro {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) auto minmax(120px, 1fr);
+  align-items: center;
+  gap: 16px;
+}
+
+.comparacao-dinheiro section {
+  display: grid;
+  min-height: 110px;
+  place-items: center;
+  padding: 14px;
+  border: 3px solid #5d9a72;
+  border-radius: 18px;
+  background: #effcf3;
+  text-align: center;
+}
+
+.comparacao-dinheiro section strong {
+  font-size: 1.6rem;
+}
+
+.comparador-visual {
+  font-size: 2rem;
+  font-weight: 1000;
+}
+
 .problema-operacoes {
   max-width: 780px;
   margin: 0 auto;
@@ -3468,6 +3810,31 @@ footer {
 
   .lista-multiplicacoes {
     padding: 14px;
+  }
+
+  .apoio-matematico {
+    padding: 12px;
+  }
+
+  .formando-dezena,
+  .reagrupamento-visual,
+  .troca-subtracao {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .operador-visual,
+  .seta-troca {
+    transform: rotate(90deg);
+    text-align: center;
+  }
+
+  .comparacao-dinheiro {
+    gap: 8px;
+  }
+
+  .comparacao-dinheiro section {
+    min-height: 94px;
+    padding: 8px;
   }
 }
 

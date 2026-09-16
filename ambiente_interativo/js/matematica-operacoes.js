@@ -231,6 +231,29 @@
     );
   }
 
+  function apoioVisualDaQuestao(questao) {
+    if (!questao.apoioVisual) return '';
+    if (
+      !window.MatematicaGeometriaMedidas ||
+      typeof window.MatematicaGeometriaMedidas.renderizarApoio !== 'function'
+    ) {
+      return '';
+    }
+    return window.MatematicaGeometriaMedidas.renderizarApoio(questao.apoioVisual, escapar);
+  }
+
+  function questaoDeMultiplicacao(questao) {
+    return questao.tipoItens === 'multiplicacao' || questao.faixa === 'tabuada';
+  }
+
+  function explicacaoDaQuestao(questao) {
+    if (questao.explicacao) return questao.explicacao;
+    if (questaoDeMultiplicacao(questao)) {
+      return 'Resolva cada multiplicação sem consultar a tabela.';
+    }
+    return 'Observe cada item e escreva todos os resultados.';
+  }
+
   function anunciar(questao, mensagem, sucesso) {
     var retorno = conteudo.querySelector('.retorno-operacoes');
     retorno.className =
@@ -340,7 +363,10 @@
     anunciar(
       questao,
       faltando
-        ? 'Complete todas as multiplicações destacadas antes de conferir.'
+        ? questao.mensagemCamposVazios ||
+            (questaoDeMultiplicacao(questao)
+              ? 'Complete todas as multiplicações destacadas antes de conferir.'
+              : 'Complete todos os resultados destacados antes de conferir.')
         : '↻ Tente outra vez. ' + questao.dica,
       false
     );
@@ -353,12 +379,14 @@
       .map(function (item) {
         var inputId = 'resposta-operacoes-' + questao.id + '-' + item.id;
         return (
-          '<label class="item-multiplicacao" for="' +
+          '<label class="item-multiplicacao item-operacao" for="' +
           inputId +
           '"><span>' +
-          escapar(item.operacao) +
+          escapar(item.rotulo || item.operacao) +
           '</span><input id="' +
           inputId +
+          '" data-item-operacao="' +
+          escapar(item.id) +
           '" data-item-multiplicacao="' +
           escapar(item.id) +
           '" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" value="' +
@@ -374,11 +402,17 @@
       escapar(questao.bloco) +
       '</p><h1 id="operacoes-titulo-questao">' +
       escapar(questao.titulo) +
-      '</h1><p class="explicacao-mariana">Resolva cada multiplicação sem consultar a tabela.</p>' +
+      '</h1><p class="explicacao-mariana">' +
+      escapar(explicacaoDaQuestao(questao)) +
+      '</p>' +
       '</div><img class="icone-etapa" src="../assets/objetos_escolares/calculator.svg" alt=""></div>' +
       '<div class="atividade-mariana atividade-operacoes"><p class="problema-operacoes">' +
       escapar(questao.enunciado) +
-      '</p><fieldset class="lista-multiplicacoes"><legend>Escreva todos os resultados</legend>' +
+      '</p>' +
+      apoioVisualDaQuestao(questao) +
+      '<fieldset class="lista-multiplicacoes lista-operacoes"><legend>' +
+      escapar(questao.rotuloItens || 'Escreva todos os resultados') +
+      '</legend>' +
       itens +
       '</fieldset><div class="acoes-atividade-mariana"><button class="botao-principal botao-grande" type="button" data-conferir-operacoes>Conferir todas</button>' +
       '<div class="retorno retorno-mariana retorno-operacoes" role="status" aria-live="polite"></div></div></div></article>';
@@ -428,13 +462,17 @@
       lembreteDaQuestao(questao) +
       '<p class="problema-operacoes">' +
       escapar(questao.enunciado) +
-      '</p><div class="conta-operacoes" aria-label="Conta: ' +
+      '</p>' +
+      apoioVisualDaQuestao(questao) +
+      '<div class="conta-operacoes" aria-label="Conta: ' +
       escapar(questao.operacao) +
       '">' +
       escapar(questao.operacao) +
       '</div><label class="campo-mariana campo-resposta-operacoes" for="' +
       inputId +
-      '"><span>Escreva o resultado:</span><input id="' +
+      '"><span>' +
+      escapar(questao.rotuloResposta || 'Escreva o resultado:') +
+      '</span><input id="' +
       inputId +
       '" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" value="' +
       escapar(resposta) +
