@@ -286,6 +286,352 @@
     );
   }
 
+  function repetir(quantidade, montar) {
+    return Array.from({ length: Math.max(0, Math.trunc(Number(quantidade) || 0)) })
+      .map(montar)
+      .join('');
+  }
+
+  function pecasBaseDez(dezenas, unidades, prefixo) {
+    return (
+      '<div class="grupo-base-dez" data-grupo-base-dez="' +
+      prefixo +
+      '" data-dezenas="' +
+      dezenas +
+      '" data-unidades="' +
+      unidades +
+      '"><div class="barras-dez">' +
+      repetir(dezenas, function (_, indice) {
+        return (
+          '<span class="barra-dez" data-barra-dez="' + (indice + 1) + '" aria-hidden="true"></span>'
+        );
+      }) +
+      '</div><div class="cubinhos-unidade">' +
+      repetir(unidades, function (_, indice) {
+        return (
+          '<span class="cubinho-unidade" data-cubinho-unidade="' +
+          (indice + 1) +
+          '" aria-hidden="true"></span>'
+        );
+      }) +
+      '</div></div>'
+    );
+  }
+
+  function renderBaseDez(visual, escapar) {
+    var dezenas = Math.max(0, Math.min(9, Math.trunc(Number(visual.dezenas) || 0)));
+    var unidades = Math.max(0, Math.min(19, Math.trunc(Number(visual.unidades) || 0)));
+    var total = dezenas * 10 + unidades;
+    return (
+      '<div class="apoio-matematico apoio-base-dez" role="img" data-modelo-total="' +
+      total +
+      '" aria-label="' +
+      escapar(
+        visual.rotuloAcessivel ||
+          'Material dourado com ' + dezenas + ' barras de dez e ' + unidades + ' cubinhos.'
+      ) +
+      '">' +
+      pecasBaseDez(dezenas, unidades, 'representacao') +
+      '</div>'
+    );
+  }
+
+  function renderSequenciaNumerica(visual, escapar) {
+    return (
+      '<div class="apoio-matematico faixa-sequencia" role="group" aria-label="' +
+      escapar(visual.rotuloAcessivel || 'Sequência numérica com lacunas') +
+      '">' +
+      (visual.valores || [])
+        .map(function (valor, indice) {
+          var lacuna = valor == null;
+          return (
+            '<span class="celula-sequencia ' +
+            (lacuna ? 'lacuna-sequencia' : '') +
+            '" data-posicao-sequencia="' +
+            indice +
+            '"' +
+            (lacuna
+              ? ' data-lacuna-sequencia="true" aria-label="Lacuna ' + (indice + 1) + '"'
+              : '') +
+            '>' +
+            (lacuna ? '<span aria-hidden="true">?</span>' : escapar(valor)) +
+            '</span>'
+          );
+        })
+        .join('') +
+      '</div>'
+    );
+  }
+
+  function renderVizinhos(visual, escapar) {
+    return (
+      '<div class="apoio-matematico lista-vizinhos" role="group" aria-label="' +
+      escapar(visual.rotuloAcessivel || 'Números com espaço para anterior e posterior') +
+      '">' +
+      (visual.alvos || [])
+        .map(function (alvo) {
+          return (
+            '<div class="linha-vizinhos" data-alvo-vizinhos="' +
+            escapar(alvo) +
+            '"><span class="vizinho-anterior" role="img" aria-label="Anterior de ' +
+            escapar(alvo) +
+            '">?</span><span aria-hidden="true">←</span><strong>' +
+            escapar(alvo) +
+            '</strong><span aria-hidden="true">→</span><span class="vizinho-posterior" role="img" aria-label="Posterior de ' +
+            escapar(alvo) +
+            '">?</span></div>'
+          );
+        })
+        .join('') +
+      '</div>'
+    );
+  }
+
+  function renderAbacoDU(visual, escapar) {
+    var dezenas = Math.max(0, Math.min(9, Math.trunc(Number(visual.dezenas) || 0)));
+    var unidades = Math.max(0, Math.min(9, Math.trunc(Number(visual.unidades) || 0)));
+    function haste(ordem, quantidade) {
+      return (
+        '<section class="haste-abaco" data-ordem-abaco="' +
+        ordem +
+        '" data-quantidade-abaco="' +
+        quantidade +
+        '"><strong>' +
+        ordem +
+        '</strong><div class="trilho-abaco" role="group" aria-label="' +
+        quantidade +
+        (ordem === 'D' ? ' dezenas' : ' unidades') +
+        '">' +
+        repetir(quantidade, function (_, indice) {
+          return (
+            '<span class="peca-abaco" data-peca-abaco="' +
+            ordem +
+            '-' +
+            (indice + 1) +
+            '" aria-hidden="true"></span>'
+          );
+        }) +
+        '</div></section>'
+      );
+    }
+    return (
+      '<div class="apoio-matematico abaco-du" role="img" data-modelo-total="' +
+      (dezenas * 10 + unidades) +
+      '" aria-label="' +
+      escapar(
+        visual.rotuloAcessivel ||
+          'Ábaco com ' + dezenas + ' peças na haste D e ' + unidades + ' peças na haste U.'
+      ) +
+      '">' +
+      haste('D', dezenas) +
+      haste('U', unidades) +
+      '</div>'
+    );
+  }
+
+  function renderFichasDinheiro(visual, escapar) {
+    var valores = (visual.valores || []).map(function (valor) {
+      return Math.max(0, Math.trunc(Number(valor) || 0));
+    });
+    return (
+      '<div class="apoio-matematico fichas-dinheiro" role="img" data-modelo-total="' +
+      valores.reduce(function (total, valor) {
+        return total + valor;
+      }, 0) +
+      '" aria-label="' +
+      escapar(
+        visual.rotuloAcessivel ||
+          'Fichas monetárias fictícias de ' +
+            valores
+              .map(function (valor) {
+                return 'R$ ' + valor;
+              })
+              .join(', ') +
+            '.'
+      ) +
+      '">' +
+      valores
+        .map(function (valor, indice) {
+          return (
+            '<span class="ficha-dinheiro" data-valor-ficha="' +
+            valor +
+            '" data-ficha-indice="' +
+            indice +
+            '">R$ ' +
+            valor +
+            '</span>'
+          );
+        })
+        .join('') +
+      '</div>'
+    );
+  }
+
+  function renderFormandoDezena(visual, escapar) {
+    var grupoA = Math.max(0, Math.trunc(Number(visual.grupoA) || 0));
+    var grupoB = Math.max(0, Math.trunc(Number(visual.grupoB) || 0));
+    var usadosDoB = Math.max(0, Math.min(grupoB, 10 - grupoA));
+    var restantes = grupoB - usadosDoB;
+    return (
+      '<div class="apoio-matematico formando-dezena" role="img" data-grupo-a="' +
+      grupoA +
+      '" data-grupo-b="' +
+      grupoB +
+      '" data-usados-grupo-b="' +
+      usadosDoB +
+      '" data-restantes-grupo-b="' +
+      restantes +
+      '" aria-label="' +
+      escapar(
+        visual.rotuloAcessivel ||
+          grupoA +
+            ' peças azuis e ' +
+            grupoB +
+            ' amarelas. Duas amarelas completam um grupo de dez; cinco ficam fora.'
+      ) +
+      '"><section class="quadro-dez">' +
+      repetir(grupoA, function (_, indice) {
+        return (
+          '<span class="peca-contagem azul" data-peca-azul="' +
+          (indice + 1) +
+          '" aria-hidden="true"></span>'
+        );
+      }) +
+      repetir(usadosDoB, function (_, indice) {
+        return (
+          '<span class="peca-contagem amarela usada" data-peca-amarela-usada="' +
+          (indice + 1) +
+          '" aria-hidden="true"></span>'
+        );
+      }) +
+      '</section><section class="pecas-restantes">' +
+      repetir(restantes, function (_, indice) {
+        return (
+          '<span class="peca-contagem amarela" data-peca-amarela-restante="' +
+          (indice + 1) +
+          '" aria-hidden="true"></span>'
+        );
+      }) +
+      '</section></div>'
+    );
+  }
+
+  function renderDecomposicao(visual, escapar) {
+    return (
+      '<div class="apoio-matematico decomposicao-visual" role="img" aria-label="' +
+      escapar(visual.rotuloAcessivel || 'Decomposição das parcelas em dezenas e unidades') +
+      '">' +
+      (visual.parcelas || [])
+        .map(function (parcela) {
+          var numero = Math.max(0, Math.min(99, Math.trunc(Number(parcela) || 0)));
+          var partes = algarismosDU(numero);
+          return (
+            '<section data-parcela="' +
+            numero +
+            '"><strong>' +
+            numero +
+            '</strong><span aria-hidden="true">→</span><span data-dezena="' +
+            partes.D * 10 +
+            '">' +
+            partes.D * 10 +
+            '</span><span aria-hidden="true">+</span><span data-unidade="' +
+            partes.U +
+            '">' +
+            partes.U +
+            '</span></section>'
+          );
+        })
+        .join('') +
+      '</div>'
+    );
+  }
+
+  function renderAdicaoReagrupamento(visual, escapar) {
+    var primeira = algarismosDU(visual.primeira);
+    var segunda = algarismosDU(visual.segunda);
+    var unidades = primeira.U + segunda.U;
+    return (
+      '<div class="apoio-matematico reagrupamento-visual adicao-reagrupamento" role="img" data-primeira-parcela="' +
+      Math.trunc(Number(visual.primeira) || 0) +
+      '" data-segunda-parcela="' +
+      Math.trunc(Number(visual.segunda) || 0) +
+      '" data-total-unidades="' +
+      unidades +
+      '" data-troca-unidades="10" aria-label="' +
+      escapar(
+        visual.rotuloAcessivel ||
+          'Duas parcelas em material dourado. As unidades totalizam ' +
+            unidades +
+            ' e um grupo de 10 unidades pode virar 1 dezena.'
+      ) +
+      '"><section><strong>Primeira parcela</strong>' +
+      pecasBaseDez(primeira.D, primeira.U, 'primeira-parcela') +
+      '</section><span class="operador-visual" aria-hidden="true">+</span><section><strong>Segunda parcela</strong>' +
+      pecasBaseDez(segunda.D, segunda.U, 'segunda-parcela') +
+      '</section><p><strong>' +
+      unidades +
+      ' U</strong><span aria-hidden="true"> → </span>agrupe 10 U para formar 1 D.</p></div>'
+    );
+  }
+
+  function renderSubtracaoReagrupamento(visual, escapar) {
+    var inicial = algarismosDU(visual.inicial);
+    var depois = { D: inicial.D - 1, U: inicial.U + 10 };
+    return (
+      '<div class="apoio-matematico troca-subtracao" role="img" data-valor-inicial="' +
+      Math.trunc(Number(visual.inicial) || 0) +
+      '" data-dezenas-iniciais="' +
+      inicial.D +
+      '" data-unidades-iniciais="' +
+      inicial.U +
+      '" data-dezenas-trocadas="' +
+      depois.D +
+      '" data-unidades-trocadas="' +
+      depois.U +
+      '" data-valor-trocado="' +
+      (depois.D * 10 + depois.U) +
+      '" aria-label="' +
+      escapar(
+        visual.rotuloAcessivel ||
+          inicial.D +
+            ' dezenas e ' +
+            inicial.U +
+            ' unidades se transformam em ' +
+            depois.D +
+            ' dezenas e ' +
+            depois.U +
+            ' unidades, preservando o mesmo valor.'
+      ) +
+      '"><section><strong>Antes da troca</strong>' +
+      pecasBaseDez(inicial.D, inicial.U, 'antes-troca') +
+      '</section><span class="seta-troca" aria-hidden="true">→</span><section><strong>Depois da troca</strong>' +
+      pecasBaseDez(depois.D, depois.U, 'depois-troca') +
+      '</section><p>1 D virou 10 U. Agora há unidades suficientes para retirar ' +
+      Math.max(0, Math.trunc(Number(visual.retirarUnidades) || 0)) +
+      ' U.</p></div>'
+    );
+  }
+
+  function renderComparacaoDinheiro(visual, escapar) {
+    var disponivel = Math.max(0, Math.trunc(Number(visual.disponivel) || 0));
+    var preco = Math.max(0, Math.trunc(Number(visual.preco) || 0));
+    return (
+      '<div class="apoio-matematico comparacao-dinheiro" role="img" data-valor-disponivel="' +
+      disponivel +
+      '" data-preco="' +
+      preco +
+      '" aria-label="' +
+      escapar(
+        visual.rotuloAcessivel || 'Nina tem R$ ' + disponivel + ' e o jogo custa R$ ' + preco + '.'
+      ) +
+      '"><section><span>Nina tem</span><strong>R$ ' +
+      disponivel +
+      '</strong></section><span class="comparador-visual" aria-hidden="true">&lt;</span><section><span>Preço do jogo</span><strong>R$ ' +
+      preco +
+      '</strong></section></div>'
+    );
+  }
+
   function renderVisual(configuracao, estado, escapar) {
     var visual = configuracao.visual || {};
     if (visual.tipo === 'contagem-formas') return renderContagem(configuracao, estado, escapar);
@@ -295,6 +641,17 @@
     if (visual.tipo === 'capacidade') return renderCapacidade(visual, escapar);
     if (visual.tipo === 'operacao-du') return renderOperacaoDU(visual, escapar);
     if (visual.tipo === 'mercado') return renderMercado(visual, escapar);
+    if (visual.tipo === 'base-dez') return renderBaseDez(visual, escapar);
+    if (visual.tipo === 'sequencia-numerica') return renderSequenciaNumerica(visual, escapar);
+    if (visual.tipo === 'vizinhos') return renderVizinhos(visual, escapar);
+    if (visual.tipo === 'abaco-du') return renderAbacoDU(visual, escapar);
+    if (visual.tipo === 'fichas-dinheiro') return renderFichasDinheiro(visual, escapar);
+    if (visual.tipo === 'formando-dezena') return renderFormandoDezena(visual, escapar);
+    if (visual.tipo === 'decomposicao') return renderDecomposicao(visual, escapar);
+    if (visual.tipo === 'adicao-reagrupamento') return renderAdicaoReagrupamento(visual, escapar);
+    if (visual.tipo === 'subtracao-reagrupamento')
+      return renderSubtracaoReagrupamento(visual, escapar);
+    if (visual.tipo === 'comparacao-dinheiro') return renderComparacaoDinheiro(visual, escapar);
     if (visual.texto) {
       return (
         '<div class="painel-visual-medidas" aria-hidden="true">' + escapar(visual.texto) + '</div>'
@@ -516,6 +873,9 @@
     estadoInicial: estadoInicial,
     normalizarEstado: normalizarEstado,
     renderizar: renderizar,
+    renderizarApoio: function (visual, escapar) {
+      return renderVisual({ visual: visual }, estadoInicial(), escapar);
+    },
     validar: validar,
     resumo: resumo,
   };

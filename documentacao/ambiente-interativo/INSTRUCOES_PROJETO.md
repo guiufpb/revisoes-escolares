@@ -32,10 +32,11 @@ o PDF editorial deve ser aprovado antes de qualquer integração ao ambiente.
 
 Para Matemática visual, reutilize `matematica-geometria-medidas.js` junto da Cena Matemática. Os
 tipos declarativos atuais cobrem campos com ilustração, seleção múltipla, associações, mosaico,
-recipientes de capacidade, continhas verticais D–U e produtos de mercado. Réguas, balanças,
-formas, objetos e unidades devem ficar na configuração da etapa; persistência, desfazer, correção
-e acessibilidade continuam no controlador compartilhado. Em etapas avaliativas da Cena
-Matemática, “Próxima” permanece bloqueado até uma conferência correta.
+recipientes de capacidade, continhas verticais D–U, produtos de mercado, base dez, sequências,
+vizinhos, ábaco D–U, fichas de dinheiro, formação de dezena, decomposição e reagrupamento. Réguas,
+balanças, formas, objetos, unidades e quantidades devem ficar na configuração da etapa;
+persistência, desfazer, correção e acessibilidade continuam no controlador compartilhado. Em
+etapas avaliativas da Cena Matemática, “Próxima” permanece bloqueado até uma conferência correta.
 
 ## 4. Arquivos gerados e privados
 
@@ -195,6 +196,9 @@ axe-core, console e `file://`.
 
 - Reutilize `ambiente_interativo/js/matematica-operacoes.js` para revisões sequenciais de adição,
   subtração, equivalências numéricas e respostas escritas no teclado.
+- Use `apoioVisual` apenas quando a questão precisar de um modelo determinístico; configure no
+  conteúdo as quantidades e os estados matemáticos, sem inferi-los da resposta final nem tornar o
+  resultado visível. Valide por estrutura e contagem depois de renderizar.
 - Mantenha enunciados, respostas, pistas e progressão nos arquivos específicos de cada perfil em
   `ambiente_interativo/revisoes/<perfil>/`; não coloque conteúdo infantil no controlador.
 - Informe a conta de forma visível e acessível, associe corretamente o rótulo ao campo numérico e
@@ -214,6 +218,9 @@ axe-core, console e `file://`.
 - Se uma questão tiver vários cálculos, cada item precisa de ID e resposta próprios. Salve cada
   digitação, destaque individualmente campos vazios ou incorretos e só conclua a questão quando
   todos estiverem corretos.
+- Para atividades numéricas que não sejam multiplicações, declare `rotulo`, `rotuloItens`,
+  `rotuloResposta` e mensagens próprias no conteúdo. A ausência dessas opções deve preservar o
+  texto legado das revisões de tabuada.
 - Teste o estudo antes do bloqueio, a recarga durante o estudo, o início da avaliação, o retorno à
   questão anterior, o avanço que ignora a tabela já bloqueada e a recarga depois do bloqueio.
 

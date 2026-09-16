@@ -31,6 +31,8 @@ import '../revisoes/alice/matematica-contas-e-tabuada.js';
 import '../revisoes/mariana/matematica-contas-e-tabuada.js';
 import '../revisoes/alice/matematica-mais-contas-e-tabuada.js';
 import '../revisoes/mariana/matematica-mais-contas-e-tabuada.js';
+import '../revisoes/alice/matematica-dezenas-dinheiro-tabuadas-setembro-2026.js';
+import '../revisoes/mariana/matematica-dezenas-dinheiro-tabuadas-setembro-2026.js';
 import '../revisoes/mariana/gramatica-revisao-ampla.js';
 import '../revisoes/gramatica-h-til-vocabulario.js';
 import '../revisoes/mariana/gramatica-contos-ortografia-pontuacao.js';
