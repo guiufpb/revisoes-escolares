@@ -23,6 +23,10 @@
     alice: 'alice-matematica-mais-contas-e-tabuada',
     mariana: 'mariana-matematica-mais-contas-e-tabuada',
   };
+  var IDS_DEZENAS_DINHEIRO_TABUADAS = {
+    alice: 'alice-matematica-dezenas-dinheiro-contas-tabuadas-setembro-2026',
+    mariana: 'mariana-matematica-dezenas-dinheiro-contas-tabuadas-setembro-2026',
+  };
   var IDS_INGLES = {
     alice: 'alice-ingles-at-school-unidade-3',
     mariana: 'mariana-ingles-at-school-unidade-3',
@@ -540,6 +544,12 @@
       window.MatematicaOperacoes.abrir(IDS_MAIS_OPERACOES_TABUADA[alunoAtual]);
       atualizarResumo();
     });
+    document
+      .getElementById('abrir-dezenas-dinheiro-tabuadas-setembro')
+      .addEventListener('click', function () {
+        window.MatematicaOperacoes.abrir(IDS_DEZENAS_DINHEIRO_TABUADAS[alunoAtual]);
+        atualizarResumo();
+      });
     document.querySelector('[data-materia="leitura"]').addEventListener('click', function () {
       window.LeituraRevisoes.abrirBiblioteca(alunoAtual);
       atualizarResumo();

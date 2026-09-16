@@ -4,7 +4,7 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra o estado de trabalho em **03/09/2026**.
+Este inventário registra o estado de trabalho em **15/09/2026**.
 
 ## 2. Base da aplicação
 
@@ -53,10 +53,12 @@ Este inventário registra o estado de trabalho em **03/09/2026**.
 - `js/leitura.js`, `js/leitor-dedicado.js` e `js/glossario.js`: biblioteca e leitor.
 - `js/matematica.js`, `js/matematica-cena.js` e `js/matematica-manipulaveis.js`: Matemática manipulativa.
 - `js/matematica-geometria-medidas.js`: formas originais em CSS, campos com unidade, seleção,
-  associação, mosaico, régua, balança, recipientes de capacidade, continhas verticais D–U e
-  produtos de mercado dentro do mesmo contrato de Cena Matemática.
-- `js/matematica-operacoes.js`: operações digitadas, questões com vários campos e estudo
-  intermediário de tabuadas configuráveis com bloqueio persistente.
+  associação, mosaico, régua, balança, recipientes de capacidade, continhas verticais D–U,
+  produtos de mercado e apoios determinísticos de base dez, sequências, vizinhos, ábaco D–U,
+  dinheiro, decomposição e reagrupamento dentro do mesmo contrato de Cena Matemática.
+- `js/matematica-operacoes.js`: operações digitadas, questões com vários campos e rótulos
+  configuráveis, apoio visual opt-in e estudo intermediário de tabuadas configuráveis com
+  bloqueio persistente.
 
 ### Armazenamento seguro
 
@@ -240,6 +242,35 @@ Chave: `revisoesEscolares.mariana.ciencias.plantasSolSetembro2026.v1`.
 Conteúdo: `ambiente_interativo/revisoes/mariana/ciencias-plantas-sol-setembro-2026.js`.
 
 ## 5. Matemática
+
+### Alice e Mariana — Dezenas, dinheiro, contas e tabuadas
+
+- Nova rodada com **30 questões e 30 pontos**, semanticamente idêntica nos dois perfis e com IDs,
+  chaves, respostas e progresso independentes.
+- Questões 1 a 6: material dourado, decomposição, sequências, números vizinhos e ábaco D–U.
+- Questões 7 a 12: dinheiro fictício, dezenas exatas, cálculos até 19, formação de uma dezena e
+  adição sem reagrupamento no quadro D–U.
+- Questões 13 a 22: estratégias de adição, decomposição, cálculo mental, adição e subtração com
+  reagrupamento, comparação e situações com dinheiro.
+- Questões 23 e 24: problemas em etapas e mini simulado. Depois do acerto da questão 24, uma etapa
+  de estudo apresenta somente as tabuadas do 2 e do 3, de `× 1` a `× 10`, sem conceder ponto.
+- Ao iniciar a questão 25, a tabela fica bloqueada de modo persistente: voltar leva diretamente à
+  questão 24 e avançar retorna à 25 sem reabrir o estudo, inclusive após sair ou recarregar.
+- Questões 25 a 30 avaliam as tabuadas do 2 e do 3 em páginas com vários campos; cada página vale
+  um único ponto e só termina quando todos os fatos estiverem corretos.
+- Os visuais locais expõem dados estruturais que permitem conferir quantidades, posições D–U,
+  valores monetários, parcelas e estados anterior/posterior das trocas sem revelar o resultado
+  final. A revisão visual cega e os testes verificam o modelo matemático além da aparência.
+
+IDs:
+
+- `alice-matematica-dezenas-dinheiro-contas-tabuadas-setembro-2026`
+- `mariana-matematica-dezenas-dinheiro-contas-tabuadas-setembro-2026`
+
+Chaves:
+
+- `revisoesEscolares.alice.matematica.dezenasDinheiroContasTabuadasSetembro2026.v1`
+- `revisoesEscolares.mariana.matematica.dezenasDinheiroContasTabuadasSetembro2026.v1`
 
 ### Alice — Capacidade, continhas e números
 
@@ -748,7 +779,7 @@ Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
 - Toda pull request para `main` continua executando a suíte global no GitHub Actions; a saída
   completa é consultada apenas quando houver falha ou necessidade de diagnóstico.
 
-Na data deste inventário existem **230 testes Playwright**:
+Na data deste inventário existem **243 testes Playwright**:
 
 - `tests/ambiente-interativo.spec.js`: fluxos centrais, revisões de Inglês de Alice e Mariana, Leitura, Matemática ampla, armazenamento, canvas e `file://`.
 - `tests/ciencias-mariana-plantas-sol.spec.js`: 30 questões, mapa visual, gabarito completo,
@@ -775,6 +806,10 @@ Na data deste inventário existem **230 testes Playwright**:
 - `tests/matematica-mais-contas-tabuada.spec.js`: nova rodada com números próprios, tabuadas
   configuráveis do 1 ao 3, bloqueio persistente, multiplicações por 3, correção, retorno, recarga,
   isolamento da rodada anterior, limpeza seletiva, celular, axe e `file://`.
+- `tests/matematica-dezenas-dinheiro-tabuadas-setembro.spec.js`: igualdade semântica das 30
+  questões entre perfis, IDs e chaves isolados, gabarito, modelos visuais quantificados, erro e
+  correção, vários campos, pontuação única, tabuadas somente do 2 e do 3, bloqueio persistente,
+  limpeza seletiva, teclado, toque, celular, axe-core, console e `file://`.
 
 A cobertura inclui isolamento, erro e correção antes do avanço em City Life e At the Farm,
 recarga, Pointer Events, teclado, dados corrompidos, `localStorage` bloqueado, áudio bilíngue,

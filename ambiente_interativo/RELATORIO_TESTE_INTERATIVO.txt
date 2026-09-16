@@ -1,6 +1,62 @@
 RELATORIO DE TESTE - AMBIENTE INTERATIVO
 =======================================
 
+ATUALIZAÇÃO: 15/09/2026 - DEZENAS, DINHEIRO, CONTAS E TABUADAS 2 E 3
+====================================================================
+
+ESCOPO IMPLEMENTADO
+- Criada para Alice e Mariana uma nova revisão de 30 questões e 30
+  pontos, com conteúdo, ordem, valores, respostas e modelos visuais
+  semanticamente idênticos, mas IDs, chaves e progresso separados.
+- Os blocos trabalham dezenas e unidades, sequências, números vizinhos,
+  ábaco D-U, dinheiro fictício, dezenas exatas, cálculo mental, adição e
+  subtração com reagrupamento, problemas e mini simulado.
+- Após a questão 24, a etapa de estudo mostra somente as tabuadas do 2 e
+  do 3, de x 1 a x 10. Iniciar a questão 25 bloqueia a tabela de modo
+  persistente; voltar leva à Q24 e avançar retorna à Q25 sem reabri-la.
+- O controlador de operações ganhou apoio visual e rótulos opt-in. O
+  renderizador compartilhado ganhou modelos determinísticos locais para
+  base dez, sequências, vizinhos, ábaco, dinheiro, decomposição e
+  reagrupamento, preservando as revisões antigas.
+
+PERSISTÊNCIA E ACESSIBILIDADE
+- Chaves:
+  revisoesEscolares.alice.matematica.dezenasDinheiroContasTabuadasSetembro2026.v1
+  revisoesEscolares.mariana.matematica.dezenasDinheiroContasTabuadasSetembro2026.v1
+- Erro, correção, vários campos, ponto único, avanço, retorno, recarga,
+  conclusão e limpeza seletiva foram verificados nos dois perfis.
+- Teclado, toque, aria-live, axe-core, viewport 390 x 844, ausência de
+  rolagem horizontal e execução pelo bundle em file:// foram preservados.
+- O PDF escolar privado não foi submetido a novo OCR nem rerenderizado; o
+  conteúdo foi implementado apenas a partir do roteiro pedagógico fornecido.
+
+VALIDAÇÃO VISUAL E COBERTURA
+- Q1, Q6, Q7, Q11, Q16, Q20 e Q22 foram inspecionadas no navegador. A
+  revisão cega e os atributos estruturais confirmaram quantidades, ordens
+  D-U, valores e estados de troca sem depender apenas da aparência e sem
+  revelar o resultado final.
+- Teste direcionado novo: 8 de 8 aprovados.
+- Regressões de operações e tabuadas anteriores: 21 de 21 aprovadas.
+- Registro e teste legado que oscilaram na primeira execução foram
+  repetidos isoladamente: 2 de 2 aprovados.
+- npm run build, npm run format:check e npm run lint: PASSARAM.
+- npm test, repetição global final: 243 de 243 testes Playwright aprovados
+  em 18,2 minutos.
+
+VALIDAÇÃO MANUAL EM USO REAL
+- Mariana concluiu integralmente a revisão
+  mariana-matematica-dezenas-dinheiro-contas-tabuadas-setembro-2026.
+- Alice concluiu integralmente a revisão
+  alice-matematica-dezenas-dinheiro-contas-tabuadas-setembro-2026.
+- Nos dois perfis, não foi observado problema funcional. Navegação,
+  correção, progressão, persistência e etapa das tabuadas funcionaram
+  normalmente, sem necessidade de correção de código durante o uso.
+- Foi observada somente uma questão de UX: o layout ficou estreito no
+  desktop. Esta revisão permanece inalterada por esse motivo.
+- Para novas atividades do Ambiente Interativo, adotar Desktop Amplo como
+  padrão, mantendo o celular responsivo e as revisões antigas intactas.
+- Até esta consolidação, nenhum push, merge ou publicação foi realizado.
+
 ATUALIZAÇÃO: 26/08/2026 - CAPACIDADE, CONTINHAS E NÚMEROS
 ==========================================================
 

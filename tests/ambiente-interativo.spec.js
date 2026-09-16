@@ -189,9 +189,9 @@ test('carrega a tela inicial e registra todas as revisões sem chaves duplicadas
       ),
     }))
   );
-  expect(registro).toHaveLength(47);
-  expect(new Set(registro.map((item) => item.id)).size).toBe(47);
-  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(47);
+  expect(registro).toHaveLength(49);
+  expect(new Set(registro.map((item) => item.id)).size).toBe(49);
+  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(49);
   expect(registro.every((item) => item.elementosExistem)).toBe(true);
 });
 
@@ -3022,10 +3022,9 @@ test('desenha, salva e restaura um canvas em alta densidade', async ({ page }) =
   await abrirRevisaoMariana(page);
   const canvas = page.locator('#canvas-mariana-vistas');
   await expect(canvas).toBeVisible();
-  const caixa = await canvas.boundingBox();
-  await page.mouse.move(caixa.x + 30, caixa.y + 30);
+  await canvas.hover({ position: { x: 30, y: 30 } });
   await page.mouse.down();
-  await page.mouse.move(caixa.x + 130, caixa.y + 90, { steps: 8 });
+  await canvas.hover({ position: { x: 130, y: 90 } });
   await page.mouse.up();
   await expect(canvas).toHaveAttribute('data-tem-desenho', 'true');
   await expect

@@ -240,6 +240,28 @@
       controladorCompartilhado: 'matematica-operacoes',
     },
     {
+      id: 'alice-matematica-dezenas-dinheiro-contas-tabuadas-setembro-2026',
+      aluno: 'alice',
+      titulo: 'Dezenas, dinheiro, contas e tabuadas',
+      cartaoId: 'abrir-dezenas-dinheiro-tabuadas-setembro',
+      painelId: 'tela-matematica-operacoes',
+      chaveArmazenamento:
+        'revisoesEscolares.alice.matematica.dezenasDinheiroContasTabuadasSetembro2026.v1',
+      totalEtapas: 30,
+      controladorCompartilhado: 'matematica-operacoes',
+    },
+    {
+      id: 'mariana-matematica-dezenas-dinheiro-contas-tabuadas-setembro-2026',
+      aluno: 'mariana',
+      titulo: 'Dezenas, dinheiro, contas e tabuadas',
+      cartaoId: 'abrir-dezenas-dinheiro-tabuadas-setembro',
+      painelId: 'tela-matematica-operacoes',
+      chaveArmazenamento:
+        'revisoesEscolares.mariana.matematica.dezenasDinheiroContasTabuadasSetembro2026.v1',
+      totalEtapas: 30,
+      controladorCompartilhado: 'matematica-operacoes',
+    },
+    {
       id: 'mariana-gramatica-revisao-ampla',
       aluno: 'mariana',
       titulo: 'Revisão ampla de Gramática',
