@@ -134,7 +134,7 @@ Use apenas os modulos compartilhados existentes. Audio comeca por acao da crianc
 
 Ditado e apoio auditivo sem preenchimento automatico nem exposicao da resposta. Use-o tambem como ferramenta pedagogica quando exercitar leitura, escrita ou vocabulario de forma apropriada.
 
-Por padrao, Ciencias, Historia, Geografia, Matematica e Leitura nao devem rejeitar uma resposta apenas por diferenca de maiusculas/minusculas. Exija capitalizacao, pontuacao, acentuacao ou frase completa somente quando isso tiver valor pedagogico explicito. Reserve `maiusculasObrigatorias` principalmente para Gramatica/Portugues ou objetivos declarados de escrita. Detalhes ficam em `references/questionarios-e-audio.md` e `references/pedagogia-e-cobertura.md`.
+Por padrao, Ciencias, Historia, Geografia, Matematica e Leitura nao devem rejeitar uma resposta apenas por diferenca de maiusculas/minusculas. Exija capitalizacao, pontuacao, acentuacao ou frase completa somente quando isso tiver valor pedagogico explicito. Reserve `maiusculasObrigatorias` principalmente para Gramatica/Portugues ou objetivos declarados de escrita. Detalhes ficam em `references/questionarios-e-audio.md`, `documentacao/ambiente-interativo/infraestrutura/AUDIO_E_VOZ.md` e `references/pedagogia-e-cobertura.md`.
 
 ## 9. Privacidade e direitos autorais
 

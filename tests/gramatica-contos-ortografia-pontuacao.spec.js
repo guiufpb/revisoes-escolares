@@ -361,59 +361,54 @@ test('sete ditados não revelam respostas nem tocam sozinhos e usam português l
       });
       await expect(page.locator('[data-resposta-gramatica]').nth(i)).toHaveValue('');
     }
-    await expect.poll(() => page.evaluate(() => window.__falas.length)).toBe(3);
+    await expect.poll(() => page.evaluate(() => window.__falas.length)).toBe(questao.itens.length);
     const falas = await page.evaluate(() => window.__falas);
-    expect(falas.map((f) => f.texto)).toEqual([
-      'Preparando.',
-      'Atenção.',
-      questao.itens.at(-1).respostas[0],
-    ]);
-    expect(falas[0].volume).toBe(0.01);
+    expect(falas.map((f) => f.texto)).toEqual(
+      questao.itens.map(
+        (item) =>
+          (questao.unidadeDitado === 'frase' ? 'A frase é: ' : 'A palavra é: ') + item.respostas[0]
+      )
+    );
     expect(falas.every((f) => f.idioma === 'pt-BR' && f.local)).toBe(true);
-    expect(falas[2].velocidade).toBe(0.78);
+    expect(falas[0].velocidade).toBe(0.78);
     await page.locator('[data-repetir-ditado-gramatica]').click();
-    await expect.poll(() => page.evaluate(() => window.__falas.length)).toBe(6);
+    await expect
+      .poll(() => page.evaluate(() => window.__falas.length))
+      .toBe(questao.itens.length + 1);
     await page.locator('[data-parar-ditado-gramatica]').click();
     await expect(page.locator('.status-ditado-gramatica')).toContainText('interrompido');
   }
 });
 
-test('parar, trocar questão e sair cancelam falas pendentes sem duplicar ações ao reabrir', async ({
+test('parar, trocar questão e sair cancelam a fala atual sem duplicar ações ao reabrir', async ({
   page,
 }) => {
   await audioSimulado(page);
   await prepararQuestao(page, 7);
-  await page.clock.install();
   const botoes = page.locator('[data-ouvir-ditado-gramatica]');
   await botoes.first().click();
   await botoes.nth(1).click();
-  await page.clock.runFor(2200);
   expect(await page.evaluate(() => window.__falas.map((f) => f.texto))).toEqual([
-    'Preparando.',
-    'Atenção.',
-    'banho',
+    'A palavra é: ninho',
+    'A palavra é: banho',
   ]);
   await botoes.first().click();
   await page.locator('[data-parar-ditado-gramatica]').click();
-  await page.clock.runFor(2200);
   expect(await page.evaluate(() => window.__falas.length)).toBe(3);
   await botoes.first().click();
   await page.locator('#gramatica-voltar').click();
-  await page.clock.runFor(2200);
-  expect(await page.evaluate(() => window.__falas.length)).toBe(3);
+  expect(await page.evaluate(() => window.__falas.length)).toBe(4);
   await prepararQuestao(page, 7);
   await botoes.first().click();
   await page.locator('#botao-inicio').click();
-  await page.clock.runFor(2200);
-  expect(await page.evaluate(() => window.__falas.length)).toBe(0);
+  expect(await page.evaluate(() => window.__falas.length)).toBe(1);
   await abrir(page);
   await botoes.first().click();
-  await page.clock.runFor(2200);
   expect(await page.evaluate(() => window.__falas.map((f) => f.texto))).toEqual([
-    'Preparando.',
-    'Atenção.',
-    'ninho',
+    'A palavra é: ninho',
+    'A palavra é: ninho',
   ]);
+  await page.locator('[data-parar-ditado-gramatica]').click();
 });
 
 for (const viewport of [
@@ -498,7 +493,7 @@ test('celular 390 × 844, toque, ditado, campos e pontuação acessíveis sem er
     await page.screenshot({ path: testInfo.outputPath(`celular-q${numero}.png`), fullPage: true });
     if (numero === 7) {
       await page.locator('[data-ouvir-ditado-gramatica]').first().tap();
-      await expect.poll(() => page.evaluate(() => window.__falas.length)).toBe(3);
+      await expect.poll(() => page.evaluate(() => window.__falas.length)).toBe(1);
       await preencher(page, ['ninho', 'banho', 'caminho', 'galinha']);
       await page.locator('[data-conferir-gramatica]').tap();
       await expect(page.locator('#gramatica-proxima')).toBeEnabled();
@@ -546,7 +541,7 @@ test('bundle file:// mantém ditado, correção e progresso sem recurso externo'
   await page.locator('[data-ouvir-ditado-gramatica]').click();
   await expect
     .poll(() => page.evaluate(() => window.__falas.map((f) => f.texto)))
-    .toEqual(['Preparando.', 'Atenção.', 'Que chuva forte!']);
+    .toEqual(['A frase é: Que chuva forte!']);
   await preencher(page, ['Que chuva forte.']);
   await page.locator('[data-conferir-gramatica]').click();
   await expect(page.locator('#gramatica-proxima')).toBeDisabled();

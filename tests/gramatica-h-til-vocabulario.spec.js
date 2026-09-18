@@ -325,7 +325,7 @@ test('dita em português as quatro respostas com til para Alice e Mariana', asyn
   expect(ouvidas).toEqual(esperadas);
   await expect
     .poll(() => page.evaluate(() => window.__falasGramaticaCompartilhada))
-    .toEqual(['Preparando.', 'Atenção.', 'manhã']);
+    .toEqual(esperadas.map((palavra) => `A palavra é: ${palavra}`));
 
   const falasAntesDaTroca = await page.evaluate(() => window.__falasGramaticaCompartilhada.length);
   await page.locator('#botao-inicio').click();

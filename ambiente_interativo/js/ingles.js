@@ -598,6 +598,7 @@
       idioma: 'pt-BR',
       velocidade: 0.88,
       origem: 'ingles',
+      unidadeAudio: 'instrucao',
       aoEstado: function (detalhe) {
         aoEstadoDoAudio(detalhe, null);
       },
@@ -611,6 +612,7 @@
       idioma: 'en-US',
       velocidade: devagar ? 0.5 : 0.62,
       origem: 'ingles',
+      unidadeAudio: item.unidadeAudio || 'palavra',
       aoEstado: function (detalhe) {
         aoEstadoDoAudio(detalhe, item.id);
       },
@@ -952,6 +954,7 @@
       idioma: 'en-US',
       velocidade: 0.62,
       origem: 'ingles-atividade',
+      unidadeAudio: 'frase',
       aoEstado: function (detalhe) {
         elemento('ingles-status-atividade').textContent = detalhe.mensagem;
       },

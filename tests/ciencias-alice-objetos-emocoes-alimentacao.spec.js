@@ -219,7 +219,9 @@ test('ditados usam voz local sem revelar ou preencher a resposta', async ({ page
       resposta
     );
     await page.locator('[data-ouvir-ditado-gramatica]').press('Enter');
-    await expect.poll(() => page.evaluate(() => window.__falasAlice.at(-1))).toBe(resposta);
+    await expect
+      .poll(() => page.evaluate(() => window.__falasAlice.at(-1)))
+      .toBe('A palavra é: ' + resposta);
     await expect(page.locator('[data-resposta-gramatica]')).toHaveValue('');
     await page.locator('[data-parar-ditado-gramatica]').click();
   }

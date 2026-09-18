@@ -282,6 +282,17 @@
       controladorCompartilhado: 'gramatica-questionarios',
     },
     {
+      id: 'mariana-gramatica-pontuacao-ortografia-vocabulario-setembro-2026',
+      aluno: 'mariana',
+      titulo: 'Pontuação, ortografia e palavras',
+      cartaoId: 'abrir-gramatica-pontuacao-ortografia-mariana',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento:
+        'revisoesEscolares.mariana.gramatica.pontuacaoOrtografiaVocabularioSetembro2026.v1',
+      totalEtapas: 35,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
       id: 'alice-gramatica-contos-digrafos-vocabulario',
       aluno: 'alice',
       titulo: 'Contos, dígrafos e vocabulário',

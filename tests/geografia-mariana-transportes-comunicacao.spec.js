@@ -300,7 +300,9 @@ test('ditado final é local, não toca automaticamente, permite repetir, parar e
   const html = await page.locator('#gramatica-conteudo').innerHTML();
   for (const frase of FRASES) expect(html.toLowerCase()).not.toContain(frase.toLowerCase());
   await page.locator('[data-ouvir-ditado-gramatica]').first().press('Enter');
-  await expect.poll(async () => page.evaluate(() => window.__falas.at(-1)?.texto)).toBe(FRASES[0]);
+  await expect
+    .poll(async () => page.evaluate(() => window.__falas.at(-1)?.texto))
+    .toBe('A frase é: ' + FRASES[0]);
   expect(await page.evaluate(() => window.__falas.at(-1))).toMatchObject({
     idioma: 'pt-BR',
     velocidade: 0.78,

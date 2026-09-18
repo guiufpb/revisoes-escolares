@@ -280,7 +280,7 @@ test('cinco ditados são locais, não revelam/preenchem respostas e cancelam cor
     await page.locator('[data-ouvir-ditado-gramatica]').press('Enter');
     await expect
       .poll(async () => page.evaluate(() => window.__falasCiencias.at(-1)?.texto))
-      .toBe(resposta);
+      .toBe((numero === 30 ? 'A frase é: ' : 'A palavra é: ') + resposta);
     expect(await page.evaluate(() => window.__falasCiencias.at(-1))).toMatchObject({
       idioma: 'pt-BR',
       velocidade: 0.78,

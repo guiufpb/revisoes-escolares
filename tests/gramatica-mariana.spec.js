@@ -305,12 +305,10 @@ test('oferece ditado em português nas questões 5, 7 e 22 sem mostrar a respost
     await expect(page.locator('[data-repetir-ditado-gramatica]')).toBeEnabled();
   }
 
-  await expect(page.locator('.status-ditado-gramatica')).toContainText(
-    'O ditado começará em 1 segundo'
-  );
+  await expect(page.locator('.status-ditado-gramatica')).toContainText('Ditado concluído');
   await expect
     .poll(() => page.evaluate(() => window.__falasGramatica.map((fala) => fala.texto)))
-    .toEqual(['Preparando.', 'Atenção.', 'buzina']);
+    .toEqual(cenarios.at(-1).respostas.map((palavra) => `A palavra é: ${palavra}`));
   await page.locator('[data-repetir-ditado-gramatica]').click();
   expect(await page.evaluate(() => window.AudioRevisoes.obterUltimaSolicitacao().texto)).toBe(
     'buzina'
