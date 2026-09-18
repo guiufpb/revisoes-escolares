@@ -1,105 +1,69 @@
 # Instruções do projeto Revisões Escolares
 
-Estas regras valem para todo o repositório. O projeto é um ambiente escolar local, usado por crianças, e exige preservação rigorosa de progresso, acessibilidade e correção pedagógica.
+Este repositório contém um ambiente escolar local usado por crianças. Preserve progresso,
+acessibilidade, correção pedagógica e privacidade em toda mudança.
 
-## Leitura obrigatória antes de alterar o projeto
+## Precedência e leitura inicial
 
-1. Leia `documentacao/ambiente-interativo/INSTRUCOES_PROJETO.md`.
-2. Consulte `documentacao/ambiente-interativo/INVENTARIO_IMPLEMENTACOES.md` para saber o que já existe.
-3. Para uma nova revisão, leia também `ambiente_interativo/revisoes/MODELO_NOVA_REVISAO.txt`.
-4. Para histórico detalhado, consulte `ambiente_interativo/RELATORIO_TESTE_INTERATIVO.txt`.
+1. Siga este arquivo.
+2. Leia `documentacao/ambiente-interativo/INSTRUCOES_PROJETO.md` e o documento temático da mudança.
+3. Consulte `documentacao/ambiente-interativo/INVENTARIO_IMPLEMENTACOES.md` para o estado atual.
+4. Em revisão nova, leia `ambiente_interativo/revisoes/MODELO_NOVA_REVISAO.txt`.
+5. Use `ambiente_interativo/RELATORIO_TESTE_INTERATIVO.txt` somente para histórico detalhado.
 
-## Regras essenciais
+Antes de editar, execute `git status --short --branch` e preserve alterações, arquivos locais e
+stashes existentes.
 
-- Preserve alterações existentes e nunca apague progresso, conteúdo ou infraestrutura de outro perfil para simplificar uma tarefa.
-- Mantenha Alice e Mariana isoladas por perfil, matéria, revisão e chave de armazenamento.
-- Nunca use `localStorage.clear()`. Remova somente a chave da revisão ativa.
-- Toda rodada que deve começar do zero precisa de chave versionada nova; não reutilize uma chave antiga com significado diferente.
-- O ambiente deve continuar local: sem CDN, API, fonte, áudio ou recurso obrigatório da internet.
-- Não publique PDFs escolares, pastas identificadas por aluna ou documentos pessoais. Esses itens são ignorados pelo Git.
-- Não edite `ambiente_interativo/js/app.bundle.js` nem `ambiente_interativo/js/pdfjs.bundle.mjs` manualmente. Edite as fontes e execute `npm run build`.
-- Preserve o funcionamento por servidor local e, para a aplicação principal, por `file://` com o bundle gerado.
-- Não faça commit, push, merge, publicação ou mudança de visibilidade sem autorização explícita do usuário para essa ação.
+## Invariantes críticos
 
-## Contrato obrigatório das atividades
+- Preserve revisões anteriores e isole Alice e Mariana por perfil, matéria, revisão e chave.
+- Nunca use `localStorage.clear()`; remova somente a chave da revisão ativa.
+- Use chave versionada nova quando respostas antigas puderem adquirir outro significado.
+- Mantenha o ambiente local, sem CDN, API, fonte, voz ou recurso obrigatório da internet.
+- Não edite `ambiente_interativo/js/app.bundle.js` nem `pdfjs.bundle.mjs` manualmente; edite fontes
+  e execute o build.
+- Não publique PDF escolar, OCR, print, pasta identificada por aluna ou documento pessoal.
+- Reutilize registros e controladores compartilhados; conteúdo específico fica em
+  `ambiente_interativo/revisoes/<perfil>/`.
 
-- Errar deve ser recuperável sem pular a etapa.
-- O fluxo mínimo é: errar → conferir → corrigir → conferir → avançar → voltar → recarregar.
-- Toda ação de colocar, ordenar ou arrastar deve ter forma clara de desfazer: clicar para devolver, arrastar de volta, botão de remoção, desfazer ou limpar a cena.
-- Arrastar nunca pode ser o único meio: ofereça clique/toque e teclado.
-- Ao recarregar, restaure simultaneamente o estado visual, o estado lógico, a etapa e a pontuação.
-- Em Matemática manipulativa, a área grande da coluna deve aceitar clique depois da seleção da peça, mas ordens incompatíveis devem continuar bloqueadas.
-- Várias ações consecutivas precisam ser persistidas; não salve apenas a primeira por causa de referências de objeto reutilizadas.
-- Ao sair e reabrir, não duplique listeners nem ações.
-- Mensagens de erro e sucesso devem ser pedagógicas, específicas e anunciadas por `aria-live`.
+## Contrato geral das atividades
 
-## Inglês e pronúncia
+O fluxo mínimo é:
 
-- Use apenas o módulo compartilhado `ambiente_interativo/js/audio.js` para síntese de voz.
-- Mantenha vozes locais `pt-BR` e `en-US`, sem microfone ou serviço de nuvem.
-- Preserve o aquecimento quase inaudível e as pausas que protegem “Listen” e a primeira palavra contra cortes do Chromium/Windows.
-- Preserve as velocidades 0,62 para “Ouvir em inglês” e 0,50 para “Ouvir devagar”; a opção lenta deve continuar natural, sem soletrar ou separar sílabas artificialmente.
-- Na página inicial de vocabulário, clicar ou pressionar Enter/Espaço em uma palavra ou frase deve selecioná-la e iniciar imediatamente a pronúncia em inglês na velocidade 0,62. Preserve os botões de velocidade, repetição e parada como controles adicionais e nunca inicie áudio apenas ao abrir a página ou trocar de grupo.
-- Mantenha repetir, parar, cancelamento da sequência anterior e retorno acessível do estado do áudio.
+`errar → conferir → corrigir → conferir → avançar → voltar → recarregar`
 
-## Ditados em lacunas de Português
+Restaure juntos estado visual, estado lógico, etapa e pontuação. Toda manipulação precisa ser
+reversível; arrastar nunca pode ser o único meio. Preserve clique, toque, teclado, foco visível,
+mensagens pedagógicas por `aria-live` e pontuação sem duplicação.
 
-- Quando uma lacuna pedir uma palavra que não possa ser deduzida com segurança apenas pelo enunciado visível, ofereça ditado opcional da resposta em `pt-BR`.
-- Use somente `ambiente_interativo/js/audio.js`; não revele a resposta escrita no botão, no DOM visível ou no rótulo acessível.
-- O áudio exige ação da criança, anuncia “Atenção”, fala uma palavra por vez e oferece repetir e parar.
-- Preserve digitação, acentuação, correção recuperável e progresso; o ditado é apoio auditivo, não preenchimento automático.
-- Teste teclado, cancelamento da fala anterior, troca de etapa, voz local, celular, axe-core e `file://`.
+## Git e publicação
 
-## Computação
-
-- Antes de criar ou alterar um volume, leia `documentacao/computacao/README.md`, o histórico, a trilha, a bibliografia e o padrão editorial da coleção.
-- Preserve personagens, identidade visual e continuidade entre volumes. Antes de fechar um novo volume, examine novos trechos relevantes das obras-base e atualize o mapa comparativo.
-- Mantenha o fluxo **história → conceito → aplicação cotidiana → aplicação computacional → questões**, com texto e ilustrações originais; não publique PDFs, scans, OCR ou imagens das obras consultadas.
-- Em futura integração ao ambiente, reutilize a infraestrutura existente de Leitura/PDF e questionários, sem criar leitor paralelo, e mantenha o progresso de Alice e Mariana isolado.
+Não use `git reset --hard`, `git clean -fd`, `git add -A`, `git add .` ou `git add -f` como atalho.
+Commit, push, PR, merge, publicação e mudança de visibilidade exigem autorização explícita.
 
 ## Qualidade proporcional ao risco
 
-Para toda mudança de código, execute na raiz:
+Toda mudança de código executa `npm run build`, `npm run format:check`, `npm run lint` e regressões
+direcionadas. Mudanças em áudio, armazenamento, navegação, registros, controladores, CSS/HTML
+estrutural, build, bundle, PDF.js, pontuação, conclusão, limpeza ou restauração exigem `npm test`.
+Inclusões somente declarativas podem usar testes direcionados, salvo os demais gatilhos descritos
+na política temática. Não reduza testes para fazê-los passar.
 
-```text
-npm run build
-npm run format:check
-npm run lint
-```
+## Mapa de regras especializadas
 
-Acrescente regressão para o comportamento alterado e execute os testes direcionados da revisão,
-do controlador ou da tela afetada. A validação direcionada deve cobrir, quando aplicável: caminho
-feliz, primeira tentativa errada, correção sem pular, desfazer, avançar, voltar, recarregar,
-persistência de várias ações, isolamento entre perfis e revisões, teclado, ponteiro, viewport móvel
-de 390 × 844, axe-core, ausência de rolagem horizontal e console sem erros graves.
+| Tema | Fonte normativa |
+| --- | --- |
+| Arquitetura e roteamento | `documentacao/ambiente-interativo/INSTRUCOES_PROJETO.md` |
+| Áudio, voz, Inglês e ditado | `documentacao/ambiente-interativo/infraestrutura/AUDIO_E_VOZ.md` |
+| Questionários e interações | `documentacao/ambiente-interativo/infraestrutura/QUESTIONARIOS_E_INTERACOES.md` |
+| Armazenamento e progresso | `documentacao/ambiente-interativo/infraestrutura/ARMAZENAMENTO_E_PROGRESSO.md` |
+| Layout e acessibilidade | `documentacao/ambiente-interativo/infraestrutura/LAYOUT_E_ACESSIBILIDADE.md` |
+| Testes e validação real | `documentacao/ambiente-interativo/infraestrutura/TESTES_E_VALIDACAO_REAL.md` |
+| Matemática e ordenação | `documentacao/ambiente-interativo/infraestrutura/MATEMATICA_E_ORDENACAO.md` |
+| Leitura e PDF.js | `documentacao/ambiente-interativo/infraestrutura/LEITURA_E_PDF.md` |
+| Qualidade pedagógica e gabaritos | `documentacao/ambiente-interativo/pedagogia/QUALIDADE_DAS_QUESTOES.md` |
+| Computação | `documentacao/computacao/README.md` |
+| Orquestração e economia | `.agents/skills/revisoes-escolares/references/orquestracao-economia.md` |
 
-Execute a suíte global `npm test`:
-
-- a cada três novas revisões ou conjuntos independentes de atividades baseados em infraestrutura
-  já estabilizada; perguntas ou etapas da mesma revisão contam como um único conjunto;
-- imediatamente quando houver mudança de comportamento em navegação, registros compartilhados,
-  armazenamento, áudio, controladores compartilhados, CSS estrutural, HTML global, build, bundle,
-  PDF.js, `file://`, pontuação, conclusão, limpeza ou restauração;
-- antes de consolidar na `main` um lote que ainda não tenha passado pela suíte global.
-
-Uma inclusão somente declarativa pode ficar nos testes direcionados mesmo quando precisar de um
-novo import, cartão ou cadastro central sem mudança de comportamento. Se houver dúvida sobre o
-alcance, falha inesperada ou interferência entre perfis, antecipe `npm test`.
-
-Em pull requests, mantenha a suíte global no GitHub Actions e aguarde o check “Formatação, lint e
-testes”. Para mudanças de conteúdo já cobertas localmente por testes direcionados, não é necessário
-repetir a suíte global local antes da CI, salvo nos gatilhos acima. Consolide os commits antes do
-push quando possível para evitar execuções remotas desnecessárias.
-
-Mudanças apenas em documentação podem ser validadas com conferência dos links e `git diff --check`.
-
-## Organização
-
-- Registros centrais: `ambiente_interativo/js/registro-*.js`.
-- Controladores compartilhados: `ambiente_interativo/js/`.
-- Conteúdo específico: `ambiente_interativo/revisoes/<perfil>/`.
-- Testes: `tests/`.
-- Documentação central: `documentacao/ambiente-interativo/`.
-- Automação do GitHub: `.github/`.
-
-Atualize o inventário e as instruções quando uma mudança alterar arquitetura, conteúdo disponível, armazenamento, comandos, testes ou automações.
+Atualize a fonte temática e o inventário quando uma mudança alterar arquitetura, conteúdo,
+armazenamento, comandos, testes ou automações.

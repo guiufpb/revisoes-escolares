@@ -410,14 +410,15 @@ test('Q24 e Q30 ditado local sem vazamento, repetição, parada, campos e cancel
         .locator('[data-ouvir-ditado-gramatica]')
         .nth(i)
         .press(i % 2 ? 'Space' : 'Enter');
-      await expect.poll(async () => page.evaluate(() => window.__falas.at(-1)?.texto)).toBe(texto);
+      await expect
+        .poll(async () => page.evaluate(() => window.__falas.at(-1)?.texto))
+        .toBe((n === 24 ? 'A palavra é: ' : 'A frase é: ') + texto);
       const fala = await page.evaluate(() => window.__falas.at(-1));
       expect(fala).toMatchObject({ idioma: 'pt-BR', velocidade: 0.78, local: true });
       await expect(page.locator('[data-resposta-gramatica]').nth(i)).toHaveValue('');
     }
     const falas = await page.evaluate(() => window.__falas);
-    expect(falas[0]).toMatchObject({ texto: 'Preparando.', volume: 0.01 });
-    expect(falas[1].texto).toBe('Atenção.');
+    expect(falas[0].texto).toMatch(/^(A palavra é:|A frase é:)/);
     const antes = falas.length;
     await page.locator('[data-repetir-ditado-gramatica]').click();
     await expect
@@ -480,6 +481,7 @@ test('limpeza seletiva e troca para Gramática não vazam matéria, layout ou á
   );
   await preparar(page, 24);
   await page.locator('[data-ouvir-ditado-gramatica]').click();
+  const falasAntesDaTroca = await page.evaluate(() => window.__falas.length);
   await page.locator('#botao-inicio').click();
   await page.getByRole('button', { name: /Mariana/ }).click();
   await page.locator('#abrir-gramatica-mariana').click();
@@ -489,8 +491,7 @@ test('limpeza seletiva e troca para Gramática não vazam matéria, layout ou á
     'Progresso da revisão de Gramática'
   );
   await expect(page.locator('#tela-gramatica-mariana')).not.toHaveClass(/layout-desktop-amplo/);
-  await page.waitForTimeout(2100);
-  expect(await page.evaluate(() => window.__falas)).toEqual([]);
+  expect(await page.evaluate(() => window.__falas.length)).toBe(falasAntesDaTroca);
   await page.locator('#botao-inicio').click();
   await abrir(page);
   await page.locator('[data-resposta-gramatica]').fill('piroga');
@@ -637,7 +638,9 @@ test('file:// sem rede, seleção, persistência, ordenação e ditado local', a
   await responder(page, 22);
   await preparar(page, 24);
   await page.locator('[data-ouvir-ditado-gramatica]').click();
-  await expect.poll(async () => page.evaluate(() => window.__falas.at(-1)?.texto)).toBe('piroga');
+  await expect
+    .poll(async () => page.evaluate(() => window.__falas.at(-1)?.texto))
+    .toBe('A palavra é: piroga');
   await responder(page, 24);
   expect(rede).toEqual([]);
 });

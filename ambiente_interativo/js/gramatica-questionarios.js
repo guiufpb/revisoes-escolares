@@ -206,6 +206,26 @@
               '</div>'
             );
           }
+          if (subitem.inserirTravessao) {
+            return (
+              '<div class="campo-mariana' +
+              (subitem.fraseCompleta ? ' campo-gramatica-frase' : '') +
+              '"><label for="' +
+              escapar(idCampo) +
+              '"><span>' +
+              escapar(subitem.pergunta) +
+              '</span></label><input id="' +
+              escapar(idCampo) +
+              '" type="text" data-resposta-gramatica="' +
+              indice +
+              '" value="' +
+              escapar(respostas[indice] || '') +
+              '" autocomplete="off" autocapitalize="sentences">' +
+              '<button class="botao-secundario" type="button" data-inserir-travessao="' +
+              indice +
+              '">Inserir travessão —</button></div>'
+            );
+          }
           return (
             '<label class="campo-mariana' +
             (subitem.fraseCompleta ? ' campo-gramatica-frase' : '') +
@@ -445,6 +465,79 @@
     });
   }
 
+  function semAcentos(valor) {
+    return String(valor || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function diagnosticarCampo(subitem, resposta) {
+    var mensagens = subitem.feedbackErros;
+    if (!mensagens) return [];
+    var valor = String(resposta || '').trim();
+    var esperado = String(subitem.respostas[0] || '').trim();
+    if (!valor) return mensagens.incompleta ? [mensagens.incompleta] : [];
+
+    var diagnosticos = [];
+    if (mensagens.inicio && esperado.indexOf('— ') === 0 && valor.indexOf('— ') !== 0) {
+      diagnosticos.push(mensagens.inicio);
+    }
+
+    var sinalFinal = esperado.match(/[.!?]$/);
+    if (mensagens.final && sinalFinal && !valor.endsWith(sinalFinal[0])) {
+      diagnosticos.push(mensagens.final);
+    }
+
+    var palavrasEsperadas = esperado
+      .replace(/^—\s*/, '')
+      .replace(/[.!?]$/, '')
+      .split(/\s+/);
+    var palavrasInformadas = valor
+      .replace(/^[-—]\s*/, '')
+      .replace(/[.!?]$/, '')
+      .split(/\s+/);
+    if (mensagens.incompleta && palavrasInformadas.length < palavrasEsperadas.length) {
+      diagnosticos.push(mensagens.incompleta);
+    } else {
+      var textoEsperado = palavrasEsperadas.join(' ').toLowerCase();
+      var textoInformado = palavrasInformadas.join(' ').toLowerCase();
+      if (
+        mensagens.acentuacao &&
+        textoEsperado !== textoInformado &&
+        semAcentos(textoEsperado) === semAcentos(textoInformado)
+      ) {
+        diagnosticos.push(mensagens.acentuacao);
+      } else if (mensagens.palavras && textoEsperado !== textoInformado) {
+        diagnosticos.push(mensagens.palavras);
+      }
+    }
+    return diagnosticos;
+  }
+
+  function mensagemDeRevisao(item, respostas, acertos) {
+    var itensParaRever = item.itens
+      .filter(function (_subitem, indice) {
+        return !acertos[indice];
+      })
+      .map(function (subitem) {
+        return subitem.pergunta;
+      })
+      .join('; ');
+    var orientacoes = [];
+    item.itens.forEach(function (subitem, indice) {
+      if (acertos[indice]) return;
+      diagnosticarCampo(subitem, respostas[indice]).forEach(function (mensagem) {
+        if (orientacoes.indexOf(mensagem) === -1) orientacoes.push(mensagem);
+      });
+    });
+    return (
+      '↻ Revise os itens destacados. Itens para rever: ' +
+      itensParaRever +
+      '. ' +
+      (orientacoes.length ? orientacoes.join(' ') : item.dica)
+    );
+  }
+
   function conferir(item) {
     var respostas = respostasDaQuestao(item);
     var acertos = avaliar(item, respostas);
@@ -475,19 +568,7 @@
     }
     delete estado.corrigidas[item.id];
     salvar();
-    var itensParaRever = item.itens
-      .filter(function (_subitem, indice) {
-        return !acertos[indice];
-      })
-      .map(function (subitem) {
-        return subitem.pergunta;
-      })
-      .join('; ');
-    anunciar(
-      item,
-      '↻ Revise os itens destacados. Itens para rever: ' + itensParaRever + '. ' + item.dica,
-      false
-    );
+    anunciar(item, mensagemDeRevisao(item, respostas, acertos), false);
     atualizarNavegacao();
   }
 
@@ -553,7 +634,7 @@
     } else if (estado.conferidas && estado.conferidas[item.id]) {
       var acertos = avaliar(item, respostas);
       marcarResultado(item, acertos);
-      anunciar(item, '↻ Confira e corrija sua tentativa. ' + item.dica, false);
+      anunciar(item, mensagemDeRevisao(item, respostas, acertos), false);
     }
   }
 

@@ -2,15 +2,10 @@
   'use strict';
 
   var sintetizador = window.speechSynthesis;
-  var temporizador = null;
   var sequencia = 0;
   var ultimaSolicitacao = null;
   var vozes = [];
   var inicializado = false;
-  var ATRASO_INICIAL_PADRAO = 1000;
-  var PAUSA_APOS_AQUECIMENTO_PADRAO = 250;
-  var PAUSA_APOS_AVISO_PADRAO = 600;
-  var VOLUME_AQUECIMENTO = 0.01;
 
   function textoSeguro(valor, limite) {
     return String(valor || '')
@@ -23,6 +18,16 @@
     var valor = textoSeguro(idioma, 20).toLowerCase();
     if (valor === 'en' || valor.indexOf('en-') === 0) return 'en-US';
     return 'pt-BR';
+  }
+
+  function unidadeNormalizada(configuracao) {
+    var unidade = textoSeguro(
+      configuracao && (configuracao.unidadeAudio || configuracao.unidadeDitado),
+      20
+    ).toLowerCase();
+    if (unidade === 'frase') return 'frase';
+    if (unidade === 'instrucao' || unidade === 'instrução') return 'instrucao';
+    return 'palavra';
   }
 
   function atualizarVozes() {
@@ -83,59 +88,36 @@
     }
   }
 
-  function limparTemporizador() {
-    if (temporizador === null) return;
-    window.clearTimeout(temporizador);
-    temporizador = null;
-  }
-
   function parar(opcoes) {
     opcoes = opcoes || {};
     sequencia += 1;
-    limparTemporizador();
-    if (sintetizador && typeof sintetizador.cancel === 'function') {
-      sintetizador.cancel();
-    }
+    if (sintetizador && typeof sintetizador.cancel === 'function') sintetizador.cancel();
     if (!opcoes.silencioso) {
       emitir('parado', 'Áudio interrompido.', { origem: opcoes.origem || 'geral' });
     }
   }
 
-  function configurarFala(texto, idioma, velocidade, voz, volume) {
+  function configurarFala(texto, idioma, velocidade, voz) {
     var fala = new window.SpeechSynthesisUtterance(texto);
     fala.lang = idioma;
     fala.rate = velocidade;
     fala.pitch = 1;
-    fala.volume = Number.isFinite(volume) ? volume : 1;
+    fala.volume = 1;
     if (voz) fala.voice = voz;
     return fala;
   }
 
-  function aquecimentoParaIdioma(idioma) {
-    return idioma === 'en-US' ? 'Ready.' : 'Preparando.';
+  function textoProtegido(texto, idioma, unidade) {
+    if (idioma === 'en-US') return (unidade === 'frase' ? 'Phrase: ' : 'Word: ') + texto;
+    if (unidade === 'frase') return 'A frase é: ' + texto;
+    if (unidade === 'palavra') return 'A palavra é: ' + texto;
+    return 'Instrução: ' + texto;
   }
 
-  function avisoParaIdioma(idioma) {
-    return idioma === 'en-US' ? 'Listen.' : 'Atenção.';
-  }
-
-  function contextoDaFala(configuracao) {
-    return {
-      ehDitado: configuracao && configuracao.contexto === 'ditado',
-      unidade: configuracao && configuracao.unidadeDitado === 'frase' ? 'frase' : 'palavra',
-    };
-  }
-
-  function mensagemInicial(idioma, configuracao) {
-    var contexto = contextoDaFala(configuracao);
-    if (idioma === 'pt-BR' && contexto.ehDitado) {
-      return (
-        'O ditado começará em 1 segundo. Você ouvirá “Atenção” antes da ' + contexto.unidade + '.'
-      );
-    }
-    return idioma === 'en-US'
-      ? 'O áudio começará em 1 segundo. Você ouvirá “Listen” antes do conteúdo em inglês.'
-      : 'O áudio começará em 1 segundo. Você ouvirá “Atenção” antes da instrução.';
+  function mensagemInicial(idioma, unidade) {
+    if (idioma === 'en-US') return 'Preparando o áudio em inglês.';
+    if (unidade === 'instrucao') return 'Preparando a instrução em áudio.';
+    return 'Preparando o ditado da ' + unidade + '.';
   }
 
   function falar(opcoes, registrarComoUltima) {
@@ -143,24 +125,7 @@
     var texto = textoSeguro(opcoes.texto);
     var idioma = idiomaNormalizado(opcoes.idioma);
     var velocidade = Math.max(0.5, Math.min(1.2, Number(opcoes.velocidade) || 0.82));
-    var atrasoInicial = Math.max(
-      0,
-      Number.isFinite(Number(opcoes.atrasoInicial))
-        ? Number(opcoes.atrasoInicial)
-        : ATRASO_INICIAL_PADRAO
-    );
-    var pausaAposAviso = Math.max(
-      0,
-      Number.isFinite(Number(opcoes.pausaAposAviso))
-        ? Number(opcoes.pausaAposAviso)
-        : PAUSA_APOS_AVISO_PADRAO
-    );
-    var pausaAposAquecimento = Math.max(
-      0,
-      Number.isFinite(Number(opcoes.pausaAposAquecimento))
-        ? Number(opcoes.pausaAposAquecimento)
-        : PAUSA_APOS_AQUECIMENTO_PADRAO
-    );
+    var unidade = unidadeNormalizada(opcoes);
 
     if (!texto) {
       emitir('erro', 'Não há texto para reproduzir.', opcoes);
@@ -197,87 +162,24 @@
       texto: texto,
       idioma: idioma,
       velocidade: velocidade,
-      atrasoInicial: atrasoInicial,
-      pausaAposAquecimento: pausaAposAquecimento,
-      pausaAposAviso: pausaAposAviso,
+      unidadeAudio: unidade,
     });
-    if (registrarComoUltima !== false) {
-      ultimaSolicitacao = configuracao;
-    }
+    if (registrarComoUltima !== false) ultimaSolicitacao = configuracao;
 
     var nomeVoz = voz.name;
-    // O Chromium/Windows pode cortar o começo do primeiro enunciado depois que a voz
-    // fica ociosa. Esta fala quase inaudível absorve esse corte antes do aviso audível.
-    var aquecimento = configurarFala(
-      aquecimentoParaIdioma(idioma),
-      idioma,
-      0.9,
-      voz,
-      VOLUME_AQUECIMENTO
-    );
-    var aviso = configurarFala(avisoParaIdioma(idioma), idioma, 0.9, voz);
-    var conteudo = configurarFala(texto, idioma, velocidade, voz);
-    var contexto = contextoDaFala(configuracao);
-    var avisoAgendado = false;
-    var conteudoAgendado = false;
+    var conteudo = configurarFala(textoProtegido(texto, idioma, unidade), idioma, velocidade, voz);
 
     function aindaValido() {
       return sequenciaAtual === sequencia;
     }
 
-    function agendarConteudo() {
-      if (!aindaValido() || conteudoAgendado) return;
-      conteudoAgendado = true;
-      emitir(
-        'pausa',
-        idioma === 'en-US'
-          ? 'Listen. O conteúdo em inglês começará depois de uma pequena pausa.'
-          : contexto.ehDitado
-            ? 'Atenção. A ' + contexto.unidade + ' começará depois de uma pequena pausa.'
-            : 'Atenção. A instrução começará depois de uma pequena pausa.',
-        configuracao,
-        { voz: nomeVoz }
-      );
-      temporizador = window.setTimeout(function () {
-        temporizador = null;
-        if (!aindaValido()) return;
-        if (typeof sintetizador.resume === 'function') sintetizador.resume();
-        sintetizador.speak(conteudo);
-      }, pausaAposAviso);
-    }
-
-    function agendarAviso() {
-      if (!aindaValido() || avisoAgendado) return;
-      avisoAgendado = true;
-      temporizador = window.setTimeout(function () {
-        temporizador = null;
-        if (!aindaValido()) return;
-        if (typeof sintetizador.resume === 'function') sintetizador.resume();
-        sintetizador.speak(aviso);
-      }, pausaAposAquecimento);
-    }
-
-    aquecimento.onend = agendarAviso;
-    aquecimento.onerror = agendarAviso;
-
-    aviso.onstart = function () {
-      if (!aindaValido()) return;
-      emitir(
-        'aviso',
-        idioma === 'en-US' ? 'Listen. Prepare-se para ouvir.' : 'Atenção. Prepare-se para ouvir.',
-        configuracao,
-        { voz: nomeVoz }
-      );
-    };
-    aviso.onend = agendarConteudo;
-    aviso.onerror = agendarConteudo;
     conteudo.onstart = function () {
       if (!aindaValido()) return;
       emitir(
         'reproduzindo',
-        contexto.ehDitado
-          ? 'Reproduzindo a ' + contexto.unidade + ' com ' + nomeVoz + '.'
-          : 'Reproduzindo com ' + nomeVoz + '.',
+        unidade === 'instrucao'
+          ? 'Reproduzindo a instrução com ' + nomeVoz + '.'
+          : 'Reproduzindo a ' + unidade + ' com ' + nomeVoz + '.',
         configuracao,
         { voz: nomeVoz }
       );
@@ -286,13 +188,11 @@
       if (!aindaValido()) return;
       emitir(
         'concluido',
-        contexto.ehDitado
+        configuracao.contexto === 'ditado'
           ? 'Ditado concluído. Agora digite o que você ouviu.'
           : 'Áudio concluído. Você pode repetir ou ouvir mais devagar.',
         configuracao,
-        {
-          voz: nomeVoz,
-        }
+        { voz: nomeVoz }
       );
     };
     conteudo.onerror = function () {
@@ -302,15 +202,9 @@
       });
     };
 
-    emitir('aguardando', mensagemInicial(idioma, configuracao), configuracao, {
-      voz: nomeVoz,
-    });
-    temporizador = window.setTimeout(function () {
-      temporizador = null;
-      if (!aindaValido()) return;
-      if (typeof sintetizador.resume === 'function') sintetizador.resume();
-      sintetizador.speak(aquecimento);
-    }, atrasoInicial);
+    emitir('aguardando', mensagemInicial(idioma, unidade), configuracao, { voz: nomeVoz });
+    if (typeof sintetizador.resume === 'function') sintetizador.resume();
+    sintetizador.speak(conteudo);
     return true;
   }
 
@@ -352,6 +246,7 @@
             velocidade: ultimaSolicitacao.velocidade,
             origem: ultimaSolicitacao.origem,
             contexto: ultimaSolicitacao.contexto,
+            unidadeAudio: ultimaSolicitacao.unidadeAudio,
             unidadeDitado: ultimaSolicitacao.unidadeDitado,
           }
         : null;

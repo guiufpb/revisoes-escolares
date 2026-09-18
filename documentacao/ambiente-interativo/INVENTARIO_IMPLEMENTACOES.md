@@ -4,7 +4,7 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra o estado de trabalho em **15/09/2026**.
+Este inventário registra o estado de trabalho em **18/09/2026**.
 
 ## 2. Base da aplicação
 
@@ -46,9 +46,11 @@ Este inventário registra o estado de trabalho em **15/09/2026**.
 - `js/registro-leituras.js`: livros, perguntas, ditados, glossários e metadados.
 - `js/app.js` e `js/app.entry.js`: navegação, cartões e composição do bundle.
 - `js/armazenamento.js`: persistência segura.
-- `js/audio.js`: síntese de voz local bilíngue.
+- `js/audio.js`: síntese de voz local bilíngue; cada solicitação usa um único utterance audível
+  protegido por prefixo no mesmo payload, inclusive na repetição.
 - `js/gramatica-questionarios.js` e `js/gramatica-ditado.js`: questionários sequenciais de
-  Gramática e outras matérias, mapa visual opt-in e apoio auditivo por lacuna.
+  Gramática e outras matérias, mapa visual opt-in, apoio auditivo por lacuna, botão declarativo de
+  travessão também em campos sem ditado e feedback opt-in por categoria de erro textual.
 - `js/desenho.js`: canvas e persistência de desenho.
 - `js/leitura.js`, `js/leitor-dedicado.js` e `js/glossario.js`: biblioteca e leitor.
 - `js/matematica.js`, `js/matematica-cena.js` e `js/matematica-manipulaveis.js`: Matemática manipulativa.
@@ -116,7 +118,7 @@ Conteúdo: `ambiente_interativo/revisoes/alice/historia-familias-objetos.js`.
 - Seleção múltipla, alternativa única, classificação, associação, V/F, ordenação reversível,
   escrita curta e ditados. Escrita: Q11 (1908), Q17 (1886), Q24 (palavra) e Q30 (três frases).
 - Ditados Q24 e Q30 reutilizam exclusivamente `gramatica-ditado.js`/`audio.js`, em pt-BR local,
-  sem início automático, com aquecimento, Atenção, repetir, parar e cancelamento por subitem/tela.
+  sem início automático, com prefixo protegido, repetir, parar e cancelamento por subitem/tela.
 - Motor existente `gramatica-questionarios.js`, também exposto como `QuestionariosRevisoes`;
   `questionarios-interacoes.js` oferece seleção múltipla e ordenação opcionais. Nenhum controlador
   duplicado. Painel e registro legados mantidos, com matéria configurável e retorno a Gramática.
@@ -150,7 +152,7 @@ Conteúdo: `ambiente_interativo/revisoes/mariana/historia-convivencia-transporte
   ordenação reversível; Q28 usa símbolos e rótulos textuais de Seguro, Cuidado e Perigo, sem
   depender apenas de cor.
 - Q30 é um ditado final de três frases, usando somente `gramatica-ditado.js` e `audio.js` com voz
-  local pt-BR, aquecimento, Atenção, repetir, parar e cancelamento. As respostas não aparecem nos
+  local pt-BR, utterance protegido, repetir, parar e cancelamento. As respostas não aparecem nos
   controles.
 - Reutiliza `QuestionariosRevisoes`, com estado estritamente normalizado, limpeza seletiva e
   fallback em memória. `layout.desktopAmplo` mantém leitura e atividade lado a lado no desktop e
@@ -177,7 +179,7 @@ Conteúdo: `ambiente_interativo/revisoes/mariana/geografia-transportes-comunicac
 - Todas as telas têm “Leia para aprender” e fonte de estudo; três SVGs originais descrevem tipos
   de moradia, uma casa com árvore/praça e o interior de uma casa fictícia com quatro cômodos.
 - Q25 é um ditado final de três frases, usando somente `gramatica-ditado.js` e `audio.js` com voz
-  local pt-BR, Atenção, repetir, parar e cancelamento, sem expor respostas nos controles.
+  local pt-BR, prefixo protegido, repetir, parar e cancelamento, sem expor respostas nos controles.
 - Reutiliza `QuestionariosRevisoes`, com normalização estrita, limpeza seletiva e fallback em
   memória. `layout.desktopAmplo` organiza leitura e atividade lado a lado no desktop, mantendo uma
   coluna no celular; não há controlador paralelo.
@@ -446,7 +448,7 @@ Chave: `revisoesEscolares.mariana.matematica.formasMosaicosMedidas.v1`.
   os três itens de CH/LH/NH da Q30 também usam lacunas, sem expor as palavras completas.
 - **Cinco ditados:** Q8 (CH), Q11 (NH), Q14 (LH), Q18 (mistura) e Q29 (frase).
   Reutilizam `gramatica-ditado.js` e `audio.js`, com voz local pt-BR, ação explícita,
-  aquecimento, Atenção, repetir, parar e cancelamento. Sem revelar ou preencher respostas.
+  utterance protegido, repetir, parar e cancelamento. Sem revelar ou preencher respostas.
 - Q17 exige o til de “chão”; Q25 exige maiúscula na alternativa; Q29 exige grafia, maiúscula
   inicial e ponto-final em “A galinha achou o milho.”. Sinônimos e antônimos usam alternativas.
 - Desktop Amplo ativado somente por `layout: { desktopAmplo: true }`, com suporte a
@@ -469,6 +471,38 @@ a suíte global permanece obrigatória na CI do futuro PR. Detalhes no relatóri
 Alice concluiu integralmente a revisão em uso real, inclusive após a correção pedagógica
 de Q5, Q15 e Q30, com funcionamento correto confirmado pelo responsável.
 
+### Mariana — Pontuação, ortografia e palavras (setembro de 2026)
+
+- Nova revisão independente de Gramática do 2º ano com **35 questões e 35 pontos**.
+- ID `mariana-gramatica-pontuacao-ortografia-vocabulario-setembro-2026` e conteúdo declarativo em
+  `revisoes/mariana/gramatica-pontuacao-ortografia-vocabulario-setembro-2026.js`.
+- Blocos de sinais e tipos de frase, vírgula, S/SS, R/RR, sinônimos, antônimos, encontros
+  vocálicos, separação silábica, transformações de palavras, M antes de P/B e acentuação.
+- Q4, Q16 e Q21 usam ditado opcional local em pt-BR, sem resposta escrita nos controles; Q7,
+  Q17, Q32 e Q34 reutilizam seleção e ordenação reversíveis de `questionarios-interacoes.js`.
+- Após validação em uso real, Q3 e Q4 receberam botão de travessão; Q4 orienta separadamente erros
+  de início, grafia, acento, pontuação final e frase incompleta sem revelar a resposta. Os ditados
+  usam um único utterance com “A palavra é:” ou “A frase é:” no mesmo enunciado da resposta. Esse
+  prefixo absorve o corte inicial observado no Chromium/Windows sem expor a resposta escrita na
+  interface.
+- As alternativas foram redistribuídas deterministicamente nas questões com padrões previsíveis,
+  incluindo Q23, Q25, Q27, Q30, Q31, Q32 e Q34. Q22 permanece exatamente nas posições 2/3/2/3.
+- `layout: { desktopAmplo: true }` e `validacaoEstritaEstado: true`; correção recuperável,
+  persistência, pontuação e limpeza ficam isoladas na chave nova. As revisões anteriores não são
+  substituídas nem migradas.
+- Teste direcionado em
+  `tests/gramatica-mariana-pontuacao-ortografia-vocabulario-setembro-2026.spec.js`, cobrindo o
+  percurso completo com gabarito independente, erro e correção, retorno/recarga, isolamento,
+  ditado/áudio, teclado, toque, Desktop Amplo, 390 × 844, axe-core, overflow e `file://`.
+- Correção de uso real e arquitetura de áudio unificada validadas com 123/123 testes direcionados e
+  257/257 testes na suíte global.
+- Validação acústica humana concluída com sucesso no Chromium/Windows em Português e Inglês.
+- Implementação feita somente a partir da síntese Markdown consolidada, sem OCR, nova renderização
+  ou cópia de PDF, página, texto ou ilustração escolar.
+
+Chave:
+`revisoesEscolares.mariana.gramatica.pontuacaoOrtografiaVocabularioSetembro2026.v1`.
+
 ### Mariana — Contos, ortografia e pontuação
 
 - Nova revisão independente com **30 questões**, baseada na síntese pedagógica da prova de 31/08.
@@ -479,7 +513,7 @@ de Q5, Q15 e Q30, com funcionamento correto confirmado pelo responsável.
   reutilizando `js/gramatica-questionarios.js`. Não substitui as revisões de 40 e 25 questões.
 - Sete ditados opcionais: Q7, Q10 e Q28 com palavras; Q17, Q21, Q23 e Q30 com frases curtas.
   `js/gramatica-ditado.js` aceita `unidadeDitado: 'frase'`, mantendo palavras como padrão legado.
-  Usa exclusivamente `js/audio.js`, voz local pt-BR a 0,78, aquecimento, Atenção, repetir, parar e
+  Usa exclusivamente `js/audio.js`, voz local pt-BR a 0,78, utterance protegido, repetir, parar e
   cancelamento. Nenhuma resposta é exposta nos controles ou preenchida pelo áudio.
 - Campos podem declarar `maiusculasObrigatorias`, junto de `acentuacaoObrigatoria` e
   `fraseCompleta`. Enter confere no controlador compartilhado. `inserirTravessao` oferece um botão
@@ -518,7 +552,7 @@ a suíte versionada desta entrega contém 154 testes.
 - Respostas, questão atual, correções, pontuação e conclusão são restauradas depois de voltar ou
   recarregar; limpar remove somente a chave desta revisão.
 - O PDF escolar permaneceu privado e não foi copiado para a aplicação.
-- As questões 5, 7 e 22 oferecem ditado opcional de cada resposta em `pt-BR`, com “Atenção”,
+- As questões 5, 7 e 22 oferecem ditado opcional de cada resposta em `pt-BR`, com prefixo protegido,
   repetição e parada, sem mostrar nem preencher automaticamente a palavra.
 
 Chave: `revisoesEscolares.mariana.gramatica.revisaoAmpla.v1`.
@@ -648,60 +682,15 @@ As melhorias foram concentradas em `js/audio.js` e consumidas por `js/ingles.js`
 - City Life v2 é a única revisão optante. Unit 3 de Alice e Mariana e At the Farm continuam no layout
   legado, inclusive depois de serem abertas na mesma sessão do piloto.
 
-#### Seleção inteligente da voz
+#### Áudio compartilhado
 
-- Usa `window.speechSynthesis` e somente vozes locais (`localService !== false`).
-- Normaliza Inglês para `en-US` e Português para `pt-BR`.
-- Prefere correspondência exata do idioma; aceita a mesma família linguística quando necessário.
-- Atribui preferência extra a vozes locais com indicação `natural` ou `neural` e a vozes conhecidas do sistema.
-- Reavalia a lista no evento `voiceschanged`, pois alguns navegadores carregam vozes depois da página.
-- Exibe orientação clara se não houver voz inglesa ou portuguesa local instalada.
+`js/audio.js` atende Alice e Mariana, Inglês e ditados declarativos com vozes locais, uma única
+utterance protegida por solicitação, repetição, parada e cancelamento. A revisão mantém pronúncia
+normal/devagar e instruções em Português sem criar implementação própria.
 
-#### Proteção contra corte da primeira palavra
-
-Foi corrigido o problema do Chromium/Windows que pode cortar o início da primeira fala depois de um período ocioso:
-
-1. espera inicial de **1.000 ms**;
-2. fala de aquecimento “Ready.” ou “Preparando.” no mesmo idioma e voz, com volume de **1%**;
-3. pausa de **250 ms**;
-4. aviso audível completo “Listen.” ou “Atenção.”;
-5. pausa de **600 ms**;
-6. pronúncia do conteúdo em uma fala separada.
-
-O eventual corte fica no aquecimento quase inaudível, não em “Listen” nem na primeira palavra estudada.
-
-#### Velocidades pedagógicas
-
-- “Ouvir em inglês”: velocidade **0,62**, lenta o bastante para compreensão e ainda natural.
-- “Ouvir devagar”: velocidade **0,50**, limite mais lento aceito pelo módulo.
-- A opção devagar mantém a palavra ou frase contínua; não soletra e não separa sílabas artificialmente.
-- O `pitch` permanece neutro em 1 para evitar distorção da pronúncia.
-
-#### Controles e continuidade
-
-- “Ouvir instrução”: voz local `pt-BR`.
-- “Ouvir em inglês”: voz local `en-US`.
-- “Ouvir devagar”: repete o mesmo inglês em velocidade menor.
-- “Repetir”: reproduz exatamente a última solicitação, inclusive idioma e velocidade.
-- “Parar”: cancela a fila, o temporizador e a fala atual imediatamente.
-- Uma nova solicitação invalida a sequência anterior, impedindo falas sobrepostas ou atrasadas.
-- `resume()` é acionado antes das falas para recuperar sintetizadores pausados pelo navegador.
-
-#### Retorno acessível e privacidade
-
-- O módulo emite estados `aguardando`, `aviso`, `pausa`, `reproduzindo`, `concluido`, `parado` e `erro`.
-- As mensagens chegam à interface por evento compartilhado e região `aria-live`.
-- A interface informa que o áudio começará, qual voz está reproduzindo e quando é possível repetir.
-- Botões funcionam por teclado e em viewport móvel.
-- Não há microfone, gravação, reconhecimento de fala, avaliação automática de pronúncia, upload, API ou CDN.
-
-#### Cobertura e reaproveitamento
-
-- A mesma infraestrutura bilíngue atende Alice e Mariana.
-- O padrão de espera e aviso também foi reaproveitado nos ditados de Leitura, protegendo a primeira palavra avaliada.
-- Os ditados de Gramática reutilizam o mesmo módulo com voz `pt-BR`, velocidade 0,78 e mensagens
-  próprias para palavra ditada.
-- Testes verificam presença das vozes `pt-BR`/`en-US`, controles, progresso dos 27 itens, atividades, isolamento por perfil, recompensa e acessibilidade móvel.
+A fonte normativa de payloads, idiomas, velocidades, privacidade, controles e validação humana é
+[Áudio e voz](infraestrutura/AUDIO_E_VOZ.md). A justificativa arquitetural fica no
+[ADR-001](decisoes/ADR-001-PROTECAO_AUDIO_CHROMIUM_WINDOWS.md).
 
 ## 8. Leitura
 
@@ -755,7 +744,7 @@ O eventual corte fica no aquecimento quase inaudível, não em “Listen” nem 
 - Reabrir não duplica listeners.
 - Limpar uma revisão não apaga outra matéria, perfil ou rodada.
 - Áudio antigo é cancelado antes de uma nova pronúncia.
-- O início audível da pronúncia é protegido por aquecimento e pausas.
+- O início audível da pronúncia é protegido por prefixo dentro do mesmo utterance.
 - Lacunas ambíguas de Gramática oferecem ditado opcional sem expor a resposta escrita no controle.
 - A tabela de estudo da tabuada deixa de ser acessível de modo persistente quando começam as
   questões avaliativas, sem impedir voltar às questões anteriores.

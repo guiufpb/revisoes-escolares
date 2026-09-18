@@ -355,7 +355,7 @@ test('Q14 e Q20 usam ditado local sem revelar respostas, com repetir, parar e ca
       await page.locator('[data-ouvir-ditado-gramatica]').nth(indice).click();
       await expect
         .poll(async () => page.evaluate(() => window.__falasAliceHistoria.at(-1)?.texto))
-        .toBe(frase);
+        .toBe('A frase é: ' + frase);
       expect(await page.evaluate(() => window.__falasAliceHistoria.at(-1))).toMatchObject({
         idioma: 'pt-BR',
         velocidade: 0.78,
@@ -535,7 +535,7 @@ test('bundle file:// funciona sem rede com seleção, ordem, persistência e dit
   await page.locator('[data-ouvir-ditado-gramatica]').click();
   await expect
     .poll(async () => page.evaluate(() => window.__falasAliceHistoria.at(-1)?.texto))
-    .toBe(FRASE_14);
+    .toBe('A frase é: ' + FRASE_14);
   await responder(page, 14);
   expect(rede).toEqual([]);
 });

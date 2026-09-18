@@ -1,479 +1,78 @@
 # Instruções atualizadas do projeto
 
-## 1. Objetivo
+## Objetivo
 
-Manter e ampliar o **Revisões Escolares** como ambiente local, infantil, acessível e confiável. Toda mudança deve conservar o que já funciona e permitir que a estudante se recupere de erros sem abandonar uma atividade.
+Manter o **Revisões Escolares** como ambiente local, infantil, acessível e confiável. Toda mudança
+deve conservar o que já funciona, preservar progresso e permitir que a estudante se recupere de
+erros sem abandonar a atividade.
 
-## 2. Antes de alterar
+## Antes de alterar
 
-1. Leia o `AGENTS.md` da raiz e este documento por inteiro.
-2. Confira `git status --short --branch` e preserve arquivos já modificados.
+1. Leia `AGENTS.md`, este mapa e o documento temático relacionado.
+2. Execute `git status --short --branch` e preserve trabalho pendente e stashes.
 3. Identifique perfil, matéria, revisão, controlador, chave e testes atingidos.
-4. Para revisão nova, leia `ambiente_interativo/revisoes/MODELO_NOVA_REVISAO.txt`.
-5. Faça validação de base proporcional ao risco.
-6. Examine o fluxo real no navegador quando a tarefa for visual ou interativa.
+4. Para revisão nova, leia o modelo e examine uma implementação equivalente.
+5. Não reprocese material escolar já sintetizado sem dúvida pontual indispensável.
 
-Não remova uma implementação para facilitar outra. Se a solicitação for uma rodada nova, preserve a antiga e use chave versionada nova.
-
-## 3. Arquitetura
+## Arquitetura
 
 1. **HTML/CSS:** painéis, cartões, controles e layout.
 2. **Registros:** metadados de revisões, Inglês e Leitura.
-3. **Controladores compartilhados:** navegação, armazenamento, áudio, desenho, leitura e Matemática.
+3. **Controladores compartilhados:** navegação, armazenamento, áudio, questionários, leitura e
+   Matemática.
 4. **Conteúdo por perfil:** `ambiente_interativo/revisoes/alice/` e `mariana/`.
 5. **Build:** `app.entry.js` gera `app.bundle.js`; PDF.js tem build próprio.
 6. **Testes:** Playwright e axe-core em `tests/`.
 
-Coloque comportamento reutilizável nos controladores e exemplos/perguntas nos arquivos da revisão. Não duplique um controlador inteiro apenas para trocar conteúdo.
-
-Para produzir ou futuramente integrar cartilhas de Computação, leia primeiro
-`../computacao/README.md`. Essa matéria tem continuidade narrativa, visual e bibliográfica própria;
-o PDF editorial deve ser aprovado antes de qualquer integração ao ambiente.
-
-Para Matemática visual, reutilize `matematica-geometria-medidas.js` junto da Cena Matemática. Os
-tipos declarativos atuais cobrem campos com ilustração, seleção múltipla, associações, mosaico,
-recipientes de capacidade, continhas verticais D–U, produtos de mercado, base dez, sequências,
-vizinhos, ábaco D–U, fichas de dinheiro, formação de dezena, decomposição e reagrupamento. Réguas,
-balanças, formas, objetos, unidades e quantidades devem ficar na configuração da etapa;
-persistência, desfazer, correção e acessibilidade continuam no controlador compartilhado. Em
-etapas avaliativas da Cena Matemática, “Próxima” permanece bloqueado até uma conferência correta.
-
-## 4. Arquivos gerados e privados
-
-Nunca edite manualmente:
-
-- `ambiente_interativo/js/app.bundle.js`
-- `ambiente_interativo/js/pdfjs.bundle.mjs`
-
-Altere as fontes e execute `npm run build`.
-
-Não publique pastas numeradas das alunas, PDFs escolares reais, documentos pessoais, resultados, caches ou capturas temporárias. Não contorne o `.gitignore` com `git add -f` sem autorização e revisão específica.
-
-## 5. Revisões e armazenamento
-
-Cada revisão precisa de ID único, perfil, cartão, painel, título, total correto, chave exclusiva e controlador quando aplicável.
-
-Padrão recomendado:
-
-```text
-revisoesEscolares.<perfil>.<materia>.<revisao>.v<versao>
-```
-
-Avance a versão quando etapas mudarem de significado, respostas antigas puderem ser mal interpretadas ou a tarefa pedir nova rodada limpa. Não apague a chave anterior automaticamente.
-
-Todo carregamento deve tolerar dados ausentes, JSON corrompido, versão incompatível, etapas fora do limite e `localStorage` bloqueado. Use fallback em memória.
-
-Regras de persistência:
-
-- salve cada ação significativa;
-- não dependa só da identidade da referência de um objeto mutável;
-- restaure estado lógico e visual juntos;
-- teste várias ações seguidas antes da recarga;
-- nunca use `localStorage.clear()`;
-- “Limpar” remove somente a chave ativa.
-
-## 6. Contrato pedagógico
-
-Toda atividade editável, ordenável ou manipulável deve passar por:
-
-```text
-errar → conferir → corrigir → conferir → avançar → voltar → recarregar
-```
-
-- A primeira tentativa errada não bloqueia a correção.
-- A criança não precisa usar “Próxima” para escapar de uma etapa travada.
-- Todo item colocado continua visível e pode ser retirado, devolvido ou desfeito.
-- O estado restaurado oferece as mesmas ações do estado recém-criado.
-- “Conferir” explica o que falta sem entregar toda a solução.
-- Pontos e conquistas são concedidos uma única vez.
-- Voltar não duplica pontos, peças, listeners ou respostas.
-
-### Lacunas com resposta em aberto
-
-Quando uma lacuna exigir uma palavra que não possa ser deduzida com segurança apenas pelo texto
-visível — por depender de um texto anterior, de uma pista ampla ou da grafia/acentuação exata —,
-ofereça um **ditado opcional em português**:
-
-- use exclusivamente `ambiente_interativo/js/audio.js`, com voz local `pt-BR`;
-- associe um botão “Ouvir palavra” a cada lacuna, sem incluir a resposta escrita no botão, no texto
-  visível, em `aria-label` ou em atributo de dados;
-- reproduza somente após clique, toque, `Enter` ou `Espaço`; nunca fale automaticamente ao abrir;
-- preserve a sequência de aquecimento, “Atenção” e pausas contra corte da primeira palavra;
-- fale uma palavra por vez em velocidade natural de ditado (`rate = 0.78`), sem soletrar;
-- ofereça repetir a última palavra e parar, cancelando imediatamente a solicitação anterior;
-- cancele o ditado ao trocar de lacuna, questão, revisão ou tela;
-- mantenha uma região `aria-live` com espera, reprodução, conclusão, interrupção e erro;
-- o áudio não preenche o campo: a criança continua responsável por grafia e acentuação;
-- mantenha a atividade plenamente utilizável sem áudio e preserve correção, pontuação e progresso.
-
-Teste, no mínimo, ausência de reprodução automática, todas as palavras esperadas, idioma, velocidade,
-sequência “Atenção”→palavra, repetição, parada, cancelamento, teclado, outro perfil, viewport móvel,
-axe-core, console e `file://`.
-
-### Questionários de Gramática e ditados de frases
-
-- Para novas revisões, use conteúdo declarativo em `revisoes/<perfil>/` com
-  `js/gramatica-questionarios.js`; preserve a revisão ampla legada e suas 40 questões.
-- Quando a tarefa avaliar maiúsculas, declare `maiusculasObrigatorias: true` no campo. Use também
-  `acentuacaoObrigatoria: true` e `fraseCompleta: true` quando aplicáveis. Sem essas declarações,
-  a normalização das revisões anteriores permanece inalterada.
-- Um ditado curto de frase usa `ditado: true` e `unidadeDitado: 'frase'` na questão. Mantenha a
-  resposta apenas no conteúdo declarativo; os rótulos e controles não podem revelá-la. O módulo
-  compartilhado oferece Ouvir frase, Repetir última frase e Parar sem alterar `audio.js`.
-- A criança pode usar `inserirTravessao: true` em um campo que exija esse sinal. O botão deve
-  inserir somente o travessão no cursor, salvar a edição e permitir apagá-lo normalmente.
-- Enter confere campos no controlador compartilhado, sem interceptar composição de caracteres.
-  Além das cores, a correção deve identificar no texto os itens a rever e marcar `aria-invalid`.
-- A revisão pode declarar `layout: { desktopAmplo: true }`. O controlador aplica a classe na
-  tela compartilhada e a remove ao abrir uma revisão sem opt-in ou desativar o controlador.
-  A declaração `leitura` cria um painel de texto sem HTML arbitrário. Não reserve espaço para
-  leitura inexistente e mantenha os campos de frase amplos e o celular em uma coluna.
-- Antes de ativar, valide 1366 × 768, 1920 × 1080 e 390 × 844, incluindo troca para a revisão
-  ampla legada e H/til nos dois perfis, ausência de overflow, teclado, toque e axe-core.
-- Preserve os ditados de palavra existentes: a unidade padrão continua sendo `palavra`, com
-  voz local, velocidade 0,78, aquecimento, aviso, pausas e cancelamento já estabelecidos.
-
-### Questionários de História e outras matérias
-
-- `window.QuestionariosRevisoes` é o mesmo motor de `GramaticaQuestionarios`, não um controlador
-  duplicado. Cadastre o conteúdo em `revisoes/<perfil>/`, informe `materia` e mantenha o registro
-  central com `controladorCompartilhado: 'gramatica-questionarios'`. Os IDs internos do painel
-  continuam legados; rótulos, resumo e limpeza usam a matéria ativa e voltam a Gramática quando
-  uma revisão dessa matéria é aberta.
-- `js/questionarios-interacoes.js` acrescenta tipos opcionais `selecao` (conjunto completo de
-  respostas no primeiro subitem), `ordenacao` (cartões únicos e uma resposta por posição) e
-  `misto` (alternativa, seleção e/ou ordenação em subitens da mesma questão). Clique, toque e
-  teclado colocam/retiram cartões; limpar sequência afeta somente aquela questão. No tipo misto,
-  declare `tipo` no subitem de seleção ou ordenação e mantenha alternativas simples com `opcoes`.
-- `opcoesReversiveis: true` permite desmarcar alternativas e associações, com indicação textual.
-  Uma questão com vários itens só recebe seu ponto depois de todos os acertos conferidos.
-- `validacaoEstritaEstado: true` normaliza os novos tipos, versão, IDs, opções e duplicatas;
-  revalida conferências corretas e restaura também a tentativa errada. Não ative retroativamente
-  sem avaliar o armazenamento da revisão legada.
-- `pontuacaoFlexivel: true` nos campos de História flexibiliza os sinais do ditado sem mudar
-  campos de Gramática. A revisão pode usar caixa, acentos e espaços normalizados, sem exigir
-  maiúscula inicial e ponto final. O conteúdo mantém as frases corretas para a pronúncia.
-- Ditados reutilizam `gramatica-ditado.js` e `audio.js`. `cancelarAoTrocarCampo: true` cancela
-  também ao mover o foco para outro subitem e desabilita a repetição da solicitação anterior.
-- `ilustracaoLeitura` acrescenta uma imagem local ao quadro de leitura; informe também
-  `descricaoIlustracao` significativa. Use apenas recursos originais ou licenciados, sem copiar
-  páginas, fotografias ou personagens do material privado.
-- `mapaVisual` é uma capacidade opt-in para uma alternativa ser escolhida diretamente sobre uma
-  ilustração. Declare imagem, descrição e pontos percentuais associados a opções já existentes;
-  cada ponto deve continuar sendo um botão nomeado, grande e acionável por clique, toque e teclado.
-  O acerto precisa ganhar símbolo e rótulo textual, sem depender apenas de cor.
-- História da Mariana tem 30 questões sobre convivência nos transportes; escrita em Q11, Q17,
-  Q24 e Q30, ditados em Q24 e Q30. Cada questão traz na própria tela uma leitura adaptada e a
-  identificação da página ou do material complementar que fornece o conteúdo necessário para
-  responder. A criança não deve depender do caderno aberto fora do ambiente interativo. Testes:
-  `tests/historia-mariana-transportes.spec.js`.
-- Não reextraia um PDF quando o usuário já tiver fornecido a síntese pedagógica como fonte, salvo
-  se ele pedir expressamente uma nova conferência do documento. Mesmo nessa exceção, não publique
-  o PDF, as páginas renderizadas nem os arquivos temporários de OCR.
-
-### Arrasto
-
-- Use Pointer Events para mouse e toque.
-- Ofereça também clique/toque e teclado.
-- Cartão colocado pode voltar por clique, novo arrasto ou controle explícito.
-- Suprima somente o clique sintético ligado ao `pointerup`; preserve o clique legítimo seguinte.
-- Teste após recarregar dados persistidos.
-
-## 7. Matemática manipulativa
-
-- A seleção precisa de indicação visual e acessível.
-- Coloque peças pelo botão, clique na área grande ou teclado.
-- A área clicável corresponde ao quadro visual inteiro.
-- Cubinho→U, barra→D, placa→C e cubo→M.
-- Rejeite ordem incompatível com mensagem pedagógica e sem mover a peça.
-- Remoção recalcula contagens, número e decomposição.
-- Trocas exigem exatamente 10 peças e preservam o valor: 10 U→1 D, 10 D→1 C e 10 C→1 M.
-- Desfazer e recarregar preservam a representação anterior ou trocada.
-- No ábaco, declare se a tarefa é montar ou ler, mostre apenas hastes necessárias e descreva cada haste de modo acessível.
-- Use o modelo de nova revisão, atualize cartão, registro, chave, total, testes e inventário.
-
-### Operações digitadas
-
-- Reutilize `ambiente_interativo/js/matematica-operacoes.js` para revisões sequenciais de adição,
-  subtração, equivalências numéricas e respostas escritas no teclado.
-- Use `apoioVisual` apenas quando a questão precisar de um modelo determinístico; configure no
-  conteúdo as quantidades e os estados matemáticos, sem inferi-los da resposta final nem tornar o
-  resultado visível. Valide por estrutura e contagem depois de renderizar.
-- Mantenha enunciados, respostas, pistas e progressão nos arquivos específicos de cada perfil em
-  `ambiente_interativo/revisoes/<perfil>/`; não coloque conteúdo infantil no controlador.
-- Informe a conta de forma visível e acessível, associe corretamente o rótulo ao campo numérico e
-  permita conferir também com Enter.
-- Depois de um erro, preserve a resposta para edição, anuncie uma pista específica por `aria-live`
-  e só libere “Próxima” depois da correção conferida.
-- Ao aumentar a dificuldade, registre a faixa de cada questão e teste a fronteira da progressão,
-  por exemplo das cinco primeiras questões de unidades para as questões seguintes de dezenas.
-- Conteúdos exclusivos, como centenas apenas para uma criança, permanecem no arquivo e na chave
-  desse perfil; o controlador compartilhado não deve inferir ou copiar perguntas entre perfis.
-- Para uma etapa de estudo que não pode ser consultada durante a avaliação, persista separadamente
-  os estados “estudo aberto” e “estudo concluído”. Depois do início das respostas, voltar, sair e
-  recarregar podem restaurar as questões anteriores, mas nunca a tabela bloqueada.
-- Declare em `estudoTabuada.fatores` quais tabuadas a revisão deve apresentar. O título, o contador
-  e as tabelas precisam refletir a mesma lista; mantenha o padrão `[1, 2]` para revisões antigas que
-  não declarem fatores.
-- Se uma questão tiver vários cálculos, cada item precisa de ID e resposta próprios. Salve cada
-  digitação, destaque individualmente campos vazios ou incorretos e só conclua a questão quando
-  todos estiverem corretos.
-- Para atividades numéricas que não sejam multiplicações, declare `rotulo`, `rotuloItens`,
-  `rotuloResposta` e mensagens próprias no conteúdo. A ausência dessas opções deve preservar o
-  texto legado das revisões de tabuada.
-- Teste o estudo antes do bloqueio, a recarga durante o estudo, o início da avaliação, o retorno à
-  questão anterior, o avanço que ignora a tabela já bloqueada e a recarga depois do bloqueio.
-
-## 8. Ordenação de cartões
-
-- Reconstrua bandeja e posições a partir do estado atual.
-- Restaure cartões colocados dentro da área correta.
-- Reexiba cartões disponíveis na bandeja.
-- Depois de conferir errado, mantenha ativos todos os controles de correção.
-- Atualize o modelo de dados, não apenas o DOM.
-- Teste expressamente um cartão errado na primeira posição.
-
-## 9. Inglês e pronúncia
-
-### Fonte única
-
-Use `ambiente_interativo/js/audio.js`. Uma revisão não deve criar outra implementação direta de `speechSynthesis`.
-
-### Idiomas e voz local
-
-- Instruções: `pt-BR`.
-- Palavras e frases estudadas: `en-US`.
-- Considere apenas vozes locais.
-- Preserve a seleção que prefere correspondência exata de idioma e vozes naturais/neural quando disponíveis.
-- Continue reagindo a `voiceschanged`.
-- Se faltar voz, oriente a instalação local no Windows; não migre para serviço online.
-
-### Sequência que protege a pronúncia
-
-Preserve a ordem e os valores atuais, salvo teste comparativo que demonstre melhoria:
-
-1. espera de 1.000 ms;
-2. aquecimento “Ready.”/“Preparando.” com volume 0,01;
-3. pausa de 250 ms;
-4. aviso “Listen.”/“Atenção.” em fala separada;
-5. pausa de 600 ms;
-6. conteúdo em outra fala.
-
-Essa sequência absorve o corte inicial do Chromium/Windows antes da palavra estudada.
-
-### Velocidades
-
-- “Ouvir em inglês”: `rate = 0.62`.
-- “Ouvir devagar”: `rate = 0.50`.
-- `pitch = 1`.
-- Não soletrar nem separar sílabas artificialmente; a pronúncia deve permanecer contínua.
-
-### Controles obrigatórios
-
-- Na página inicial de vocabulário, clicar ou pressionar `Enter`/`Espaço` em um cartão seleciona o
-  item e inicia imediatamente sua pronúncia em `en-US` na velocidade normal `0.62`.
-- Esse comportamento pertence ao controlador compartilhado e vale para as revisões atuais e futuras
-  de Alice e Mariana.
-- Não inicie áudio ao abrir a revisão ou trocar de grupo; a reprodução exige a ação da
-  criança sobre um cartão ou controle de áudio.
-- Ouvir instrução.
-- Ouvir em inglês.
-- Ouvir devagar.
-- Repetir a última solicitação com mesmo idioma e velocidade.
-- Parar e cancelar imediatamente fila, timer e fala.
-
-Nova solicitação invalida a anterior para impedir sobreposição. Preserve mensagens acessíveis de espera, aviso, pausa, reprodução, conclusão, parada e erro.
-
-### Prática compartilhada de escrita
-
-- Revisões novas de Inglês com página de vocabulário devem ativar no conteúdo
-  `praticaEscrita: { habilitada: true, obrigatoriaParaAtividades: true }`. Revisões antigas sem a
-  configuração preservam integralmente o fluxo anterior e continuam liberando atividades apenas
-  pelos áudios.
-- A implementação pertence exclusivamente a `js/ingles.js`; não crie campos, conferência ou
-  persistência próprios no arquivo declarativo da revisão.
-- Exiba um único campo abaixo do item selecionado. A palavra visível continua disponível para cópia;
-  o objetivo é associação entre som, forma escrita e significado, não ditado oculto.
-- Use `label` real, `input type="text"`, `autocomplete="off"`, `autocapitalize="off"` e
-  `spellcheck="false"`. `Enter` confere, `Tab` mantém a ordem natural e digitar nunca dispara áudio.
-- Normalize apenas maiúsculas/minúsculas, espaços externos e espaços internos duplicados. A grafia
-  deve ser exata; variações pedagógicas explícitas ficam em `variantesEscrita` no item.
-- Persista `respostasEscrita` e `conferenciasEscrita` a cada edição. Alterar uma resposta já correta
-  remove sua conferência até nova validação; dados corrompidos e IDs inexistentes são ignorados.
-- Mostre os selos textuais `✓ Ouvido` e `✓ Escrito`, os contadores por grupo e o resumo global de
-  áudios e escritas. Não codifique o total de itens no controlador.
-- Quando `obrigatoriaParaAtividades` estiver ativa, libere as atividades somente após todos os áudios
-  e todas as escritas corretas. A mensagem bloqueada deve informar separadamente os dois totais
-  restantes.
-- Uma revisão com escrita optativa só fica “em andamento” quando há áudio concluído, texto digitado
-  ou conferido, ou atividade iniciada; apenas selecionar cartão ou grupo não conta como início.
-- Teste erro recuperável, `Enter`, caixa alta, espaços, edição após acerto, texto parcial e correto
-  após recarga, quatro combinações do portão áudio/escrita, isolamento, limpeza seletiva, teclado,
-  390 × 844, axe-core e ausência de rolagem horizontal.
-
-### Layout desktop amplo opt-in
-
-- O controlador compartilhado de Inglês oferece a capacidade declarativa
-  `layout: { desktopAmplo: true }`. Use-a somente em uma revisão cujo conteúdo tenha sido conferido
-  nas larguras desktop oficiais; a ausência da declaração mantém integralmente o layout legado.
-- A classe genérica `.layout-desktop-amplo` deve ser aplicada e removida pelo controlador ao abrir
-  cada unidade. Nunca deixe a classe de uma revisão ampla vazar para outra revisão ou perfil.
-- Todas as regras visuais da capacidade devem permanecer sob `.layout-desktop-amplo` e um breakpoint
-  desktop. Preserve o fallback estreito e não altere o HTML global ou o comportamento pedagógico
-  para ativar o recurso.
-- Em desktop largo, use aproximadamente 92–96% da viewport com limite máximo alto e redistribua o
-  conteúdo por grade ou flex: áudio em duas áreas, grupos ocupando a largura e vocabulário com
-  resumo/escrita à esquerda e cartões à direita.
-- Questões com apoio visual podem usar duas áreas; questões sem imagem não devem reservar coluna
-  vazia. Alternativas podem usar duas colunas e a revisão final pode usar duas colunas quando houver
-  espaço suficiente.
-- Antes de ativar em uma revisão, teste pelo menos 1366 × 768 e 1920 × 1080, ausência de rolagem
-  horizontal, cabeçalho global, clique/teclado/áudio, escrita, troca de grupos, atividades, resultado
-  e remoção da classe ao abrir revisões legadas.
-
-### Privacidade e escopo pedagógico
-
-- Sem microfone, gravação, reconhecimento, avaliação automática da fala, upload ou API.
-- Não reproduza automaticamente ao abrir.
-- Alice e Mariana mantêm progresso próprio.
-- Na Unidade 3 atual, preserve 27 áudios antes das 10 atividades, salvo nova versão solicitada.
-- Preserve alternativas estáveis e correção conjunta no final.
-
-O controlador de Inglês aceita várias revisões no mesmo perfil, identificadas pelo
-`revisaoId` e por chaves independentes. A Unidade 3 continua com correção conjunta;
-novas rodadas podem declarar correção por questão quando precisarem cumprir o ciclo
-errar → conferir → corrigir → conferir → avançar.
-
-### Testes de áudio
-
-- Simule vozes `pt-BR` e `en-US`.
-- Verifique idioma, velocidade normal e devagar.
-- Confirme atraso, aquecimento, aviso e conteúdo em ordem.
-- Confirme que “Parar” e nova solicitação cancelam a anterior.
-- Verifique “Repetir”.
-- Confirme que clique, toque, `Enter` e `Espaço` no cartão iniciam a pronúncia normal do item e que
-  cliques rápidos cancelam a sequência anterior.
-- Cubra o total declarado pela unidade, desbloqueio, persistência e isolamento.
-- Audite controles por teclado e em 390 × 844.
-- Não dependa da voz específica instalada na máquina de CI.
-
-## 10. Leitura
-
-Para um livro novo:
-
-1. confira PDF, páginas e capa;
-2. cadastre recursos publicáveis em `leituras/<slug>/`;
-3. registre metadados, perguntas, ditados e glossário;
-4. crie arquivos dos dois perfis quando compartilhado;
-5. use chaves separadas;
-6. registre as revisões;
-7. informe à CI o número exato de páginas;
-8. teste ambos os perfis, primeira/última página, questionário, ditado, recarga e limpeza.
-
-PDF.js permanece local. O leitor dedicado sincroniza páginas, cancela renderizações antigas e mostra glossário da página atual. Explicações não alteram pontos. O gerador da CI nunca sobrescreve PDF real.
-
-## 11. Interface e acessibilidade
-
-- Rótulos compreensíveis, elementos nativos e foco visível.
-- Ordem lógica de tabulação.
-- `aria-live` para mudanças importantes sem repetição excessiva.
-- Texto alternativo adequado.
-- Não depender só de cor.
-- Sem rolagem horizontal em 390 × 844.
-- Cabeçalho não encobre conteúdo.
-- Áreas de toque confortáveis e movimento reduzido respeitado.
-- Execute axe-core nas telas alteradas.
-
-## 12. Validação proporcional ao risco
-
-### Base obrigatória para toda mudança de código
-
-```text
-npm run build
-npm run format:check
-npm run lint
-```
-
-Acrescente regressão e execute os testes Playwright direcionados à revisão, ao controlador e às
-telas atingidas. Não use apenas o caminho feliz para considerar uma atividade validada.
-
-Matriz mínima dos testes direcionados, quando aplicável:
-
-- caminho feliz e primeira tentativa errada;
-- correção sem sair da etapa;
-- retirar/desfazer;
-- avançar, voltar e recarregar;
-- várias ações persistidas;
-- dados corrompidos e armazenamento bloqueado quando aplicável;
-- teclado e ponteiro;
-- viewport 390 × 844, sem overflow;
-- console sem erro grave e axe sem violação grave/crítica;
-- outro perfil/revisão preservado;
-- `file://` para o fluxo principal.
-
-Não reduza testes para fazer uma mudança passar.
-
-### Quando executar a suíte global
-
-Execute `npm test` nas seguintes situações:
-
-1. A cada três novas revisões ou conjuntos independentes de atividades criados sobre infraestrutura
-   compartilhada já estabilizada. Várias perguntas ou etapas da mesma revisão contam como um único
-   conjunto, não como várias entregas para essa contagem.
-2. Sempre que uma alteração mudar o comportamento de qualquer parte compartilhada: navegação,
-   seleção de perfil, registros, armazenamento, áudio, controladores de Inglês, Leitura ou
-   Matemática, CSS estrutural, HTML global, build, bundle, PDF.js ou execução por `file://`.
-3. Sempre que mudar regras compartilhadas de pontuação, conclusão, limpeza, migração ou restauração
-   de progresso.
-4. Quando testes direcionados falharem de modo inesperado, houver indício de interferência entre
-   perfis/revisões ou o alcance da mudança não estiver claro.
-5. Antes de consolidar na `main` um lote que ainda não tenha passado por uma suíte global.
-
-Adicionar conteúdo declarativo, um import, cartão ou entrada de registro sem alterar o
-comportamento da infraestrutura não aciona sozinho a suíte global. Nesse caso, valide cadastro,
-chave exclusiva, isolamento, fluxo pedagógico, acessibilidade e persistência com testes
-direcionados.
-
-### Validação local e GitHub
-
-- Durante o desenvolvimento, prefira testes direcionados e saída resumida.
-- Uma mudança compartilhada ou o terceiro conjunto da cadência deve passar por `npm test`
-  localmente antes da publicação.
-- Toda pull request para `main` continua executando a suíte global no GitHub Actions.
-- Quando a mudança for somente de conteúdo e já tiver testes direcionados locais, a suíte global da
-  pull request pode ser a única execução completa daquela entrega.
-- Consolide o trabalho antes do push quando possível; novos commits na mesma pull request reiniciam
-  a validação remota.
-- Aguarde o check “Formatação, lint e testes” e consulte preferencialmente seu resumo final. Abra os
-  logs completos apenas em caso de falha ou diagnóstico necessário.
-
-Mudança apenas em Markdown/TXT não exige build, mas requer links válidos e `git diff --check`.
-
-## 13. GitHub
-
-1. Use branch `codex/`.
-2. Preserve commits; não use reset destrutivo.
-3. Revise o diff e selecione arquivos intencionais, sem `git add -A` às cegas.
-4. Valide localmente.
-5. Commit, push, PR, merge ou publicação somente com autorização explícita.
-6. Aguarde o check “Formatação, lint e testes”.
-7. Mantenha PR em rascunho enquanto houver trabalho ou decisão pendente.
-
-GitHub Actions, Dependabot, artefatos de falha, formulário de bug e proteção da `main` já estão configurados. Não inclua dados pessoais em issue, commit, PR ou artefato público.
-
-## 14. Critérios de aceite
-
-- Pedido funciona no fluxo real.
-- Comportamento fora do escopo foi preservado.
-- Perfis e revisões permanecem isolados.
-- Erro é corrigível sem pular.
-- Teclado, toque e mouse têm alternativa adequada.
-- Desktop, celular, armazenamento e recarga foram verificados.
-- Não há erro grave no console.
+Comportamento reutilizável pertence aos controladores; enunciados, respostas e exemplos pertencem
+ao conteúdo. Não duplique um motor inteiro para trocar matéria ou perguntas.
+
+## Roteamento por domínio
+
+- [Áudio e voz](infraestrutura/AUDIO_E_VOZ.md): `audio.js`, Inglês, ditado, prefixos, vozes e
+  validação humana.
+- [Questionários e interações](infraestrutura/QUESTIONARIOS_E_INTERACOES.md): campos, alternativas,
+  seleção, ordenação, mapa visual e motores declarativos.
+- [Armazenamento e progresso](infraestrutura/ARMAZENAMENTO_E_PROGRESSO.md): chaves, normalização,
+  recarga, isolamento e limpeza.
+- [Layout e acessibilidade](infraestrutura/LAYOUT_E_ACESSIBILIDADE.md): desktop amplo, celular,
+  teclado, toque e axe-core.
+- [Testes e validação real](infraestrutura/TESTES_E_VALIDACAO_REAL.md): comandos, matriz de risco,
+  suíte global e limites da automação.
+- [Matemática e ordenação](infraestrutura/MATEMATICA_E_ORDENACAO.md): cenas, operações, cartões e
+  regras manipulativas.
+- [Leitura e PDF.js](infraestrutura/LEITURA_E_PDF.md): cadastro de livros, leitor e integração.
+- [Qualidade das questões](pedagogia/QUALIDADE_DAS_QUESTOES.md): ambiguidade, bancos fechados,
+  imagens e distribuição de gabarito.
+- [Computação](../computacao/README.md): fluxo editorial e continuidade da coleção.
+
+## Decisões transversais
+
+- Preserve o contrato `errar → conferir → corrigir → conferir → avançar → voltar → recarregar`.
+- Uma rodada com novo significado recebe ID ou chave versionada nova; a anterior não é apagada.
+- A aplicação continua sem dependência obrigatória da internet e sem serviço externo de voz.
+- Bundles gerados nunca são editados manualmente.
+- Conteúdo privado orienta a análise, mas não entra no repositório.
+- Interface global, controladores e persistência só mudam quando a capacidade precisa ser comum.
+- `INVENTARIO_IMPLEMENTACOES.md` descreve o estado atual; o relatório interativo registra fatos
+  históricos; ADRs explicam decisões; documentos temáticos guardam regras vigentes.
+
+## Critérios de aceite
+
+- Pedido funciona no fluxo real e comportamento fora do escopo foi preservado.
+- Perfis, revisões, chaves e pontos continuam isolados.
+- Erro permanece corrigível e a recarga restaura lógica e interface.
+- Teclado, toque e mouse têm caminhos adequados; celular não tem overflow horizontal.
 - Build, formatação, lint e testes aplicáveis passaram.
-- Documentação foi atualizada quando a capacidade mudou.
-- Relatório final informa arquivos, benefícios, testes e limites.
+- Documentação e inventário refletem a capacidade atual.
+- Git e privacidade foram auditados antes de qualquer publicação autorizada.
 
-## 15. Manutenção desta documentação
+## GitHub e publicação
 
-Atualize o inventário quando houver nova revisão, livro, etapa, controlador, chave, interação, teste, comando ou automação. Atualize estas instruções sempre que uma experiência revelar nova regra de prevenção.
+- Use branch com prefixo `codex/` e preserve commits e trabalho local existente.
+- Selecione arquivos intencionais; não use `git add -A`, `git add .` ou `git add -f` como atalho.
+- Commit, push, PR, merge e publicação exigem autorização explícita.
+- Mantenha a PR em rascunho enquanto houver trabalho ou decisão pendente.
+- Antes do merge, aguarde o check **Formatação, lint e testes**; abra logs completos somente para
+  investigar falha.
+- Não exponha dados pessoais em issue, commit, PR ou artefato público.

@@ -1,6 +1,107 @@
 RELATORIO DE TESTE - AMBIENTE INTERATIVO
 =======================================
 
+ATUALIZAÇÃO: 18/09/2026 - ÁUDIO UNIFICADO E ARQUITETURA DOCUMENTAL
+===================================================================
+
+ESCOPO
+- `audio.js` foi simplificado de aquecimento, aviso, pausas e conteúdo em utterances separados
+  para um único utterance audível protegido por solicitação.
+- `Listen.` e `Atenção.` deixaram de ser falas separadas. Os payloads finais usam “A palavra é:”,
+  “A frase é:”, “Instrução:”, “Word:” ou “Phrase:” conforme idioma e unidade.
+- Repetir, Parar, cancelamento, vozes locais, ação explícita, velocidades 0,62/0,50 do Inglês e
+  0,78 dos ditados foram preservados. Respostas de ditado continuam ausentes da interface.
+- A documentação foi separada em mapa, fontes temáticas, inventário de estado, histórico e ADR.
+
+VALIDAÇÃO AUTOMÁTICA
+- Testes direcionados de áudio, Inglês, Gramática, ditado e regressões: 123/123 PASSARAM em 9,4
+  minutos.
+- `npm test`: 257/257 testes Playwright PASSARAM em 17,9 minutos.
+- `npm run build`, `npm run format:check`, `npm run lint` e `git diff --check`: PASSARAM.
+- O diff compartilhado foi revisado; stage vazio, bundles sem edição manual e stash
+  dd5623a8d3db5cbb0f699d13d2af34b8afc39590 preservado.
+
+VALIDAÇÃO HUMANA
+- A audição acústica final no Chromium/Windows foi concluída com sucesso pelo usuário em Português
+  e Inglês, incluindo os prefixos protetores e os conteúdos que haviam apresentado corte inicial.
+- Sem commit, push, PR, merge, OCR, reprocessamento de material escolar ou publicação.
+
+ATUALIZAÇÃO: 16/09/2026 - GRAMÁTICA DA MARIANA: PONTUAÇÃO, ORTOGRAFIA E PALAVRAS
+=================================================================================
+
+ESCOPO IMPLEMENTADO
+- Nova revisão declarativa exclusiva de Mariana, com 35 questões e 35 pontos, ID
+  mariana-gramatica-pontuacao-ortografia-vocabulario-setembro-2026 e chave
+  revisoesEscolares.mariana.gramatica.pontuacaoOrtografiaVocabularioSetembro2026.v1.
+- Conteúdo em oito blocos: pontuação e tipos de frase; vírgula; S/SS; R/RR; sinônimos,
+  antônimos e IN-/IM-; AR/ER/IR/OR/UR; AS/ES/IS/OS/US; M, Ç, U pronunciado e acentos.
+- Q4, Q16 e Q21 usam ditado local pt-BR. Q7, Q17, Q32 e Q34 combinam alternativas,
+  seleção e ordenação reversíveis. Desktop Amplo e validação estrita de estado estão ativos.
+- Nenhum controlador, CSS ou comportamento compartilhado foi alterado. O conteúdo veio somente
+  do Markdown consolidado; nenhum PDF, print, OCR, renderização ou material escolar foi copiado.
+
+VALIDAÇÃO
+- tests/gramatica-mariana-pontuacao-ortografia-vocabulario-setembro-2026.spec.js: 11/11
+  testes aprovados em 1,0 minuto.
+- Percurso completo com gabarito independente, 35 pontos, primeira tentativa errada, correção,
+  ações reversíveis, avanço, retorno, recarga, conclusão, persistência e limpeza seletiva.
+- Isolamento entre perfis/revisões, armazenamento inválido/bloqueado, teclado, toque, ditado e
+  áudio local, Desktop Amplo 1366 x 768 e 1920 x 1080, celular 390 x 844, axe-core, ausência de
+  overflow, console sem erros graves e bundle file:// sem recurso externo: aprovados.
+- Teste central de cadastro: 1/1 aprovado, com 50 IDs e chaves distintos.
+- npm run build, npm run format:check, npm run lint e git diff --check: aprovados.
+- npm test global dispensado: inclusão declarativa em infraestrutura estabilizada, primeiro
+  conjunto após a última suíte global e sem gatilho de comportamento compartilhado.
+- Sem commit, push, PR, merge ou publicação.
+
+CORREÇÃO EM USO REAL: 17/09/2026 - GRAMÁTICA DA MARIANA
+========================================================
+
+PROBLEMAS OBSERVADOS
+- Q3 exigia travessão, mas os campos sem ditado não exibiam o botão declarativo já usado nos
+  ditados. O hífen digitado pelo teclado continuava corretamente diferente do travessão.
+- Q4 cobrava a frase completa, porém o retorno genérico não distinguia travessão/espaço inicial,
+  grafia, acentuação, pontuação final e fala incompleta.
+- Nos ditados Q4, Q16 e Q21, a primeira sílaba podia ser cortada depois de “Atenção”, tanto na
+  primeira audição como na repetição. Em uso real, “barata” chegou a soar como “prata”.
+- Q23, Q25, Q27, Q30, Q31, Q32 e Q34 apresentavam posições ou sequências previsíveis. A auditoria
+  pontual encontrou casos equivalentes em Q1, Q5, Q6, Q10, Q11, Q15, Q17, Q24, Q28, Q29 e Q35.
+- Q22 já havia sido corrigida manualmente e precisava permanecer nas posições 2/3/2/3.
+
+CAUSA E CORREÇÃO
+- `gramatica-questionarios.js` passou a renderizar o botão opt-in `inserirTravessao` também em
+  campos comuns. Q3 recebeu o botão nas duas lacunas de fala, com inserção na seleção/cursor,
+  edição normal, teclado, toque e persistência.
+- O controlador ganhou feedback textual opt-in por categoria. Q4 agora orienta o tipo de erro sem
+  expor a frase correta; a comparação estrita continua exigindo travessão, espaço, palavras,
+  acentos, maiúscula e interrogação.
+- `audio.js` já encadeava aquecimento, aviso e conteúdo pelos eventos `onend`. A separação padrão
+  de 600 ms após o aviso era insuficiente no Chromium/Windows usado em produção. Somente para
+  contexto de ditado, a pausa passou a 1,1 s; primeira audição e repetição reutilizam a mesma
+  cadeia, mantendo voz local pt-BR, ação explícita, parar, cancelar e ausência de autoplay.
+- A audição humana posterior mostrou que a pausa isolada ainda permitia cortar o começo do novo
+  enunciado e transformar “barata” em “prata”. O conteúdo do ditado passou então a usar, no mesmo
+  enunciado de síntese, o prefixo genérico “A palavra é:” ou “A frase é:”. O eventual corte recai
+  sobre essa introdução, enquanto a resposta continua ausente do texto, DOM e rótulos da tela.
+- As alternativas foram apenas reordenadas de forma determinística. Nenhum sorteio em tempo de
+  execução foi adicionado e os enunciados, respostas e objetivos pedagógicos foram preservados.
+- Q22 não foi alterada e o teste confirma os índices zero-based [1, 2, 1, 2], isto é, posições
+  visíveis 2/3/2/3.
+
+VALIDAÇÃO
+- `npm run build`, `npm run format:check`, `npm run lint` e `git diff --check`: PASSARAM.
+- Teste direcionado da nova revisão: 14/14 PASSARAM em 1,2 minuto.
+- Regressões focadas de ditado em revisões anteriores: 3/3 PASSARAM.
+- Regressões dos dois relógios simulados ajustados para a nova cadeia: 2/2 PASSARAM.
+- Regressão específica do prefixo protetor na primeira audição e na repetição: 1/1 PASSOU.
+- `npm test`: 257/257 testes Playwright PASSARAM em 21,5 minutos após a proteção final.
+- Cobertura confirmada para sequência completa de áudio e repetição, pausa de 1,1 s, cancelamento,
+  prefixo protetor no mesmo enunciado, Q3 por teclado e persistência, rejeição de hífen, feedback
+  de Q4, posições das alternativas,
+  Q22, percurso completo, Desktop Amplo, 390 × 844, axe-core, overflow e `file://`.
+- Nenhum PDF, print, OCR ou material escolar foi aberto, reprocessado ou incluído. Sem commit,
+  push, PR, merge ou publicação.
+
 ATUALIZAÇÃO: 15/09/2026 - DEZENAS, DINHEIRO, CONTAS E TABUADAS 2 E 3
 ====================================================================
 

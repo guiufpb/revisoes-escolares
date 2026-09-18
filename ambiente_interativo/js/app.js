@@ -412,6 +412,8 @@
     document.getElementById('abrir-geografia-transportes-comunicacao').hidden = aluno !== 'mariana';
     document.getElementById('abrir-geografia-moradias-lugares-interior').hidden = aluno !== 'alice';
     document.getElementById('abrir-gramatica-contos').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-gramatica-pontuacao-ortografia-mariana').hidden =
+      aluno !== 'mariana';
     document.getElementById('abrir-gramatica-contos-digrafos-alice').hidden = aluno !== 'alice';
     document.getElementById('limpar-progresso').hidden = false;
     atualizarResumo();
@@ -599,6 +601,15 @@
       window.GramaticaQuestionarios.abrir('mariana-gramatica-contos-ortografia-pontuacao');
       atualizarResumo();
     });
+    document
+      .getElementById('abrir-gramatica-pontuacao-ortografia-mariana')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'mariana') return;
+        window.GramaticaQuestionarios.abrir(
+          'mariana-gramatica-pontuacao-ortografia-vocabulario-setembro-2026'
+        );
+        atualizarResumo();
+      });
     document
       .getElementById('abrir-gramatica-contos-digrafos-alice')
       .addEventListener('click', function () {

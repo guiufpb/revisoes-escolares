@@ -42,7 +42,8 @@ Regras basicas:
 - en-US para conteudo em ingles;
 - repetir/parar/cancelar;
 - nao revelar/preencher a resposta;
-- preserve as configuracoes de velocidade/aquecimento definidas nas instrucoes atuais;
+- siga a arquitetura de utterance unico protegido e as velocidades definidas em
+  `documentacao/ambiente-interativo/infraestrutura/AUDIO_E_VOZ.md`;
 - nao crie `speechSynthesis` paralelo.
 
 Ditado e ferramenta pedagogica quando exercita leitura, escrita ou vocabulario de forma apropriada; nao e apenas uma solucao tecnica para evitar respostas abertas.
@@ -72,3 +73,9 @@ Inclua, quando aplicavel:
 - console;
 - `file://`;
 - isolamento entre Alice/Mariana e revisoes antigas.
+
+As regras normativas completas ficam em:
+
+- `documentacao/ambiente-interativo/infraestrutura/QUESTIONARIOS_E_INTERACOES.md`;
+- `documentacao/ambiente-interativo/infraestrutura/AUDIO_E_VOZ.md`;
+- `documentacao/ambiente-interativo/pedagogia/QUALIDADE_DAS_QUESTOES.md`.

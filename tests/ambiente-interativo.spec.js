@@ -189,9 +189,9 @@ test('carrega a tela inicial e registra todas as revisões sem chaves duplicadas
       ),
     }))
   );
-  expect(registro).toHaveLength(49);
-  expect(new Set(registro.map((item) => item.id)).size).toBe(49);
-  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(49);
+  expect(registro).toHaveLength(50);
+  expect(new Set(registro.map((item) => item.id)).size).toBe(50);
+  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(50);
   expect(registro.every((item) => item.elementosExistem)).toBe(true);
 });
 
@@ -236,38 +236,36 @@ test('oferece Inglês para os dois perfis e usa áudio bilíngue local com repet
   await expect(page.getByText(/Microsoft Zira Desktop/)).toBeVisible();
   await expect(page.getByText(/Microsoft Maria Desktop/)).toBeVisible();
 
-  await page.locator('[data-item-ingles="book"]').click();
   await page.locator('[data-item-ingles="pencil"]').click();
-  await expect(page.getByRole('status')).toContainText('começará em 1 segundo');
-  await page.waitForTimeout(700);
-  expect(await page.evaluate(() => window.__falasIngles)).toHaveLength(0);
-  await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(3);
+  await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(1);
 
   await page.getByRole('button', { name: '🔊 Ouvir em inglês' }).click();
-  await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(6);
+  await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(2);
   await page.getByRole('button', { name: '🐢 Ouvir devagar' }).click();
-  await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(9);
+  await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(3);
   await page.getByRole('button', { name: '🔁 Repetir' }).click();
-  await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(12);
+  await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(4);
   await page.getByRole('button', { name: '🔊 Ouvir instrução' }).click();
-  await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(15);
+  await expect.poll(() => page.evaluate(() => window.__falasIngles.length)).toBe(5);
 
   const falas = await page.evaluate(() => window.__falasIngles);
-  expect(falas.slice(0, 3).map((fala) => fala.texto)).toEqual(['Ready.', 'Listen.', 'pencil']);
-  expect(falas[0]).toMatchObject({ idioma: 'en-US', volume: 0.01 });
-  expect(falas[1]).toMatchObject({ texto: 'Listen.', idioma: 'en-US', volume: 1 });
-  expect(falas[2]).toMatchObject({
+  expect(falas.map((fala) => fala.texto)).toEqual([
+    'Word: pencil',
+    'Word: pencil',
+    'Word: pencil',
+    'Word: pencil',
+    expect.stringMatching(/^Instrução: Clique em um objeto escolar/),
+  ]);
+  expect(falas[0]).toMatchObject({
     idioma: 'en-US',
     velocidade: 0.62,
+    volume: 1,
     voz: 'Microsoft Zira Desktop',
   });
-  expect(falas[5]).toMatchObject({ texto: 'pencil', idioma: 'en-US', velocidade: 0.62 });
-  expect(falas[8]).toMatchObject({ texto: 'pencil', idioma: 'en-US', velocidade: 0.5 });
-  expect(falas[11]).toMatchObject({ texto: 'pencil', idioma: 'en-US', velocidade: 0.5 });
-  expect(falas[12]).toMatchObject({ texto: 'Preparando.', idioma: 'pt-BR', volume: 0.01 });
-  expect(falas[13]).toMatchObject({ texto: 'Atenção.', idioma: 'pt-BR', volume: 1 });
-  expect(falas[14].texto).toContain('Clique em um objeto escolar');
-  expect(falas[14]).toMatchObject({ idioma: 'pt-BR', voz: 'Microsoft Maria Desktop' });
+  expect(falas[1]).toMatchObject({ idioma: 'en-US', velocidade: 0.62 });
+  expect(falas[2]).toMatchObject({ idioma: 'en-US', velocidade: 0.5 });
+  expect(falas[3]).toMatchObject({ idioma: 'en-US', velocidade: 0.5 });
+  expect(falas[4]).toMatchObject({ idioma: 'pt-BR', voz: 'Microsoft Maria Desktop' });
 
   await page.getByRole('button', { name: '⏹ Parar' }).click();
   await expect(page.getByRole('status')).toContainText('Áudio interrompido');
@@ -278,6 +276,22 @@ test('oferece Inglês para os dois perfis e usa áudio bilíngue local com repet
   expect(salvo.itensOuvidos).toEqual(['pencil']);
   expect(salvo.reproducoes).toBe(4);
   await expect(page.getByText('1 de 27 palavras e frases ouvidas')).toBeVisible();
+
+  await page.locator('[data-grupo-ingles="frases-instrucoes"]').click();
+  await page.locator('[data-item-ingles="this-pencil"]').press('Enter');
+  await expect
+    .poll(() => page.evaluate(() => window.__falasIngles.at(-1)?.texto))
+    .toBe('Phrase: This is a pencil.');
+  const cancelamentosAntesDaTroca = await page.evaluate(() => window.__cancelamentosIngles);
+  await page.locator('[data-grupo-ingles="objetos-escolares"]').click();
+  await page.locator('[data-item-ingles="book"]').click();
+  await page.locator('[data-item-ingles="eraser"]').press('Space');
+  await expect
+    .poll(() => page.evaluate(() => window.__falasIngles.at(-1)?.texto))
+    .toBe('Word: eraser');
+  expect(await page.evaluate(() => window.__cancelamentosIngles)).toBeGreaterThanOrEqual(
+    cancelamentosAntesDaTroca + 2
+  );
 
   await page.getByRole('button', { name: 'Voltar ao início' }).click();
   await page.getByRole('button', { name: /Mariana/ }).click();
@@ -537,13 +551,13 @@ test('City Life ativa o layout desktop amplo em 1366 e 1920 e o remove nas revis
   await page.locator('[data-item-ingles="trip"]').click();
   await expect
     .poll(() => page.evaluate(() => window.__falasLayoutAmplo.at(-1)?.texto))
-    .toBe('trip');
+    .toBe('Word: trip');
   await page.locator('[data-grupo-ingles="dia-soldado"]').click();
   await expect(page.locator('[data-item-ingles="soldier"]')).toHaveClass(/selecionado/);
   await page.locator('[data-item-ingles="soldier"]').click();
   await expect
     .poll(() => page.evaluate(() => window.__falasLayoutAmplo.at(-1)?.texto))
-    .toBe('soldier');
+    .toBe('Word: soldier');
 
   await page.setViewportSize({ width: 1920, height: 1080 });
   await conferirDistribuicao(1920);
@@ -717,9 +731,9 @@ test('City Life salva, normaliza e exige as 73 escritas junto dos áudios antes 
   await expect(campo).toHaveAttribute('spellcheck', 'false');
 
   await page.locator('[data-item-ingles="supermarket"]').click();
-  await expect.poll(() => page.evaluate(() => window.__falasCityLife.length)).toBe(3);
-  expect(await page.evaluate(() => window.__falasCityLife[2])).toMatchObject({
-    texto: 'supermarket',
+  await expect.poll(() => page.evaluate(() => window.__falasCityLife.length)).toBe(1);
+  expect(await page.evaluate(() => window.__falasCityLife[0])).toMatchObject({
+    texto: 'Word: supermarket',
     idioma: 'en-US',
     velocidade: 0.62,
   });
@@ -957,9 +971,9 @@ test('At the Farm exige 41 pronúncias e preserva correção, recarga e isolamen
   await expect(page.locator('#ingles-grupos').getByRole('button')).toHaveCount(4);
   await page.locator('[data-item-ingles="pig"]').click();
   await expect(page.locator('[data-item-ingles="pig"]')).toHaveAttribute('aria-pressed', 'true');
-  await expect.poll(() => page.evaluate(() => window.__falasFazenda.length)).toBe(3);
-  expect(await page.evaluate(() => window.__falasFazenda[2])).toMatchObject({
-    texto: 'pig',
+  await expect.poll(() => page.evaluate(() => window.__falasFazenda.length)).toBe(1);
+  expect(await page.evaluate(() => window.__falasFazenda[0])).toMatchObject({
+    texto: 'Word: pig',
     idioma: 'en-US',
     velocidade: 0.62,
   });

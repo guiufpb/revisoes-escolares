@@ -3,9 +3,10 @@
 
   var REVISAO_ID = 'mariana-ingles-city-life-unidade-5';
 
-  function item(id, ingles, portugues, imagem, variantesEscrita) {
+  function item(id, ingles, portugues, imagem, variantesEscrita, unidadeAudio) {
     var registro = { id: id, ingles: ingles, portugues: portugues, imagem: imagem };
     if (variantesEscrita) registro.variantesEscrita = variantesEscrita;
+    if (unidadeAudio) registro.unidadeAudio = unidadeAudio;
     return registro;
   }
 
@@ -87,8 +88,8 @@
           item('in-front-of', 'in front of', 'na frente de', 'store.svg'),
           item('between', 'between', 'entre', 'car.svg'),
           item('next-to', 'next to', 'ao lado de', 'map.svg'),
-          item('there-is', 'There is.', 'Há, no singular.', 'house.svg', ['There is']),
-          item('there-are', 'There are.', 'Há, no plural.', 'street.svg', ['There are']),
+          item('there-is', 'There is.', 'Há, no singular.', 'house.svg', ['There is'], 'frase'),
+          item('there-are', 'There are.', 'Há, no plural.', 'street.svg', ['There are'], 'frase'),
         ],
       },
       {
