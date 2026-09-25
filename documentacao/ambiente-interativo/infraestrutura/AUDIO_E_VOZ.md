@@ -49,6 +49,13 @@ o mesmo payload protegido, idioma, unidade e velocidade. Nova solicitação inva
 anterior e cancela a fila para impedir sobreposição. Clique, toque, `Enter` e `Espaço` continuam
 disponíveis onde já fazem parte do controle.
 
+Quando uma revisão opt-in precisar de várias falas ordenadas, use `AudioRevisoes.falarSequencia`.
+Cada etapa continua sendo um utterance protegido e declara texto, idioma e unidade; a infraestrutura
+controla as pausas e só emite `concluido` depois da última etapa. Etapas intermediárias usam
+`etapa-concluida`. Parada, cancelamento, erro ou nova solicitação invalidam toda a sequência e não
+podem ser tratados pelo controlador como conclusão. Não implemente filas paralelas diretamente com
+`speechSynthesis`.
+
 ## Ditado e não exposição
 
 Ditado é apoio auditivo e não preenchimento automático. A resposta pode existir na configuração

@@ -1538,6 +1538,98 @@ INSPEÇÃO E LIMITES
   re-renderizados para produzir a revisão. Usada somente a síntese do Markdown.
 - Sem commit, push, merge, PR ou publicação.
 
+INGLÊS DA MARIANA — AT SCHOOL · ATIVIDADE 2 — 24/09/2026
+================================================================
+
+IMPLEMENTAÇÃO
+- Revisão exclusiva da Mariana com ID `mariana-ingles-at-school-atividade-2`, unidade
+  `at-school-atividade-2` e chave isolada
+  `revisoesEscolares.mariana.ingles.atSchoolAtividade2.v1`.
+- Etapa inicial com 25 itens obrigatórios de áudio e transcrição: dez objetos escolares, seis
+  perguntas/respostas e nove comandos. O portão exige 25/25 áudios e 25/25 escritas corretas.
+- As 25 questões valem 25 pontos e progridem de reconhecimento de objetos para `What's this?`,
+  `Is it...?`, respostas afirmativas/negativas e comandos de sala de aula.
+- `ingles.js` recebeu a capacidade opt-in `exigirAudioPerguntaAntesDeResponder`. Somente o callback
+  `concluido` do áudio da pergunta atual libera suas alternativas. Erro, parada, cancelamento,
+  nova solicitação, navegação ou troca de tela não liberam a resposta.
+- Os IDs ouvidos são normalizados e persistidos em `perguntasOuvidasAtividades`. `Refazer` limpa
+  essas liberações, respostas e conferências das atividades, preservando os 25 áudios e escritas
+  do vocabulário. Revisões antigas continuam sem a trava.
+- `audio.js` não foi alterado. Foram criados cinco SVGs locais originais para abrir o livro,
+  fechar a mochila, sentar na carteira, passar a caneta e a instrução da professora.
+
+VALIDAÇÃO
+- `npm run build`, `npm run format:check` e `npm run lint`: PASSARAM.
+- `tests/ingles-mariana-at-school-atividade-2.spec.js`: 7/7 PASSARAM em 30,2 segundos.
+- `tests/ingles-friends-atividade-1.spec.js`: 6/6 PASSARAM em 32,1 segundos.
+- `npm test`: 270/270 testes Playwright PASSARAM em 18,7 minutos na repetição global final.
+- Cobertura: cadastro, conteúdo e gabarito; portão 25/25; áudio concluído, interrompido,
+  cancelado e com erro; retorno, recarga, armazenamento adverso, percurso completo, 25 pontos,
+  `Refazer`, limpeza seletiva, regressão legada, 1366 × 768, 1920 × 1080, axe-core e `file://`.
+- Os áudios foram validados com vozes locais simuladas; não houve validação acústica humana
+  nem avaliação de ergonomia/clareza pelas crianças nesta entrega.
+
+PRIVACIDADE E GIT
+- A síntese do prompt foi usada diretamente. Nenhum PDF, OCR, print escolar ou recurso remoto foi
+  aberto, processado ou incorporado.
+- A Atividade 1 — Friends e todas as alterações locais relacionadas foram preservadas e estendidas.
+  O ramo `codex/ingles-friends-atividade-1` continua somente local e sem divergência de commits em
+  relação a `origin/main` no preflight.
+- Nenhum progresso real foi usado; os testes rodaram em contextos temporários do Playwright.
+- Sem commit, push, merge, PR, descarte ou publicação.
+
+INGLÊS — FRIENDS · ATIVIDADE 1 — ALICE E MARIANA — 23/09/2026
+===================================================================
+
+IMPLEMENTAÇÃO
+- Unidade compartilhada `friends-level-1-atividade-1`, com conteúdo e gabarito exatamente iguais
+  para Alice e Mariana. IDs e chaves são individuais:
+  - `alice-ingles-friends-atividade-1` / `revisoesEscolares.alice.ingles.friendsAtividade1.v1`;
+  - `mariana-ingles-friends-atividade-1` / `revisoesEscolares.mariana.ingles.friendsAtividade1.v1`.
+- A etapa inicial tem 25 itens obrigatórios de áudio e transcrição visível. O portão libera as
+  atividades somente após 25/25 áudios e 25/25 escritas corretas.
+- As 25 questões valem 25 pontos e usam correção imediata recuperável. O total registrado é de
+  50 etapas, conforme a convenção vigente de itens de estudo mais questões avaliativas.
+- `praticaEscrita`, Desktop Amplo e `audio.js` foram reutilizados. `audio.js` não foi alterado;
+  `Word:`/`Phrase:`, en-US, velocidades 0,62/0,50, repetir, parar e cancelamento foram preservados.
+- `ingles.js` recebeu somente suporte declarativo opcional a `imagemEnunciadoAlt`, aplicado na
+  primeira ocorrência quando uma imagem é repetida. Revisões sem o campo mantêm o comportamento
+  anterior.
+- Dois SVGs originais e locais representam um balão verde e uma mochila azul. As asserções
+  verificam cores, quantidade e textos alternativos; nenhum recurso do livro foi copiado.
+
+VALIDAÇÃO
+- `npm run build`: PASSOU; `app.bundle.js` e `pdfjs.bundle.mjs` foram gerados somente pelo build.
+- `npm run format:check`: PASSOU.
+- `npm run lint`: PASSOU.
+- `npx playwright test tests/ingles-friends-atividade-1.spec.js`: 6/6 PASSARAM em 30,6 segundos.
+- Regressões direcionadas de Inglês e acessibilidade: 15/15 PASSARAM em 55,8 segundos.
+- `npm test`: 263/263 testes Playwright PASSARAM em 19,5 minutos.
+- 390 × 844 com toque, 1366 × 768 e 1920 × 1080: sem overflow horizontal; Desktop Amplo
+  ativo na nova revisão e removido ao abrir a Unit 3 legada.
+- axe-core não encontrou violações graves ou críticas na tela auditada. Teclado, toque,
+  correção, retorno, recarga, pontuação única, isolamento, limpeza seletiva, JSON inválido,
+  localStorage bloqueado, ausência de autoplay e bundle `file://` foram exercitados.
+- Os payloads e as velocidades foram validados com vozes simuladas. Não houve nova validação
+  acústica humana nem validação de ergonomia/clareza pelas crianças nesta entrega.
+
+PRIVACIDADE E GIT
+- O prompt sintetizado foi a única fonte pedagógica; nenhum PDF, OCR, print ou página escolar foi
+  aberto, reprocessado ou adicionado ao Git.
+- Os testes usaram contextos temporários do Playwright e não alteraram o progresso real.
+- Sem commit, push, merge, PR ou publicação.
+
+AJUSTE PEDAGÓGICO POSTERIOR — NÚMEROS E ALFABETO
+- Q6, Q8 e Q9 passaram de palavra inglesa -> numeral para numeral -> palavra inglesa; Q7 foi
+  alinhada visualmente. As alternativas desse bloco não exibem tradução em português.
+- Q13–Q16 agora usam enunciados completos com `Which letter...`, opções somente com as letras e
+  feedback inicial em inglês. As traduções redundantes `letra A`, `letra B` etc. foram removidas.
+- IDs das questões, IDs das alternativas, respostas corretas, unidade, revisões e chaves não
+  mudaram. O progresso anterior de Alice e Mariana permanece semanticamente compatível.
+- Validação posterior: `npm run build`, `npm run format:check` e `npm run lint` passaram;
+  `tests/ingles-friends-atividade-1.spec.js` passou em 6/6 cenários e `npm test` passou em
+  263/263 testes Playwright, em 19,5 minutos.
+
 CIÊNCIAS DA MARIANA — PLANTAS, SERES VIVOS E A LUZ DO SOL — 03/09/2026
 =======================================================================
 

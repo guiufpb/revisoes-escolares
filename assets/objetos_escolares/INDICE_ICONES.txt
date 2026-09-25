@@ -110,3 +110,16 @@ plane.svg | avião | fluent-emoji-flat:airplane | exato
 shield.svg | coragem/proteção | fluent-emoji-flat:shield | aproximado: escudo representa proteção
 soldier.svg | soldado | fluent-emoji-flat:guard | aproximado: guarda representa soldado
 star.svg | incrível/especial | fluent-emoji-flat:star | aproximado: estrela representa algo especial
+
+ICONES DA REVISAO FRIENDS - ATIVIDADE 1
+
+blue-backpack.svg | mochila azul | ilustração SVG original | cor azul faz parte da resposta visual
+green-balloon.svg | balão verde | ilustração SVG original | cor verde e quantidade fazem parte da resposta visual
+
+ICONES DA REVISAO AT SCHOOL - ATIVIDADE 2
+
+school-open-book.svg | abrir o livro | ilustração SVG original | duas mãos abrem um livro
+school-close-bag.svg | fechar a mochila | ilustração SVG original | uma mão fecha o zíper da mochila
+school-sit-at-desk.svg | sentar na carteira | ilustração SVG original | criança sentada diante da carteira escolar
+school-pass-pen.svg | passar a caneta | ilustração SVG original | uma mão entrega a caneta para outra
+school-teacher-open-book.svg | professora pede para abrir o livro | ilustração SVG original | professora aponta para um livro aberto

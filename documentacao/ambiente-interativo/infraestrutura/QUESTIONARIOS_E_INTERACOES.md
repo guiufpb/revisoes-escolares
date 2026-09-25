@@ -31,6 +31,11 @@ da solicitação anterior.
 ou licenciada e descrição significativa. `mapaVisual` associa botões nomeados a pontos percentuais
 de uma imagem; cada ponto permanece acionável por teclado e o acerto não depende só de cor.
 
+No motor de Inglês, questões podem declarar `imagemEnunciadoAlt` junto de `imagemEnunciado`.
+Quando a mesma imagem é repetida para representar quantidade, o texto alternativo é aplicado
+somente à primeira ocorrência, evitando anúncios duplicados. O texto deve descrever toda a
+informação visual indispensável à atividade.
+
 Não copie páginas, personagens ou imagens do material escolar. Quando a síntese pedagógica já foi
 fornecida, não reextraia PDF sem pedido ou dúvida indispensável.
 
@@ -44,6 +49,28 @@ autocompletar/capitalização/corretor desativados e normalização apenas de ca
 Persistem `respostasEscrita` e `conferenciasEscrita`; editar resposta correta invalida a conferência.
 Variantes legítimas são explícitas em `variantesEscrita`. Se a escrita for obrigatória, o portão das
 atividades combina todos os áudios concluídos e todas as escritas corretas.
+
+Uma unidade pode declarar `exigirAudioPerguntaAntesDeResponder: true`. Nesse modo, as alternativas
+de cada questão permanecem desabilitadas até o callback `concluido` do áudio daquela pergunta. O
+estado persiste somente IDs válidos e únicos em `perguntasOuvidasAtividades`; erro, parada,
+cancelamento, nova solicitação, troca de questão ou saída da tela não liberam respostas. `Refazer`
+limpa essas liberações junto das respostas e conferências das atividades, sem apagar o vocabulário.
+Unidades que não declaram a opção preservam o comportamento anterior.
+
+Uma unidade de Inglês pode ainda declarar
+`revisaoPosResposta: { obrigatoria: true, pausaMs: <tempo> }`. Cada questão opt-in mantém em
+`revisaoPosResposta` a tradução auditiva da pergunta, a resposta correta em Inglês, seu significado
+em Português, as unidades de áudio e uma imagem local opcional. Depois de cada conferência, a tela
+mostra somente a pergunta e a resposta correta em Inglês; a tradução existe apenas na sequência de
+áudio EN → PT → EN → PT. A próxima questão só é liberada depois do callback final. Uma tentativa
+errada retorna à questão para correção após a revisão; uma correta permanece na revisão com avanço
+liberado. A conclusão fica associada ao ID da questão e à alternativa conferida, evitando reaproveitar
+uma revisão após mudança de resposta.
+
+Esse estado intermediário precisa sobreviver à recarga sem duplicar tentativa, listener ou ponto.
+Estados legados já finalizados continuam finalizados mesmo sem o novo campo. `Refazer` limpa as
+revisões pós-resposta e reinicia a pergunta 1, preservando estudo e escrita. A questão final segue o
+mesmo contrato e só pode concluir a atividade depois da última sequência completa.
 
 ## Correção e feedback
 

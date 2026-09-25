@@ -4,7 +4,7 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra o estado de trabalho em **18/09/2026**.
+Este inventário registra o estado de trabalho em **23/09/2026**.
 
 ## 2. Base da aplicação
 
@@ -580,6 +580,79 @@ Chaves:
 
 ## 7. Inglês — conteúdo, áudio e pronúncia
 
+### Alice e Mariana — Friends · Atividade 1
+
+- Uma única unidade declarativa compartilhada oferece o mesmo conteúdo, as mesmas 25 questões,
+  o mesmo gabarito e a mesma progressão pedagógica aos dois perfis. IDs, chaves, respostas,
+  conferências, pontos, conclusão e limpeza permanecem separados para Alice e Mariana.
+- A etapa inicial tem **25 itens obrigatórios de áudio e transcrição**: nome e amizade;
+  números de 1 a 10; seis cores; e sete frases de apresentação, idade e cor. A grafia continua
+  visível e o portão só libera as atividades com 25/25 áudios e 25/25 escritas corretas.
+- As **25 atividades / 25 pontos** trabalham cumprimento, nome, idade, números, anterior e
+  posterior no alfabeto, cores e três integrações curtas. Correção imediata permite errar,
+  corrigir e conferir novamente antes de avançar.
+- Nos exercícios específicos de números, o numeral aparece no enunciado e a criança escolhe a
+  palavra em inglês, sem tradução em português nas alternativas. Nos exercícios de alfabeto, as
+  alternativas exibem somente as letras e o enunciado explicita `Which letter...`; o áudio da
+  pergunta pratica o nome inglês da letra. IDs, gabarito e chaves foram preservados, portanto o
+  refinamento não invalida o progresso já salvo.
+- `layout.desktopAmplo` e `praticaEscrita` reutilizam o motor atual. Áudio permanece exclusivamente
+  em `audio.js`, com `Word:`/`Phrase:`, velocidades 0,62/0,50, repetição, parada e cancelamento.
+- Dois SVGs originais representam um balão verde e uma mochila azul. Atividades visuais podem
+  declarar `imagemEnunciadoAlt`; em repetições, o texto alternativo completo aparece somente na
+  primeira imagem para evitar anúncio duplicado.
+- Teste direcionado: `tests/ingles-friends-atividade-1.spec.js` (6 cenários), cobrindo cadastro,
+  áudio/escrita, portão, percurso, pontuação, gabarito, isolamento, armazenamento adverso,
+  lógica visual, teclado/toque, viewports, axe-core, troca para revisão legada e `file://`.
+
+IDs:
+
+- `alice-ingles-friends-atividade-1`
+- `mariana-ingles-friends-atividade-1`
+
+Chaves:
+
+- `revisoesEscolares.alice.ingles.friendsAtividade1.v1`
+- `revisoesEscolares.mariana.ingles.friendsAtividade1.v1`
+
+Unidade compartilhada: `friends-level-1-atividade-1`.
+
+### Mariana — At School · Atividade 2
+
+- Revisão exclusiva da Mariana, independente da Unit 3 e da Atividade 1, com **25 itens de áudio
+  e transcrição** distribuídos em dez objetos escolares, seis perguntas/respostas e nove comandos
+  de sala. O portão exige 25/25 áudios e 25/25 escritas corretas.
+- As **25 atividades / 25 pontos** avançam de reconhecimento visual de objetos para perguntas com
+  `What's this?` e `Is it...?`, respostas afirmativas/negativas e compreensão de comandos.
+- A unidade ativa `exigirAudioPerguntaAntesDeResponder`: cada questão começa bloqueada e somente o
+  término do seu próprio áudio libera as alternativas. As liberações são isoladas por questão,
+  normalizadas, persistidas e apagadas por `Refazer`; vocabulário e escrita permanecem preservados.
+- `js/ingles.js` concentra a capacidade opt-in e continua usando exclusivamente `js/audio.js`.
+  Revisões anteriores não recebem a trava. Parada, erro, cancelamento, nova fala, navegação ou
+  troca de tela não simulam conclusão.
+- Depois de cada conferência, a unidade abre a etapa obrigatória **Let’s review!**, com pergunta,
+  resposta correta e imagem opcional somente em Inglês. O botão de revisão executa a sequência
+  pergunta EN → tradução PT → resposta EN → significado PT; `Próxima` só libera ao término normal.
+  Erro, parada, cancelamento, clique repetido, outro áudio, navegação e recarga não fabricam a
+  conclusão. A questão 25 segue o mesmo ciclo antes do resultado final.
+- A conclusão da revisão pós-resposta é persistida por questão e alternativa na mesma chave `v1`.
+  Estados antigos já concluídos continuam válidos, tentativas e pontos não são duplicados, e
+  `Refazer` inicia o ciclo completo na questão 1 sem apagar vocabulário ou escrita.
+- Cinco SVGs originais representam abrir o livro, fechar a mochila, sentar na carteira, passar a
+  caneta e a orientação da professora. As descrições significativas ficam expostas por
+  `imagemEnunciadoAlt`; nenhum PDF, OCR, captura escolar ou recurso remoto foi incorporado.
+- Teste direcionado: `tests/ingles-mariana-at-school-atividade-2.spec.js` (13 cenários), cobrindo
+  cadastro, conteúdo, portão, ordem bilíngue, acerto/erro, bloqueio até o fim, parada, cancelamento,
+  erro, clique repetido, outro áudio, navegação, recarga intermediária, persistência, progresso
+  legado, refazer, questão 25, percurso completo, pontuação, isolamento, viewports, axe-core e
+  `file://`.
+
+ID: `mariana-ingles-at-school-atividade-2`.
+
+Chave: `revisoesEscolares.mariana.ingles.atSchoolAtividade2.v1`.
+
+Unidade: `at-school-atividade-2`.
+
 ### Unit 3 — At School
 
 - Disponível para Alice e Mariana com progresso independente.
@@ -679,8 +752,9 @@ As melhorias foram concentradas em `js/audio.js` e consumidas por `js/ingles.js`
 - O áudio separa título/controles de vozes/status; o vocabulário separa resumo e escrita da grade de
   cartões; questões só ganham área visual quando possuem imagem; alternativas e resultado usam duas
   colunas quando há espaço.
-- City Life v2 é a única revisão optante. Unit 3 de Alice e Mariana e At the Farm continuam no layout
-  legado, inclusive depois de serem abertas na mesma sessão do piloto.
+- City Life v2 e Friends · Atividade 1 ativam o layout amplo. Unit 3 de Alice e Mariana e At the Farm
+  continuam no layout legado, inclusive depois de serem abertas na mesma sessão de uma revisão
+  optante.
 
 #### Áudio compartilhado
 
@@ -768,9 +842,15 @@ Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
 - Toda pull request para `main` continua executando a suíte global no GitHub Actions; a saída
   completa é consultada apenas quando houver falha ou necessidade de diagnóstico.
 
-Na data deste inventário existem **243 testes Playwright**:
+Na data deste inventário existem **270 testes Playwright**:
 
 - `tests/ambiente-interativo.spec.js`: fluxos centrais, revisões de Inglês de Alice e Mariana, Leitura, Matemática ampla, armazenamento, canvas e `file://`.
+- `tests/ingles-friends-atividade-1.spec.js`: unidade compartilhada com 25 itens e 25 questões,
+  áudio e escrita obrigatórios, portão, correção recuperável, isolamento, armazenamento
+  adverso, lógica das ilustrações, viewports, axe-core e `file://`.
+- `tests/ingles-mariana-at-school-atividade-2.spec.js`: 25 itens e 25 questões, portão de
+  áudio/escrita, conclusão obrigatória do áudio de cada pergunta, cancelamento, normalização,
+  percurso completo, refazer, regressão legada, viewports, axe-core e `file://`.
 - `tests/ciencias-mariana-plantas-sol.spec.js`: 30 questões, mapa visual, gabarito completo,
   associações, ordenação, cinco ditados, persistência, isolamento, armazenamento adverso,
   teclado/toque, layouts, axe-core, console e `file://`.

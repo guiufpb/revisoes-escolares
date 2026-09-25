@@ -71,6 +71,13 @@ INGLES
   Não recrie campos, correção ou persistência no conteúdo da revisão.
 - layout: { desktopAmplo: true } também é opt-in; remova a classe ao abrir unidade
   sem a opção. Preserve o fluxo e o layout das revisões antigas sem esses recursos.
+- Em atividade visual de Inglês, declare imagemEnunciadoAlt junto de imagemEnunciado.
+  Se repeticoesImagem for maior que 1, descreva o conjunto completo; o controlador
+  anuncia esse texto apenas na primeira imagem e mantém as repetições seguintes decorativas.
+- Quando a proposta exigir escuta obrigatória da pergunta, declare
+  exigirAudioPerguntaAntesDeResponder: true. O controlador compartilhado mantém as
+  alternativas desabilitadas até a conclusão do áudio da questão e persiste os IDs em
+  perguntasOuvidasAtividades. Não recrie essa trava no arquivo de conteúdo.
 
 MATEMATICA VISUAL / MANIPULATIVA
 - Registre conteúdo por MatematicaRevisoes; reutilize js/matematica.js,

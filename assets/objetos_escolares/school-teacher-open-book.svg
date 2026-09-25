@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 200" role="img" aria-labelledby="title desc">
+  <title id="title">Professora pede para abrir o livro</title>
+  <desc id="desc">Uma professora aponta para um livro aberto sobre a carteira.</desc>
+  <rect width="280" height="200" rx="24" fill="#eaf8fb"/>
+  <rect x="18" y="18" width="154" height="91" rx="8" fill="#326d58" stroke="#184838" stroke-width="7"/>
+  <path d="M40 43h73m-73 20h96m-96 20h55" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="211" cy="55" r="23" fill="#f2b28d" stroke="#7b4935" stroke-width="5"/>
+  <path d="M185 53c8-32 47-32 54-2-18-7-36-6-54 2z" fill="#59372d"/>
+  <path d="M211 80v68m0-48-42 25m42-20 32 29" fill="none" stroke="#7048bd" stroke-width="13" stroke-linecap="round"/>
+  <path d="M130 137c-16-11-35-13-55-7v36c20-6 39-3 55 8z" fill="#fff" stroke="#245f8f" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M130 137c16-11 35-13 55-7v36c-20-6-39-3-55 8z" fill="#fff" stroke="#245f8f" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M130 138v36" stroke="#245f8f" stroke-width="5"/>
+</svg>
