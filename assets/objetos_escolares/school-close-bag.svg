@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 200" role="img" aria-labelledby="title desc">
+  <title id="title">Fechar a mochila</title>
+  <desc id="desc">Uma mão puxa o zíper para fechar uma mochila roxa.</desc>
+  <rect width="280" height="200" rx="24" fill="#fff3df"/>
+  <path d="M92 63c3-35 93-35 96 0" fill="none" stroke="#4c318d" stroke-width="12" stroke-linecap="round"/>
+  <path d="M65 77c0-16 13-29 29-29h92c16 0 29 13 29 29v82H65z" fill="#7553c8" stroke="#3c277a" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M75 92h130" stroke="#e5d8ff" stroke-width="8" stroke-linecap="round" stroke-dasharray="8 8"/>
+  <path d="M135 82v20h16V82z" fill="#ffcf4a" stroke="#704f00" stroke-width="4"/>
+  <path d="M222 55c-19 3-34 13-44 31l-19 8 8 25 27-12c12-5 24-18 34-35z" fill="#f2b28d" stroke="#8b4d34" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M191 55l-8-12m21 8 2-15" stroke="#5f3db5" stroke-width="6" stroke-linecap="round"/>
+</svg>

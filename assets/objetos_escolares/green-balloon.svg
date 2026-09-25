@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 80" role="img" aria-label="balão verde">
+  <path d="M32 3C17.64 3 7 14.63 7 29c0 16.55 12.64 27.58 21.34 31.64L25 68h14l-3.34-7.36C44.36 56.58 57 45.55 57 29 57 14.63 46.36 3 32 3Z" fill="#2f9e44" stroke="#176c2c" stroke-width="3"/>
+  <path d="M28.5 68h7L32 75l-3.5-7Z" fill="#176c2c"/>
+  <path d="M32 75c-5 1-7 2-7 4" fill="none" stroke="#6b4f3a" stroke-width="2" stroke-linecap="round"/>
+  <ellipse cx="23" cy="18" rx="6" ry="9" fill="#8ce99a" opacity=".75"/>
+</svg>

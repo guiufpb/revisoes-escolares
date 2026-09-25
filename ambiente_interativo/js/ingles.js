@@ -8,6 +8,7 @@
   var armazenamento = null;
   var estado = null;
   var inicializado = false;
+  var revisaoPosRespostaEmReproducao = null;
   var MENSAGENS_SURPRESA = {
     alice:
       'Alice, invadi o computador de vocês, li tudo e vi que você é muito estudiosa, espero que você volte a jogar e me liberte da Mita Day Mochi má! Como prova da minha gratidão, vou te enviar pelos correios um presentinho. Ah, vi que você gosta de Minecraft, né?',
@@ -41,6 +42,42 @@
     return Boolean(
       praticaEscritaAtiva(unidade) && unidade.praticaEscrita.obrigatoriaParaAtividades
     );
+  }
+
+  function exigeAudioDaPergunta(unidade) {
+    return Boolean(unidade && unidade.exigirAudioPerguntaAntesDeResponder);
+  }
+
+  function revisaoPosRespostaAtiva(unidade, questao) {
+    return Boolean(
+      unidade &&
+      unidade.revisaoPosResposta &&
+      unidade.revisaoPosResposta.obrigatoria &&
+      questao &&
+      questao.revisaoPosResposta
+    );
+  }
+
+  function perguntaAtualFoiOuvida() {
+    var questao = questaoAtual();
+    return Boolean(
+      questao &&
+      Array.isArray(estado.perguntasOuvidasAtividades) &&
+      estado.perguntasOuvidasAtividades.indexOf(questao.id) >= 0
+    );
+  }
+
+  function perguntaAtualBloqueadaPorAudio() {
+    return exigeAudioDaPergunta(unidadeAtual) && !perguntaAtualFoiOuvida();
+  }
+
+  function mensagemDeBloqueioDaPergunta() {
+    return '🔒 Ouça a pergunta em inglês para liberar as respostas.';
+  }
+
+  function pararAudioDaAtividade() {
+    revisaoPosRespostaEmReproducao = null;
+    window.AudioRevisoes.parar({ silencioso: true, origem: 'ingles-atividade' });
   }
 
   function normalizarRespostaEscrita(valor) {
@@ -106,8 +143,10 @@
       conferenciasEscrita: {},
       iniciado: false,
       questaoAtual: 0,
+      perguntasOuvidasAtividades: [],
       respostasAtividades: {},
       conferenciasAtividades: {},
+      revisoesPosRespostaConcluidas: {},
       atividadeIniciada: false,
       atividadeFinalizada: false,
       tentativasAtividade: 0,
@@ -124,11 +163,21 @@
       return item.id;
     });
     var atividades = todasAsAtividades(unidade);
+    var idsAtividades = atividades.map(function (atividade) {
+      return atividade.id;
+    });
+    var perguntasOuvidasValidas = (
+      Array.isArray(valor.perguntasOuvidasAtividades) ? valor.perguntasOuvidasAtividades : []
+    ).filter(function (id, indice, lista) {
+      return idsAtividades.indexOf(id) >= 0 && lista.indexOf(id) === indice;
+    });
     var itens = todosOsItens(unidade);
     var respostasRecebidas = objeto(valor.respostasAtividades);
     var respostasValidas = {};
     var conferenciasRecebidas = objeto(valor.conferenciasAtividades);
     var conferenciasValidas = {};
+    var revisoesRecebidas = objeto(valor.revisoesPosRespostaConcluidas);
+    var revisoesValidas = {};
     var respostasEscritaRecebidas = objeto(valor.respostasEscrita);
     var respostasEscritaValidas = {};
     var conferenciasEscritaRecebidas = objeto(valor.conferenciasEscrita);
@@ -150,10 +199,19 @@
       var idsAlternativas = atividade.alternativas.map(function (alternativa) {
         return alternativa.id;
       });
-      if (idsAlternativas.indexOf(respostasRecebidas[atividade.id]) >= 0) {
+      if (
+        idsAlternativas.indexOf(respostasRecebidas[atividade.id]) >= 0 &&
+        (!exigeAudioDaPergunta(unidade) || perguntasOuvidasValidas.indexOf(atividade.id) >= 0)
+      ) {
         respostasValidas[atividade.id] = respostasRecebidas[atividade.id];
         if (['correta', 'incorreta'].indexOf(conferenciasRecebidas[atividade.id]) >= 0) {
           conferenciasValidas[atividade.id] = conferenciasRecebidas[atividade.id];
+        }
+        if (
+          revisaoPosRespostaAtiva(unidade, atividade) &&
+          revisoesRecebidas[atividade.id] === respostasRecebidas[atividade.id]
+        ) {
+          revisoesValidas[atividade.id] = respostasRecebidas[atividade.id];
         }
       }
     });
@@ -182,8 +240,10 @@
       0,
       Math.min(atividades.length - 1, Math.trunc(Number(valor.questaoAtual) || 0))
     );
+    base.perguntasOuvidasAtividades = perguntasOuvidasValidas;
     base.respostasAtividades = respostasValidas;
     base.conferenciasAtividades = conferenciasValidas;
+    base.revisoesPosRespostaConcluidas = revisoesValidas;
     base.atividadeIniciada =
       Boolean(valor.atividadeIniciada) || Object.keys(respostasValidas).length > 0;
     base.atividadeFinalizada =
@@ -681,12 +741,13 @@
       Boolean(questao.imagemEnunciado)
     );
     recipiente.innerHTML = '';
+    recipiente.setAttribute('aria-hidden', questao.imagemEnunciadoAlt ? 'false' : 'true');
     if (!questao.imagemEnunciado) return;
     var repeticoes = Math.max(1, Number(questao.repeticoesImagem) || 1);
     for (var indice = 0; indice < repeticoes; indice += 1) {
       var imagem = document.createElement('img');
       imagem.src = '../assets/objetos_escolares/' + questao.imagemEnunciado;
-      imagem.alt = '';
+      imagem.alt = indice === 0 && questao.imagemEnunciadoAlt ? questao.imagemEnunciadoAlt : '';
       recipiente.appendChild(imagem);
     }
   }
@@ -694,9 +755,16 @@
   function selecionarAlternativaAtividade(id) {
     var questao = questaoAtual();
     if (!questao) return;
+    if (perguntaAtualBloqueadaPorAudio()) {
+      elemento('ingles-status-atividade').textContent = mensagemDeBloqueioDaPergunta();
+      return;
+    }
     if (correcaoPorQuestao() && estado.conferenciasAtividades[questao.id] === 'correta') return;
     estado.respostasAtividades[questao.id] = id;
-    if (correcaoPorQuestao()) delete estado.conferenciasAtividades[questao.id];
+    if (correcaoPorQuestao()) {
+      delete estado.conferenciasAtividades[questao.id];
+      delete estado.revisoesPosRespostaConcluidas[questao.id];
+    }
     estado.atividadeIniciada = true;
     estado.iniciado = true;
     salvarEstado();
@@ -709,10 +777,26 @@
     atualizarContinuidade();
   }
 
+  function revisaoDaQuestaoConcluida(questao) {
+    return Boolean(
+      questao &&
+      estado.revisoesPosRespostaConcluidas[questao.id] === estado.respostasAtividades[questao.id]
+    );
+  }
+
+  function deveMostrarRevisaoPosResposta(questao) {
+    if (!revisaoPosRespostaAtiva(unidadeAtual, questao)) return false;
+    var conferencia = estado.conferenciasAtividades[questao.id];
+    return Boolean(
+      conferencia && (conferencia === 'correta' || !revisaoDaQuestaoConcluida(questao))
+    );
+  }
+
   function renderizarAlternativasAtividade(questao) {
     var grade = elemento('ingles-alternativas-atividade');
     var resposta = estado.respostasAtividades[questao.id];
     var conferencia = estado.conferenciasAtividades[questao.id];
+    var bloqueadaPorAudio = perguntaAtualBloqueadaPorAudio();
     grade.innerHTML = '';
     alternativasParaExibicao(questao, estado.questaoAtual).forEach(function (alternativa, indice) {
       var botao = document.createElement('button');
@@ -728,7 +812,8 @@
         conferencia === 'incorreta' && resposta === alternativa.id
       );
       botao.classList.toggle('correta', conferencia === 'correta' && resposta === alternativa.id);
-      botao.disabled = conferencia === 'correta';
+      botao.disabled = conferencia === 'correta' || bloqueadaPorAudio;
+      if (bloqueadaPorAudio) botao.setAttribute('aria-describedby', 'ingles-status-atividade');
       if (alternativa.imagem) {
         var imagem = document.createElement('img');
         imagem.src = '../assets/objetos_escolares/' + alternativa.imagem;
@@ -756,12 +841,59 @@
     });
   }
 
+  function renderizarRevisaoPosResposta(questao) {
+    var atividades = todasAsAtividades(unidadeAtual);
+    var dados = questao.revisaoPosResposta;
+    var concluida = revisaoDaQuestaoConcluida(questao);
+    var reproduzindo = revisaoPosRespostaEmReproducao === questao.id;
+    var imagem = elemento('ingles-imagem-revisao-pos-resposta');
+    var imagemElemento = elemento('ingles-imagem-revisao-pos-resposta-img');
+    var botaoAnterior = elemento('ingles-atividade-anterior');
+    var botaoConferir = elemento('ingles-conferir-atividade');
+    var botaoProxima = elemento('ingles-atividade-proxima');
+
+    elemento('ingles-conteudo-questao').hidden = true;
+    elemento('ingles-revisao-pos-resposta').hidden = false;
+    elemento('ingles-cartao-questao').classList.remove('com-apoio-visual');
+    elemento('ingles-progresso-revisao-pos-resposta').textContent =
+      'Question ' + (estado.questaoAtual + 1) + ' of ' + atividades.length;
+    elemento('ingles-pergunta-revisao-pos-resposta').textContent = questao.perguntaIngles;
+    elemento('ingles-resposta-revisao-pos-resposta').textContent = dados.respostaIngles;
+
+    imagem.hidden = !dados.imagemResposta;
+    imagemElemento.src = dados.imagemResposta
+      ? '../assets/objetos_escolares/' + dados.imagemResposta
+      : '';
+    imagemElemento.alt = dados.imagemResposta ? dados.imagemRespostaAltIngles || '' : '';
+
+    elemento('ingles-ouvir-revisao').disabled = reproduzindo;
+    elemento('ingles-status-revisao-pos-resposta').textContent = reproduzindo
+      ? 'Playing the full review. Please listen until the end.'
+      : concluida
+        ? '✓ Review complete. You can continue.'
+        : 'Listen to the full review to continue.';
+
+    botaoAnterior.hidden = true;
+    botaoConferir.hidden = true;
+    botaoProxima.hidden = false;
+    botaoProxima.disabled =
+      reproduzindo || estado.conferenciasAtividades[questao.id] !== 'correta' || !concluida;
+    botaoProxima.textContent =
+      estado.questaoAtual === atividades.length - 1 ? 'Concluir revisão ✓' : 'Próxima →';
+  }
+
   function renderizarQuestaoAtividade() {
     var atividades = todasAsAtividades(unidadeAtual);
     var questao = questaoAtual();
     if (!questao) return;
     elemento('ingles-cartao-questao').hidden = false;
     elemento('ingles-revisao-atividades').hidden = true;
+    if (deveMostrarRevisaoPosResposta(questao)) {
+      renderizarRevisaoPosResposta(questao);
+      return;
+    }
+    elemento('ingles-conteudo-questao').hidden = false;
+    elemento('ingles-revisao-pos-resposta').hidden = true;
     elemento('ingles-progresso-atividade').textContent =
       'Atividade ' + (estado.questaoAtual + 1) + ' de ' + atividades.length;
     elemento('ingles-pergunta-atividade').textContent = questao.perguntaIngles;
@@ -771,20 +903,24 @@
     var resposta = estado.respostasAtividades[questao.id];
     var conferencia = estado.conferenciasAtividades[questao.id];
     var imediata = correcaoPorQuestao();
+    var bloqueadaPorAudio = perguntaAtualBloqueadaPorAudio();
     var botaoConferir = elemento('ingles-conferir-atividade');
+    elemento('ingles-atividade-anterior').hidden = false;
     elemento('ingles-atividade-anterior').disabled = estado.questaoAtual === 0;
     botaoConferir.hidden = !imediata;
-    botaoConferir.disabled = !resposta || conferencia === 'correta';
-    elemento('ingles-atividade-proxima').disabled = imediata
-      ? conferencia !== 'correta'
-      : !resposta;
+    botaoConferir.disabled = bloqueadaPorAudio || !resposta || conferencia === 'correta';
+    elemento('ingles-atividade-proxima').hidden = false;
+    elemento('ingles-atividade-proxima').disabled =
+      bloqueadaPorAudio || (imediata ? conferencia !== 'correta' : !resposta);
     elemento('ingles-atividade-proxima').textContent =
       estado.questaoAtual === atividades.length - 1
         ? imediata
           ? 'Concluir revisão ✓'
           : 'Conferir respostas ✓'
         : 'Próxima →';
-    if (imediata && conferencia === 'correta') {
+    if (bloqueadaPorAudio) {
+      elemento('ingles-status-atividade').textContent = mensagemDeBloqueioDaPergunta();
+    } else if (imediata && conferencia === 'correta') {
       elemento('ingles-status-atividade').textContent = '✓ ' + questao.explicacao;
     } else if (imediata && conferencia === 'incorreta') {
       elemento('ingles-status-atividade').textContent =
@@ -802,11 +938,16 @@
 
   function conferirRespostaAtividade() {
     if (!correcaoPorQuestao()) return;
+    if (perguntaAtualBloqueadaPorAudio()) {
+      elemento('ingles-status-atividade').textContent = mensagemDeBloqueioDaPergunta();
+      return;
+    }
     var questao = questaoAtual();
     var resposta = questao && estado.respostasAtividades[questao.id];
     if (!questao || !resposta) return;
     estado.conferenciasAtividades[questao.id] =
       resposta === questao.respostaCorreta ? 'correta' : 'incorreta';
+    delete estado.revisoesPosRespostaConcluidas[questao.id];
     estado.tentativasAtividade += 1;
     salvarEstado();
     renderizarQuestaoAtividade();
@@ -890,6 +1031,7 @@
 
   function irParaQuestaoAnterior() {
     if (estado.questaoAtual <= 0) return;
+    pararAudioDaAtividade();
     estado.questaoAtual -= 1;
     salvarEstado();
     renderizarQuestaoAtividade();
@@ -918,19 +1060,27 @@
     var questao = questaoAtual();
     if (!questao || !estado.respostasAtividades[questao.id]) return;
     if (correcaoPorQuestao() && estado.conferenciasAtividades[questao.id] !== 'correta') return;
+    if (revisaoPosRespostaAtiva(unidadeAtual, questao) && !revisaoDaQuestaoConcluida(questao)) {
+      return;
+    }
     if (estado.questaoAtual === atividades.length - 1) {
+      pararAudioDaAtividade();
       finalizarAtividades();
       return;
     }
+    pararAudioDaAtividade();
     estado.questaoAtual += 1;
     salvarEstado();
     renderizarQuestaoAtividade();
   }
 
   function refazerAtividades() {
+    pararAudioDaAtividade();
     estado.questaoAtual = 0;
+    estado.perguntasOuvidasAtividades = [];
     estado.respostasAtividades = {};
     estado.conferenciasAtividades = {};
+    estado.revisoesPosRespostaConcluidas = {};
     estado.atividadeIniciada = true;
     estado.atividadeFinalizada = false;
     salvarEstado();
@@ -939,6 +1089,7 @@
   }
 
   function voltarAoVocabulario() {
+    pararAudioDaAtividade();
     elemento('ingles-painel-atividades').hidden = true;
     elemento('titulo-controles-audio-ingles').scrollIntoView({
       behavior: 'smooth',
@@ -949,6 +1100,9 @@
   function ouvirPerguntaAtual() {
     var questao = questaoAtual();
     if (!questao) return;
+    var revisaoId = configuracaoAtual.revisaoId;
+    var unidadeId = unidadeAtual.id;
+    var questaoId = questao.id;
     window.AudioRevisoes.falar({
       texto: questao.perguntaIngles,
       idioma: 'en-US',
@@ -956,9 +1110,128 @@
       origem: 'ingles-atividade',
       unidadeAudio: 'frase',
       aoEstado: function (detalhe) {
+        if (
+          !configuracaoAtual ||
+          configuracaoAtual.revisaoId !== revisaoId ||
+          !unidadeAtual ||
+          unidadeAtual.id !== unidadeId ||
+          !questaoAtual() ||
+          questaoAtual().id !== questaoId
+        ) {
+          return;
+        }
+        if (detalhe.fase === 'concluido' && exigeAudioDaPergunta(unidadeAtual)) {
+          if (estado.perguntasOuvidasAtividades.indexOf(questaoId) < 0) {
+            estado.perguntasOuvidasAtividades.push(questaoId);
+            salvarEstado();
+          }
+          renderizarQuestaoAtividade();
+          elemento('ingles-status-atividade').textContent =
+            '✓ Pergunta ouvida. Agora escolha uma resposta.';
+          return;
+        }
         elemento('ingles-status-atividade').textContent = detalhe.mensagem;
       },
     });
+  }
+
+  function ouvirRevisaoPosResposta() {
+    var questao = questaoAtual();
+    if (!revisaoPosRespostaAtiva(unidadeAtual, questao)) return;
+    if (revisaoPosRespostaEmReproducao) return;
+
+    var dados = questao.revisaoPosResposta;
+    var revisaoId = configuracaoAtual.revisaoId;
+    var unidadeId = unidadeAtual.id;
+    var questaoId = questao.id;
+    var respostaId = estado.respostasAtividades[questao.id];
+    revisaoPosRespostaEmReproducao = questao.id;
+    renderizarRevisaoPosResposta(questao);
+
+    window.AudioRevisoes.falarSequencia({
+      origem: 'ingles-revisao-pos-resposta',
+      pausaMs: unidadeAtual.revisaoPosResposta.pausaMs,
+      etapas: [
+        {
+          texto: questao.perguntaIngles,
+          idioma: 'en-US',
+          velocidade: 0.62,
+          unidadeAudio: 'frase',
+        },
+        {
+          texto: dados.perguntaPortugues,
+          idioma: 'pt-BR',
+          velocidade: 0.82,
+          unidadeAudio: 'frase',
+        },
+        {
+          texto: dados.respostaIngles,
+          idioma: 'en-US',
+          velocidade: 0.62,
+          unidadeAudio: dados.unidadeRespostaIngles,
+        },
+        {
+          texto: dados.significadoPortugues,
+          idioma: 'pt-BR',
+          velocidade: 0.82,
+          unidadeAudio: dados.unidadeSignificadoPortugues,
+        },
+      ],
+      aoEstado: function (detalhe) {
+        if (
+          !configuracaoAtual ||
+          configuracaoAtual.revisaoId !== revisaoId ||
+          !unidadeAtual ||
+          unidadeAtual.id !== unidadeId ||
+          !questaoAtual() ||
+          questaoAtual().id !== questaoId ||
+          revisaoPosRespostaEmReproducao !== questaoId
+        ) {
+          return;
+        }
+        if (detalhe.fase === 'erro' || detalhe.fase === 'cancelado') {
+          revisaoPosRespostaEmReproducao = null;
+          renderizarRevisaoPosResposta(questaoAtual());
+          elemento('ingles-status-revisao-pos-resposta').textContent =
+            detalhe.fase === 'erro'
+              ? 'The review could not be completed. Please listen again.'
+              : 'Review interrupted. Listen to the full review to continue.';
+          return;
+        }
+        if (detalhe.fase === 'concluido') {
+          revisaoPosRespostaEmReproducao = null;
+          estado.revisoesPosRespostaConcluidas[questaoId] = respostaId;
+          salvarEstado();
+          renderizarQuestaoAtividade();
+          if (estado.conferenciasAtividades[questaoId] === 'correta') {
+            elemento('ingles-atividade-proxima').focus();
+          } else {
+            elemento('ingles-status-atividade').textContent =
+              '↻ ' + (questao.feedbackErro || 'Review the options and try again.');
+          }
+          return;
+        }
+        elemento('ingles-status-revisao-pos-resposta').textContent =
+          'Playing part ' + (detalhe.indiceEtapa + 1) + ' of ' + detalhe.totalEtapas + '.';
+      },
+    });
+  }
+
+  function aoEstadoGlobalDoAudio(evento) {
+    var detalhe = evento.detail || {};
+    if (
+      !revisaoPosRespostaEmReproducao ||
+      detalhe.origem === 'ingles-revisao-pos-resposta' ||
+      ['aguardando', 'reproduzindo', 'parado'].indexOf(detalhe.fase) < 0
+    ) {
+      return;
+    }
+    var questao = questaoAtual();
+    revisaoPosRespostaEmReproducao = null;
+    if (!questao || elemento('ingles-revisao-pos-resposta').hidden) return;
+    renderizarRevisaoPosResposta(questao);
+    elemento('ingles-status-revisao-pos-resposta').textContent =
+      'Review interrupted. Listen to the full review to continue.';
   }
 
   function renderizar() {
@@ -1025,16 +1298,21 @@
     elemento('ingles-parar').addEventListener('click', function () {
       window.AudioRevisoes.parar({ origem: 'ingles' });
       elemento('ingles-status-audio').textContent = 'Áudio interrompido.';
+      if (!elemento('ingles-painel-atividades').hidden && perguntaAtualBloqueadaPorAudio()) {
+        elemento('ingles-status-atividade').textContent = mensagemDeBloqueioDaPergunta();
+      }
     });
     elemento('ingles-pratica-escrita').addEventListener('submit', conferirEscrita);
     elemento('ingles-campo-escrita').addEventListener('input', aoDigitarEscrita);
     elemento('ingles-iniciar-atividades').addEventListener('click', abrirAtividades);
     elemento('ingles-ouvir-pergunta').addEventListener('click', ouvirPerguntaAtual);
+    elemento('ingles-ouvir-revisao').addEventListener('click', ouvirRevisaoPosResposta);
     elemento('ingles-conferir-atividade').addEventListener('click', conferirRespostaAtividade);
     elemento('ingles-atividade-anterior').addEventListener('click', irParaQuestaoAnterior);
     elemento('ingles-atividade-proxima').addEventListener('click', irParaProximaQuestao);
     elemento('ingles-refazer-atividades').addEventListener('click', refazerAtividades);
     elemento('ingles-voltar-vocabulario').addEventListener('click', voltarAoVocabulario);
+    document.addEventListener('audioestadoalterado', aoEstadoGlobalDoAudio);
   }
 
   function inicializar(configuracao) {
@@ -1082,6 +1360,7 @@
     abrir: abrir,
     limparProgresso: limparProgresso,
     pararAudio: function () {
+      revisaoPosRespostaEmReproducao = null;
       window.AudioRevisoes.parar({ silencioso: true, origem: 'ingles' });
     },
     obterEstado: function (perfil, revisaoId) {

@@ -4,6 +4,7 @@
   var sintetizador = window.speechSynthesis;
   var sequencia = 0;
   var ultimaSolicitacao = null;
+  var solicitacaoAtiva = null;
   var vozes = [];
   var inicializado = false;
 
@@ -90,8 +91,14 @@
 
   function parar(opcoes) {
     opcoes = opcoes || {};
+    var ativa = solicitacaoAtiva;
     sequencia += 1;
+    solicitacaoAtiva = null;
     if (sintetizador && typeof sintetizador.cancel === 'function') sintetizador.cancel();
+    if (ativa) {
+      emitir('cancelado', 'Áudio interrompido.', ativa);
+      return;
+    }
     if (!opcoes.silencioso) {
       emitir('parado', 'Áudio interrompido.', { origem: opcoes.origem || 'geral' });
     }
@@ -120,8 +127,9 @@
     return 'Preparando o ditado da ' + unidade + '.';
   }
 
-  function falar(opcoes, registrarComoUltima) {
+  function falar(opcoes, registrarComoUltima, controleInterno) {
     opcoes = opcoes || {};
+    controleInterno = controleInterno || {};
     var texto = textoSeguro(opcoes.texto);
     var idioma = idiomaNormalizado(opcoes.idioma);
     var velocidade = Math.max(0.5, Math.min(1.2, Number(opcoes.velocidade) || 0.82));
@@ -156,8 +164,8 @@
       return false;
     }
 
-    parar({ silencioso: true });
-    var sequenciaAtual = sequencia;
+    if (!controleInterno.preservarSequencia) parar({ silencioso: true });
+    var sequenciaAtual = controleInterno.sequenciaAtual || sequencia;
     var configuracao = Object.assign({}, opcoes, {
       texto: texto,
       idioma: idioma,
@@ -186,8 +194,9 @@
     };
     conteudo.onend = function () {
       if (!aindaValido()) return;
+      solicitacaoAtiva = null;
       emitir(
-        'concluido',
+        controleInterno.faseConclusao || 'concluido',
         configuracao.contexto === 'ditado'
           ? 'Ditado concluído. Agora digite o que você ouviu.'
           : 'Áudio concluído. Você pode repetir ou ouvir mais devagar.',
@@ -197,6 +206,7 @@
     };
     conteudo.onerror = function () {
       if (!aindaValido()) return;
+      solicitacaoAtiva = null;
       emitir('erro', 'Não foi possível reproduzir este áudio. Tente novamente.', configuracao, {
         voz: nomeVoz,
       });
@@ -204,8 +214,58 @@
 
     emitir('aguardando', mensagemInicial(idioma, unidade), configuracao, { voz: nomeVoz });
     if (typeof sintetizador.resume === 'function') sintetizador.resume();
+    solicitacaoAtiva = configuracao;
     sintetizador.speak(conteudo);
     return true;
+  }
+
+  function falarSequencia(opcoes) {
+    opcoes = opcoes || {};
+    var etapas = Array.isArray(opcoes.etapas) ? opcoes.etapas : [];
+    var pausaMs = Math.max(0, Math.min(3000, Math.trunc(Number(opcoes.pausaMs) || 0)));
+
+    if (!etapas.length) {
+      emitir('erro', 'Não há etapas de áudio para reproduzir.', opcoes);
+      return false;
+    }
+
+    parar({ silencioso: true });
+    var sequenciaAtual = sequencia;
+    var indice = 0;
+
+    function notificar(detalhe) {
+      if (typeof opcoes.aoEstado !== 'function') return;
+      opcoes.aoEstado(
+        Object.assign({}, detalhe, {
+          indiceEtapa: indice,
+          totalEtapas: etapas.length,
+        })
+      );
+    }
+
+    function reproduzirEtapa() {
+      if (sequenciaAtual !== sequencia) return false;
+      var ultimaEtapa = indice === etapas.length - 1;
+      var etapa = Object.assign({}, etapas[indice], {
+        origem: opcoes.origem || etapas[indice].origem || 'geral',
+        aoEstado: function (detalhe) {
+          notificar(detalhe);
+          if (detalhe.fase === 'erro') return;
+          if (detalhe.fase !== 'etapa-concluida') return;
+          indice += 1;
+          window.setTimeout(function () {
+            reproduzirEtapa();
+          }, pausaMs);
+        },
+      });
+      return falar(etapa, false, {
+        preservarSequencia: true,
+        sequenciaAtual: sequenciaAtual,
+        faseConclusao: ultimaEtapa ? 'concluido' : 'etapa-concluida',
+      });
+    }
+
+    return reproduzirEtapa();
   }
 
   function repetir() {
@@ -231,6 +291,7 @@
 
   window.AudioRevisoes = {
     falar: falar,
+    falarSequencia: falarSequencia,
     parar: parar,
     repetir: repetir,
     atualizarVozes: atualizarVozes,

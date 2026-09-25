@@ -140,6 +140,25 @@
             <small>Unit 5 · Farm Animals</small>
             <strong>Nova revisão de inglês →</strong>
           </button>
+          <button class="cartao-materia ingles" id="abrir-ingles-friends-atividade-1" type="button">
+            <img src="../assets/objetos_escolares/friend.svg" alt="" />
+            <span>Friends · Atividade 1</span>
+            <small>25 itens + 25 atividades</small>
+            <small>Nome, idade, números, alfabeto e cores</small>
+            <strong>Começar ou continuar →</strong>
+          </button>
+          <button
+            class="cartao-materia ingles"
+            id="abrir-ingles-at-school-atividade-2"
+            type="button"
+            hidden
+          >
+            <img src="../assets/objetos_escolares/desk.svg" alt="" />
+            <span>At School · Atividade 2</span>
+            <small>25 itens + 25 atividades</small>
+            <small>Objetos, perguntas e comandos da escola</small>
+            <strong>Começar ou continuar →</strong>
+          </button>
           <button
             class="cartao-materia leitura"
             id="materia-leitura"
@@ -461,42 +480,79 @@
           hidden
         >
           <div id="ingles-cartao-questao">
-            <div class="cabecalho-atividade-ingles">
-              <div>
-                <p class="etiqueta" id="ingles-progresso-atividade">Atividade 1 de 10</p>
-                <h2 id="ingles-titulo-atividade">Practice Time!</h2>
+            <div id="ingles-conteudo-questao">
+              <div class="cabecalho-atividade-ingles">
+                <div>
+                  <p class="etiqueta" id="ingles-progresso-atividade">Atividade 1 de 10</p>
+                  <h2 id="ingles-titulo-atividade">Practice Time!</h2>
+                </div>
+                <button
+                  class="botao-secundario"
+                  id="ingles-ouvir-pergunta"
+                  type="button"
+                  aria-label="Ouvir a pergunta atual em inglês"
+                >
+                  🔊 Ouvir pergunta
+                </button>
               </div>
-              <button
-                class="botao-secundario"
-                id="ingles-ouvir-pergunta"
-                type="button"
-                aria-label="Ouvir a pergunta atual em inglês"
+
+              <div
+                class="imagens-enunciado-ingles"
+                id="ingles-imagens-enunciado"
+                aria-hidden="true"
+              ></div>
+              <h3 id="ingles-pergunta-atividade" lang="en-US"></h3>
+              <p class="traducao-pergunta-ingles" id="ingles-instrucao-atividade"></p>
+              <div
+                class="alternativas-atividade-ingles"
+                id="ingles-alternativas-atividade"
+                role="group"
+                aria-labelledby="ingles-pergunta-atividade"
+              ></div>
+              <p
+                class="status-atividade-ingles"
+                id="ingles-status-atividade"
+                role="status"
+                aria-live="polite"
               >
-                🔊 Ouvir pergunta
-              </button>
+                Escolha uma alternativa. A correção aparecerá somente ao final.
+              </p>
             </div>
 
-            <div
-              class="imagens-enunciado-ingles"
-              id="ingles-imagens-enunciado"
-              aria-hidden="true"
-            ></div>
-            <h3 id="ingles-pergunta-atividade" lang="en-US"></h3>
-            <p class="traducao-pergunta-ingles" id="ingles-instrucao-atividade"></p>
-            <div
-              class="alternativas-atividade-ingles"
-              id="ingles-alternativas-atividade"
-              role="group"
-              aria-labelledby="ingles-pergunta-atividade"
-            ></div>
-            <p
-              class="status-atividade-ingles"
-              id="ingles-status-atividade"
-              role="status"
-              aria-live="polite"
+            <section
+              class="revisao-pos-resposta-ingles"
+              id="ingles-revisao-pos-resposta"
+              aria-labelledby="ingles-titulo-revisao-pos-resposta"
+              lang="en-US"
+              hidden
             >
-              Escolha uma alternativa. A correção aparecerá somente ao final.
-            </p>
+              <p class="etiqueta" id="ingles-progresso-revisao-pos-resposta"></p>
+              <h2 id="ingles-titulo-revisao-pos-resposta">Let’s review!</h2>
+              <p
+                class="pergunta-revisao-pos-resposta"
+                id="ingles-pergunta-revisao-pos-resposta"
+              ></p>
+              <div
+                class="imagem-revisao-pos-resposta"
+                id="ingles-imagem-revisao-pos-resposta"
+                hidden
+              >
+                <img id="ingles-imagem-revisao-pos-resposta-img" src="" alt="" />
+              </div>
+              <p class="resposta-revisao-pos-resposta">
+                <span>Correct answer:</span>
+                <strong id="ingles-resposta-revisao-pos-resposta"></strong>
+              </p>
+              <button class="botao-secundario" id="ingles-ouvir-revisao" type="button">
+                🔊 Ouvir revisão
+              </button>
+              <p
+                class="status-atividade-ingles"
+                id="ingles-status-revisao-pos-resposta"
+                role="status"
+                aria-live="polite"
+              ></p>
+            </section>
             <div class="navegacao-atividade-ingles">
               <button class="botao-secundario" id="ingles-atividade-anterior" type="button">
                 ← Anterior

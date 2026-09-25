@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 200" role="img" aria-labelledby="title desc">
+  <title id="title">Sentar na carteira</title>
+  <desc id="desc">Uma criança está sentada diante de uma carteira escolar.</desc>
+  <rect width="280" height="200" rx="24" fill="#effbea"/>
+  <circle cx="87" cy="49" r="25" fill="#f2b28d" stroke="#7b4935" stroke-width="5"/>
+  <path d="M61 43c5-27 47-31 55-2-17-7-36-7-55 2z" fill="#5a382b"/>
+  <path d="M87 75v54m0-37 41 25m-41-18-24 34m24-4 36 31m-36-31-13 43" fill="none" stroke="#315c96" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M120 101h118v20H120z" fill="#efb448" stroke="#78520c" stroke-width="6"/>
+  <path d="M135 121v57m88-57v57" stroke="#78520c" stroke-width="8"/>
+  <path d="M49 126h55v14H49zm7 14v39" fill="#75b86b" stroke="#356c35" stroke-width="6"/>
+</svg>

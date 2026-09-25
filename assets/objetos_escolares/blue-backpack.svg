@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 80" role="img" aria-label="mochila azul">
+  <path d="M22 19v-5c0-8 20-8 20 0v5" fill="none" stroke="#174ea6" stroke-width="5" stroke-linecap="round"/>
+  <path d="M13 30c0-9 7-16 16-16h6c9 0 16 7 16 16v39c0 5-4 8-9 8H22c-5 0-9-3-9-8V30Z" fill="#2f80ed" stroke="#174ea6" stroke-width="3"/>
+  <path d="M18 42h28v24c0 4-3 7-7 7H25c-4 0-7-3-7-7V42Z" fill="#66a3ff" stroke="#174ea6" stroke-width="3"/>
+  <path d="M24 50h16" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+  <path d="M13 35H8v25h5M51 35h5v25h-5" fill="none" stroke="#174ea6" stroke-width="4" stroke-linecap="round"/>
+</svg>
