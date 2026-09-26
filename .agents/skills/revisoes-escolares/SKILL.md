@@ -46,6 +46,8 @@ Na fase pedagogica, estude todas as fontes relevantes, incluindo texto e element
 
 Preencha a sintese durante a analise para registrar fontes, matriz, plano e resultado do gate. Somente depois de corrigir todas as lacunas e aprovar o gate, finalize a sintese e gere o Markdown de implementacao para o Codex. Leia `references/pedagogia-e-cobertura.md` para analisar materiais, planejar ensino, textos de apoio, diversidade, ilustracoes, validacao textual e o gate completo. Use `assets/modelo-sintese-pedagogica.md` para registrar a passagem entre as fases.
 
+Para Ingles baseado em livro, workbook, caderno, PDF ou prints, feche tambem as dependencias entre questao e contexto: historias, dialogos, cenas, audios e informacoes visuais necessarios ao gabarito precisam aparecer dentro da propria revisao antes da cobranca. Use `references/ingles.md`.
+
 No Codex, receba a sintese pronta, consulte poucos arquivos tecnicos, reutilize infraestrutura e evite reanalisar integralmente o material. Leia `references/materiais-locais.md` quando houver PDF, caderno, print, OCR, imagem, DOCX, planilha ou outro material bruto.
 
 ## 4. Entenda a entrada antes de codificar
@@ -82,7 +84,7 @@ Consulte primeiro o inventario e uma revisao equivalente. Depois roteie:
 
 - **Matematica visual/manipulativa ou digitada/tabuada**: `references/matematica.md`.
 - **Gramatica/Portugues, Historia, Geografia, Ciencias e questionarios declarativos**: `references/questionarios-e-audio.md`.
-- **Ingles/audio**: `references/questionarios-e-audio.md`.
+- **Ingles**: leia primeiro `references/ingles.md`; para detalhes tecnicos de questionarios e audio, siga tambem `references/questionarios-e-audio.md` e as fontes normativas indicadas pela referencia de Ingles.
 - **Leitura/PDF.js**: `references/leitura.md`.
 - **Computacao**: leia primeiro `documentacao/computacao/README.md` e siga o ciclo editorial abaixo antes de qualquer integracao.
 - **Outra materia futura**: inventario/modelo e extensao opt-in; nao presuma biblioteca ou controlador inexistente.
