@@ -50,6 +50,17 @@ Persistem `respostasEscrita` e `conferenciasEscrita`; editar resposta correta in
 Variantes legítimas são explícitas em `variantesEscrita`. Se a escrita for obrigatória, o portão das
 atividades combina todos os áudios concluídos e todas as escritas corretas.
 
+Uma unidade pode declarar `historia` como etapa opt-in entre o estudo e as atividades. Cada cena
+mantém imagem local original, texto em Inglês e Português e uma sequência de áudio EN → PT feita
+por `AudioRevisoes`; abrir ou trocar de cena nunca inicia áudio automaticamente. O controlador
+persiste a cena atual e a conclusão, exige os pré-requisitos de estudo antes de aceitá-la como
+concluída e restaura a etapa na recarga.
+
+Quando `historia.questoesComConsulta` inclui a questão atual, **Rever história** abre essa mesma
+etapa sem reinicializar resposta, conferência, liberação do áudio da pergunta, revisão pós-resposta
+ou pontuação. **Voltar à questão** restaura o índice e o estado exatos. Revisões sem `historia`
+preservam o fluxo anterior.
+
 Uma unidade pode declarar `exigirAudioPerguntaAntesDeResponder: true`. Nesse modo, as alternativas
 de cada questão permanecem desabilitadas até o callback `concluido` do áudio daquela pergunta. O
 estado persiste somente IDs válidos e únicos em `perguntasOuvidasAtividades`; erro, parada,
@@ -71,6 +82,16 @@ Esse estado intermediário precisa sobreviver à recarga sem duplicar tentativa,
 Estados legados já finalizados continuam finalizados mesmo sem o novo campo. `Refazer` limpa as
 revisões pós-resposta e reinicia a pergunta 1, preservando estudo e escrita. A questão final segue o
 mesmo contrato e só pode concluir a atividade depois da última sequência completa.
+
+O opt-in `revisaoPosResposta.manterTelaAposErro` mantém a tela **Let’s review!** aberta depois da
+sequência de uma tentativa incorreta e troca o avanço por **Tentar novamente**. Esse botão retorna
+à mesma questão, preserva a alternativa marcada e invalida somente a conclusão daquela tentativa.
+Se a criança errar outra vez, uma nova sequência EN → PT → EN → PT é obrigatória. Sem esse opt-in,
+o retorno automático após erro permanece inalterado.
+
+O título da mensagem final aceita o opt-in declarativo `destinatariaMensagemFinal`. Quando ausente,
+o controlador continua derivando Alice ou Mariana do perfil, preservando todas as revisões antigas;
+o texto da mensagem permanece configurável por `mensagemFinal`.
 
 ## Correção e feedback
 

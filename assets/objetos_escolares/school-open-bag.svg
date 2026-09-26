@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img">
+  <title>Duas mãos abrindo uma mochila vazia</title>
+  <metadata data-action="open" data-object="bag" data-book="absent" />
+  <rect width="240" height="160" rx="24" fill="#fff3e8" />
+  <path d="M65 139V65c0-35 110-35 110 0v74Z" fill="#ff8d65" stroke="#8a4328" stroke-width="5" /><path d="M91 40c0-32 58-32 58 0" fill="none" stroke="#8a4328" stroke-width="6" />
+  <path d="M76 80c28-18 60-18 88 0-28 20-60 20-88 0Z" fill="#5d3928" stroke="#8a4328" stroke-width="5" />
+  <path d="M17 104c23-5 39-13 57-26l17-13M223 104c-23-5-39-13-57-26l-17-13" fill="none" stroke="#f3ba91" stroke-width="13" stroke-linecap="round" />
+  <path d="m55 48-17-15m130 15 17-15" stroke="#ff7849" stroke-width="5" stroke-linecap="round" />
+  <text x="120" y="153" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="700" fill="#6b481d">open the bag</text>
+</svg>

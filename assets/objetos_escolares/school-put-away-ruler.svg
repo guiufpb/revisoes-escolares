@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img">
+  <title>Uma mão guardando uma régua no estojo</title>
+  <metadata data-action="put-away" data-object="ruler" data-container="pencil-case" />
+  <rect width="240" height="160" rx="24" fill="#fff6e8" />
+  <rect x="25" y="88" width="111" height="46" rx="17" fill="#5eb8ff" stroke="#265f8b" stroke-width="5" /><path d="M43 101h75" stroke="#fff" stroke-width="5" />
+  <rect x="83" y="56" width="115" height="23" rx="7" fill="#ffd54f" stroke="#745b0b" stroke-width="4" transform="rotate(10 140 68)" /><path d="M107 58v12m21-8v12m21-8v12m21-8v12" stroke="#745b0b" stroke-width="3" />
+  <path d="M205 44c-18 1-29 10-37 28l-16 37c-5 12 9 19 17 10l14-17c3 12 12 19 26 21" fill="#f3ba91" stroke="#965f40" stroke-width="4" stroke-linecap="round" />
+  <path d="m97 83-18 12m23 2-23 5" stroke="#42a85b" stroke-width="4" stroke-linecap="round" />
+  <text x="120" y="151" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="700" fill="#6b481d">put away the ruler</text>
+</svg>

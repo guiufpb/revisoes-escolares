@@ -64,6 +64,7 @@ import '../revisoes/mariana/ingles-city-life-unidade-5.js';
 import '../revisoes/alice/ingles-at-the-farm-unidade-5.js';
 import '../revisoes/ingles-friends-atividade-1.js';
 import '../revisoes/mariana/ingles-at-school-atividade-2.js';
+import '../revisoes/mariana/ingles-at-school-atividade-3.js';
 import './leitura.js';
 import './ingles.js';
 import './app.js';
