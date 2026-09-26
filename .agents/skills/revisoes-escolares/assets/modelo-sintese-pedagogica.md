@@ -19,6 +19,8 @@ Esta sintese e a passagem entre a analise pedagogica profunda e a implementacao 
 - Prints/imagens e contribuicao de cada um:
 - Sinteses, OCR e renderizacoes reutilizados:
 - Confirmacao de inspecao visual das paginas relevantes:
+- Historias/dialogos/sequencias relevantes e fatos que sustentam questoes:
+- Informacoes que existem somente nas ilustracoes e precisam ser recriadas/explicitadas:
 
 ## Camadas de cobertura
 
@@ -44,13 +46,31 @@ Esta sintese e a passagem entre a analise pedagogica profunda e a implementacao 
 | --- | --- | --- | --- | --- | --- | --- |
 |  |  |  | nucleo/reforco/ampliacao/enriquecimento |  |  |  |
 
+## Matriz de dependencias das questoes
+
+Use quando alguma pergunta depender de historia, texto, dialogo, cena, tabela, mapa, grafico,
+audio, sequencia ou informacao visual do material de origem.
+
+| Questao/bloco | Conhecimento necessario para responder | Fonte no material | Onde a crianca aprende isso dentro da revisao |
+| --- | --- | --- | --- |
+|  |  |  |  |
+
+Nenhuma linha aplicavel pode ficar sem uma fonte interna de aprendizagem antes da implementacao.
+
+Esta matriz nao substitui a matriz de cobertura.
+
+A matriz de cobertura responde: **o que sera ensinado?**
+
+A matriz de dependencias responde: **de onde a crianca sabera a resposta?**
+
 ## Percurso de aprendizagem
 
-- Ensinar — textos curtos ou exemplos necessarios:
+- Ensinar — textos curtos, historias, dialogos ou exemplos necessarios:
 - Observar — cenas, imagens, relacoes ou modelos:
+- Estudo ativo — audio/transcricao ou pratica guiada quando aplicavel:
 - Praticar — aplicacoes guiadas:
 - Verificar — questoes e criterios de acerto:
-- Consolidar — retomada, feedback ou sintese final:
+- Consolidar — retomada, feedback ou revisao pos-resposta:
 
 ## Diversidade e densidade pedagogica
 
@@ -73,6 +93,26 @@ Esta sintese e a passagem entre a analise pedagogica profunda e a implementacao 
 - Respostas legitimas alternativas previstas:
 - Campos livres ambiguos a substituir:
 - Ditados com valor pedagogico:
+
+## Ingles — quando aplicavel
+
+- Revisao equivalente:
+- Quantidade de cartoes de estudo:
+- `praticaEscrita` obrigatoria?:
+- Portao previsto: __/__ audios + __/__ escritas:
+- `exigirAudioPerguntaAntesDeResponder`?:
+- `revisaoPosResposta`?:
+- Fluxo apos erro:
+- Fluxo apos acerto:
+- Historias/dialogos/cenas necessarios antes das questoes:
+- Contextos que precisam poder ser revistos durante o questionario:
+- Phonics previsto:
+- Listening:
+- Speaking guiado:
+- Reading:
+- Writing:
+
+Preencha este bloco somente para Ingles.
 
 ## Plano sugerido de revisao
 
@@ -107,6 +147,9 @@ Registre PASS/FAIL e corrija qualquer falha antes da implementacao:
 - [ ] Nao ha repeticao sem ganho.
 - [ ] Cada questao esta tao rica quanto possivel sem ficar mais dificil.
 - [ ] Imagens possuem funcao pedagogica real.
+- [ ] Cada questao aplicavel tem uma fonte interna identificada para o conhecimento necessario ao gabarito.
+- [ ] Historias, dialogos, cenas e informacoes visuais cobrados aparecem antes da avaliacao ou no proprio enunciado.
+- [ ] Em Ingles, quando aplicavel, o fluxo de estudo, compreensao e consolidacao foi explicitamente definido.
 - [ ] A revisao e autossuficiente.
 
 Resultado do gate: PASS / FAIL
