@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img">
+  <title>Uma criança rindo enquanto livros de uma amiga estão no chão</title>
+  <metadata data-scene="laugh friend dropped books not helping" />
+  <rect width="240" height="160" rx="24" fill="#fff2f2" />
+  <circle cx="65" cy="47" r="22" fill="#9a6341" /><path d="M38 126V87c0-22 54-22 54 0v39" fill="#fb7891" stroke="#823244" stroke-width="4" />
+  <path d="M56 52q10 13 20 0" fill="none" stroke="#3a241b" stroke-width="4" stroke-linecap="round" /><path d="M100 55h18m-9-9v18" stroke="#844" stroke-width="4" />
+  <circle cx="171" cy="51" r="21" fill="#825232" /><path d="M146 124V89c0-22 50-22 50 0v35" fill="#67b7e8" stroke="#285e7e" stroke-width="4" />
+  <path d="M153 61q18-10 34 0" fill="none" stroke="#3a241b" stroke-width="4" />
+  <g stroke="#455a64" stroke-width="3"><rect x="116" y="120" width="57" height="13" rx="3" fill="#ffd65c" transform="rotate(9 144 126)" /><rect x="158" y="132" width="57" height="13" rx="3" fill="#7ac6a4" transform="rotate(-7 186 138)" /></g>
+  <text x="120" y="154" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="#71343c">laugh instead of helping</text>
+</svg>

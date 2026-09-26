@@ -9,6 +9,7 @@
   var estado = null;
   var inicializado = false;
   var revisaoPosRespostaEmReproducao = null;
+  var historiaEmReproducao = null;
   var MENSAGENS_SURPRESA = {
     alice:
       'Alice, invadi o computador de vocês, li tudo e vi que você é muito estudiosa, espero que você volte a jogar e me liberte da Mita Day Mochi má! Como prova da minha gratidão, vou te enviar pelos correios um presentinho. Ah, vi que você gosta de Minecraft, né?',
@@ -55,6 +56,31 @@
       unidade.revisaoPosResposta.obrigatoria &&
       questao &&
       questao.revisaoPosResposta
+    );
+  }
+
+  function manterTelaDaRevisaoAposErro(unidade) {
+    return Boolean(
+      unidade && unidade.revisaoPosResposta && unidade.revisaoPosResposta.manterTelaAposErro
+    );
+  }
+
+  function historiaDaUnidade(unidade) {
+    if (!unidade || !unidade.historia || !Array.isArray(unidade.historia.cenas)) return null;
+    return unidade.historia.cenas.length ? unidade.historia : null;
+  }
+
+  function cenaAtualDaHistoria() {
+    var historia = historiaDaUnidade(unidadeAtual);
+    return historia ? historia.cenas[estado.historiaCenaAtual] || historia.cenas[0] : null;
+  }
+
+  function questaoAtualPermiteReverHistoria() {
+    var historia = historiaDaUnidade(unidadeAtual);
+    return Boolean(
+      historia &&
+      estado.questaoAtual >= 0 &&
+      estado.questaoAtual < Math.max(0, Math.trunc(Number(historia.questoesComConsulta) || 0))
     );
   }
 
@@ -147,6 +173,10 @@
       respostasAtividades: {},
       conferenciasAtividades: {},
       revisoesPosRespostaConcluidas: {},
+      historiaCenaAtual: 0,
+      historiaConcluida: false,
+      historiaEmExibicao: false,
+      historiaOrigem: 'estudo',
       atividadeIniciada: false,
       atividadeFinalizada: false,
       tentativasAtividade: 0,
@@ -254,6 +284,28 @@
         atividades.every(function (atividade) {
           return conferenciasValidas[atividade.id] === 'correta';
         }));
+    var historia = historiaDaUnidade(unidade);
+    var quantidadeCenas = historia ? historia.cenas.length : 0;
+    base.historiaCenaAtual = quantidadeCenas
+      ? Math.max(0, Math.min(quantidadeCenas - 1, Math.trunc(Number(valor.historiaCenaAtual) || 0)))
+      : 0;
+    base.historiaConcluida = Boolean(
+      historia &&
+      valor.historiaConcluida &&
+      base.itensOuvidos.length === itens.length &&
+      (!praticaEscritaObrigatoria(unidade) || quantidadeEscritasCorretas(base) === itens.length)
+    );
+    base.historiaOrigem =
+      historia && valor.historiaOrigem === 'questao' && base.atividadeIniciada
+        ? 'questao'
+        : 'estudo';
+    base.historiaEmExibicao = Boolean(
+      historia &&
+      valor.historiaEmExibicao &&
+      !base.atividadeFinalizada &&
+      base.itensOuvidos.length === itens.length &&
+      (!praticaEscritaObrigatoria(unidade) || quantidadeEscritasCorretas(base) === itens.length)
+    );
     base.tentativasAtividade = Math.max(0, Math.trunc(Number(valor.tentativasAtividade) || 0));
     var possuiConteudoIniciado =
       base.itensOuvidos.length > 0 ||
@@ -262,6 +314,8 @@
         return respostasEscritaValidas[id].length > 0;
       }) ||
       Object.keys(conferenciasEscritaValidas).length > 0 ||
+      base.historiaConcluida ||
+      base.historiaEmExibicao ||
       base.atividadeIniciada;
     base.iniciado = praticaEscritaAtiva(unidade)
       ? possuiConteudoIniciado
@@ -409,12 +463,22 @@
       botao.textContent = 'Ver resultado das atividades →';
       return;
     }
+    if (historiaDaUnidade(unidadeAtual) && !estado.historiaConcluida) {
+      mensagem.textContent =
+        unidadeAtual.mensagemAtividades ||
+        'Muito bem! Agora acompanhe a Story Time antes de começar as atividades.';
+      botao.textContent = 'Abrir Story Time →';
+      return;
+    }
     if (estado.atividadeIniciada) {
       mensagem.textContent = respondidas + ' de ' + atividades.length + ' atividades respondidas.';
       botao.textContent = 'Continuar atividades →';
       return;
     }
     mensagem.textContent =
+      (historiaDaUnidade(unidadeAtual) &&
+        estado.historiaConcluida &&
+        unidadeAtual.mensagemAposHistoria) ||
       unidadeAtual.mensagemAtividades ||
       'Muito bem! Agora pratique objetos, pessoas, lugares, materiais e regras da escola.';
     botao.textContent = 'Começar as ' + atividades.length + ' atividades →';
@@ -752,6 +816,188 @@
     }
   }
 
+  function pararAudioDaHistoria(silencioso) {
+    historiaEmReproducao = null;
+    window.AudioRevisoes.parar({
+      silencioso: Boolean(silencioso),
+      origem: 'ingles-story-time',
+    });
+  }
+
+  function renderizarHistoria() {
+    var historia = historiaDaUnidade(unidadeAtual);
+    var cena = cenaAtualDaHistoria();
+    if (!historia || !cena) return;
+    var indice = estado.historiaCenaAtual;
+    var ultimaCena = indice === historia.cenas.length - 1;
+    var veioDaQuestao = estado.historiaOrigem === 'questao' && estado.atividadeIniciada;
+    var reproduzindo = historiaEmReproducao === cena.id;
+
+    elemento('ingles-painel-atividades').hidden = true;
+    elemento('ingles-story-time').hidden = false;
+    elemento('ingles-story-time-titulo').textContent = historia.tituloIngles;
+    elemento('ingles-story-time-subtitulo').textContent = historia.tituloPortugues;
+    elemento('ingles-story-time-progresso').textContent =
+      'Cena ' + (indice + 1) + ' de ' + historia.cenas.length;
+    elemento('ingles-story-time-cena-titulo').textContent = cena.tituloIngles;
+    elemento('ingles-story-time-cena-subtitulo').textContent = cena.tituloPortugues;
+    elemento('ingles-story-time-texto-ingles').textContent = cena.textoIngles;
+    elemento('ingles-story-time-texto-portugues').textContent = cena.textoPortugues;
+    elemento('ingles-story-time-imagem').src = '../assets/objetos_escolares/' + cena.imagem;
+    elemento('ingles-story-time-imagem').alt = cena.imagemAlt;
+    elemento('ingles-story-time-fechar').textContent = veioDaQuestao
+      ? '← Voltar à questão'
+      : '← Voltar ao estudo';
+    elemento('ingles-story-time-anterior').disabled = indice === 0;
+    elemento('ingles-story-time-proxima').textContent = ultimaCena
+      ? veioDaQuestao
+        ? 'Voltar à questão →'
+        : 'Começar as ' + todasAsAtividades(unidadeAtual).length + ' atividades →'
+      : 'Próxima cena →';
+    elemento('ingles-story-time-ouvir').disabled = reproduzindo;
+    elemento('ingles-story-time-repetir').disabled = reproduzindo;
+    elemento('ingles-story-time-status').textContent = reproduzindo
+      ? 'Reproduzindo a cena em inglês e português.'
+      : 'A cena não toca sozinha. Use “Ouvir cena” quando quiser.';
+  }
+
+  function abrirHistoria(origem) {
+    if (!historiaDaUnidade(unidadeAtual) || !atividadesLiberadas()) return;
+    pararAudioDaAtividade();
+    pararAudioDaHistoria(true);
+    estado.historiaOrigem = origem === 'questao' && estado.atividadeIniciada ? 'questao' : 'estudo';
+    if (estado.historiaOrigem === 'questao') estado.historiaCenaAtual = 0;
+    estado.historiaEmExibicao = true;
+    estado.iniciado = true;
+    salvarEstado();
+    renderizarHistoria();
+    elemento('ingles-story-time').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function restaurarDepoisDaHistoria() {
+    var voltarParaQuestao = estado.historiaOrigem === 'questao' && estado.atividadeIniciada;
+    pararAudioDaHistoria(true);
+    estado.historiaEmExibicao = false;
+    salvarEstado();
+    elemento('ingles-story-time').hidden = true;
+    if (voltarParaQuestao) {
+      elemento('ingles-painel-atividades').hidden = false;
+      renderizarQuestaoAtividade();
+      elemento('ingles-painel-atividades').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    atualizarContinuidade();
+    elemento('ingles-continuidade').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function mudarCenaDaHistoria(deslocamento) {
+    var historia = historiaDaUnidade(unidadeAtual);
+    if (!historia) return;
+    var novoIndice = Math.max(
+      0,
+      Math.min(historia.cenas.length - 1, estado.historiaCenaAtual + deslocamento)
+    );
+    if (novoIndice === estado.historiaCenaAtual) return;
+    pararAudioDaHistoria(true);
+    estado.historiaCenaAtual = novoIndice;
+    salvarEstado();
+    renderizarHistoria();
+    elemento('ingles-story-time-cena-titulo').focus({ preventScroll: true });
+  }
+
+  function avancarHistoria() {
+    var historia = historiaDaUnidade(unidadeAtual);
+    if (!historia) return;
+    if (estado.historiaCenaAtual < historia.cenas.length - 1) {
+      mudarCenaDaHistoria(1);
+      return;
+    }
+    var voltarParaQuestao = estado.historiaOrigem === 'questao' && estado.atividadeIniciada;
+    pararAudioDaHistoria(true);
+    estado.historiaConcluida = true;
+    estado.historiaEmExibicao = false;
+    salvarEstado();
+    atualizarContinuidade();
+    elemento('ingles-story-time').hidden = true;
+    elemento('ingles-painel-atividades').hidden = false;
+    if (!voltarParaQuestao) {
+      estado.atividadeIniciada = true;
+      estado.iniciado = true;
+      salvarEstado();
+    }
+    renderizarQuestaoAtividade();
+    elemento('ingles-painel-atividades').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function ouvirCenaDaHistoria() {
+    var historia = historiaDaUnidade(unidadeAtual);
+    var cena = cenaAtualDaHistoria();
+    if (!historia || !cena || historiaEmReproducao) return;
+    var revisaoId = configuracaoAtual.revisaoId;
+    var unidadeId = unidadeAtual.id;
+    var cenaId = cena.id;
+    historiaEmReproducao = cena.id;
+    renderizarHistoria();
+    window.AudioRevisoes.falarSequencia({
+      origem: 'ingles-story-time',
+      pausaMs: historia.pausaMs,
+      etapas: [
+        {
+          texto: cena.textoIngles,
+          idioma: 'en-US',
+          velocidade: 0.62,
+          unidadeAudio: 'frase',
+        },
+        {
+          texto: cena.textoPortugues,
+          idioma: 'pt-BR',
+          velocidade: 0.82,
+          unidadeAudio: 'frase',
+        },
+      ],
+      aoEstado: function (detalhe) {
+        if (
+          !configuracaoAtual ||
+          configuracaoAtual.revisaoId !== revisaoId ||
+          !unidadeAtual ||
+          unidadeAtual.id !== unidadeId ||
+          !estado.historiaEmExibicao ||
+          !cenaAtualDaHistoria() ||
+          cenaAtualDaHistoria().id !== cenaId ||
+          historiaEmReproducao !== cenaId
+        ) {
+          return;
+        }
+        if (detalhe.fase === 'erro' || detalhe.fase === 'cancelado') {
+          historiaEmReproducao = null;
+          renderizarHistoria();
+          elemento('ingles-story-time-status').textContent =
+            detalhe.fase === 'erro'
+              ? 'Não foi possível ouvir a cena. Tente novamente.'
+              : 'Áudio interrompido. Você pode ouvir a cena novamente.';
+          return;
+        }
+        if (detalhe.fase === 'concluido') {
+          historiaEmReproducao = null;
+          renderizarHistoria();
+          elemento('ingles-story-time-status').textContent =
+            '✓ Cena ouvida em inglês e português. Você pode repetir ou avançar.';
+          return;
+        }
+        elemento('ingles-story-time-status').textContent =
+          'Reproduzindo parte ' + (detalhe.indiceEtapa + 1) + ' de ' + detalhe.totalEtapas + '.';
+      },
+    });
+  }
+
+  function pararCenaDaHistoria() {
+    if (!historiaEmReproducao) return;
+    pararAudioDaHistoria(false);
+    renderizarHistoria();
+    elemento('ingles-story-time-status').textContent =
+      'Áudio interrompido. Você pode ouvir a cena novamente.';
+  }
+
   function selecionarAlternativaAtividade(id) {
     var questao = questaoAtual();
     if (!questao) return;
@@ -787,8 +1033,11 @@
   function deveMostrarRevisaoPosResposta(questao) {
     if (!revisaoPosRespostaAtiva(unidadeAtual, questao)) return false;
     var conferencia = estado.conferenciasAtividades[questao.id];
+    if (!conferencia) return false;
     return Boolean(
-      conferencia && (conferencia === 'correta' || !revisaoDaQuestaoConcluida(questao))
+      conferencia === 'correta' ||
+      manterTelaDaRevisaoAposErro(unidadeAtual) ||
+      !revisaoDaQuestaoConcluida(questao)
     );
   }
 
@@ -851,6 +1100,8 @@
     var botaoAnterior = elemento('ingles-atividade-anterior');
     var botaoConferir = elemento('ingles-conferir-atividade');
     var botaoProxima = elemento('ingles-atividade-proxima');
+    var tentativaIncorreta = estado.conferenciasAtividades[questao.id] === 'incorreta';
+    var deveTentarNovamente = tentativaIncorreta && manterTelaDaRevisaoAposErro(unidadeAtual);
 
     elemento('ingles-conteudo-questao').hidden = true;
     elemento('ingles-revisao-pos-resposta').hidden = false;
@@ -870,22 +1121,28 @@
     elemento('ingles-status-revisao-pos-resposta').textContent = reproduzindo
       ? 'Playing the full review. Please listen until the end.'
       : concluida
-        ? '✓ Review complete. You can continue.'
+        ? deveTentarNovamente
+          ? '✓ Review complete. Try the question again.'
+          : '✓ Review complete. You can continue.'
         : 'Listen to the full review to continue.';
 
     botaoAnterior.hidden = true;
     botaoConferir.hidden = true;
     botaoProxima.hidden = false;
     botaoProxima.disabled =
-      reproduzindo || estado.conferenciasAtividades[questao.id] !== 'correta' || !concluida;
-    botaoProxima.textContent =
-      estado.questaoAtual === atividades.length - 1 ? 'Concluir revisão ✓' : 'Próxima →';
+      reproduzindo || !concluida || (tentativaIncorreta && !deveTentarNovamente);
+    botaoProxima.textContent = deveTentarNovamente
+      ? 'Tentar novamente'
+      : estado.questaoAtual === atividades.length - 1
+        ? 'Concluir revisão ✓'
+        : 'Próxima →';
   }
 
   function renderizarQuestaoAtividade() {
     var atividades = todasAsAtividades(unidadeAtual);
     var questao = questaoAtual();
     if (!questao) return;
+    elemento('ingles-story-time').hidden = true;
     elemento('ingles-cartao-questao').hidden = false;
     elemento('ingles-revisao-atividades').hidden = true;
     if (deveMostrarRevisaoPosResposta(questao)) {
@@ -905,6 +1162,7 @@
     var imediata = correcaoPorQuestao();
     var bloqueadaPorAudio = perguntaAtualBloqueadaPorAudio();
     var botaoConferir = elemento('ingles-conferir-atividade');
+    elemento('ingles-rever-historia').hidden = !questaoAtualPermiteReverHistoria();
     elemento('ingles-atividade-anterior').hidden = false;
     elemento('ingles-atividade-anterior').disabled = estado.questaoAtual === 0;
     botaoConferir.hidden = !imediata;
@@ -980,7 +1238,7 @@
       atividades.length +
       ' atividades.';
     elemento('ingles-destinataria-surpresa').textContent =
-      perfilAtual === 'alice' ? 'Alice' : 'Mariana';
+      unidadeAtual.destinatariaMensagemFinal || (perfilAtual === 'alice' ? 'Alice' : 'Mariana');
     elemento('ingles-texto-surpresa').textContent =
       unidadeAtual.mensagemFinal || MENSAGENS_SURPRESA[perfilAtual];
     elemento('ingles-refazer-atividades').textContent =
@@ -1020,6 +1278,10 @@
     elemento('ingles-painel-atividades').hidden = false;
     if (estado.atividadeFinalizada) {
       renderizarRevisaoAtividades();
+    } else if (historiaDaUnidade(unidadeAtual) && !estado.historiaConcluida) {
+      elemento('ingles-painel-atividades').hidden = true;
+      abrirHistoria('estudo');
+      return;
     } else {
       estado.atividadeIniciada = true;
       estado.iniciado = true;
@@ -1074,6 +1336,27 @@
     renderizarQuestaoAtividade();
   }
 
+  function continuarDepoisDaRevisaoPosResposta() {
+    var questao = questaoAtual();
+    if (
+      questao &&
+      manterTelaDaRevisaoAposErro(unidadeAtual) &&
+      estado.conferenciasAtividades[questao.id] === 'incorreta' &&
+      revisaoDaQuestaoConcluida(questao)
+    ) {
+      delete estado.conferenciasAtividades[questao.id];
+      delete estado.revisoesPosRespostaConcluidas[questao.id];
+      salvarEstado();
+      renderizarQuestaoAtividade();
+      var alternativaMarcada = elemento('ingles-alternativas-atividade').querySelector(
+        '[aria-pressed="true"]'
+      );
+      if (alternativaMarcada) alternativaMarcada.focus();
+      return;
+    }
+    irParaProximaQuestao();
+  }
+
   function refazerAtividades() {
     pararAudioDaAtividade();
     estado.questaoAtual = 0;
@@ -1090,6 +1373,10 @@
 
   function voltarAoVocabulario() {
     pararAudioDaAtividade();
+    pararAudioDaHistoria(true);
+    estado.historiaEmExibicao = false;
+    salvarEstado();
+    elemento('ingles-story-time').hidden = true;
     elemento('ingles-painel-atividades').hidden = true;
     elemento('titulo-controles-audio-ingles').scrollIntoView({
       behavior: 'smooth',
@@ -1203,7 +1490,10 @@
           estado.revisoesPosRespostaConcluidas[questaoId] = respostaId;
           salvarEstado();
           renderizarQuestaoAtividade();
-          if (estado.conferenciasAtividades[questaoId] === 'correta') {
+          if (
+            estado.conferenciasAtividades[questaoId] === 'correta' ||
+            manterTelaDaRevisaoAposErro(unidadeAtual)
+          ) {
             elemento('ingles-atividade-proxima').focus();
           } else {
             elemento('ingles-status-atividade').textContent =
@@ -1219,6 +1509,18 @@
 
   function aoEstadoGlobalDoAudio(evento) {
     var detalhe = evento.detail || {};
+    if (
+      historiaEmReproducao &&
+      detalhe.origem !== 'ingles-story-time' &&
+      ['aguardando', 'reproduzindo', 'parado'].indexOf(detalhe.fase) >= 0
+    ) {
+      historiaEmReproducao = null;
+      if (estado && estado.historiaEmExibicao && !elemento('ingles-story-time').hidden) {
+        renderizarHistoria();
+        elemento('ingles-story-time-status').textContent =
+          'Áudio interrompido. Você pode ouvir a cena novamente.';
+      }
+    }
     if (
       !revisaoPosRespostaEmReproducao ||
       detalhe.origem === 'ingles-revisao-pos-resposta' ||
@@ -1252,6 +1554,7 @@
     elemento('ingles-traducao-grupo').textContent = grupo.traducao;
     elemento('ingles-instrucao-grupo').textContent = grupo.instrucao;
     elemento('ingles-painel-atividades').hidden = true;
+    elemento('ingles-story-time').hidden = true;
     renderizarGrupos();
     renderizarItens();
     atualizarItemSelecionado();
@@ -1260,18 +1563,27 @@
     atualizarVozesNaTela();
     elemento('ingles-status-audio').textContent =
       'Clique ou pressione Enter em uma palavra ou frase abaixo para ouvir em inglês.';
+    if (estado.historiaEmExibicao && historiaDaUnidade(unidadeAtual) && atividadesLiberadas()) {
+      renderizarHistoria();
+    }
   }
 
   function abrir(perfil, revisaoId) {
     carregarPerfil(perfil, revisaoId);
     renderizar();
     controladorApp.mostrarTela('ingles');
+    if (estado.historiaEmExibicao && !elemento('ingles-story-time').hidden) {
+      window.requestAnimationFrame(function () {
+        elemento('ingles-story-time').scrollIntoView({ block: 'start' });
+      });
+    }
   }
 
   function limparProgresso() {
     if (!armazenamento || !unidadeAtual) return false;
     if (!window.confirm('Limpar somente o progresso desta revisão de Inglês?')) return false;
     window.AudioRevisoes.parar({ silencioso: true, origem: 'ingles' });
+    historiaEmReproducao = null;
     armazenamento.remover();
     estado = estadoInicial(unidadeAtual);
     renderizar();
@@ -1305,11 +1617,25 @@
     elemento('ingles-pratica-escrita').addEventListener('submit', conferirEscrita);
     elemento('ingles-campo-escrita').addEventListener('input', aoDigitarEscrita);
     elemento('ingles-iniciar-atividades').addEventListener('click', abrirAtividades);
+    elemento('ingles-story-time-fechar').addEventListener('click', restaurarDepoisDaHistoria);
+    elemento('ingles-story-time-ouvir').addEventListener('click', ouvirCenaDaHistoria);
+    elemento('ingles-story-time-repetir').addEventListener('click', ouvirCenaDaHistoria);
+    elemento('ingles-story-time-parar').addEventListener('click', pararCenaDaHistoria);
+    elemento('ingles-story-time-anterior').addEventListener('click', function () {
+      mudarCenaDaHistoria(-1);
+    });
+    elemento('ingles-story-time-proxima').addEventListener('click', avancarHistoria);
+    elemento('ingles-rever-historia').addEventListener('click', function () {
+      abrirHistoria('questao');
+    });
     elemento('ingles-ouvir-pergunta').addEventListener('click', ouvirPerguntaAtual);
     elemento('ingles-ouvir-revisao').addEventListener('click', ouvirRevisaoPosResposta);
     elemento('ingles-conferir-atividade').addEventListener('click', conferirRespostaAtividade);
     elemento('ingles-atividade-anterior').addEventListener('click', irParaQuestaoAnterior);
-    elemento('ingles-atividade-proxima').addEventListener('click', irParaProximaQuestao);
+    elemento('ingles-atividade-proxima').addEventListener(
+      'click',
+      continuarDepoisDaRevisaoPosResposta
+    );
     elemento('ingles-refazer-atividades').addEventListener('click', refazerAtividades);
     elemento('ingles-voltar-vocabulario').addEventListener('click', voltarAoVocabulario);
     document.addEventListener('audioestadoalterado', aoEstadoGlobalDoAudio);
@@ -1335,12 +1661,16 @@
         estadoDoPerfil.itensOuvidos.length === totalAudios &&
         quantidadeEscritasCorretas(estadoDoPerfil) === totalAudios
       ) {
-        resumo +=
-          ' · ' +
-          Object.keys(estadoDoPerfil.respostasAtividades).length +
-          '/' +
-          totalAtividades +
-          ' atividades';
+        if (historiaDaUnidade(unidade) && !estadoDoPerfil.historiaConcluida) {
+          resumo += ' · Story Time pendente';
+        } else {
+          resumo +=
+            ' · ' +
+            Object.keys(estadoDoPerfil.respostasAtividades).length +
+            '/' +
+            totalAtividades +
+            ' atividades';
+        }
       }
       return resumo;
     }
@@ -1361,6 +1691,7 @@
     limparProgresso: limparProgresso,
     pararAudio: function () {
       revisaoPosRespostaEmReproducao = null;
+      historiaEmReproducao = null;
       window.AudioRevisoes.parar({ silencioso: true, origem: 'ingles' });
     },
     obterEstado: function (perfil, revisaoId) {

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img">
+  <title>Estojo, borracha e caderno</title>
+  <metadata data-objects="pencil-case eraser notebook" data-count="3" />
+  <rect width="240" height="160" rx="24" fill="#f4eeff" />
+  <rect x="14" y="45" width="67" height="39" rx="13" fill="#63b7ff" stroke="#275d88" stroke-width="4" /><path d="M29 57h38" stroke="#fff" stroke-width="4" /><text x="48" y="106" text-anchor="middle" font-family="sans-serif" font-size="12">pencil case</text>
+  <rect x="96" y="50" width="52" height="31" rx="8" fill="#ff92ad" stroke="#91384e" stroke-width="4" /><path d="M130 50v31" stroke="#fff" stroke-width="3" /><text x="122" y="106" text-anchor="middle" font-family="sans-serif" font-size="12">eraser</text>
+  <rect x="169" y="35" width="51" height="65" rx="5" fill="#72d5a2" stroke="#2f7652" stroke-width="4" /><path d="M179 35v65m-5-51h10m-10 14h10m-10 14h10" stroke="#fff" stroke-width="3" /><text x="195" y="119" text-anchor="middle" font-family="sans-serif" font-size="12">notebook</text>
+  <text x="120" y="146" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="700" fill="#4c346e">different set</text>
+</svg>

@@ -160,6 +160,18 @@
             <strong>Começar ou continuar →</strong>
           </button>
           <button
+            class="cartao-materia ingles"
+            id="abrir-ingles-at-school-atividade-3"
+            type="button"
+            hidden
+          >
+            <img src="../assets/objetos_escolares/friend.svg" alt="" />
+            <span>At School · Atividade 3</span>
+            <small>17 itens + Story Time + 25 atividades</small>
+            <small>Story, phonics, skills, senses e revisão</small>
+            <strong>Começar ou continuar →</strong>
+          </button>
+          <button
             class="cartao-materia leitura"
             id="materia-leitura"
             type="button"
@@ -474,6 +486,77 @@
         </section>
 
         <section
+          class="story-time-ingles"
+          id="ingles-story-time"
+          aria-labelledby="ingles-story-time-titulo"
+          hidden
+        >
+          <div class="cabecalho-story-time-ingles">
+            <div>
+              <p class="etiqueta">Story Time · Hora da história</p>
+              <h2 id="ingles-story-time-titulo" lang="en-US"></h2>
+              <p id="ingles-story-time-subtitulo"></p>
+            </div>
+            <button class="botao-secundario" id="ingles-story-time-fechar" type="button">
+              ← Voltar ao estudo
+            </button>
+          </div>
+
+          <article class="cena-story-time-ingles" aria-labelledby="ingles-story-time-cena-titulo">
+            <div class="imagem-story-time-ingles">
+              <img id="ingles-story-time-imagem" src="" alt="" />
+            </div>
+            <div class="conteudo-story-time-ingles">
+              <p class="etiqueta" id="ingles-story-time-progresso">Cena 1 de 6</p>
+              <h3 id="ingles-story-time-cena-titulo" lang="en-US" tabindex="-1"></h3>
+              <p class="titulo-portugues-story-time" id="ingles-story-time-cena-subtitulo"></p>
+              <div class="texto-bilingue-story-time-ingles">
+                <section lang="en-US" aria-label="Trecho da história em inglês">
+                  <strong>English</strong>
+                  <p id="ingles-story-time-texto-ingles"></p>
+                </section>
+                <section lang="pt-BR" aria-label="Apoio da história em português">
+                  <strong>Português</strong>
+                  <p id="ingles-story-time-texto-portugues"></p>
+                </section>
+              </div>
+              <div
+                class="controles-story-time-ingles"
+                role="group"
+                aria-label="Controles de áudio da cena"
+              >
+                <button class="botao-principal" id="ingles-story-time-ouvir" type="button">
+                  🔊 Ouvir cena
+                </button>
+                <button class="botao-secundario" id="ingles-story-time-repetir" type="button">
+                  🔁 Repetir cena
+                </button>
+                <button class="botao-parar-audio" id="ingles-story-time-parar" type="button">
+                  ⏹ Parar
+                </button>
+              </div>
+              <p
+                class="status-atividade-ingles"
+                id="ingles-story-time-status"
+                role="status"
+                aria-live="polite"
+              >
+                A cena não toca sozinha. Use “Ouvir cena” quando quiser.
+              </p>
+            </div>
+          </article>
+
+          <div class="navegacao-story-time-ingles">
+            <button class="botao-secundario" id="ingles-story-time-anterior" type="button">
+              ← Cena anterior
+            </button>
+            <button class="botao-principal" id="ingles-story-time-proxima" type="button">
+              Próxima cena →
+            </button>
+          </div>
+        </section>
+
+        <section
           class="painel-atividades-ingles"
           id="ingles-painel-atividades"
           aria-labelledby="ingles-titulo-atividade"
@@ -486,14 +569,19 @@
                   <p class="etiqueta" id="ingles-progresso-atividade">Atividade 1 de 10</p>
                   <h2 id="ingles-titulo-atividade">Practice Time!</h2>
                 </div>
-                <button
-                  class="botao-secundario"
-                  id="ingles-ouvir-pergunta"
-                  type="button"
-                  aria-label="Ouvir a pergunta atual em inglês"
-                >
-                  🔊 Ouvir pergunta
-                </button>
+                <div class="acoes-cabecalho-atividade-ingles">
+                  <button class="botao-secundario" id="ingles-rever-historia" type="button" hidden>
+                    📖 Rever história
+                  </button>
+                  <button
+                    class="botao-secundario"
+                    id="ingles-ouvir-pergunta"
+                    type="button"
+                    aria-label="Ouvir a pergunta atual em inglês"
+                  >
+                    🔊 Ouvir pergunta
+                  </button>
+                </div>
               </div>
 
               <div

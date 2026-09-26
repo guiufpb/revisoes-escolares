@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 170" role="img">
+  <title>Carteira com régua, caderno e lápis</title>
+  <metadata data-objects="ruler notebook pencil" data-count="3" />
+  <rect width="260" height="170" rx="24" fill="#fff8e8" />
+  <path d="M25 67h210v60H25Z" fill="#d99055" stroke="#77411f" stroke-width="5" /><path d="M43 127v29m174-29v29" stroke="#77411f" stroke-width="8" />
+  <rect x="39" y="45" width="66" height="16" rx="4" fill="#ffd64f" stroke="#77600e" stroke-width="3" /><text x="72" y="37" text-anchor="middle" font-family="sans-serif" font-size="12">ruler</text>
+  <rect x="113" y="14" width="62" height="48" rx="5" fill="#72d5a2" stroke="#2f7652" stroke-width="3" /><path d="M123 14v48" stroke="#fff" stroke-width="3" /><text x="144" y="12" text-anchor="middle" font-family="sans-serif" font-size="12">notebook</text>
+  <path d="m191 58 39-35 10 11-39 35-15 4Z" fill="#ffcd42" stroke="#725a0d" stroke-width="3" /><text x="213" y="18" text-anchor="middle" font-family="sans-serif" font-size="12">pencil</text>
+  <text x="130" y="161" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="#5b4815">ruler · notebook · pencil</text>
+</svg>

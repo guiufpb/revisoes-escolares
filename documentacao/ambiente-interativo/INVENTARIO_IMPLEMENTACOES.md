@@ -653,6 +653,48 @@ Chave: `revisoesEscolares.mariana.ingles.atSchoolAtividade2.v1`.
 
 Unidade: `at-school-atividade-2`.
 
+### Mariana — At School · Atividade 3
+
+- Revisão exclusiva da Mariana com **17 itens obrigatórios de áudio e transcrição** em quatro
+  grupos: Story & Values, Phonics · Letter A, Senses e Create That!. O questionário permanece
+  bloqueado até 17/17 áudios e 17/17 escritas corretas.
+- A validação humana mostrou que Q1–Q7 dependiam de contexto externo. Por isso, uma **Story Time
+  interna com seis cenas** agora aparece depois do estudo e antes das perguntas, tornando a revisão
+  autossuficiente. As cenas são recontações e ilustrações originais/adaptadas; nenhuma página,
+  quadrinho ou ilustração do livro foi copiada.
+- Cada cena oferece texto em Inglês e Português e áudio local EN → PT, sem autoplay, pela
+  infraestrutura `AudioRevisoes`. Cena, conclusão e origem da consulta sobrevivem à recarga.
+- As **25 atividades / 25 pontos** cobrem a história e Helping Each Other, o som curto de `a`,
+  Skills, os cinco sentidos e Think Back. Cada pergunta exige a conclusão do próprio áudio antes
+  de liberar as alternativas e mantém erro recuperável.
+- Q1–Q7 oferecem **Rever história**. A consulta abre a Story Time sem apagar questão, resposta,
+  áudio já concluído ou consolidações anteriores; **Voltar à questão** restaura o ponto exato.
+- Toda questão usa a consolidação obrigatória Let’s review!, na ordem pergunta EN → tradução PT →
+  resposta EN → significado PT. Parada, cancelamento, erro ou substituição do áudio não fabricam
+  conclusão; a recarga restaura o estado intermediário.
+- Depois de uma resposta errada, a Activity 3 mantém **Let’s review!** aberta até o fim da sequência
+  e então libera **Tentar novamente**, que volta à mesma questão. Cada novo erro invalida somente a
+  revisão daquela tentativa e exige novamente EN → PT → EN → PT; o acerto libera **Próxima**.
+- `destinatariaMensagemFinal` é uma capacidade declarativa opt-in de `js/ingles.js`: esta unidade
+  mostra “Uma mensagem para as meninas”, enquanto a Atividade 2 e as demais revisões conservam o
+  destinatário derivado do perfil.
+- Os SVGs novos são originais e descrevem conjuntos de objetos, ajuda entre colegas, ações de
+  retirar/guardar, os cinco sentidos e as seis cenas da Story Time. Assets existentes de objetos
+  escolares e de abrir o livro foram reutilizados. Nenhum PDF, OCR, print escolar ou recurso
+  remoto foi incorporado.
+- Teste direcionado: `tests/ingles-mariana-at-school-atividade-3.spec.js` (14 cenários), cobrindo
+  cadastro, perfil, portão de estudo, Story Time antes das perguntas, seis cenas, conteúdo de
+  Q1–Q7, áudio bilíngue sem autoplay, navegação e recarga, consulta sem perda de estado, escrita
+  corrigível, áudio obrigatório, consolidação bilíngue, refazer, limpeza seletiva, armazenamento
+  adverso, isolamento, cenas visuais, percurso completo, mensagem final, Activity 2, viewports,
+  teclado, toque, axe-core e `file://`.
+
+ID: `mariana-ingles-at-school-atividade-3`.
+
+Chave: `revisoesEscolares.mariana.ingles.atSchoolAtividade3.v1`.
+
+Unidade: `at-school-atividade-3`.
+
 ### Unit 3 — At School
 
 - Disponível para Alice e Mariana com progresso independente.
@@ -842,7 +884,7 @@ Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
 - Toda pull request para `main` continua executando a suíte global no GitHub Actions; a saída
   completa é consultada apenas quando houver falha ou necessidade de diagnóstico.
 
-Na data deste inventário existem **270 testes Playwright**:
+Na data deste inventário existem **290 testes Playwright**:
 
 - `tests/ambiente-interativo.spec.js`: fluxos centrais, revisões de Inglês de Alice e Mariana, Leitura, Matemática ampla, armazenamento, canvas e `file://`.
 - `tests/ingles-friends-atividade-1.spec.js`: unidade compartilhada com 25 itens e 25 questões,
@@ -851,6 +893,11 @@ Na data deste inventário existem **270 testes Playwright**:
 - `tests/ingles-mariana-at-school-atividade-2.spec.js`: 25 itens e 25 questões, portão de
   áudio/escrita, conclusão obrigatória do áudio de cada pergunta, cancelamento, normalização,
   percurso completo, refazer, regressão legada, viewports, axe-core e `file://`.
+- `tests/ingles-mariana-at-school-atividade-3.spec.js`: 17 itens, Story Time de seis cenas, 25
+  questões e quatro grupos, portão de áudio/escrita, áudio bilíngue sem autoplay, consulta da
+  história em Q1–Q7 com restauração exata, áudio obrigatório por pergunta, consolidação bilíngue,
+  mensagem plural opt-in, cenas visuais, armazenamento adverso, isolamento, refazer, viewports,
+  axe-core e `file://`.
 - `tests/ciencias-mariana-plantas-sol.spec.js`: 30 questões, mapa visual, gabarito completo,
   associações, ordenação, cinco ditados, persistência, isolamento, armazenamento adverso,
   teclado/toque, layouts, axe-core, console e `file://`.

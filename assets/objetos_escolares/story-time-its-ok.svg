@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc" data-scene="response-to-apology its-ok">
+  <title id="title">It's OK.</title>
+  <desc id="desc">O homem responde com tranquilidade ao pedido de desculpas de Flash.</desc>
+  <rect width="640" height="360" rx="28" fill="#eefaf3"/>
+  <path d="M0 286h640v74H0z" fill="#dcebd3"/>
+  <g data-character="flash" transform="translate(112 91)">
+    <circle cx="63" cy="43" r="31" fill="#f4bd8a"/>
+    <path d="M31 38c5-32 57-39 68-3-19-10-44-9-68 3z" fill="#344b73"/>
+    <rect x="29" y="77" width="70" height="93" rx="24" fill="#5b7bd5"/>
+    <path d="M43 168l-13 86M84 168l17 86" stroke="#344b73" stroke-width="17" stroke-linecap="round"/>
+    <path d="M36 105l28 31 27-31" fill="none" stroke="#f4bd8a" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g data-character="man" transform="translate(416 81)">
+    <circle cx="62" cy="47" r="33" fill="#8f5c42"/>
+    <path d="M29 44c8-34 59-39 69-3-20-9-47-8-69 3z" fill="#253746"/>
+    <rect x="21" y="82" width="82" height="100" rx="24" fill="#d76565"/>
+    <path d="M39 180l-9 77M83 180l14 77" stroke="#39495b" stroke-width="18" stroke-linecap="round"/>
+    <path d="M28 110l-21 43M97 108l36-33" stroke="#8f5c42" stroke-width="16" stroke-linecap="round"/>
+    <path d="M128 65l11 13 25-29" fill="none" stroke="#27834d" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(227 35)">
+    <path d="M0 28C0 12 13 0 29 0h181c16 0 29 12 29 28v54c0 16-13 29-29 29h-67l-34 25 8-25H29C13 111 0 98 0 82z" fill="#fff" stroke="#27834d" stroke-width="6"/>
+    <text x="120" y="68" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#17633f">It’s OK.</text>
+  </g>
+  <path d="M320 194c-18-20-47 7 0 38 47-31 18-58 0-38z" fill="#e76378"/>
+</svg>
