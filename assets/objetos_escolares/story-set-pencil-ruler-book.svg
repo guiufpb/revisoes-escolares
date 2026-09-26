@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img">
+  <title>Lápis, régua e livro</title>
+  <metadata data-objects="pencil ruler book" data-count="3" />
+  <rect width="240" height="160" rx="24" fill="#fff8e8" />
+  <path d="m22 75 57-29 9 17-57 29-17-1Z" fill="#ffd54f" stroke="#755d10" stroke-width="4" /><path d="m22 75-8 16 17 1" fill="#f1c6a8" stroke="#755d10" stroke-width="3" /><text x="52" y="112" text-anchor="middle" font-family="sans-serif" font-size="12">pencil</text>
+  <rect x="91" y="48" width="62" height="19" rx="5" fill="#ffd64f" stroke="#7c6008" stroke-width="4" /><path d="M103 49v9m13-9v9m13-9v9m13-9v9" stroke="#7c6008" stroke-width="2" /><text x="122" y="106" text-anchor="middle" font-family="sans-serif" font-size="12">ruler</text>
+  <path d="M171 39h49v57h-49c-7 0-11-4-11-10V49c0-6 4-10 11-10Z" fill="#ff768d" stroke="#84303e" stroke-width="4" /><path d="M171 39v57" stroke="#fff" stroke-width="4" /><text x="190" y="116" text-anchor="middle" font-family="sans-serif" font-size="12">book</text>
+  <text x="120" y="146" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="700" fill="#5b4815">different set</text>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img">
+  <title>Uma mão retirando uma régua do estojo</title>
+  <metadata data-action="take-out" data-object="ruler" data-container="pencil-case" />
+  <rect width="240" height="160" rx="24" fill="#eef8ff" />
+  <rect x="23" y="89" width="108" height="45" rx="17" fill="#5eb8ff" stroke="#265f8b" stroke-width="5" /><path d="M43 101h69" stroke="#fff" stroke-width="5" />
+  <rect x="79" y="45" width="118" height="24" rx="7" fill="#ffd54f" stroke="#745b0b" stroke-width="4" transform="rotate(-11 138 57)" /><path d="M104 48v12m20-16v12m20-15v12m20-16v12" stroke="#745b0b" stroke-width="3" />
+  <path d="M203 34c-20 4-31 15-37 34l-13 39c-4 12 11 18 18 8l12-18c4 12 13 18 27 19" fill="#f3ba91" stroke="#965f40" stroke-width="4" stroke-linecap="round" />
+  <path d="m102 31 19-13m-5 28 23-6" stroke="#ff7849" stroke-width="4" stroke-linecap="round" />
+  <text x="120" y="151" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="700" fill="#28516a">take out the ruler</text>
+</svg>

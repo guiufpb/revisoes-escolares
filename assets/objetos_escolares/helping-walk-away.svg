@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img">
+  <title>Uma criança indo embora sem ajudar a amiga</title>
+  <metadata data-scene="walk away friend needs help not helping" />
+  <rect width="240" height="160" rx="24" fill="#f2f4f7" />
+  <circle cx="174" cy="42" r="20" fill="#9a6341" /><path d="M151 107V77c0-20 46-20 46 0v30" fill="#7f8cd9" stroke="#394478" stroke-width="4" /><path d="m165 105-19 35M185 105l22 31M151 82l-22 17" stroke="#9a6341" stroke-width="9" stroke-linecap="round" />
+  <circle cx="56" cy="66" r="18" fill="#825232" /><path d="M34 128V99c0-20 44-20 44 0v29" fill="#f28585" stroke="#743b3b" stroke-width="4" />
+  <rect x="83" y="125" width="55" height="12" rx="3" fill="#ffd65c" stroke="#796119" stroke-width="3" transform="rotate(8 110 131)" />
+  <path d="m107 55 22-12M112 70l25 1" stroke="#77818a" stroke-width="4" stroke-linecap="round" />
+  <text x="120" y="154" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="#4a5360">walk away</text>
+</svg>

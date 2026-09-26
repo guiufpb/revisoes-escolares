@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 160" role="img">
+  <title>Olhos observando uma estrela</title>
+  <metadata data-scene="look" />
+  <rect width="220" height="160" rx="24" fill="#fff6d8" />
+  <path d="M24 77c24-36 58-36 82 0-24 36-58 36-82 0Z" fill="#fff" stroke="#5f4b32" stroke-width="5" />
+  <circle cx="65" cy="77" r="15" fill="#4867c7" /><circle cx="65" cy="77" r="7" fill="#182039" />
+  <path d="M114 77c24-36 58-36 82 0-24 36-58 36-82 0Z" fill="#fff" stroke="#5f4b32" stroke-width="5" />
+  <circle cx="155" cy="77" r="15" fill="#4867c7" /><circle cx="155" cy="77" r="7" fill="#182039" />
+  <path d="m188 22 6 13 14 2-10 10 3 14-13-7-13 7 3-14-10-10 14-2Z" fill="#ffbf3f" stroke="#9a6a00" stroke-width="3" />
+  <text x="110" y="145" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#4a3a24">look</text>
+</svg>

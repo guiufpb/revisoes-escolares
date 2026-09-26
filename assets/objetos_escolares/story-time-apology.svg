@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc" data-scene="small-bump apology no-violence">
+  <title id="title">I'm sorry.</title>
+  <desc id="desc">Duas figuras se encontram sem violência, alguns materiais caem e Flash pede desculpas.</desc>
+  <rect width="640" height="360" rx="28" fill="#fff8e8"/>
+  <path d="M0 286h640v74H0z" fill="#e6edda"/>
+  <g data-character="flash" transform="translate(112 87)">
+    <circle cx="64" cy="44" r="31" fill="#f4bd8a"/>
+    <path d="M32 39c4-32 57-40 67-3-19-10-43-9-67 3z" fill="#344b73"/>
+    <rect x="30" y="78" width="69" height="93" rx="24" fill="#5b7bd5"/>
+    <path d="M44 168l-18 87M84 168l22 87" stroke="#344b73" stroke-width="17" stroke-linecap="round"/>
+    <path d="M34 104l-19 50M95 104l28 34" stroke="#f4bd8a" stroke-width="15" stroke-linecap="round"/>
+  </g>
+  <g data-character="man" transform="translate(409 78)">
+    <circle cx="63" cy="49" r="33" fill="#8f5c42"/>
+    <path d="M30 46c7-34 59-39 68-3-20-9-46-8-68 3z" fill="#253746"/>
+    <rect x="22" y="84" width="82" height="99" rx="24" fill="#d76565"/>
+    <path d="M40 180l-9 77M84 180l13 77" stroke="#39495b" stroke-width="18" stroke-linecap="round"/>
+    <path d="M29 112L4 145M98 110l24 37" stroke="#8f5c42" stroke-width="16" stroke-linecap="round"/>
+  </g>
+  <g data-school-things="scattered" transform="translate(244 250)">
+    <rect x="0" y="13" width="74" height="38" rx="7" fill="#ffcf5c" stroke="#805e19" stroke-width="4" transform="rotate(-8 37 32)"/>
+    <rect x="92" y="3" width="82" height="50" rx="6" fill="#58aa92" stroke="#276d5b" stroke-width="4" transform="rotate(7 133 28)"/>
+    <path d="M101 13h64" stroke="#dff7ee" stroke-width="4"/>
+  </g>
+  <g transform="translate(219 28)">
+    <path d="M0 28C0 12 13 0 29 0h183c16 0 29 12 29 28v55c0 16-13 28-29 28h-77l-29 24 6-24H29C13 111 0 99 0 83z" fill="#fff" stroke="#5b7bd5" stroke-width="6"/>
+    <text x="121" y="68" text-anchor="middle" font-family="Arial, sans-serif" font-size="31" font-weight="700" fill="#344b73">I’m sorry.</text>
+  </g>
+  <path d="M315 136c-15-17-39 6 0 31 39-25 15-48 0-31z" fill="#e76378"/>
+</svg>

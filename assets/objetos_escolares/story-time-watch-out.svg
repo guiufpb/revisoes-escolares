@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc" data-scene="watch-out warning box school-things">
+  <title id="title">Watch out!</title>
+  <desc id="desc">Uma criança caminha com materiais escolares perto de um homem que carrega uma caixa e faz um alerta.</desc>
+  <rect width="640" height="360" rx="28" fill="#eef8ff"/>
+  <path d="M0 282h640v78H0z" fill="#d9ebd5"/>
+  <path d="M78 282h484" stroke="#9fc49a" stroke-width="8" stroke-linecap="round"/>
+  <g data-character="flash" transform="translate(105 92)">
+    <circle cx="62" cy="44" r="31" fill="#f4bd8a"/>
+    <path d="M30 39c4-33 58-41 69-4-19-10-44-10-69 4z" fill="#344b73"/>
+    <rect x="29" y="77" width="70" height="92" rx="24" fill="#5b7bd5"/>
+    <path d="M44 168l-12 82M82 168l18 82" stroke="#344b73" stroke-width="17" stroke-linecap="round"/>
+    <path d="M34 103L4 151M95 104l30 43" stroke="#f4bd8a" stroke-width="15" stroke-linecap="round"/>
+    <rect x="-12" y="144" width="60" height="42" rx="7" fill="#ffcf5c" stroke="#805e19" stroke-width="4"/>
+    <path d="M-2 144v-13h40v13" fill="none" stroke="#805e19" stroke-width="4"/>
+    <rect x="90" y="137" width="46" height="58" rx="5" fill="#58aa92" stroke="#276d5b" stroke-width="4"/>
+  </g>
+  <g data-character="man" transform="translate(410 73)">
+    <circle cx="65" cy="47" r="33" fill="#8f5c42"/>
+    <path d="M31 44c8-34 59-39 69-3-20-9-47-8-69 3z" fill="#253746"/>
+    <rect x="25" y="82" width="82" height="102" rx="24" fill="#d76565"/>
+    <path d="M44 181l-9 78M88 181l12 78" stroke="#39495b" stroke-width="18" stroke-linecap="round"/>
+    <path d="M31 111L4 153M101 110l23 43" stroke="#8f5c42" stroke-width="16" stroke-linecap="round"/>
+    <rect x="-4" y="130" width="134" height="82" rx="10" fill="#c89353" stroke="#7a4f24" stroke-width="5"/>
+    <path d="M63 131v80M-2 158h132" stroke="#7a4f24" stroke-width="4"/>
+  </g>
+  <g transform="translate(258 34)">
+    <path d="M0 31C0 14 14 0 31 0h168c17 0 31 14 31 31v50c0 17-14 31-31 31h-75l-30 26 6-26H31C14 112 0 98 0 81z" fill="#fff" stroke="#cf394e" stroke-width="6"/>
+    <text x="115" y="69" text-anchor="middle" font-family="Arial, sans-serif" font-size="31" font-weight="700" fill="#9d2639">Watch out!</text>
+  </g>
+  <path d="M351 214l22-39 22 39z" fill="#ffcf5c" stroke="#9d2639" stroke-width="5"/>
+  <text x="373" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#9d2639">!</text>
+</svg>

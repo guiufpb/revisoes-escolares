@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" role="img">
+  <title>Uma mão pegando uma caneta do estojo</title>
+  <metadata data-action="take-out" data-object="pen" data-container="pencil-case" />
+  <rect width="240" height="160" rx="24" fill="#f4efff" />
+  <rect x="25" y="91" width="108" height="43" rx="17" fill="#5eb8ff" stroke="#265f8b" stroke-width="5" /><path d="M43 103h72" stroke="#fff" stroke-width="5" />
+  <path d="m86 82 76-57 14 18-76 57-20 4Z" fill="#556ee6" stroke="#2e397f" stroke-width="5" />
+  <path d="M207 34c-22 5-35 19-42 40l-12 35c-4 13 12 18 19 7l11-18c5 11 14 17 27 18" fill="#f3ba91" stroke="#965f40" stroke-width="4" stroke-linecap="round" />
+  <path d="m99 41 17-17m-5 35 22-10" stroke="#ff7849" stroke-width="4" stroke-linecap="round" />
+  <text x="120" y="152" text-anchor="middle" font-family="sans-serif" font-size="16" font-weight="700" fill="#4b2b6c">take out a pen</text>
+</svg>

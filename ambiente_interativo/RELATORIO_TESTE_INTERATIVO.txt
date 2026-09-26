@@ -1538,6 +1538,99 @@ INSPEÇÃO E LIMITES
   re-renderizados para produzir a revisão. Usada somente a síntese do Markdown.
 - Sem commit, push, merge, PR ou publicação.
 
+INGLÊS DA MARIANA — AT SCHOOL · ACTIVITY 3 — 26/09/2026
+=========================================================
+
+IMPLEMENTAÇÃO
+- Revisão exclusiva da Mariana, com ID mariana-ingles-at-school-atividade-3, unidade
+  at-school-atividade-3 e chave nova revisoesEscolares.mariana.ingles.atSchoolAtividade3.v1.
+- 17 itens obrigatórios de estudo (áudio e transcrição), Story Time, 25 atividades, 25 pontos e 43
+  etapas,
+  distribuídos em Story & Values, Phonics · Letter A, Senses e Create That!.
+- Cada pergunta exige o término válido do áudio antes de liberar as alternativas. Após a resposta,
+  a consolidação obrigatória fala pergunta EN, tradução PT, resposta EN e significado PT.
+- O controlador compartilhado de Inglês foi reutilizado. A destinatária da mensagem final passou a
+  aceitar configuração opt-in; as revisões anteriores mantêm os títulos existentes.
+- Foram adicionados 29 SVGs originais e locais: 23 para conjuntos de objetos, ações e sentidos, e
+  seis para a Story Time. Nenhum recurso obrigatório depende da internet.
+- Cadastro central, cartão, roteamento, inventário e documentação temática foram atualizados. O
+  app.bundle.js foi regenerado somente por npm run build.
+
+VALIDAÇÃO
+- tests/ingles-mariana-at-school-atividade-3.spec.js: 14/14 casos PASSARAM.
+- Regressões direcionadas da Activity 2 e Friends · Atividade 1: 19/19 PASSARAM.
+- npm run build, npm run format:check e npm run lint: PASSARAM.
+- npm test: 290/290 testes Playwright PASSARAM em 19,8 minutos.
+- Foram cobertos erro e correção, avanço, retorno, recarga, pontuação única, conclusão, refazer,
+  limpeza seletiva, JSON inválido, localStorage bloqueado, áudio interrompido/cancelado, teclado,
+  toque, axe-core, 390 × 844, 1366 × 768, 1920 × 1080 e file:// sem rede.
+- Os 29 SVGs novos foram inspecionados em conjunto; objetos, quantidades, ações, sentidos e cenas
+  da história são visualmente distintos e coerentes com os gabaritos.
+
+PRIVACIDADE E GIT
+- Nenhum PDF escolar, OCR, página renderizada, captura de teste, dado pessoal ou progresso real foi
+  adicionado. Os testes usaram contextos temporários e chaves isoladas.
+- Alterações locais e stashes preexistentes foram preservados.
+- Sem commit, push, merge, PR ou publicação.
+
+CORREÇÃO PEDAGÓGICA DA ACTIVITY 3 — STORY TIME AUTOSSUFICIENTE — 26/09/2026
+============================================================================
+
+MOTIVO E SOLUÇÃO
+- A validação humana identificou que Q1–Q7 dependiam da história “Watch Out, Flash!” fora do
+  Ambiente Interativo; frases isoladas no estudo não forneciam contexto pedagógico suficiente.
+- Foi inserida uma Story Time própria depois de 17/17 áudios e 17/17 escritas corretas e antes das
+  25 questões. A revisão agora ensina internamente todas as informações necessárias para Q1–Q7.
+- A recontação tem seis cenas curtas, bilíngues e infantis: alerta, esbarrão e desculpa, resposta ao
+  pedido, notebook devolvido pela mãe, pencil case/ruler/book devolvidos pelos amigos e fechamento
+  com Thank you/Helping Each Other.
+- Nenhuma página, quadrinho, texto integral ou ilustração do livro foi copiada. As seis ilustrações
+  são originais, locais e usam figuras genéricas identificadas pelos nomes pedagógicos.
+- Cada cena pode ser ouvida e repetida em EN → PT, ou interrompida, exclusivamente pela
+  infraestrutura AudioRevisoes. Não há autoplay, microfone nem avaliação de pronúncia.
+- Cena atual, conclusão e origem da visita são persistidas. Durante Q1–Q7, Rever história abre a
+  narrativa sem perder questão, resposta, áudio já ouvido ou consolidações; Voltar à questão
+  restaura exatamente o estado anterior.
+- O fluxo das 25 questões e os gabaritos de Q1–Q25 foram preservados. Activity 3 passa a ter 43
+  etapas: 17 itens de estudo + Story Time + 25 questões.
+
+VALIDAÇÃO DA CORREÇÃO
+- tests/ingles-mariana-at-school-atividade-3.spec.js: 14/14 PASSARAM em 52,9 segundos.
+- Regressões direcionadas da Activity 2 e Friends · Atividade 1: 19/19 PASSARAM em 1,3 minuto.
+- npm run build, npm run format:check e npm run lint: PASSARAM.
+- npm test: 290/290 testes Playwright PASSARAM em 19,8 minutos.
+- A cobertura confirma o portão da Story Time, seis cenas, fatos de Q1–Q7, ausência de autoplay,
+  uso de AudioRevisoes, EN/PT, anterior/próxima, restauração na recarga, início das atividades,
+  bloqueio de Q1 até o áudio, consulta em Q1–Q7, retorno sem perda de estado, Activity 2, Friends,
+  390 × 844 sem overflow, Desktop Amplo, axe-core sem violações graves/críticas e file://.
+- As seis cenas foram auditadas visualmente em conjunto; textos, objetos e ações permanecem
+  legíveis e inequívocos, inclusive notebook e o conjunto exclusivo pencil case/ruler/book.
+
+PRIVACIDADE E GIT
+- Nenhum PDF escolar, OCR, página do livro, print de teste, dado pessoal ou progresso real foi
+  incorporado. Os arquivos e stashes preexistentes foram preservados.
+- Sem commit, push, merge, PR ou publicação; a correção aguarda nova validação humana.
+
+AJUSTE DA CONSOLIDAÇÃO APÓS ERRO — ACTIVITY 3 — 26/09/2026
+================================================================
+
+- A validação humana pediu que Let’s review! permaneça na tela também depois de uma tentativa
+  incorreta, sem retorno automático assim que o áudio termina.
+- Activity 3 passou a usar o opt-in manterTelaAposErro. Após cada erro, a sequência completa
+  pergunta EN → pergunta PT → resposta correta EN → significado PT continua obrigatória; somente
+  ao final o botão Tentar novamente é liberado e retorna à mesma questão.
+- A alternativa errada permanece marcada para permitir correção consciente. A conclusão auditiva
+  da tentativa é invalidada ao retornar; portanto, um novo erro sempre abre e exige outra revisão
+  completa. Após acerto, o botão continua sendo Próxima.
+- Activity 2 e as demais revisões conservam o comportamento existente.
+- tests/ingles-mariana-at-school-atividade-3.spec.js: 14/14 PASSARAM em 56,1 segundos, incluindo
+  dois erros consecutivos, nova sequência completa por erro, recarga na tela de revisão, retorno à
+  mesma Q1 com a alternativa preservada e acerto seguido de Próxima.
+- Regressões direcionadas da Activity 2 e Friends · Atividade 1: 19/19 PASSARAM em 1,3 minuto.
+- npm run build, npm run format:check e npm run lint: PASSARAM.
+- npm test: 290/290 testes Playwright PASSARAM em 20,8 minutos.
+- Sem commit, staging, push, merge, PR ou publicação; o ajuste aguarda validação humana.
+
 INGLÊS DA MARIANA — AT SCHOOL · ATIVIDADE 2 — 24/09/2026
 ================================================================
 

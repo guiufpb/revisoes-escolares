@@ -159,6 +159,17 @@
       controladorCompartilhado: 'ingles',
     },
     {
+      id: 'mariana-ingles-at-school-atividade-3',
+      aluno: 'mariana',
+      titulo: 'English Review · At School · Activity 3',
+      cartaoId: 'abrir-ingles-at-school-atividade-3',
+      painelId: 'tela-ingles',
+      chaveArmazenamento: 'revisoesEscolares.mariana.ingles.atSchoolAtividade3.v1',
+      totalEtapas: 43,
+      possuiAudio: true,
+      controladorCompartilhado: 'ingles',
+    },
+    {
       id: 'mariana-matematica-revisao-ampla',
       aluno: 'mariana',
       titulo: 'Revisão ampla de Matemática',

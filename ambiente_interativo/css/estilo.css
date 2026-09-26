@@ -3347,6 +3347,108 @@ footer {
   flex: 0 0 auto;
 }
 
+.story-time-ingles {
+  scroll-margin-top: 120px;
+  margin-top: 24px;
+  padding: clamp(20px, 4vw, 34px);
+  border: 3px solid #9a65c7;
+  border-radius: 28px;
+  background: linear-gradient(145deg, #fbf8ff, #eef8ff);
+  box-shadow: var(--sombra);
+}
+
+.cabecalho-story-time-ingles,
+.navegacao-story-time-ingles,
+.controles-story-time-ingles,
+.acoes-cabecalho-atividade-ingles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.cabecalho-story-time-ingles,
+.navegacao-story-time-ingles {
+  justify-content: space-between;
+}
+
+.cabecalho-story-time-ingles h2 {
+  margin: 4px 0 6px;
+  color: #5d347f;
+}
+
+.cabecalho-story-time-ingles p:last-child {
+  margin: 0;
+  color: #435568;
+  font-weight: 800;
+}
+
+.cena-story-time-ingles {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(20px, 4vw, 38px);
+  align-items: center;
+  margin-top: 24px;
+  padding: clamp(16px, 3vw, 28px);
+  border: 3px solid #d7c8e8;
+  border-radius: 24px;
+  background: white;
+}
+
+.imagem-story-time-ingles img {
+  display: block;
+  width: 100%;
+  max-height: 440px;
+  border-radius: 20px;
+  object-fit: contain;
+}
+
+.conteudo-story-time-ingles h3 {
+  margin: 5px 0 2px;
+  color: #174f6b;
+  font-size: clamp(1.45rem, 4vw, 2rem);
+}
+
+.titulo-portugues-story-time {
+  margin: 0 0 18px;
+  color: #6f52c7;
+  font-size: 1.08rem;
+  font-weight: 900;
+}
+
+.texto-bilingue-story-time-ingles {
+  display: grid;
+  gap: 12px;
+}
+
+.texto-bilingue-story-time-ingles section {
+  padding: 14px 16px;
+  border-left: 6px solid #5b7bd5;
+  border-radius: 14px;
+  background: #eef5ff;
+}
+
+.texto-bilingue-story-time-ingles section:last-child {
+  border-left-color: #49a878;
+  background: #edf9f2;
+}
+
+.texto-bilingue-story-time-ingles p {
+  margin: 6px 0 0;
+  color: #253746;
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.controles-story-time-ingles {
+  margin-top: 18px;
+}
+
+.navegacao-story-time-ingles {
+  margin-top: 20px;
+}
+
 .painel-atividades-ingles {
   scroll-margin-top: 120px;
   margin-top: 24px;
@@ -3362,6 +3464,10 @@ footer {
   gap: 20px;
   align-items: center;
   justify-content: space-between;
+}
+
+.acoes-cabecalho-atividade-ingles {
+  justify-content: flex-end;
 }
 
 #ingles-conteudo-questao {
@@ -3717,6 +3823,10 @@ footer {
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
 
+  .layout-desktop-amplo .cena-story-time-ingles {
+    grid-template-columns: minmax(360px, 0.9fr) minmax(0, 1.1fr);
+  }
+
   .layout-desktop-amplo #ingles-cartao-questao.com-apoio-visual {
     display: grid;
     grid-template-areas:
@@ -3778,6 +3888,7 @@ footer {
 
   .cabecalho-painel-audio,
   .cabecalho-atividade-ingles,
+  .cabecalho-story-time-ingles,
   .continuidade-ingles,
   .progresso-ingles-cabecalho,
   .privacidade-audio-ingles {
@@ -3835,9 +3946,21 @@ footer {
 
   .continuidade-ingles button,
   .cabecalho-atividade-ingles button,
+  .cabecalho-story-time-ingles button,
+  .controles-story-time-ingles button,
+  .navegacao-story-time-ingles button,
   .navegacao-atividade-ingles button,
   .acoes-resultado-ingles button {
     width: 100%;
+  }
+
+  .cena-story-time-ingles {
+    grid-template-columns: 1fr;
+  }
+
+  .acoes-cabecalho-atividade-ingles {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 
   .grade-palavras-ingles {

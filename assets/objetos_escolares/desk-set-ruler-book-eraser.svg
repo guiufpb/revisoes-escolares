@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 170" role="img">
+  <title>Carteira com régua, livro e borracha</title>
+  <metadata data-objects="ruler book eraser" data-count="3" />
+  <rect width="260" height="170" rx="24" fill="#eef8ff" />
+  <path d="M25 67h210v60H25Z" fill="#d99055" stroke="#77411f" stroke-width="5" /><path d="M43 127v29m174-29v29" stroke="#77411f" stroke-width="8" />
+  <rect x="42" y="45" width="66" height="16" rx="4" fill="#ffd64f" stroke="#77600e" stroke-width="3" /><text x="75" y="37" text-anchor="middle" font-family="sans-serif" font-size="12">ruler</text>
+  <path d="M116 18h65v43h-65c-5 0-8-3-8-8V26c0-5 3-8 8-8Z" fill="#ff7289" stroke="#813141" stroke-width="3" /><path d="M117 18v43" stroke="#fff" stroke-width="3" /><text x="145" y="14" text-anchor="middle" font-family="sans-serif" font-size="12">book</text>
+  <rect x="190" y="35" width="43" height="27" rx="7" fill="#ff9aae" stroke="#8d3f50" stroke-width="3" /><text x="211" y="29" text-anchor="middle" font-family="sans-serif" font-size="12">eraser</text>
+  <text x="130" y="161" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="#27485d">ruler · book · eraser</text>
+</svg>

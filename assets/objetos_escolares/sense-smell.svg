@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 160" role="img">
+  <title>Flor com perfume</title>
+  <metadata data-scene="smell flower scent" />
+  <rect width="220" height="160" rx="24" fill="#effbef" />
+  <path d="M111 76v58M111 105c-24-22-42-10-43 8 19 5 34-1 43-8ZM111 116c22-18 40-7 40 10-18 5-31-1-40-10Z" fill="#69b96b" stroke="#2f7742" stroke-width="4" stroke-linecap="round" />
+  <g fill="#ff79a8" stroke="#a43066" stroke-width="3"><circle cx="111" cy="55" r="18" /><circle cx="88" cy="61" r="18" /><circle cx="95" cy="37" r="18" /><circle cx="127" cy="37" r="18" /><circle cx="134" cy="61" r="18" /></g>
+  <circle cx="111" cy="52" r="13" fill="#ffd456" />
+  <path d="M157 83c15-11-9-20 8-31M180 78c15-11-9-20 8-31" fill="none" stroke="#7f8d8d" stroke-width="4" stroke-linecap="round" />
+  <text x="110" y="149" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="700" fill="#285d38">smell</text>
+</svg>

@@ -36,6 +36,7 @@
     mariana: 'mariana-ingles-friends-atividade-1',
   };
   var ID_INGLES_AT_SCHOOL_ATIVIDADE_2 = 'mariana-ingles-at-school-atividade-2';
+  var ID_INGLES_AT_SCHOOL_ATIVIDADE_3 = 'mariana-ingles-at-school-atividade-3';
   var telas;
   var alunoAtual = null;
   var opcaoSelecionada = null;
@@ -400,6 +401,7 @@
     document.getElementById('abrir-ingles-at-the-farm').hidden = aluno !== 'alice';
     document.getElementById('abrir-ingles-friends-atividade-1').hidden = false;
     document.getElementById('abrir-ingles-at-school-atividade-2').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-ingles-at-school-atividade-3').hidden = aluno !== 'mariana';
     document.getElementById('materia-matematica').hidden = false;
     document.getElementById('materia-matematica-descricao').textContent =
       aluno === 'alice' ? 'Contas, problemas e tabuada' : 'Revisões, problemas e tabuada';
@@ -549,6 +551,13 @@
       .addEventListener('click', function () {
         if (alunoAtual !== 'mariana') return;
         window.InglesRevisoes.abrir('mariana', ID_INGLES_AT_SCHOOL_ATIVIDADE_2);
+        atualizarResumo();
+      });
+    document
+      .getElementById('abrir-ingles-at-school-atividade-3')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'mariana') return;
+        window.InglesRevisoes.abrir('mariana', ID_INGLES_AT_SCHOOL_ATIVIDADE_3);
         atualizarResumo();
       });
     document.querySelector('[data-materia="matematica"]').addEventListener('click', function () {
