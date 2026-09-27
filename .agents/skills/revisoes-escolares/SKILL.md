@@ -7,19 +7,26 @@ description: Planeja, implementa, testa, audita e prepara publicacao de revisoes
 
 Use esta skill como **roteador operacional**, nao como substituto das regras do repositorio.
 
-## 1. Fonte de verdade e precedencia
+## 1. Precedencia normativa e verificacao factual
 
-Antes de alterar codigo, siga nesta ordem:
+### Precedencia normativa
 
-1. `AGENTS.md`.
-2. `documentacao/ambiente-interativo/INSTRUCOES_PROJETO.md`.
-3. `documentacao/ambiente-interativo/INVENTARIO_IMPLEMENTACOES.md`.
-4. Para nova revisao: `ambiente_interativo/revisoes/MODELO_NOVA_REVISAO.txt`.
-5. Quando precisar de historico/testes reais: `ambiente_interativo/RELATORIO_TESTE_INTERATIVO.txt`.
-6. `package.json` para comandos vigentes.
-7. Implementacao atual e uma revisao equivalente.
+Siga `AGENTS.md` e a hierarquia documental definida nele. As instrucoes do projeto e o documento
+tematico vigente contem as regras especializadas. O inventario descreve o estado atual, o modelo
+orienta novas revisoes e o relatorio interativo serve somente como historico detalhado.
 
-Se houver divergencia, prevalecem `AGENTS.md`, as instrucoes do projeto e a implementacao atual. Nao copie para esta skill regras que mudam com frequencia; releia os arquivos acima.
+### Verificacao factual
+
+- `package.json` confirma os comandos existentes;
+- a implementacao atual confirma as capacidades efetivamente disponiveis;
+- uma revisao equivalente demonstra o uso concreto de uma capacidade vigente.
+
+### Quando documentacao e implementacao divergirem
+
+Nao invente comportamento nem transforme automaticamente o codigo existente em nova norma.
+Identifique e reporte a divergencia: use a implementacao para saber o que existe e as fontes
+normativas para saber o comportamento pretendido. Alinhe documentacao ou codigo apenas dentro do
+escopo autorizado. Nao copie para esta skill regras que mudam com frequencia; releia as fontes.
 
 ## 2. Preflight obrigatorio
 

@@ -54,7 +54,8 @@ na política temática. Não reduza testes para fazê-los passar.
 | Tema | Fonte normativa |
 | --- | --- |
 | Arquitetura e roteamento | `documentacao/ambiente-interativo/INSTRUCOES_PROJETO.md` |
-| Áudio, voz, Inglês e ditado | `documentacao/ambiente-interativo/infraestrutura/AUDIO_E_VOZ.md` |
+| Áudio, voz e ditado | `documentacao/ambiente-interativo/infraestrutura/AUDIO_E_VOZ.md` |
+| Pedagogia/didática de Inglês | `.agents/skills/revisoes-escolares/references/ingles.md` |
 | Questionários e interações | `documentacao/ambiente-interativo/infraestrutura/QUESTIONARIOS_E_INTERACOES.md` |
 | Armazenamento e progresso | `documentacao/ambiente-interativo/infraestrutura/ARMAZENAMENTO_E_PROGRESSO.md` |
 | Layout e acessibilidade | `documentacao/ambiente-interativo/infraestrutura/LAYOUT_E_ACESSIBILIDADE.md` |

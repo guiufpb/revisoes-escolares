@@ -8,9 +8,10 @@ Leia AGENTS.md e as partes pertinentes de:
 - documentacao/ambiente-interativo/INVENTARIO_IMPLEMENTACOES.md
 
 Consulte o inventário antes de criar infraestrutura nova. Este modelo é um guia
-operacional; em caso de divergência, siga AGENTS.md, as instruções e a implementação
-atual. Os caminhos js/, revisoes/ e leituras/ abaixo partem de ambiente_interativo/;
-<perfil> e <slug> são marcadores a substituir, não diretórios literais.
+operacional; em caso de divergência, siga a precedência normativa definida em AGENTS.md,
+use a implementação atual para confirmar capacidades disponíveis e reporte o desalinhamento.
+Os caminhos js/, revisoes/ e leituras/ abaixo partem de ambiente_interativo/; <perfil> e
+<slug> são marcadores a substituir, não diretórios literais.
 
 2. REGRAS GERAIS PARA TODA NOVA REVISAO
 
@@ -47,9 +48,11 @@ GRAMATICA
 - Para lacuna cuja palavra não seja dedutível com segurança, ofereça ditado opcional
   por js/gramatica-ditado.js e js/audio.js. A unidade padrão é palavra; frase curta
   exige ditado: true e unidadeDitado: 'frase' na questão.
-- Use voz local pt-BR, somente após ação da criança, com “Atenção”, repetir, parar e
-  cancelamento ao trocar de campo/etapa. Não revele a resposta nos controles, no DOM
-  visível ou no rótulo acessível; o áudio não preenche a resposta.
+- Use voz local pt-BR somente após ação da criança. Quando aplicável, prefixo e conteúdo
+  ficam no mesmo utterance protegido; sequências, pausas, repetição, parada e cancelamento
+  ficam a cargo da infraestrutura compartilhada. Nunca crie speechSynthesis paralelo.
+  Não revele a resposta nos controles, no DOM visível ou no rótulo acessível; o áudio
+  não preenche a resposta.
 - Nos campos que precisarem, declare maiusculasObrigatorias: true,
   acentuacaoObrigatoria: true, fraseCompleta: true e inserirTravessao: true.
   O travessão inserido continua editável e removível.
@@ -59,11 +62,12 @@ GRAMATICA
 INGLES
 - Reutilize js/ingles.js e js/audio.js; não implemente speechSynthesis paralelo.
   Use vozes locais pt-BR para instruções e en-US para palavras/frases estudadas.
+- Para a didática especializada, leia .agents/skills/revisoes-escolares/references/ingles.md.
 - Áudio exige ação da criança. Na página inicial de vocabulário, clique/toque ou
   Enter/Espaço no item seleciona e pronuncia imediatamente em en-US a 0,62.
   Abrir a revisão ou trocar de grupo não inicia áudio.
 - Preserve Ouvir em inglês (0,62), Ouvir devagar (0,50), Repetir, Parar, cancelamento
-  da sequência anterior, aquecimento, pausas e retorno acessível do áudio.
+  da sequência anterior, pausas e retorno acessível do áudio pela infraestrutura compartilhada.
 - praticaEscrita é capacidade opt-in compartilhada em js/ingles.js para revisões
   novas que precisem dela. Para novas páginas de vocabulário, siga a orientação
   das INSTRUCOES_PROJETO.md e declare:
