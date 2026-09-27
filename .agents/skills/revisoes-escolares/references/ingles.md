@@ -353,6 +353,16 @@ e:
 
 `AudioRevisoes.falarSequencia`
 
+`revisaoPosResposta.obrigatoria` executa a consolidação pós-resposta. Após uma tentativa
+incorreta, sem outro opt-in, o fluxo pode retornar automaticamente à questão quando a sequência
+termina.
+
+`revisaoPosResposta.manterTelaAposErro: true` mantém a tela **Let's review!** após a tentativa
+incorreta. Ao terminar a sequência, a tela libera explicitamente **Tentar novamente**, que retorna
+à mesma questão. Esse comportamento é opt-in: revisões que não o declaram preservam o retorno
+automático. A Activity 2 exemplifica a consolidação sem esse opt-in; a Activity 3, a consolidação
+com `manterTelaAposErro: true`.
+
 A sequência de consolidação é:
 
 1. pergunta em Inglês;
@@ -368,7 +378,11 @@ Não crie outra fila de `speechSynthesis`.
 
 ### Depois de uma tentativa incorreta
 
-O fluxo pedagógico é:
+Quando a metodologia desejada for:
+
+**erro → Let's review! → Tentar novamente → mesma questão**
+
+declare `revisaoPosResposta.manterTelaAposErro: true`. Nesse modo, o fluxo pedagógico é:
 
 **ouvir pergunta
 → responder
@@ -382,7 +396,7 @@ O fluxo pedagógico é:
 
 Depois da consolidação:
 
-- retornar à mesma questão;
+- liberar **Tentar novamente** e então retornar à mesma questão;
 - permitir nova escolha;
 - manter o erro recuperável;
 - não conceder o ponto;

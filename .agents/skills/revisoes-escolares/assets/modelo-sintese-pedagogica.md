@@ -102,6 +102,7 @@ A matriz de dependencias responde: **de onde a crianca sabera a resposta?**
 - Portao previsto: __/__ audios + __/__ escritas:
 - `exigirAudioPerguntaAntesDeResponder`?:
 - `revisaoPosResposta`?:
+- `manterTelaAposErro`?: retorno automatico / permanecer em `Let's review!` + **Tentar novamente**
 - Fluxo apos erro:
 - Fluxo apos acerto:
 - Historias/dialogos/cenas necessarios antes das questoes:

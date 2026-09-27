@@ -29,10 +29,12 @@ ao conteúdo. Não duplique um motor inteiro para trocar matéria ou perguntas.
 
 ## Roteamento por domínio
 
-- [Áudio e voz](infraestrutura/AUDIO_E_VOZ.md): `audio.js`, Inglês, ditado, prefixos, vozes e
-  validação humana.
+- [Áudio e voz](infraestrutura/AUDIO_E_VOZ.md): `audio.js`, ditado, prefixos, vozes e validação
+  humana.
 - [Questionários e interações](infraestrutura/QUESTIONARIOS_E_INTERACOES.md): campos, alternativas,
   seleção, ordenação, mapa visual e motores declarativos.
+- [Pedagogia especializada de Inglês](../../.agents/skills/revisoes-escolares/references/ingles.md):
+  análise, estudo ativo, contexto autossuficiente e consolidação.
 - [Armazenamento e progresso](infraestrutura/ARMAZENAMENTO_E_PROGRESSO.md): chaves, normalização,
   recarga, isolamento e limpeza.
 - [Layout e acessibilidade](infraestrutura/LAYOUT_E_ACESSIBILIDADE.md): desktop amplo, celular,

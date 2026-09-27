@@ -6,8 +6,12 @@ Reduzir custo de modelo, poluição de contexto, releituras e tempo de espera se
 por rotina nem reduzir análise pedagógica, correção, testes, acessibilidade, preservação de
 progresso, estabilidade, privacidade ou qualidade da revisão final.
 
-Este protocolo complementa `AGENTS.md` e a skill `revisoes-escolares`. Em caso de conflito,
-prevalecem `AGENTS.md`, as instruções do projeto e a implementação atual.
+Este protocolo complementa `AGENTS.md` e a skill `revisoes-escolares`. Para regras, siga a
+precedência normativa definida em `AGENTS.md`, nas instruções do projeto e no documento temático
+vigente. Use `package.json`, a implementação atual e uma revisão equivalente apenas para verificar
+comandos, capacidades disponíveis e seu uso concreto. Se houver divergência, identifique-a e
+reporte-a; não transforme automaticamente o código existente em nova norma nem alinhe arquivos
+fora do escopo autorizado.
 
 A fórmula central da v2 permanece:
 

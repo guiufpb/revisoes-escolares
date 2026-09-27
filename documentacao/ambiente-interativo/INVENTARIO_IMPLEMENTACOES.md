@@ -834,7 +834,7 @@ A fonte normativa de payloads, idiomas, velocidades, privacidade, controles e va
 - Cancelamento de renderizações antigas em trocas rápidas.
 - Glossário apenas da página atual.
 - Questionários com quatro alternativas em ordem estável.
-- Ditados com voz local, “Atenção” completo e proteção contra corte.
+- Ditados com voz local e prefixo protegido no mesmo utterance do conteúdo contra corte.
 - Correções, explicações e resultado persistente.
 - Explicações de cobiça e eclipse sem alterar pontos ou respostas.
 - Conteúdo de inclusão em “Uma Formiga Especial”.
