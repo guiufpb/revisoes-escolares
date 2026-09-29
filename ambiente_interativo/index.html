@@ -339,10 +339,81 @@
           <strong>Inglês</strong>
         </nav>
 
+        <div
+          class="faixa-modo-responsavel"
+          id="ingles-faixa-modo-responsavel"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+
+        <aside
+          class="painel-modo-responsavel"
+          id="ingles-modo-responsavel"
+          aria-labelledby="ingles-modo-responsavel-titulo"
+          aria-keyshortcuts="Control+Alt+R"
+          hidden
+        >
+          <div class="cabecalho-modo-responsavel">
+            <div>
+              <p class="etiqueta">Área administrativa</p>
+              <h2 id="ingles-modo-responsavel-titulo" tabindex="-1">Modo Responsável</h2>
+              <p>Atalho: Ctrl + Alt + R</p>
+            </div>
+            <button class="botao-secundario" id="ingles-modo-responsavel-fechar" type="button">
+              Fechar painel
+            </button>
+          </div>
+          <div class="resumo-modo-responsavel">
+            <p>Sessão atual: <strong id="ingles-modo-responsavel-sessao-atual">Mariana</strong></p>
+            <p>
+              Questão atual: <strong id="ingles-modo-responsavel-questao-atual">1 de 25</strong>
+            </p>
+          </div>
+          <div class="controles-modo-responsavel">
+            <label for="ingles-modo-responsavel-sessao">Sessão de progresso</label>
+            <select id="ingles-modo-responsavel-sessao"></select>
+            <form id="ingles-modo-responsavel-ir">
+              <label for="ingles-modo-responsavel-questao">Ir para questão</label>
+              <div class="ir-para-questao-modo-responsavel">
+                <input
+                  id="ingles-modo-responsavel-questao"
+                  name="questao-modo-responsavel"
+                  type="number"
+                  inputmode="numeric"
+                  min="1"
+                  max="25"
+                  step="1"
+                  required
+                />
+                <button class="botao-principal" type="submit">Ir</button>
+              </div>
+            </form>
+          </div>
+          <div
+            class="navegacao-modo-responsavel"
+            role="group"
+            aria-label="Navegação administrativa entre questões"
+          >
+            <button class="botao-secundario" id="ingles-modo-responsavel-anterior" type="button">
+              ← Anterior
+            </button>
+            <button class="botao-secundario" id="ingles-modo-responsavel-proxima" type="button">
+              Próxima →
+            </button>
+          </div>
+          <div class="rodape-modo-responsavel">
+            <button class="botao-perigo" id="ingles-modo-responsavel-encerrar" type="button">
+              Encerrar sessão responsável
+            </button>
+            <p id="ingles-status-modo-responsavel" role="status" aria-live="polite"></p>
+          </div>
+        </aside>
+
         <div class="cabecalho-ingles">
           <div>
             <p class="chapeu">Inglês com áudio local</p>
-            <h1 id="ingles-titulo-unidade">English Review – Unit 3</h1>
+            <h1 id="ingles-titulo-unidade" tabindex="-1">English Review – Unit 3</h1>
             <p class="titulo-at-school" id="ingles-subtitulo-unidade" lang="en-US">At School</p>
             <p id="ingles-descricao-unidade">
               Escolha uma palavra ou frase. O ambiente pronuncia em inglês e também pode ler as

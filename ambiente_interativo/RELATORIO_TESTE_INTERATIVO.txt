@@ -2101,3 +2101,17 @@ PRIVACIDADE E GIT
 - Os testes usaram contextos temporários do Playwright e não alteraram o progresso real das
   crianças.
 - Sem commit, push, merge, PR ou publicação.
+
+VALIDAÇÃO HUMANA — MODO RESPONSÁVEL — 29/09/2026
+================================================
+
+CONFIRMAÇÃO EM USO REAL
+- O Modo Responsável foi utilizado em situação real na revisão `At School · Activity 3`.
+- O responsável confirmou a conclusão da atividade em uma sessão auxiliar.
+- A navegação administrativa e a continuidade normal das questões funcionaram conforme esperado.
+- Não foi relatada interferência no progresso da sessão principal.
+
+DISTINÇÃO DA AUTOMAÇÃO
+- Este registro contém somente a confirmação humana acima. A cobertura de isolamento, saltos,
+  recarga, limpeza seletiva, acessibilidade e regressões pertence aos testes Playwright e está
+  registrada separadamente no inventário e na documentação de testes.

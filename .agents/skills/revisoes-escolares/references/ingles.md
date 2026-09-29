@@ -638,7 +638,44 @@ Não crie:
 - fila manual de áudio;
 - persistência específica quando o controlador compartilhado já cobre o caso.
 
-## 15. Estado e persistência
+## 15. Modo Responsável — capacidade opt-in
+
+O Modo Responsável permite reutilizar uma mesma revisão de Inglês em sessões de progresso
+independentes, sem duplicar questões, vocabulário, Story Time ou assets:
+
+**uma fonte de conteúdo → múltiplas sessões de progresso independentes**
+
+A capacidade é declarada por `modoResponsavel`. Uma sessão deve ser marcada como
+`principal: true`, e cada sessão recebe sua própria `chaveArmazenamento`. Exemplo reduzido da
+configuração atualmente usada:
+
+```js
+modoResponsavel: {
+  habilitado: true,
+  sessoes: [
+    { id: 'mariana', nome: 'Mariana', principal: true,
+      chaveArmazenamento: 'revisoesEscolares.mariana.ingles.atSchoolAtividade3.v1' },
+    { id: 'alice', nome: 'Alice',
+      chaveArmazenamento: 'revisoesEscolares.alice.ingles.atSchoolAtividade3Compartilhada.v1' },
+  ],
+}
+```
+
+A sessão principal continua definindo o progresso normal e o cartão da revisão. Sessões
+auxiliares não criam automaticamente cartões em outros perfis. A troca de sessão salva o estado
+na chave atual e carrega a outra chave; a limpeza continua limitada à chave da sessão ativa.
+
+O atalho atual da interface responsável é `Ctrl + Alt + R`. A navegação administrativa pode
+saltar para frente ou para trás, mas o salto muda somente a posição: nunca cria resposta, acerto,
+ponto, tentativa, áudio ouvido, Story Time concluída nem outro pré-requisito falso. O bypass
+administrativo permite acessar diretamente uma questão enquanto a sessão autorizada estiver em
+uso, sem adulterar os pré-requisitos pedagógicos persistidos.
+
+Sem `modoResponsavel.habilitado`, o comportamento legado é preservado integralmente. A
+implementação de referência atual, e única revisão habilitada neste momento, é
+`mariana-ingles-at-school-atividade-3`.
+
+## 16. Estado e persistência
 
 Quando aplicável, preserve:
 
@@ -665,7 +702,7 @@ Nunca use:
 
 Limpe somente a chave da revisão ativa.
 
-## 16. Testes específicos de Inglês
+## 17. Testes específicos de Inglês
 
 Além das regras gerais do projeto, cubra quando aplicável:
 
@@ -729,7 +766,7 @@ Quando perguntas dependem de história, diálogo, leitura, cena ou sequência:
 
 Automação não substitui revisão pedagógica humana.
 
-## 17. Gate específico de Inglês
+## 18. Gate específico de Inglês
 
 Antes de gerar o Markdown para implementação, confirme:
 

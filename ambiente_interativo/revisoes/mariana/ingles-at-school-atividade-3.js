@@ -278,6 +278,22 @@
     revisaoPosResposta: { obrigatoria: true, pausaMs: 350, manterTelaAposErro: true },
     layout: { desktopAmplo: true },
     praticaEscrita: { habilitada: true, obrigatoriaParaAtividades: true },
+    modoResponsavel: {
+      habilitado: true,
+      sessoes: [
+        {
+          id: 'mariana',
+          nome: 'Mariana',
+          principal: true,
+          chaveArmazenamento: 'revisoesEscolares.mariana.ingles.atSchoolAtividade3.v1',
+        },
+        {
+          id: 'alice',
+          nome: 'Alice',
+          chaveArmazenamento: 'revisoesEscolares.alice.ingles.atSchoolAtividade3Compartilhada.v1',
+        },
+      ],
+    },
     historia: {
       tituloIngles: 'Story Time · Watch Out, Flash!',
       tituloPortugues: 'História · Cuidado, Flash!',
