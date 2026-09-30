@@ -73,6 +73,13 @@
     return unidade.historia.cenas.length ? unidade.historia : null;
   }
 
+  function atualizarPronuncia(mostrar) {
+    if (!window.PronunciaRevisoes) return;
+    window.PronunciaRevisoes.configurar(unidadeAtual && unidadeAtual.pronuncia, {
+      visivel: Boolean(mostrar && estado && estado.atividadeFinalizada),
+    });
+  }
+
   function configuracaoModoResponsavel(unidade) {
     var configuracao = unidade && unidade.modoResponsavel;
     if (!configuracao || !configuracao.habilitado || !Array.isArray(configuracao.sessoes)) {
@@ -1222,6 +1229,7 @@
     var atividades = todasAsAtividades(unidadeAtual);
     var questao = questaoAtual();
     if (!questao) return;
+    atualizarPronuncia(false);
     elemento('ingles-story-time').hidden = true;
     elemento('ingles-cartao-questao').hidden = false;
     elemento('ingles-revisao-atividades').hidden = true;
@@ -1352,6 +1360,7 @@
       }
       lista.appendChild(cartao);
     });
+    atualizarPronuncia(true);
   }
 
   function abrirAtividades() {
@@ -1843,6 +1852,7 @@
     elemento('ingles-instrucao-grupo').textContent = grupo.instrucao;
     elemento('ingles-painel-atividades').hidden = true;
     elemento('ingles-story-time').hidden = true;
+    atualizarPronuncia(false);
     renderizarGrupos();
     renderizarItens();
     atualizarItemSelecionado();

@@ -11,6 +11,7 @@
     "format": "prettier --write \"ambiente_interativo/**/*.{html,css,js}\" \"tests/**/*.js\"",
     "format:check": "prettier --check \"ambiente_interativo/**/*.{html,css,js}\" \"tests/**/*.js\"",
     "lint": "eslint ambiente_interativo/**/*.js tests/**/*.js",
+    "pronuncia:gateway": "node scripts/azure-pronunciation-gateway.js",
     "pretest:interativo": "npm run build",
     "test:interativo": "playwright test tests/ambiente-interativo.spec.js",
     "pretest:a11y": "npm run build",

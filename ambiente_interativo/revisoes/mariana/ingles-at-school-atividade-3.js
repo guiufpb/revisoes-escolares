@@ -294,6 +294,29 @@
         },
       ],
     },
+    pronuncia: {
+      id: 'at-school-atividade-3-conversacao-v1',
+      habilitada: true,
+      gatewayUrl: 'http://127.0.0.1:5190/api/pronunciation',
+      duracaoMaximaSegundos: 15,
+      timeoutMs: 12000,
+      faixas: { muitoBem: 75, quase: 45 },
+      pares: [
+        {
+          id: 'flash-thank-you',
+          pergunta: 'What does Flash say after his friends help him?',
+          resposta: 'Thank you.',
+        },
+        { id: 'schoolbag', pergunta: "What's this?", resposta: "It's a bag." },
+        { id: 'song', pergunta: 'What do you do with a song?', resposta: 'listen' },
+        { id: 'notebook', pergunta: "What's this?", resposta: "It's a notebook." },
+        {
+          id: 'pencil-case',
+          pergunta: 'Is it a pencil case?',
+          resposta: "No, it isn't.",
+        },
+      ],
+    },
     historia: {
       tituloIngles: 'Story Time · Watch Out, Flash!',
       tituloPortugues: 'História · Cuidado, Flash!',

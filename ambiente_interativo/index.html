@@ -756,6 +756,125 @@
                 <p class="assinatura-surpresa-ingles">Beijos.<br /><strong>Mita.</strong></p>
               </div>
             </aside>
+            <section
+              class="pronuncia-conversacao"
+              id="pronuncia-conversacao"
+              aria-labelledby="pronuncia-titulo"
+              hidden
+            >
+              <div class="cabecalho-pronuncia-conversacao">
+                <div>
+                  <p class="etiqueta">Nova sessão opcional</p>
+                  <h2 id="pronuncia-titulo">CONVERSAÇÃO · ESCUTE E PRONUNCIE</h2>
+                  <p>
+                    Treine cinco conversas curtas. Esta etapa não muda seus pontos nem a conclusão
+                    da Activity 3.
+                  </p>
+                </div>
+                <span class="selo-pronuncia-opcional">Opcional</span>
+              </div>
+
+              <aside class="aviso-envio-pronuncia" aria-label="Privacidade do treino de pronúncia">
+                <strong>Antes de gravar</strong>
+                <p>
+                  A tentativa será enviada ao gateway deste computador e ao Azure somente para
+                  avaliação. O áudio fica na memória durante a tentativa e é descartado depois; ele
+                  não entra no progresso salvo.
+                </p>
+              </aside>
+
+              <label class="consentimento-pronuncia" for="pronuncia-consentimento">
+                <input id="pronuncia-consentimento" type="checkbox" />
+                <span>
+                  Eu entendi e quero usar o microfone nesta sessão de treino. Um responsável está
+                  acompanhando.
+                </span>
+              </label>
+
+              <article class="cartao-pronuncia" aria-labelledby="pronuncia-titulo-cartao">
+                <p class="etiqueta" id="pronuncia-progresso">Conversa 1 de 5</p>
+                <h3 id="pronuncia-titulo-cartao" tabindex="-1">Pergunta e resposta</h3>
+                <div class="falas-pronuncia">
+                  <section lang="en-US" aria-label="Pergunta em inglês">
+                    <strong>Question · Pergunta</strong>
+                    <p id="pronuncia-pergunta"></p>
+                  </section>
+                  <section lang="en-US" aria-label="Resposta em inglês">
+                    <strong>Answer · Resposta</strong>
+                    <p id="pronuncia-resposta"></p>
+                  </section>
+                </div>
+
+                <div
+                  class="escolha-alvo-pronuncia"
+                  role="group"
+                  aria-label="Escolha a fala que deseja praticar"
+                >
+                  <button
+                    class="botao-alvo-pronuncia"
+                    id="pronuncia-alvo-pergunta"
+                    type="button"
+                    aria-pressed="true"
+                  >
+                    1. Praticar pergunta
+                  </button>
+                  <button
+                    class="botao-alvo-pronuncia"
+                    id="pronuncia-alvo-resposta"
+                    type="button"
+                    aria-pressed="false"
+                  >
+                    2. Praticar resposta
+                  </button>
+                </div>
+                <p id="pronuncia-alvo-atual" class="alvo-atual-pronuncia"></p>
+
+                <div
+                  class="controles-pronuncia"
+                  role="group"
+                  aria-label="Controles do treino de pronúncia"
+                >
+                  <button class="botao-secundario" id="pronuncia-ouvir" type="button">
+                    🔊 Ouvir modelo
+                  </button>
+                  <button class="botao-principal" id="pronuncia-gravar" type="button" disabled>
+                    🎙 Gravar
+                  </button>
+                  <button class="botao-parar-audio" id="pronuncia-parar" type="button" disabled>
+                    ⏹ Parar e avaliar
+                  </button>
+                  <button class="botao-secundario" id="pronuncia-repetir" type="button" disabled>
+                    🔁 Repetir tentativa
+                  </button>
+                </div>
+                <p
+                  class="status-pronuncia"
+                  id="pronuncia-status"
+                  role="status"
+                  aria-live="polite"
+                ></p>
+                <p
+                  class="feedback-pronuncia"
+                  id="pronuncia-feedback"
+                  role="status"
+                  aria-live="polite"
+                  hidden
+                ></p>
+              </article>
+
+              <div class="navegacao-pronuncia">
+                <button class="botao-secundario" id="pronuncia-par-anterior" type="button">
+                  ← Conversa anterior
+                </button>
+                <button class="botao-principal" id="pronuncia-par-proximo" type="button">
+                  Próxima conversa →
+                </button>
+              </div>
+              <p class="pronuncia-indisponivel">
+                Se o microfone, o gateway ou o Azure não estiverem disponíveis, você pode continuar
+                ouvindo e repetindo. A Activity 3 permanece concluída.
+              </p>
+            </section>
             <div class="acoes-resultado-ingles">
               <button class="botao-secundario" id="ingles-refazer-atividades" type="button">
                 Refazer as 10 atividades
@@ -768,8 +887,8 @@
         </section>
 
         <aside class="privacidade-audio-ingles">
-          <strong>🔒 Áudio local</strong>
-          <span>
+          <strong id="ingles-privacidade-audio-titulo">🔒 Áudio local</strong>
+          <span id="ingles-privacidade-audio-texto">
             A pronúncia usa as vozes instaladas neste computador. O ambiente não grava a criança e
             não envia o conteúdo para a internet.
           </span>
