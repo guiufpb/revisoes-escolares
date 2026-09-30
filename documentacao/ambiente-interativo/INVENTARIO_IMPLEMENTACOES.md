@@ -4,7 +4,7 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra o estado de trabalho em **29/09/2026**.
+Este inventário registra o estado de trabalho em **30/09/2026**.
 
 ## 2. Base da aplicação
 
@@ -20,7 +20,9 @@ Este inventário registra o estado de trabalho em **29/09/2026**.
 
 ### Execução local
 
-- Servidor Vite por `abrir_ambiente_interativo.bat` ou `npm run interativo`.
+- Servidor Vite por `abrir_ambiente_interativo.bat` ou `npm run interativo`. O launcher prepara o
+  gateway opcional de pronúncia via Azure CLI, reutiliza `/health` saudável e mantém o ambiente
+  principal disponível em caso de falha da CLI, da chave ou do gateway.
 - Aplicação principal por `file://` usando bundle clássico gerado.
 - Atalho para Chromium do Playwright.
 - Recursos locais, sem CDN obrigatória.
@@ -48,6 +50,8 @@ Este inventário registra o estado de trabalho em **29/09/2026**.
 - `js/armazenamento.js`: persistência segura.
 - `js/audio.js`: síntese de voz local bilíngue; cada solicitação usa um único utterance audível
   protegido por prefixo no mesmo payload, inclusive na repetição.
+- `js/pronuncia.js`: controlador opt-in de conversa oral, com consentimento, captura PCM em memória,
+  WAV de 16 kHz, gateway local, feedback infantil configurável, descarte e falha não bloqueante.
 - `js/ingles.js`: motor único de Inglês, incluindo o **Modo Responsável** opt-in com sessões por
   chave, salto administrativo sem fabricar progresso e painel acessível por `Ctrl + Alt + R`.
 - `js/gramatica-questionarios.js` e `js/gramatica-ditado.js`: questionários sequenciais de
@@ -691,6 +695,25 @@ Unidade: `at-school-atividade-2`.
 - `destinatariaMensagemFinal` é uma capacidade declarativa opt-in de `js/ingles.js`: esta unidade
   mostra “Uma mensagem para as meninas”, enquanto a Atividade 2 e as demais revisões conservam o
   destinatário derivado do perfil.
+- Depois do resultado normal, a seção opcional **CONVERSAÇÃO · ESCUTE E PRONUNCIE** reutiliza
+  cinco pares de Q6, Q15, Q17, Q21 e Q22. Pergunta e resposta podem ser ouvidas pelo `audio.js` e
+  praticadas separadamente, com gravação/parada/repetição ilimitada e feedback “Muito bem!”,
+  “Quase!” ou “Tente mais uma vez.”, sem exibir nota nem aprovar/reprovar.
+  **Ouvir modelo** fixa `en-US` a `0.50` em `js/pronuncia.js`, para pergunta e resposta, inclusive
+  ao ouvir novamente; vocabulário, Story Time, perguntas e consolidação mantêm suas velocidades.
+- A conversa não cria etapa, ponto ou estado persistido, portanto preserva as 25 questões, as 43
+  etapas, a chave `v1`, progresso legado e sessões do Modo Responsável. Consentimento e permissão
+  são explícitos; permissão negada, API ausente, timeout e rede indisponível não desfazem a
+  conclusão.
+- `scripts/azure-pronunciation-gateway.js` escuta apenas em loopback, lê chave/região do ambiente,
+  limita WAV, aplica CORS local, chama o Azure e devolve somente escores resumidos. Navegador e
+  gateway zeram buffers após uso e não gravam arquivos. Operação e privacidade estão documentadas
+  em `infraestrutura/PRONUNCIA_AZURE.md`.
+- O parser de pronúncia aceita os escores REST diretamente em `NBest[0]`, mantendo o formato
+  aninhado compatível. Logs seguros distinguem status Azure, ausência de avaliação e erro local,
+  com metadados WAV e nomes de campos, sem áudio, fala ou credenciais. A retomada após reboot e
+  o contrato REST estão descritos em `PRONUNCIA_AZURE.md`; o responsável confirmou a validação do
+  protótipo com Azure real antes da automação do launcher.
 - Os SVGs novos são originais e descrevem conjuntos de objetos, ajuda entre colegas, ações de
   retirar/guardar, os cinco sentidos e as seis cenas da Story Time. Assets existentes de objetos
   escolares e de abrir o livro foram reutilizados. Nenhum PDF, OCR, print escolar ou recurso
@@ -702,6 +725,16 @@ Unidade: `at-school-atividade-2`.
   adverso, isolamento, cenas visuais, percurso completo, mensagem final, Activity 2, viewports,
   teclado, toque, axe-core, `file://`, opt-in exclusivo do Modo Responsável, atalho, sessão auxiliar,
   salto sem pré-requisitos falsos, restauração entre sessões, recarga e limpeza por chave.
+- Protótipo de pronúncia: `tests/ingles-pronuncia-azure.spec.js` (8 cenários), com parser REST,
+  resposta Azure 200/401 simulada, logs sem fala/credencial, descarte no gateway e gateway sem
+  credencial e CORS restrito, opt-in exclusivo, TTS compartilhado, WAV de 16 kHz, consentimento,
+  pergunta/resposta, repetição, faixas sem nota, descarte, permissão negada, `503`, rede, timeout,
+  isolamento do `localStorage`, 390 × 844 e axe-core.
+  O payload-modelo é verificado a `0.50` nas cinco perguntas e respostas, com repetição, retorno e
+  nova audição após tentativa simulada, sem consumir Azure.
+- Launcher de pronúncia: `tests/launcher-pronuncia.cjs` (8 cenários simulados) cobre autenticação,
+  login, reutilização do gateway, CLI ausente, falha na chave, `configured:false` e continuidade do
+  ambiente principal. A chave real não é usada nesses testes.
 
 ID: `mariana-ingles-at-school-atividade-3`.
 

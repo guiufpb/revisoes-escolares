@@ -9,8 +9,14 @@ declarativos. Não crie `speechSynthesis` paralelo em uma revisão. Use somente 
 `pt-BR` para Português e `en-US` para Inglês; mantenha `voiceschanged` e a preferência por
 correspondência exata do idioma e vozes naturais/neural.
 
-Não há microfone, gravação, reconhecimento, avaliação automática da fala, upload ou API. O áudio
-só começa após ação explícita da criança. Abrir tela ou trocar grupo não pode reproduzir som.
+Por padrão não há microfone, gravação, reconhecimento, avaliação automática da fala, upload ou
+API. O áudio só começa após ação explícita da criança. Abrir tela ou trocar grupo não pode
+reproduzir som.
+
+A exceção atual é o protótipo explicitamente solicitado e opt-in de Pronunciation Assessment,
+documentado em [PRONUNCIA_AZURE.md](PRONUNCIA_AZURE.md). Ele mantém o TTS neste controlador, isola
+microfone/captura em `pronuncia.js`, exige consentimento e gateway local, não persiste áudio e nunca
+bloqueia a conclusão da revisão. Unidades sem a declaração preservam integralmente a regra padrão.
 
 ## Um utterance protegido por solicitação
 

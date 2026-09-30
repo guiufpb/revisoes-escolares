@@ -3835,6 +3835,212 @@ footer {
   line-height: 1.7;
 }
 
+.pronuncia-conversacao {
+  scroll-margin-top: 120px;
+  margin-top: 26px;
+  padding: clamp(20px, 4vw, 34px);
+  border: 4px solid #4b8eb1;
+  border-radius: 28px;
+  background: linear-gradient(145deg, #eef9ff, #f7f2ff);
+  box-shadow: var(--sombra);
+}
+
+.cabecalho-pronuncia-conversacao,
+.navegacao-pronuncia,
+.controles-pronuncia,
+.escolha-alvo-pronuncia {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.cabecalho-pronuncia-conversacao,
+.navegacao-pronuncia {
+  justify-content: space-between;
+}
+
+.cabecalho-pronuncia-conversacao h2 {
+  margin: 4px 0 8px;
+  color: #174f6b;
+  font-size: clamp(1.35rem, 4vw, 2rem);
+}
+
+.cabecalho-pronuncia-conversacao p:last-child,
+.aviso-envio-pronuncia p,
+.pronuncia-indisponivel {
+  margin-bottom: 0;
+  color: #435568;
+  font-weight: 750;
+  line-height: 1.55;
+}
+
+.selo-pronuncia-opcional {
+  padding: 8px 13px;
+  border: 2px solid #3a7e5b;
+  border-radius: 999px;
+  color: #185d3c;
+  background: #edf9f2;
+  font-weight: 900;
+}
+
+.aviso-envio-pronuncia,
+.consentimento-pronuncia {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 16px;
+}
+
+.aviso-envio-pronuncia {
+  border-left: 6px solid #d18d18;
+  background: #fff8e5;
+}
+
+.aviso-envio-pronuncia strong {
+  color: #714b0c;
+}
+
+.consentimento-pronuncia {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  border: 3px solid #7c6ab8;
+  color: #35255d;
+  background: white;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.consentimento-pronuncia input {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  margin: 1px 0 0;
+  accent-color: #6546c4;
+}
+
+.cartao-pronuncia {
+  margin-top: 18px;
+  padding: clamp(18px, 3vw, 26px);
+  border: 3px solid #b8d8e8;
+  border-radius: 22px;
+  background: white;
+}
+
+.cartao-pronuncia h3 {
+  margin: 4px 0 14px;
+  color: #174f6b;
+}
+
+.falas-pronuncia {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.falas-pronuncia section {
+  padding: 16px;
+  border: 3px solid #c8dfe9;
+  border-radius: 18px;
+  background: #f4fbff;
+}
+
+.falas-pronuncia section:last-child {
+  border-color: #c8dfd1;
+  background: #f2fbf6;
+}
+
+.falas-pronuncia strong {
+  color: #435568;
+}
+
+.falas-pronuncia p {
+  margin: 8px 0 0;
+  color: #174f6b;
+  font-size: clamp(1.15rem, 3vw, 1.45rem);
+  font-weight: 900;
+}
+
+.escolha-alvo-pronuncia,
+.controles-pronuncia {
+  margin-top: 18px;
+}
+
+.botao-alvo-pronuncia {
+  min-height: 46px;
+  padding: 10px 15px;
+  border: 3px solid #a9bfd0;
+  border-radius: 14px;
+  color: #29475a;
+  background: white;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.botao-alvo-pronuncia[aria-pressed='true'] {
+  border-color: #12658f;
+  color: #0c4d6d;
+  background: #eaf8ff;
+}
+
+.alvo-atual-pronuncia,
+.status-pronuncia,
+.feedback-pronuncia,
+.pronuncia-indisponivel {
+  font-weight: 850;
+}
+
+.alvo-atual-pronuncia {
+  color: #4e2b70;
+}
+
+.status-pronuncia {
+  min-height: 28px;
+  margin-bottom: 0;
+  color: #435568;
+}
+
+.status-pronuncia[data-estado='erro'] {
+  color: #8a2d42;
+}
+
+.feedback-pronuncia {
+  margin: 14px 0 0;
+  padding: 14px 16px;
+  border: 3px solid #d5c76d;
+  border-radius: 16px;
+  color: #5a4a00;
+  background: #fffbe2;
+  font-size: 1.12rem;
+}
+
+.feedback-pronuncia[data-faixa='muito-bem'] {
+  border-color: #55aa78;
+  color: #185d3c;
+  background: #edf9f2;
+}
+
+.feedback-pronuncia[data-faixa='tentar-novamente'] {
+  border-color: #c58aac;
+  color: #752d67;
+  background: #fff2f7;
+}
+
+.navegacao-pronuncia {
+  margin-top: 18px;
+}
+
+.pronuncia-indisponivel {
+  padding-top: 14px;
+  border-top: 2px dashed #a9bfd0;
+}
+
+.pronuncia-conversacao :is(button, input):focus-visible {
+  outline: 4px solid #ffbf47;
+  outline-offset: 3px;
+}
+
 .privacidade-audio-ingles {
   display: flex;
   gap: 12px;
@@ -3998,6 +4204,7 @@ footer {
   .cabecalho-painel-audio,
   .cabecalho-atividade-ingles,
   .cabecalho-story-time-ingles,
+  .cabecalho-pronuncia-conversacao,
   .cabecalho-modo-responsavel,
   .resumo-modo-responsavel,
   .rodape-modo-responsavel,
@@ -4083,6 +4290,23 @@ footer {
 
   .cena-story-time-ingles {
     grid-template-columns: 1fr;
+  }
+
+  .falas-pronuncia {
+    grid-template-columns: 1fr;
+  }
+
+  .controles-pronuncia,
+  .escolha-alvo-pronuncia,
+  .navegacao-pronuncia {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .controles-pronuncia button,
+  .escolha-alvo-pronuncia button,
+  .navegacao-pronuncia button {
+    width: 100%;
   }
 
   .acoes-cabecalho-atividade-ingles {

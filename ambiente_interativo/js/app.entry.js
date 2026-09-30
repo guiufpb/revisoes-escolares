@@ -4,6 +4,7 @@ import './registro-ingles.js';
 import './glossario.js';
 import './armazenamento.js';
 import './audio.js';
+import './pronuncia.js';
 import './gramatica-ditado.js';
 import './desenho.js';
 import './atividades.js';

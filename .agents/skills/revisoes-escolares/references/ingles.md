@@ -526,6 +526,13 @@ Não usar:
 
 sem pedido específico.
 
+Quando houver pedido específico, a capacidade deve ser opt-in, posterior ao fluxo avaliativo
+normal e não punitiva. Reutilize `audio.js` para o modelo em Inglês e mantenha microfone, conversão,
+envio e feedback no controlador compartilhado de pronúncia. Exija consentimento antes de cada
+sessão, esconda credenciais em gateway local, não persista gravações e descarte buffers após a
+avaliação. Indisponibilidade externa nunca pode retirar conclusão, ponto ou acesso ao estudo.
+Consulte `documentacao/ambiente-interativo/infraestrutura/PRONUNCIA_AZURE.md`.
+
 ### Reading
 
 Use textos curtos e adequados à série.
