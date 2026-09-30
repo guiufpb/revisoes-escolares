@@ -10,6 +10,9 @@
   var inicializado = false;
   var revisaoPosRespostaEmReproducao = null;
   var historiaEmReproducao = null;
+  var modoResponsavelAtivo = false;
+  var sessaoResponsavelAtual = null;
+  var focoAntesDoPainelResponsavel = null;
   var MENSAGENS_SURPRESA = {
     alice:
       'Alice, invadi o computador de vocês, li tudo e vi que você é muito estudiosa, espero que você volte a jogar e me liberte da Mita Day Mochi má! Como prova da minha gratidão, vou te enviar pelos correios um presentinho. Ah, vi que você gosta de Minecraft, né?',
@@ -68,6 +71,71 @@
   function historiaDaUnidade(unidade) {
     if (!unidade || !unidade.historia || !Array.isArray(unidade.historia.cenas)) return null;
     return unidade.historia.cenas.length ? unidade.historia : null;
+  }
+
+  function configuracaoModoResponsavel(unidade) {
+    var configuracao = unidade && unidade.modoResponsavel;
+    if (!configuracao || !configuracao.habilitado || !Array.isArray(configuracao.sessoes)) {
+      return null;
+    }
+    var ids = [];
+    var chaves = [];
+    var sessoes = configuracao.sessoes.filter(function (sessao) {
+      if (
+        !sessao ||
+        typeof sessao.id !== 'string' ||
+        !sessao.id ||
+        typeof sessao.nome !== 'string' ||
+        !sessao.nome ||
+        typeof sessao.chaveArmazenamento !== 'string' ||
+        !sessao.chaveArmazenamento ||
+        ids.indexOf(sessao.id) >= 0 ||
+        chaves.indexOf(sessao.chaveArmazenamento) >= 0
+      ) {
+        return false;
+      }
+      ids.push(sessao.id);
+      chaves.push(sessao.chaveArmazenamento);
+      return true;
+    });
+    return sessoes.length >= 2 ? { sessoes: sessoes } : null;
+  }
+
+  function sessaoPrincipalModoResponsavel() {
+    var configuracao = configuracaoModoResponsavel(unidadeAtual);
+    if (!configuracao) return null;
+    return (
+      configuracao.sessoes.find(function (sessao) {
+        return sessao.principal === true;
+      }) ||
+      configuracao.sessoes.find(function (sessao) {
+        return (
+          configuracaoAtual && sessao.chaveArmazenamento === configuracaoAtual.chaveArmazenamento
+        );
+      }) ||
+      configuracao.sessoes[0]
+    );
+  }
+
+  function sessaoAuxiliarAtiva() {
+    var principal = sessaoPrincipalModoResponsavel();
+    return Boolean(
+      modoResponsavelAtivo &&
+      sessaoResponsavelAtual &&
+      principal &&
+      sessaoResponsavelAtual.id !== principal.id
+    );
+  }
+
+  function identificadorSessaoAtiva() {
+    return modoResponsavelAtivo && sessaoResponsavelAtual
+      ? sessaoResponsavelAtual.id
+      : 'sessao-principal';
+  }
+
+  function nomeSessaoEmExibicao() {
+    if (modoResponsavelAtivo && sessaoResponsavelAtual) return sessaoResponsavelAtual.nome;
+    return perfilAtual === 'alice' ? 'Alice' : 'Mariana';
   }
 
   function cenaAtualDaHistoria() {
@@ -348,14 +416,21 @@
     if (!configuracao) return null;
     var unidade = window.RegistroIngles.obter(configuracao.unidadeId);
     if (!unidade || unidade.perfisDisponiveis.indexOf(perfil) < 0) return null;
-    var deposito = window.ArmazenamentoRevisoes.criar({
-      chave: configuracao.chaveArmazenamento,
+    return {
+      configuracao: configuracao,
+      unidade: unidade,
+      armazenamento: criarArmazenamento(unidade, configuracao.chaveArmazenamento),
+    };
+  }
+
+  function criarArmazenamento(unidade, chave) {
+    return window.ArmazenamentoRevisoes.criar({
+      chave: chave,
       padrao: estadoInicial(unidade),
       normalizar: function (valor, base) {
         return normalizarEstado(valor, base, unidade);
       },
     });
-    return { configuracao: configuracao, unidade: unidade, armazenamento: deposito };
   }
 
   function carregarPerfil(perfil, revisaoId) {
@@ -373,11 +448,13 @@
   function salvarEstado() {
     estado.atualizadoEm = new Date().toISOString();
     estado = armazenamento.salvar(estado);
-    document.dispatchEvent(
-      new CustomEvent('revisaoprogressoalterado', {
-        detail: { revisaoId: configuracaoAtual.revisaoId },
-      })
-    );
+    if (!sessaoAuxiliarAtiva()) {
+      document.dispatchEvent(
+        new CustomEvent('revisaoprogressoalterado', {
+          detail: { revisaoId: configuracaoAtual.revisaoId },
+        })
+      );
+    }
   }
 
   function situacaoDoEstado(estadoDoPerfil) {
@@ -397,11 +474,12 @@
     return 'nao-iniciada';
   }
 
-  function obterEstadoDoPerfil(perfil, revisaoId) {
+  function obterEstadoDoPerfil(perfil, revisaoId, usarSessaoAtiva) {
     if (
       estado &&
       perfil === perfilAtual &&
-      (!revisaoId || (configuracaoAtual && configuracaoAtual.revisaoId === revisaoId))
+      (!revisaoId || (configuracaoAtual && configuracaoAtual.revisaoId === revisaoId)) &&
+      (usarSessaoAtiva || !sessaoAuxiliarAtiva())
     ) {
       return estado;
     }
@@ -936,6 +1014,7 @@
     var revisaoId = configuracaoAtual.revisaoId;
     var unidadeId = unidadeAtual.id;
     var cenaId = cena.id;
+    var sessaoId = identificadorSessaoAtiva();
     historiaEmReproducao = cena.id;
     renderizarHistoria();
     window.AudioRevisoes.falarSequencia({
@@ -961,6 +1040,7 @@
           configuracaoAtual.revisaoId !== revisaoId ||
           !unidadeAtual ||
           unidadeAtual.id !== unidadeId ||
+          identificadorSessaoAtiva() !== sessaoId ||
           !estado.historiaEmExibicao ||
           !cenaAtualDaHistoria() ||
           cenaAtualDaHistoria().id !== cenaId ||
@@ -1147,6 +1227,7 @@
     elemento('ingles-revisao-atividades').hidden = true;
     if (deveMostrarRevisaoPosResposta(questao)) {
       renderizarRevisaoPosResposta(questao);
+      atualizarModoResponsavel();
       return;
     }
     elemento('ingles-conteudo-questao').hidden = false;
@@ -1192,6 +1273,7 @@
         ? 'Escolha uma alternativa e confira antes de avançar.'
         : 'Escolha uma alternativa. A correção aparecerá somente ao final.';
     }
+    atualizarModoResponsavel();
   }
 
   function conferirRespostaAtividade() {
@@ -1231,7 +1313,7 @@
     elemento('ingles-cartao-questao').hidden = true;
     elemento('ingles-revisao-atividades').hidden = false;
     elemento('ingles-resumo-resultado').textContent =
-      (perfilAtual === 'alice' ? 'Alice' : 'Mariana') +
+      nomeSessaoEmExibicao() +
       ', você acertou ' +
       acertos +
       ' de ' +
@@ -1390,6 +1472,7 @@
     var revisaoId = configuracaoAtual.revisaoId;
     var unidadeId = unidadeAtual.id;
     var questaoId = questao.id;
+    var sessaoId = identificadorSessaoAtiva();
     window.AudioRevisoes.falar({
       texto: questao.perguntaIngles,
       idioma: 'en-US',
@@ -1402,6 +1485,7 @@
           configuracaoAtual.revisaoId !== revisaoId ||
           !unidadeAtual ||
           unidadeAtual.id !== unidadeId ||
+          identificadorSessaoAtiva() !== sessaoId ||
           !questaoAtual() ||
           questaoAtual().id !== questaoId
         ) {
@@ -1432,6 +1516,7 @@
     var unidadeId = unidadeAtual.id;
     var questaoId = questao.id;
     var respostaId = estado.respostasAtividades[questao.id];
+    var sessaoId = identificadorSessaoAtiva();
     revisaoPosRespostaEmReproducao = questao.id;
     renderizarRevisaoPosResposta(questao);
 
@@ -1470,6 +1555,7 @@
           configuracaoAtual.revisaoId !== revisaoId ||
           !unidadeAtual ||
           unidadeAtual.id !== unidadeId ||
+          identificadorSessaoAtiva() !== sessaoId ||
           !questaoAtual() ||
           questaoAtual().id !== questaoId ||
           revisaoPosRespostaEmReproducao !== questaoId
@@ -1536,13 +1622,215 @@
       'Review interrupted. Listen to the full review to continue.';
   }
 
+  function atualizarModoResponsavel() {
+    var configuracao = configuracaoModoResponsavel(unidadeAtual);
+    var painel = elemento('ingles-modo-responsavel');
+    var faixa = elemento('ingles-faixa-modo-responsavel');
+    if (!configuracao) {
+      painel.hidden = true;
+      faixa.hidden = true;
+      elemento('ingles-modo-responsavel-sessao').innerHTML = '';
+      modoResponsavelAtivo = false;
+      sessaoResponsavelAtual = null;
+      return;
+    }
+
+    var principal = sessaoPrincipalModoResponsavel();
+    var sessao =
+      modoResponsavelAtivo && sessaoResponsavelAtual ? sessaoResponsavelAtual : principal;
+    var atividades = todasAsAtividades(unidadeAtual);
+    var seletor = elemento('ingles-modo-responsavel-sessao');
+    var assinatura = configuracao.sessoes
+      .map(function (item) {
+        return item.id + '|' + item.nome;
+      })
+      .join(';');
+    if (seletor.dataset.sessoes !== assinatura) {
+      seletor.innerHTML = '';
+      configuracao.sessoes.forEach(function (item) {
+        var opcao = document.createElement('option');
+        opcao.value = item.id;
+        opcao.textContent = item.nome;
+        seletor.appendChild(opcao);
+      });
+      seletor.dataset.sessoes = assinatura;
+    }
+    seletor.value = sessao.id;
+    elemento('ingles-modo-responsavel-sessao-atual').textContent = sessao.nome;
+    elemento('ingles-modo-responsavel-questao-atual').textContent =
+      estado.questaoAtual + 1 + ' de ' + atividades.length;
+    var campo = elemento('ingles-modo-responsavel-questao');
+    campo.min = '1';
+    campo.max = String(atividades.length);
+    if (document.activeElement !== campo) campo.value = String(estado.questaoAtual + 1);
+    elemento('ingles-modo-responsavel-anterior').disabled = estado.questaoAtual === 0;
+    elemento('ingles-modo-responsavel-proxima').disabled =
+      estado.questaoAtual === atividades.length - 1;
+
+    faixa.hidden = !sessaoAuxiliarAtiva();
+    faixa.textContent =
+      '🔐 Modo Responsável · sessão de ' +
+      sessao.nome +
+      ' · questão ' +
+      (estado.questaoAtual + 1) +
+      ' de ' +
+      atividades.length;
+  }
+
+  function fecharPainelModoResponsavel() {
+    var painel = elemento('ingles-modo-responsavel');
+    if (painel.hidden) return;
+    painel.hidden = true;
+    if (
+      focoAntesDoPainelResponsavel &&
+      focoAntesDoPainelResponsavel.isConnected &&
+      typeof focoAntesDoPainelResponsavel.focus === 'function'
+    ) {
+      focoAntesDoPainelResponsavel.focus();
+    }
+    focoAntesDoPainelResponsavel = null;
+  }
+
+  function abrirPainelModoResponsavel() {
+    if (!configuracaoModoResponsavel(unidadeAtual)) return;
+    if (!modoResponsavelAtivo) {
+      modoResponsavelAtivo = true;
+      sessaoResponsavelAtual = sessaoPrincipalModoResponsavel();
+    }
+    focoAntesDoPainelResponsavel = document.activeElement;
+    elemento('ingles-modo-responsavel').hidden = false;
+    atualizarModoResponsavel();
+    elemento('ingles-modo-responsavel-titulo').focus();
+  }
+
+  function alternarPainelModoResponsavel() {
+    if (elemento('ingles-modo-responsavel').hidden) abrirPainelModoResponsavel();
+    else fecharPainelModoResponsavel();
+  }
+
+  function restaurarTelaDaSessao() {
+    if (estado.atividadeFinalizada) {
+      elemento('ingles-painel-atividades').hidden = false;
+      renderizarRevisaoAtividades();
+      return;
+    }
+    if (estado.historiaEmExibicao && historiaDaUnidade(unidadeAtual) && atividadesLiberadas()) {
+      renderizarHistoria();
+      return;
+    }
+    if (
+      estado.atividadeIniciada ||
+      estado.questaoAtual > 0 ||
+      Object.keys(estado.respostasAtividades).length > 0
+    ) {
+      elemento('ingles-painel-atividades').hidden = false;
+      renderizarQuestaoAtividade();
+    }
+  }
+
+  function trocarSessaoModoResponsavel(id) {
+    var configuracao = configuracaoModoResponsavel(unidadeAtual);
+    if (!modoResponsavelAtivo || !configuracao) return;
+    var novaSessao = configuracao.sessoes.find(function (sessao) {
+      return sessao.id === id;
+    });
+    if (!novaSessao || (sessaoResponsavelAtual && novaSessao.id === sessaoResponsavelAtual.id)) {
+      atualizarModoResponsavel();
+      return;
+    }
+
+    salvarEstado();
+    pararAudioDaAtividade();
+    pararAudioDaHistoria(true);
+    armazenamento = criarArmazenamento(unidadeAtual, novaSessao.chaveArmazenamento);
+    estado = armazenamento.carregar();
+    sessaoResponsavelAtual = novaSessao;
+    renderizar();
+    restaurarTelaDaSessao();
+    elemento('ingles-modo-responsavel').hidden = false;
+    atualizarModoResponsavel();
+    elemento('ingles-status-modo-responsavel').textContent =
+      'Sessão de ' + novaSessao.nome + ' carregada sem copiar dados de outra sessão.';
+  }
+
+  function irParaQuestaoModoResponsavel(indice) {
+    if (!modoResponsavelAtivo || !sessaoResponsavelAtual) return;
+    var atividades = todasAsAtividades(unidadeAtual);
+    var destino = Math.trunc(Number(indice));
+    if (!Number.isFinite(destino) || destino < 0 || destino >= atividades.length) {
+      elemento('ingles-status-modo-responsavel').textContent =
+        'Informe uma questão entre 1 e ' + atividades.length + '.';
+      return;
+    }
+    pararAudioDaAtividade();
+    pararAudioDaHistoria(true);
+    estado.questaoAtual = destino;
+    salvarEstado();
+    elemento('ingles-story-time').hidden = true;
+    elemento('ingles-painel-atividades').hidden = false;
+    renderizarQuestaoAtividade();
+    atualizarModoResponsavel();
+    elemento('ingles-status-modo-responsavel').textContent =
+      'Questão ' + (destino + 1) + ' aberta na sessão de ' + sessaoResponsavelAtual.nome + '.';
+    elemento('ingles-ouvir-pergunta').focus();
+  }
+
+  function encerrarModoResponsavel() {
+    if (!modoResponsavelAtivo) return;
+    salvarEstado();
+    pararAudioDaAtividade();
+    pararAudioDaHistoria(true);
+    var dadosPrincipais = dadosDoPerfil(perfilAtual, configuracaoAtual.revisaoId);
+    armazenamento = dadosPrincipais.armazenamento;
+    estado = armazenamento.carregar();
+    modoResponsavelAtivo = false;
+    sessaoResponsavelAtual = null;
+    focoAntesDoPainelResponsavel = null;
+    elemento('ingles-modo-responsavel').hidden = true;
+    elemento('ingles-faixa-modo-responsavel').hidden = true;
+    renderizar();
+    restaurarTelaDaSessao();
+    elemento('ingles-titulo-unidade').focus({ preventScroll: true });
+  }
+
+  function aoAtalhoModoResponsavel(evento) {
+    if (
+      !unidadeAtual ||
+      elemento('tela-ingles').hidden ||
+      !configuracaoModoResponsavel(unidadeAtual)
+    ) {
+      return;
+    }
+    var painel = elemento('ingles-modo-responsavel');
+    var alvo = evento.target;
+    var campoEditavel =
+      alvo &&
+      (alvo.matches('input, textarea, select') || alvo.isContentEditable) &&
+      !painel.contains(alvo);
+    if (
+      evento.ctrlKey &&
+      evento.altKey &&
+      !evento.shiftKey &&
+      String(evento.key).toLocaleLowerCase('pt-BR') === 'r'
+    ) {
+      if (campoEditavel) return;
+      evento.preventDefault();
+      alternarPainelModoResponsavel();
+      return;
+    }
+    if (evento.key === 'Escape' && !painel.hidden) {
+      evento.preventDefault();
+      fecharPainelModoResponsavel();
+    }
+  }
+
   function renderizar() {
     var grupo = grupoAtual();
     elemento('tela-ingles').classList.toggle(
       'layout-desktop-amplo',
       Boolean(unidadeAtual.layout && unidadeAtual.layout.desktopAmplo)
     );
-    elemento('ingles-nome-perfil').textContent = perfilAtual === 'alice' ? 'Alice' : 'Mariana';
+    elemento('ingles-nome-perfil').textContent = nomeSessaoEmExibicao();
     elemento('ingles-titulo-unidade').textContent = unidadeAtual.subtitulo;
     elemento('ingles-subtitulo-unidade').textContent = unidadeAtual.titulo;
     elemento('ingles-descricao-unidade').textContent =
@@ -1563,12 +1851,21 @@
     atualizarVozesNaTela();
     elemento('ingles-status-audio').textContent =
       'Clique ou pressione Enter em uma palavra ou frase abaixo para ouvir em inglês.';
+    atualizarModoResponsavel();
     if (estado.historiaEmExibicao && historiaDaUnidade(unidadeAtual) && atividadesLiberadas()) {
       renderizarHistoria();
     }
   }
 
   function abrir(perfil, revisaoId) {
+    if (estado && armazenamento) salvarEstado();
+    pararAudioDaAtividade();
+    historiaEmReproducao = null;
+    modoResponsavelAtivo = false;
+    sessaoResponsavelAtual = null;
+    focoAntesDoPainelResponsavel = null;
+    elemento('ingles-modo-responsavel').hidden = true;
+    elemento('ingles-faixa-modo-responsavel').hidden = true;
     carregarPerfil(perfil, revisaoId);
     renderizar();
     controladorApp.mostrarTela('ingles');
@@ -1587,11 +1884,13 @@
     armazenamento.remover();
     estado = estadoInicial(unidadeAtual);
     renderizar();
-    document.dispatchEvent(
-      new CustomEvent('revisaoprogressoalterado', {
-        detail: { revisaoId: configuracaoAtual.revisaoId },
-      })
-    );
+    if (!sessaoAuxiliarAtiva()) {
+      document.dispatchEvent(
+        new CustomEvent('revisaoprogressoalterado', {
+          detail: { revisaoId: configuracaoAtual.revisaoId },
+        })
+      );
+    }
     return true;
   }
 
@@ -1638,6 +1937,25 @@
     );
     elemento('ingles-refazer-atividades').addEventListener('click', refazerAtividades);
     elemento('ingles-voltar-vocabulario').addEventListener('click', voltarAoVocabulario);
+    elemento('ingles-modo-responsavel-fechar').addEventListener(
+      'click',
+      fecharPainelModoResponsavel
+    );
+    elemento('ingles-modo-responsavel-sessao').addEventListener('change', function (evento) {
+      trocarSessaoModoResponsavel(evento.target.value);
+    });
+    elemento('ingles-modo-responsavel-ir').addEventListener('submit', function (evento) {
+      evento.preventDefault();
+      irParaQuestaoModoResponsavel(Number(elemento('ingles-modo-responsavel-questao').value) - 1);
+    });
+    elemento('ingles-modo-responsavel-anterior').addEventListener('click', function () {
+      irParaQuestaoModoResponsavel(estado.questaoAtual - 1);
+    });
+    elemento('ingles-modo-responsavel-proxima').addEventListener('click', function () {
+      irParaQuestaoModoResponsavel(estado.questaoAtual + 1);
+    });
+    elemento('ingles-modo-responsavel-encerrar').addEventListener('click', encerrarModoResponsavel);
+    document.addEventListener('keydown', aoAtalhoModoResponsavel);
     document.addEventListener('audioestadoalterado', aoEstadoGlobalDoAudio);
   }
 
@@ -1695,21 +2013,25 @@
       window.AudioRevisoes.parar({ silencioso: true, origem: 'ingles' });
     },
     obterEstado: function (perfil, revisaoId) {
+      var usarSessaoAtiva = arguments.length === 0;
       var perfilDesejado = perfil || perfilAtual;
       var revisaoDesejada =
         revisaoId || (!perfil && configuracaoAtual && configuracaoAtual.revisaoId);
-      var atual = obterEstadoDoPerfil(perfilDesejado, revisaoDesejada);
+      var atual = obterEstadoDoPerfil(perfilDesejado, revisaoDesejada, usarSessaoAtiva);
       return atual ? JSON.parse(JSON.stringify(atual)) : null;
     },
     obterSituacao: function (perfil, revisaoId) {
-      return situacaoDoEstado(obterEstadoDoPerfil(perfil || perfilAtual, revisaoId));
+      return situacaoDoEstado(
+        obterEstadoDoPerfil(perfil || perfilAtual, revisaoId, arguments.length === 0)
+      );
     },
     obterResumo: function (perfil, revisaoId) {
+      var usarSessaoAtiva = arguments.length === 0;
       var perfilDesejado = perfil || perfilAtual;
       var revisaoDesejada =
         revisaoId || (!perfil && configuracaoAtual && configuracaoAtual.revisaoId);
       var dados = dadosDoPerfil(perfilDesejado, revisaoDesejada);
-      var estadoDoPerfil = obterEstadoDoPerfil(perfilDesejado, revisaoDesejada);
+      var estadoDoPerfil = obterEstadoDoPerfil(perfilDesejado, revisaoDesejada, usarSessaoAtiva);
       return dados ? resumoDoEstado(estadoDoPerfil, dados.unidade) : null;
     },
     obterUnidade: function () {

@@ -24,3 +24,12 @@ Em 390 × 844 não pode haver rolagem horizontal nem conteúdo encoberto. Teste 
 foco após mudança de etapa, nomes acessíveis, anúncios sem repetição excessiva e axe-core sem
 violação grave ou crítica. Um screenshot ajuda a avaliar geometria, mas não substitui asserções de
 estrutura, bounding boxes e overflow.
+
+## Modo Responsável opt-in
+
+O painel administrativo de Inglês fica oculto no uso infantil normal e só responde a
+`Ctrl + Alt + R` em uma unidade que declare `modoResponsavel`. Ele usa controles nativos com
+rótulos, foco visível, região de status e faixa persistente quando a sessão auxiliar está ativa.
+`Escape` fecha apenas o painel, sem encerrar a sessão; o botão **Encerrar sessão responsável** volta
+à sessão principal. O atalho é ignorado em campos editáveis da atividade e deve ser validado também
+em 390 × 844 sem overflow horizontal.

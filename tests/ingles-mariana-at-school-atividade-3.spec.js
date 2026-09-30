@@ -8,6 +8,7 @@ const URL = '/ambiente_interativo/index.html';
 const UNIDADE = 'at-school-atividade-3';
 const REVISAO = 'mariana-ingles-at-school-atividade-3';
 const CHAVE = 'revisoesEscolares.mariana.ingles.atSchoolAtividade3.v1';
+const CHAVE_ALICE = 'revisoesEscolares.alice.ingles.atSchoolAtividade3Compartilhada.v1';
 const CHAVE_ACTIVITY_1 = 'revisoesEscolares.mariana.ingles.friendsAtividade1.v1';
 const CHAVE_ACTIVITY_2 = 'revisoesEscolares.mariana.ingles.atSchoolAtividade2.v1';
 
@@ -139,7 +140,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto(URL);
   await page.evaluate(
     (chaves) => chaves.forEach((chave) => localStorage.removeItem(chave)),
-    [CHAVE, CHAVE_ACTIVITY_1, CHAVE_ACTIVITY_2]
+    [CHAVE, CHAVE_ALICE, CHAVE_ACTIVITY_1, CHAVE_ACTIVITY_2]
   );
   await page.reload();
 });
@@ -180,6 +181,22 @@ test('cadastra somente para Mariana 17 itens, Story Time, 25 questões e 43 etap
   expect(dados.unidade.praticaEscrita).toEqual({
     habilitada: true,
     obrigatoriaParaAtividades: true,
+  });
+  expect(dados.unidade.modoResponsavel).toEqual({
+    habilitado: true,
+    sessoes: [
+      {
+        id: 'mariana',
+        nome: 'Mariana',
+        principal: true,
+        chaveArmazenamento: CHAVE,
+      },
+      {
+        id: 'alice',
+        nome: 'Alice',
+        chaveArmazenamento: CHAVE_ALICE,
+      },
+    ],
   });
   expect(dados.unidade.exigirAudioPerguntaAntesDeResponder).toBe(true);
   expect(dados.unidade.revisaoPosResposta).toEqual({
@@ -248,6 +265,159 @@ test('cadastra somente para Mariana 17 itens, Story Time, 25 questões e 43 etap
     chaveArmazenamento: CHAVE,
   });
   expect(dados.configuracaoAlice).toBeUndefined();
+});
+
+test('atalho abre e fecha o painel somente na revisão opt-in sem interferir na digitação', async ({
+  page,
+}) => {
+  await abrir(page);
+  const painel = page.locator('#ingles-modo-responsavel');
+  await expect(painel).toBeHidden();
+
+  await page.keyboard.press('Control+Alt+R');
+  await expect(painel).toBeVisible();
+  await expect(page.locator('#ingles-modo-responsavel-titulo')).toBeFocused();
+  await expect(page.locator('#ingles-modo-responsavel-sessao-atual')).toHaveText('Mariana');
+  await expect(page.locator('#ingles-modo-responsavel-questao-atual')).toHaveText('1 de 25');
+
+  await page.keyboard.press('Control+Alt+R');
+  await expect(painel).toBeHidden();
+  await page.keyboard.press('Control+Alt+R');
+  await page.keyboard.press('Escape');
+  await expect(painel).toBeHidden();
+
+  await page.locator('#ingles-campo-escrita').focus();
+  await page.keyboard.type('r');
+  await page.keyboard.press('Control+Alt+R');
+  await expect(painel).toBeHidden();
+  await expect(page.locator('#ingles-campo-escrita')).toHaveValue('r');
+
+  await page.reload();
+  await page.getByRole('button', { name: /Mariana/i }).click();
+  await page.locator('#abrir-ingles-at-school-atividade-2').click();
+  await page.keyboard.press('Control+Alt+R');
+  await expect(painel).toBeHidden();
+});
+
+test('isola Mariana e Alice, permite salto puro e segue Q12 até Q13 sem pré-requisitos', async ({
+  page,
+}) => {
+  await salvarPreRequisitos(page);
+  await page.evaluate(
+    ({ chave, unidadeId }) => {
+      const estado = JSON.parse(localStorage.getItem(chave));
+      const questao = window.RegistroIngles.obter(unidadeId).atividades[4];
+      estado.questaoAtual = 4;
+      estado.perguntasOuvidasAtividades = [questao.id];
+      estado.respostasAtividades = { [questao.id]: questao.respostaCorreta };
+      estado.conferenciasAtividades = { [questao.id]: 'correta' };
+      estado.revisoesPosRespostaConcluidas = { [questao.id]: questao.respostaCorreta };
+      estado.atividadeIniciada = true;
+      estado.tentativasAtividade = 1;
+      localStorage.setItem(chave, JSON.stringify(estado));
+    },
+    { chave: CHAVE, unidadeId: UNIDADE }
+  );
+  await page.reload();
+  await instalarAudioAutomatico(page);
+  await abrir(page);
+  await page.keyboard.press('Control+Alt+R');
+  await expect(page.locator('#ingles-modo-responsavel-questao-atual')).toHaveText('5 de 25');
+
+  await page.locator('#ingles-modo-responsavel-sessao').selectOption('alice');
+  await expect(page.locator('#ingles-faixa-modo-responsavel')).toHaveText(
+    '🔐 Modo Responsável · sessão de Alice · questão 1 de 25'
+  );
+  await page.locator('#ingles-modo-responsavel-questao').fill('12');
+  await page.locator('#ingles-modo-responsavel-questao').press('Enter');
+  await expect(page.locator('#ingles-progresso-atividade')).toHaveText('Atividade 12 de 25');
+
+  let estados = await page.evaluate(
+    ({ chaveMariana, chaveAlice, revisaoId }) => ({
+      mariana: JSON.parse(localStorage.getItem(chaveMariana)),
+      alice: JSON.parse(localStorage.getItem(chaveAlice)),
+      cartao: window.InglesRevisoes.obterEstado('mariana', revisaoId),
+    }),
+    { chaveMariana: CHAVE, chaveAlice: CHAVE_ALICE, revisaoId: REVISAO }
+  );
+  expect(estados.alice).toMatchObject({
+    questaoAtual: 11,
+    itensOuvidos: [],
+    respostasEscrita: {},
+    conferenciasEscrita: {},
+    historiaConcluida: false,
+    atividadeIniciada: false,
+    tentativasAtividade: 0,
+    perguntasOuvidasAtividades: [],
+    respostasAtividades: {},
+    conferenciasAtividades: {},
+    revisoesPosRespostaConcluidas: {},
+  });
+  expect(estados.mariana.questaoAtual).toBe(4);
+  expect(estados.cartao.questaoAtual).toBe(4);
+  expect(estados.cartao.tentativasAtividade).toBe(1);
+
+  await page.locator('#ingles-modo-responsavel-questao').fill('20');
+  await page.getByRole('button', { name: 'Ir', exact: true }).click();
+  await expect(page.locator('#ingles-progresso-atividade')).toHaveText('Atividade 20 de 25');
+  await page.locator('#ingles-modo-responsavel-questao').fill('12');
+  await page.getByRole('button', { name: 'Ir', exact: true }).click();
+  await expect(page.locator('#ingles-progresso-atividade')).toHaveText('Atividade 12 de 25');
+
+  await page.locator('#ingles-ouvir-pergunta').click();
+  const corretaQ12 = await page.evaluate(
+    (unidadeId) => window.RegistroIngles.obter(unidadeId).atividades[11].respostaCorreta,
+    UNIDADE
+  );
+  await page.locator(`[data-alternativa-atividade-ingles="${corretaQ12}"]`).click();
+  await page.getByRole('button', { name: 'Conferir resposta' }).click();
+  await page.locator('#ingles-ouvir-revisao').click();
+  await expect(page.locator('#ingles-atividade-proxima')).toBeEnabled();
+  await page.locator('#ingles-atividade-proxima').click();
+  await expect(page.locator('#ingles-progresso-atividade')).toHaveText('Atividade 13 de 25');
+
+  await page.locator('#ingles-modo-responsavel-sessao').selectOption('mariana');
+  await expect(page.locator('#ingles-progresso-revisao-pos-resposta')).toHaveText(
+    'Question 5 of 25'
+  );
+  expect(await page.evaluate(() => window.InglesRevisoes.obterEstado())).toMatchObject({
+    questaoAtual: 4,
+    tentativasAtividade: 1,
+  });
+
+  await page.locator('#ingles-modo-responsavel-sessao').selectOption('alice');
+  await expect(page.locator('#ingles-progresso-atividade')).toHaveText('Atividade 13 de 25');
+  expect(await page.evaluate(() => window.InglesRevisoes.obterEstado())).toMatchObject({
+    questaoAtual: 12,
+    tentativasAtividade: 1,
+    historiaConcluida: false,
+  });
+
+  await page.reload();
+  await instalarAudioAutomatico(page);
+  await abrir(page);
+  await page.keyboard.press('Control+Alt+R');
+  await page.locator('#ingles-modo-responsavel-sessao').selectOption('alice');
+  await expect(page.locator('#ingles-progresso-atividade')).toHaveText('Atividade 13 de 25');
+  estados = await page.evaluate(
+    ({ chaveMariana, chaveAlice }) => ({
+      mariana: JSON.parse(localStorage.getItem(chaveMariana)),
+      alice: JSON.parse(localStorage.getItem(chaveAlice)),
+    }),
+    { chaveMariana: CHAVE, chaveAlice: CHAVE_ALICE }
+  );
+  expect(estados.mariana).toMatchObject({ questaoAtual: 4, tentativasAtividade: 1 });
+  expect(estados.alice).toMatchObject({ questaoAtual: 12, tentativasAtividade: 1 });
+  expect(estados.alice.itensOuvidos).toEqual([]);
+  expect(estados.alice.historiaConcluida).toBe(false);
+
+  await page.getByRole('button', { name: 'Encerrar sessão responsável' }).click();
+  await expect(page.locator('#ingles-modo-responsavel')).toBeHidden();
+  await expect(page.locator('#ingles-faixa-modo-responsavel')).toBeHidden();
+  expect(await page.evaluate(() => window.InglesRevisoes.obterEstado())).toMatchObject({
+    questaoAtual: 4,
+    tentativasAtividade: 1,
+  });
 });
 
 test('mostra o cartão só para Mariana e exige áudio e escrita nos 17 itens', async ({ page }) => {
@@ -586,7 +756,11 @@ test('refazer preserva estudo, e limpar remove apenas a chave da Activity 3', as
         localStorage.setItem(vizinha, JSON.stringify({ preservar: true }))
       );
     },
-    { chave: CHAVE, unidadeId: UNIDADE, vizinhas: [CHAVE_ACTIVITY_1, CHAVE_ACTIVITY_2] }
+    {
+      chave: CHAVE,
+      unidadeId: UNIDADE,
+      vizinhas: [CHAVE_ALICE, CHAVE_ACTIVITY_1, CHAVE_ACTIVITY_2],
+    }
   );
   await page.reload();
   await abrir(page);
@@ -608,14 +782,46 @@ test('refazer preserva estudo, e limpar remove apenas a chave da Activity 3', as
         atual: localStorage.getItem(chave),
         vizinhas: vizinhas.map((vizinha) => localStorage.getItem(vizinha)),
       }),
-      { chave: CHAVE, vizinhas: [CHAVE_ACTIVITY_1, CHAVE_ACTIVITY_2] }
+      { chave: CHAVE, vizinhas: [CHAVE_ALICE, CHAVE_ACTIVITY_1, CHAVE_ACTIVITY_2] }
     )
   ).toEqual({
     atual: null,
-    vizinhas: [JSON.stringify({ preservar: true }), JSON.stringify({ preservar: true })],
+    vizinhas: [
+      JSON.stringify({ preservar: true }),
+      JSON.stringify({ preservar: true }),
+      JSON.stringify({ preservar: true }),
+    ],
   });
   estado = await page.evaluate(() => window.InglesRevisoes.obterEstado());
   expect(estado.itensOuvidos).toEqual([]);
+});
+
+test('limpeza da sessão auxiliar remove somente a chave de Alice', async ({ page }) => {
+  await salvarPreRequisitos(page);
+  await page.reload();
+  await abrir(page);
+  await page.keyboard.press('Control+Alt+R');
+  await page.locator('#ingles-modo-responsavel-sessao').selectOption('alice');
+  await page.locator('#ingles-modo-responsavel-questao').fill('12');
+  await page.getByRole('button', { name: 'Ir', exact: true }).click();
+
+  page.once('dialog', (dialogo) => dialogo.accept());
+  await page.locator('#limpar-progresso').click();
+  expect(
+    await page.evaluate(
+      ({ chaveMariana, chaveAlice }) => ({
+        mariana: localStorage.getItem(chaveMariana),
+        alice: localStorage.getItem(chaveAlice),
+      }),
+      { chaveMariana: CHAVE, chaveAlice: CHAVE_ALICE }
+    )
+  ).toMatchObject({
+    mariana: expect.any(String),
+    alice: null,
+  });
+  await expect(page.locator('#ingles-faixa-modo-responsavel')).toHaveText(
+    '🔐 Modo Responsável · sessão de Alice · questão 1 de 25'
+  );
 });
 
 test('tolera JSON inválido e localStorage bloqueado com fallback em memória', async ({
@@ -845,6 +1051,11 @@ test('funciona em toque, desktops, axe-core e file sem rede', async ({ page, bro
   await abrir(paginaToque);
   await paginaToque.getByRole('button', { name: 'Abrir Story Time →' }).tap();
   await expect(paginaToque.locator('#ingles-story-time')).toBeVisible();
+  await paginaToque.keyboard.press('Control+Alt+R');
+  await expect(paginaToque.locator('#ingles-modo-responsavel')).toBeVisible();
+  await paginaToque.locator('#ingles-modo-responsavel-sessao').selectOption('alice');
+  await paginaToque.locator('#ingles-modo-responsavel-proxima').tap();
+  await expect(paginaToque.locator('#ingles-progresso-atividade')).toHaveText('Atividade 2 de 25');
   await expect(paginaToque.locator('#tela-ingles')).toHaveClass(/layout-desktop-amplo/);
   expect(
     await paginaToque.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
@@ -867,6 +1078,8 @@ test('funciona em toque, desktops, axe-core e file sem rede', async ({ page, bro
     await abrir(page);
     await page.getByRole('button', { name: 'Abrir Story Time →' }).click();
     await expect(page.locator('#ingles-story-time')).toBeVisible();
+    await page.keyboard.press('Control+Alt+R');
+    await expect(page.locator('#ingles-modo-responsavel')).toBeVisible();
     await expect(page.locator('#tela-ingles')).toHaveClass(/layout-desktop-amplo/);
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)

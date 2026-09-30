@@ -19,6 +19,11 @@ persistência de várias ações, dados corrompidos/bloqueados, isolamento, tecl
 Não enfraqueça um teste para fazer a implementação passar. Prefira asserções sobre contrato e
 efeito observável; em áudio, valide o payload enviado ao sintetizador, não um atraso arbitrário.
 
+Para o **Modo Responsável**, cubra unidade sem opt-in, atalho e `Escape`, teclado/toque, troca e
+restauração integral de sessões, chaves independentes, salto para frente e para trás, bypass sem
+pré-requisitos falsos, fluxo normal após o salto, recarga, cartão ligado apenas à sessão principal,
+limpeza seletiva, 390 × 844, desktop e axe-core.
+
 ## Gatilhos da suíte global
 
 Execute `npm test`:

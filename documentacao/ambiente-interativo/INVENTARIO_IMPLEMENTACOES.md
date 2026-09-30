@@ -4,7 +4,7 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra o estado de trabalho em **23/09/2026**.
+Este inventário registra o estado de trabalho em **29/09/2026**.
 
 ## 2. Base da aplicação
 
@@ -48,6 +48,8 @@ Este inventário registra o estado de trabalho em **23/09/2026**.
 - `js/armazenamento.js`: persistência segura.
 - `js/audio.js`: síntese de voz local bilíngue; cada solicitação usa um único utterance audível
   protegido por prefixo no mesmo payload, inclusive na repetição.
+- `js/ingles.js`: motor único de Inglês, incluindo o **Modo Responsável** opt-in com sessões por
+  chave, salto administrativo sem fabricar progresso e painel acessível por `Ctrl + Alt + R`.
 - `js/gramatica-questionarios.js` e `js/gramatica-ditado.js`: questionários sequenciais de
   Gramática e outras matérias, mapa visual opt-in, apoio auditivo por lacuna, botão declarativo de
   travessão também em campos sem ditado e feedback opt-in por categoria de erro textual.
@@ -675,6 +677,17 @@ Unidade: `at-school-atividade-2`.
 - Depois de uma resposta errada, a Activity 3 mantém **Let’s review!** aberta até o fim da sequência
   e então libera **Tentar novamente**, que volta à mesma questão. Cada novo erro invalida somente a
   revisão daquela tentativa e exige novamente EN → PT → EN → PT; o acerto libera **Próxima**.
+- A Activity 3 é, neste momento, a única revisão com **Modo Responsável** habilitado. O painel
+  oculto abre e fecha por `Ctrl + Alt + R`, mostra sessão e questão, permite selecionar Mariana ou
+  Alice, saltar livremente e encerrar a sessão administrativa. A faixa permanece visível enquanto
+  a sessão auxiliar de Alice está ativa.
+- A sessão principal continua usando exatamente
+  `revisoesEscolares.mariana.ingles.atSchoolAtividade3.v1`; a sessão auxiliar usa
+  `revisoesEscolares.alice.ingles.atSchoolAtividade3Compartilhada.v1`. A troca salva e restaura os
+  mapas completos sem copiar dados. O salto persiste apenas `questaoAtual`, não conclui os 17 itens,
+  a Story Time, áudio, resposta, conferência, revisão pós-resposta, tentativa ou ponto.
+- O cartão continua exclusivo da Mariana e consulta somente a chave principal. Não há cartão nem
+  cadastro da Activity 3 no perfil de Alice, e a limpeza remove apenas a chave da sessão ativa.
 - `destinatariaMensagemFinal` é uma capacidade declarativa opt-in de `js/ingles.js`: esta unidade
   mostra “Uma mensagem para as meninas”, enquanto a Atividade 2 e as demais revisões conservam o
   destinatário derivado do perfil.
@@ -682,16 +695,20 @@ Unidade: `at-school-atividade-2`.
   retirar/guardar, os cinco sentidos e as seis cenas da Story Time. Assets existentes de objetos
   escolares e de abrir o livro foram reutilizados. Nenhum PDF, OCR, print escolar ou recurso
   remoto foi incorporado.
-- Teste direcionado: `tests/ingles-mariana-at-school-atividade-3.spec.js` (14 cenários), cobrindo
+- Teste direcionado: `tests/ingles-mariana-at-school-atividade-3.spec.js` (17 cenários), cobrindo
   cadastro, perfil, portão de estudo, Story Time antes das perguntas, seis cenas, conteúdo de
   Q1–Q7, áudio bilíngue sem autoplay, navegação e recarga, consulta sem perda de estado, escrita
   corrigível, áudio obrigatório, consolidação bilíngue, refazer, limpeza seletiva, armazenamento
   adverso, isolamento, cenas visuais, percurso completo, mensagem final, Activity 2, viewports,
-  teclado, toque, axe-core e `file://`.
+  teclado, toque, axe-core, `file://`, opt-in exclusivo do Modo Responsável, atalho, sessão auxiliar,
+  salto sem pré-requisitos falsos, restauração entre sessões, recarga e limpeza por chave.
 
 ID: `mariana-ingles-at-school-atividade-3`.
 
 Chave: `revisoesEscolares.mariana.ingles.atSchoolAtividade3.v1`.
+
+Chave auxiliar do Modo Responsável:
+`revisoesEscolares.alice.ingles.atSchoolAtividade3Compartilhada.v1`.
 
 Unidade: `at-school-atividade-3`.
 
@@ -884,7 +901,7 @@ Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
 - Toda pull request para `main` continua executando a suíte global no GitHub Actions; a saída
   completa é consultada apenas quando houver falha ou necessidade de diagnóstico.
 
-Na data deste inventário existem **290 testes Playwright**:
+Na data deste inventário existem **293 testes Playwright**:
 
 - `tests/ambiente-interativo.spec.js`: fluxos centrais, revisões de Inglês de Alice e Mariana, Leitura, Matemática ampla, armazenamento, canvas e `file://`.
 - `tests/ingles-friends-atividade-1.spec.js`: unidade compartilhada com 25 itens e 25 questões,
@@ -896,6 +913,7 @@ Na data deste inventário existem **290 testes Playwright**:
 - `tests/ingles-mariana-at-school-atividade-3.spec.js`: 17 itens, Story Time de seis cenas, 25
   questões e quatro grupos, portão de áudio/escrita, áudio bilíngue sem autoplay, consulta da
   história em Q1–Q7 com restauração exata, áudio obrigatório por pergunta, consolidação bilíngue,
+  Modo Responsável opt-in com sessões Mariana/Alice, salto puro, restauração e limpeza seletiva,
   mensagem plural opt-in, cenas visuais, armazenamento adverso, isolamento, refazer, viewports,
   axe-core e `file://`.
 - `tests/ciencias-mariana-plantas-sol.spec.js`: 30 questões, mapa visual, gabarito completo,

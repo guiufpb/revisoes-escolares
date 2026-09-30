@@ -20,6 +20,17 @@ Alice e Mariana não compartilham progresso. Matérias, revisões anteriores e n
 permanecem independentes. Testes de limpeza sempre deixam marcadores em chaves vizinhas e confirmam
 que somente a chave ativa foi removida.
 
+Uma revisão pode declarar, de forma opt-in, sessões autorizadas pelo **Modo Responsável**. Cada
+sessão precisa ter ID, nome e chave próprios; a sessão principal conserva exatamente a chave já
+registrada da revisão. Trocar de sessão salva integralmente a atual e carrega a outra pelo mesmo
+`ArmazenamentoRevisoes`, sem copiar, migrar, reinterpretar ou apagar dados entre chaves.
+
+O salto administrativo persiste somente a posição da questão na sessão escolhida. O bypass de
+navegação é efêmero e não entra no objeto de progresso: não conclui estudo, escrita ou história,
+não marca áudio, resposta, conferência, revisão pós-resposta, tentativa, ponto nem questão anterior.
+A limpeza continua removendo somente a chave da sessão ativa; limpar a sessão principal ou a
+auxiliar nunca remove silenciosamente a outra.
+
 ## Mudanças de contrato
 
 Migração só é apropriada quando o significado anterior pode ser preservado com segurança. Se uma

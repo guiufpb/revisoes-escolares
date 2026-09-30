@@ -93,6 +93,17 @@ O título da mensagem final aceita o opt-in declarativo `destinatariaMensagemFin
 o controlador continua derivando Alice ou Mariana do perfil, preservando todas as revisões antigas;
 o texto da mensagem permanece configurável por `mensagemFinal`.
 
+O motor de Inglês também aceita o opt-in `modoResponsavel`, com `habilitado` e uma lista de
+`sessoes` identificadas por `id`, `nome`, `chaveArmazenamento` e, em uma delas, `principal: true`.
+`Ctrl + Alt + R` abre ou fecha o painel administrativo somente em unidades optantes. A troca de
+sessão reutiliza o mesmo controlador e o mesmo `ArmazenamentoRevisoes`; a sessão auxiliar não cria
+cartão, não altera o perfil disponível e não alimenta o status do cartão principal.
+
+O painel pode saltar entre questões sem depender do portão de estudo ou da Story Time. Esse bypass
+existe apenas durante a sessão autorizada e altera somente `questaoAtual`; o fluxo pedagógico normal
+da questão escolhida — inclusive áudio obrigatório, conferência, revisão pós-resposta e avanço —
+continua vigente. Na ausência da configuração, o atalho, o painel e o bypass permanecem inativos.
+
 ## Correção e feedback
 
 Depois de erro, preserve a resposta para edição, marque `aria-invalid` e dê orientação específica

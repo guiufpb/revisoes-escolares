@@ -56,6 +56,8 @@ ao conteúdo. Não duplique um motor inteiro para trocar matéria ou perguntas.
 - Bundles gerados nunca são editados manualmente.
 - Conteúdo privado orienta a análise, mas não entra no repositório.
 - Interface global, controladores e persistência só mudam quando a capacidade precisa ser comum.
+- Uma capacidade compartilhada entre sessões deve, quando apropriado, manter uma fonte única de
+  conteúdo e progresso completamente independente por sessão e chave; isso não a torna universal.
 - `INVENTARIO_IMPLEMENTACOES.md` descreve o estado atual; o relatório interativo registra fatos
   históricos; ADRs explicam decisões; documentos temáticos guardam regras vigentes.
 

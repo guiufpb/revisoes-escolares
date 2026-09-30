@@ -3347,6 +3347,115 @@ footer {
   flex: 0 0 auto;
 }
 
+.faixa-modo-responsavel {
+  margin: 14px 0;
+  padding: 10px 14px;
+  border: 2px solid #7652a7;
+  border-radius: 14px;
+  color: #3f245e;
+  background: #f5edff;
+  font-weight: 900;
+  text-align: center;
+}
+
+.painel-modo-responsavel {
+  margin: 14px 0 24px;
+  padding: clamp(16px, 3vw, 24px);
+  border: 3px solid #7652a7;
+  border-radius: 22px;
+  background: #fbf8ff;
+  box-shadow: var(--sombra);
+}
+
+.cabecalho-modo-responsavel,
+.resumo-modo-responsavel,
+.navegacao-modo-responsavel,
+.rodape-modo-responsavel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cabecalho-modo-responsavel h2 {
+  margin: 4px 0;
+  color: #4e2b70;
+}
+
+.cabecalho-modo-responsavel p,
+.resumo-modo-responsavel p,
+.rodape-modo-responsavel p {
+  margin: 0;
+}
+
+.resumo-modo-responsavel {
+  margin: 18px 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #eee4f8;
+}
+
+.controles-modo-responsavel {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.8fr) minmax(260px, 1.2fr);
+  gap: 8px 18px;
+  align-items: end;
+}
+
+.controles-modo-responsavel label {
+  color: #3f245e;
+  font-weight: 900;
+}
+
+.controles-modo-responsavel select,
+.controles-modo-responsavel input {
+  width: 100%;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 2px solid #7652a7;
+  border-radius: 12px;
+  color: #253746;
+  background: white;
+  font: inherit;
+}
+
+.controles-modo-responsavel form {
+  display: grid;
+  gap: 8px;
+}
+
+.ir-para-questao-modo-responsavel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.navegacao-modo-responsavel,
+.rodape-modo-responsavel {
+  margin-top: 16px;
+}
+
+.botao-perigo {
+  padding: 11px 16px;
+  border: 2px solid #8c2f39;
+  border-radius: 12px;
+  color: #6d1f29;
+  background: #fff1f2;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.botao-perigo:hover {
+  background: #ffe1e4;
+}
+
+.painel-modo-responsavel :is(button, input, select):focus-visible {
+  outline: 4px solid #ffbf47;
+  outline-offset: 3px;
+}
+
 .story-time-ingles {
   scroll-margin-top: 120px;
   margin-top: 24px;
@@ -3889,6 +3998,9 @@ footer {
   .cabecalho-painel-audio,
   .cabecalho-atividade-ingles,
   .cabecalho-story-time-ingles,
+  .cabecalho-modo-responsavel,
+  .resumo-modo-responsavel,
+  .rodape-modo-responsavel,
   .continuidade-ingles,
   .progresso-ingles-cabecalho,
   .privacidade-audio-ingles {
@@ -3906,6 +4018,21 @@ footer {
   }
 
   .controles-audio-ingles button {
+    width: 100%;
+  }
+
+  .controles-modo-responsavel {
+    grid-template-columns: 1fr;
+  }
+
+  .navegacao-modo-responsavel {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .cabecalho-modo-responsavel button,
+  .navegacao-modo-responsavel button,
+  .rodape-modo-responsavel button {
     width: 100%;
   }
 

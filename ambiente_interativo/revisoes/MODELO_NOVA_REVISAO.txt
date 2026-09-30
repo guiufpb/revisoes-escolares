@@ -63,6 +63,10 @@ INGLES
 - Reutilize js/ingles.js e js/audio.js; não implemente speechSynthesis paralelo.
   Use vozes locais pt-BR para instruções e en-US para palavras/frases estudadas.
 - Para a didática especializada, leia .agents/skills/revisoes-escolares/references/ingles.md.
+- O Modo Responsável é opt-in. Antes de duplicar uma revisão entre perfis apenas para permitir
+  uso por outra criança, avalie reutilizar o mesmo conteúdo com sessões de progresso independentes.
+  Nunca habilite a capacidade automaticamente em revisões antigas ou novas. Consulte ingles.md,
+  ARMAZENAMENTO_E_PROGRESSO.md e a Activity 3 da Mariana como referência.
 - Áudio exige ação da criança. Na página inicial de vocabulário, clique/toque ou
   Enter/Espaço no item seleciona e pronuncia imediatamente em en-US a 0,62.
   Abrir a revisão ou trocar de grupo não inicia áudio.
