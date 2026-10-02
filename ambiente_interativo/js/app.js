@@ -424,6 +424,7 @@
     document.getElementById('abrir-gramatica-pontuacao-ortografia-mariana').hidden =
       aluno !== 'mariana';
     document.getElementById('abrir-gramatica-contos-digrafos-alice').hidden = aluno !== 'alice';
+    document.getElementById('abrir-gramatica-pontuacao-lh-xch-alice').hidden = aluno !== 'alice';
     document.getElementById('limpar-progresso').hidden = false;
     atualizarResumo();
     mostrarTela('trilhas');
@@ -644,6 +645,13 @@
       .addEventListener('click', function () {
         if (alunoAtual !== 'alice') return;
         window.GramaticaQuestionarios.abrir('alice-gramatica-contos-digrafos-vocabulario');
+        atualizarResumo();
+      });
+    document
+      .getElementById('abrir-gramatica-pontuacao-lh-xch-alice')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'alice') return;
+        window.GramaticaQuestionarios.abrir('alice-gramatica-pontuacao-lh-xch-outubro-2026');
         atualizarResumo();
       });
     document.getElementById('abrir-revisao-mariana').addEventListener('click', function () {

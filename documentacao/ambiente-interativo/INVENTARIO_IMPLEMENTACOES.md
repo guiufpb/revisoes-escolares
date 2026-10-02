@@ -4,7 +4,7 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra o estado de trabalho em **30/09/2026**.
+Este inventário registra o estado de trabalho em **02/10/2026**.
 
 ## 2. Base da aplicação
 
@@ -55,7 +55,8 @@ Este inventário registra o estado de trabalho em **30/09/2026**.
 - `js/ingles.js`: motor único de Inglês, incluindo o **Modo Responsável** opt-in com sessões por
   chave, salto administrativo sem fabricar progresso e painel acessível por `Ctrl + Alt + R`.
 - `js/gramatica-questionarios.js` e `js/gramatica-ditado.js`: questionários sequenciais de
-  Gramática e outras matérias, mapa visual opt-in, apoio auditivo por lacuna, botão declarativo de
+  Gramática e outras matérias, mapa visual opt-in, Modo Responsável opt-in, imagem por subitem,
+  apoio auditivo por lacuna, botão declarativo de
   travessão também em campos sem ditado e feedback opt-in por categoria de erro textual.
 - `js/desenho.js`: canvas e persistência de desenho.
 - `js/leitura.js`, `js/leitor-dedicado.js` e `js/glossario.js`: biblioteca e leitor.
@@ -439,6 +440,36 @@ Chave: `revisoesEscolares.mariana.matematica.formasMosaicosMedidas.v1`.
 - A revisão anterior Formas, mosaicos e medidas e os respectivos progressos permanecem intactos.
 
 ## 6. Gramática
+
+### Alice — Pontuação, LH e X/CH (outubro de 2026)
+
+- Revisão original para a prova do 1º ano, com **30 questões e 30 pontos**. Progressão de
+  reconhecimento, completamento, aplicação, comparação, correção e interpretação.
+- Vírgula, ponto-final, pergunta, exclamação, dois-pontos, travessão, ponto e vírgula, reticências,
+  aspas, LH, CH, NH e X com som de CH. Q28–Q30 reutilizam o mesmo texto original; Q30 mistura
+  alternativas e seleção e só pontua depois de todos os subitens corretos.
+- Quatro ditados locais em pt-BR (Q5, Q11, Q15 e Q24) reutilizam exclusivamente
+  `gramatica-ditado.js` e `audio.js`. Q18 apresenta quatro SVGs originais e textos alternativos.
+- Conteúdo declarativo em `revisoes/alice/gramatica-pontuacao-lh-xch-outubro-2026.js`, painel de
+  questionários compartilhado, `layout.desktopAmplo`, `validacaoEstritaEstado` e contagem opt-in
+  de tentativas completas por questão.
+- Primeiro questionário com **Modo Responsável** opt-in: Ctrl + Alt + R abre o painel; a sessão
+  auxiliar tem chave isolada, salto administrativo de Q1–Q30 sem fabricar progresso, limpeza
+  seletiva e retorno à sessão principal. Cartão e status continuam ligados apenas à Alice.
+- Teste direcionado: `tests/gramatica-alice-pontuacao-lh-xch-outubro-2026.spec.js`.
+- Validação automatizada em 01/10/2026: build, formatação e lint aprovados; **14/14** testes
+  direcionados e **315/315** testes na suíte global. Os quatro SVGs foram inspecionados
+  visualmente. Em 02/10/2026, o responsável confirmou que a atividade funcionou corretamente no
+  uso real. A orientação para evitar respostas entregues nos próprios itens foi registrada em
+  `pedagogia/QUALIDADE_DAS_QUESTOES.md` para revisões futuras, sem alterar as questões atuais.
+- Material escolar privado permaneceu fora do Git; nenhuma página, OCR, print ou ilustração foi
+  copiada ou reprocessada.
+
+ID: `alice-gramatica-pontuacao-lh-xch-outubro-2026`.
+
+Chave principal: `revisoesEscolares.alice.gramatica.pontuacaoLhXchOutubro2026.v1`.
+
+Chave auxiliar: `revisoesEscolares.alice.gramatica.pontuacaoLhXchOutubro2026.responsavel.v1`.
 
 ### Alice — Contos, dígrafos e vocabulário
 

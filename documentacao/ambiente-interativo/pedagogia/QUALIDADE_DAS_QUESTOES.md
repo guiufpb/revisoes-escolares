@@ -7,12 +7,19 @@ questão deve ser autossuficiente quando a criança não puder consultar o cader
 ensina o necessário sem entregar o gabarito.
 
 Evite resposta aberta quando várias formulações legítimas não puderem ser validadas com segurança.
-Prefira alternativa, banco fechado, transformação definida ou conjunto explícito de respostas.
+Prefira alternativa, banco fechado, transformação definida ou conjunto explícito de respostas;
+quando o objetivo for escrita, considere ditado com resposta determinada.
 Exija maiúscula, acento, pontuação ou frase completa somente quando isso for objetivo pedagógico e
 estiver claro no enunciado.
 
 Imagens têm função pedagógica, descrição significativa e autoria/licença adequada. Ornamentação não
 deve competir com a tarefa nem substituir texto necessário.
+
+Para revisões futuras, cada questão avaliativa deve exigir uma decisão cognitiva: reconhecer,
+discriminar, comparar, aplicar, corrigir ou interpretar. Evite pedir a mesma sequência explícita
+(como “digite LH”) em todos os campos, mostrar a palavra completa ao lado da lacuna ou permitir
+resolver o item apenas copiando letras visíveis. O apoio “Leia para aprender” deve ensinar a regra
+geral sem entregar a resposta específica do item.
 
 ## Alternativas e gabarito
 

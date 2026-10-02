@@ -39,6 +39,7 @@ import '../revisoes/gramatica-h-til-vocabulario.js';
 import '../revisoes/mariana/gramatica-contos-ortografia-pontuacao.js';
 import '../revisoes/mariana/gramatica-pontuacao-ortografia-vocabulario-setembro-2026.js';
 import '../revisoes/alice/gramatica-contos-digrafos-vocabulario.js';
+import '../revisoes/alice/gramatica-pontuacao-lh-xch-outubro-2026.js';
 import '../revisoes/alice/leitura-primeiras-licoes-sobre-dinheiro.js';
 import '../revisoes/mariana/leitura-primeiras-licoes-sobre-dinheiro.js';
 import '../revisoes/alice/leitura-quem-e-o-rei-dos-animais.js';

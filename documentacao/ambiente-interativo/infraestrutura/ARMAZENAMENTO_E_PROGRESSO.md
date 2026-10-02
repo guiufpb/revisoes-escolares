@@ -31,6 +31,11 @@ não marca áudio, resposta, conferência, revisão pós-resposta, tentativa, po
 A limpeza continua removendo somente a chave da sessão ativa; limpar a sessão principal ou a
 auxiliar nunca remove silenciosamente a outra.
 
+Em questionários, `obterEstado` e o status do cartão consultam sempre a chave principal, mesmo
+quando a sessão auxiliar está aberta. O estado da sessão auxiliar é salvo na própria chave a cada
+ação. Depois de recarregar a aplicação, o cartão abre a sessão principal; o painel administrativo
+permite selecionar novamente a auxiliar e continuar exatamente do ponto salvo.
+
 ## Mudanças de contrato
 
 Migração só é apropriada quando o significado anterior pode ser preservado com segurança. Se uma

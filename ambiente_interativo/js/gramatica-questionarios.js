@@ -7,13 +7,78 @@
   var estado = null;
   var conteudo = null;
   var controladorApp = null;
+  var modoResponsavelAtivo = false;
+  var sessaoResponsavelAtual = null;
+  var focoAntesDoPainelResponsavel = null;
+  var eventosModoResponsavelInstalados = false;
+
+  function elementoResponsavel(sufixo) {
+    return document.getElementById('gramatica-modo-responsavel-' + sufixo);
+  }
+
+  function configuracaoModoResponsavel(revisao) {
+    var configuracao = revisao && revisao.modoResponsavel;
+    if (!configuracao || !configuracao.habilitado || !Array.isArray(configuracao.sessoes))
+      return null;
+    var ids = [];
+    var chaves = [];
+    var sessoes = configuracao.sessoes.filter(function (sessao) {
+      if (
+        !sessao ||
+        typeof sessao.id !== 'string' ||
+        !sessao.id ||
+        typeof sessao.nome !== 'string' ||
+        !sessao.nome ||
+        typeof sessao.chaveArmazenamento !== 'string' ||
+        !sessao.chaveArmazenamento ||
+        ids.indexOf(sessao.id) >= 0 ||
+        chaves.indexOf(sessao.chaveArmazenamento) >= 0
+      )
+        return false;
+      ids.push(sessao.id);
+      chaves.push(sessao.chaveArmazenamento);
+      return true;
+    });
+    if (
+      sessoes.length < 2 ||
+      !sessoes.some(function (sessao) {
+        return sessao.principal === true && sessao.chaveArmazenamento === revisao.chave;
+      })
+    )
+      return null;
+    return { sessoes: sessoes };
+  }
+
+  function sessaoPrincipal() {
+    var configuracao = configuracaoModoResponsavel(revisaoAtiva);
+    return (
+      configuracao &&
+      configuracao.sessoes.find(function (sessao) {
+        return sessao.principal === true;
+      })
+    );
+  }
+
+  function sessaoAuxiliarAtiva() {
+    var principal = sessaoPrincipal();
+    return Boolean(
+      modoResponsavelAtivo &&
+      sessaoResponsavelAtual &&
+      principal &&
+      sessaoResponsavelAtual.id !== principal.id
+    );
+  }
+
+  function chaveDaSessaoAtiva() {
+    return sessaoAuxiliarAtiva() ? sessaoResponsavelAtual.chaveArmazenamento : revisaoAtiva.chave;
+  }
 
   function objeto(valor) {
     return valor && typeof valor === 'object' && !Array.isArray(valor) ? valor : {};
   }
 
-  function estadoInicial() {
-    return {
+  function estadoInicial(revisao) {
+    var inicial = {
       questaoAtual: 0,
       respostas: {},
       corrigidas: {},
@@ -21,6 +86,8 @@
       pontos: 0,
       finalizada: false,
     };
+    if (revisao && revisao.registrarTentativas) inicial.tentativas = {};
+    return inicial;
   }
 
   function normalizadorDaRevisao(revisao) {
@@ -84,6 +151,14 @@
         });
       }
       base.pontos = Object.keys(base.pontuadas).length;
+      if (revisao.registrarTentativas) {
+        base.tentativas = {};
+        revisao.questoes.forEach(function (item) {
+          var quantidade = Number(objeto(valor.tentativas)[item.id]);
+          if (Number.isInteger(quantidade) && quantidade > 0)
+            base.tentativas[item.id] = Math.min(quantidade, 999);
+        });
+      }
       base.finalizada =
         Boolean(valor.finalizada) &&
         Object.keys(base.corrigidas).length === revisao.questoes.length;
@@ -101,15 +176,16 @@
     revisoes[configuracao.id] = configuracao;
   }
 
-  function obterArmazenamento(revisao) {
-    if (!armazenamentos[revisao.id]) {
-      armazenamentos[revisao.id] = window.ArmazenamentoRevisoes.criar({
-        chave: revisao.chave,
-        padrao: estadoInicial(),
+  function obterArmazenamento(revisao, chave) {
+    chave = chave || revisao.chave;
+    if (!armazenamentos[chave]) {
+      armazenamentos[chave] = window.ArmazenamentoRevisoes.criar({
+        chave: chave,
+        padrao: estadoInicial(revisao),
         normalizar: normalizadorDaRevisao(revisao),
       });
     }
-    return armazenamentos[revisao.id];
+    return armazenamentos[chave];
   }
 
   function emitirProgresso(revisao) {
@@ -120,8 +196,8 @@
 
   function salvar() {
     estado.pontos = Object.keys(estado.pontuadas).length;
-    estado = obterArmazenamento(revisaoAtiva).salvar(estado);
-    emitirProgresso(revisaoAtiva);
+    estado = obterArmazenamento(revisaoAtiva, chaveDaSessaoAtiva()).salvar(estado);
+    if (!sessaoAuxiliarAtiva()) emitirProgresso(revisaoAtiva);
   }
 
   function normalizarResposta(valor, acentuacaoObrigatoria, maiusculasObrigatorias) {
@@ -302,7 +378,15 @@
           indice +
           '"><legend>' +
           escapar(subitem.pergunta) +
-          '</legend><div class="opcoes-mariana">' +
+          '</legend>' +
+          (subitem.imagem
+            ? '<img class="imagem-item-questionario" src="' +
+              escapar(subitem.imagem) +
+              '" alt="' +
+              escapar(subitem.imagemAlt || '') +
+              '">'
+            : '') +
+          '<div class="opcoes-mariana">' +
           subitem.opcoes
             .map(function (opcao) {
               var selecionada = respostas[indice] === opcao;
@@ -558,6 +642,10 @@
       anunciar(item, 'Complete todos os itens antes de conferir novamente.', false);
       return;
     }
+    if (revisaoAtiva.registrarTentativas) {
+      estado.tentativas = estado.tentativas || {};
+      estado.tentativas[item.id] = Math.min((estado.tentativas[item.id] || 0) + 1, 999);
+    }
     if (acertos.every(Boolean)) {
       estado.corrigidas[item.id] = true;
       estado.pontuadas[item.id] = true;
@@ -658,6 +746,7 @@
     if (estado.finalizada) renderizarFinal();
     else renderizarQuestao();
     atualizarNavegacao();
+    atualizarModoResponsavel();
     window.scrollTo({ top: 0, behavior: 'auto' });
     if (revisaoAtiva.materia) {
       var titulo = conteudo.querySelector('h1');
@@ -677,6 +766,9 @@
     var revisao = revisoes[id];
     if (!revisao) throw new Error('Questionário não cadastrado: ' + id);
     revisaoAtiva = revisao;
+    modoResponsavelAtivo = false;
+    sessaoResponsavelAtual = null;
+    fecharPainelModoResponsavel();
     var materia = revisao.materia || 'Gramática';
     var painel = document.getElementById('tela-gramatica-mariana');
     painel.querySelector('.migalhas strong').textContent = materia;
@@ -729,19 +821,20 @@
     ) {
       return false;
     }
-    obterArmazenamento(revisao).remover();
+    var auxiliar = revisaoAtiva && revisaoAtiva.id === id && sessaoAuxiliarAtiva();
+    obterArmazenamento(revisao, auxiliar ? chaveDaSessaoAtiva() : revisao.chave).remover();
     if (revisaoAtiva && revisaoAtiva.id === id) {
-      estado = estadoInicial();
+      estado = estadoInicial(revisao);
       if (conteudo) renderizar();
     }
-    emitirProgresso(revisao);
+    if (!auxiliar) emitirProgresso(revisao);
     return true;
   }
 
   function obterEstado(id) {
     var revisao = revisoes[id];
     if (!revisao) return null;
-    if (revisaoAtiva && revisaoAtiva.id === id && estado) return estado;
+    if (revisaoAtiva && revisaoAtiva.id === id && estado && !sessaoAuxiliarAtiva()) return estado;
     return obterArmazenamento(revisao).carregar();
   }
 
@@ -761,6 +854,169 @@
 
   function inicializar(controlador) {
     controladorApp = controlador;
+    instalarEventosModoResponsavel();
+  }
+
+  function fecharPainelModoResponsavel() {
+    var painel = document.getElementById('gramatica-modo-responsavel');
+    if (!painel || painel.hidden) return;
+    painel.hidden = true;
+    if (focoAntesDoPainelResponsavel && focoAntesDoPainelResponsavel.isConnected)
+      focoAntesDoPainelResponsavel.focus();
+    focoAntesDoPainelResponsavel = null;
+  }
+
+  function atualizarModoResponsavel() {
+    var painel = document.getElementById('gramatica-modo-responsavel');
+    if (!painel) return;
+    var faixa = document.getElementById('gramatica-faixa-modo-responsavel');
+    var configuracao = configuracaoModoResponsavel(revisaoAtiva);
+    if (!configuracao) {
+      painel.hidden = true;
+      faixa.hidden = true;
+      return;
+    }
+    var sessao =
+      modoResponsavelAtivo && sessaoResponsavelAtual ? sessaoResponsavelAtual : sessaoPrincipal();
+    var seletor = elementoResponsavel('sessao');
+    var assinatura = configuracao.sessoes
+      .map(function (item) {
+        return item.id + '|' + item.nome;
+      })
+      .join(';');
+    if (seletor.dataset.sessoes !== assinatura) {
+      seletor.innerHTML = '';
+      configuracao.sessoes.forEach(function (item) {
+        var opcao = document.createElement('option');
+        opcao.value = item.id;
+        opcao.textContent = item.nome;
+        seletor.appendChild(opcao);
+      });
+      seletor.dataset.sessoes = assinatura;
+    }
+    seletor.value = sessao.id;
+    elementoResponsavel('sessao-atual').textContent = sessao.nome;
+    elementoResponsavel('questao-atual').textContent =
+      estado.questaoAtual + 1 + ' de ' + revisaoAtiva.questoes.length;
+    var campo = elementoResponsavel('questao');
+    campo.max = String(revisaoAtiva.questoes.length);
+    if (document.activeElement !== campo) campo.value = String(estado.questaoAtual + 1);
+    elementoResponsavel('anterior').disabled = estado.questaoAtual === 0;
+    elementoResponsavel('proxima').disabled =
+      estado.questaoAtual === revisaoAtiva.questoes.length - 1;
+    faixa.hidden = !sessaoAuxiliarAtiva();
+    faixa.textContent =
+      '🔐 Modo Responsável · sessão de ' +
+      sessao.nome +
+      ' · questão ' +
+      (estado.questaoAtual + 1) +
+      ' de ' +
+      revisaoAtiva.questoes.length;
+  }
+
+  function abrirPainelModoResponsavel() {
+    if (!configuracaoModoResponsavel(revisaoAtiva)) return;
+    if (!modoResponsavelAtivo) {
+      modoResponsavelAtivo = true;
+      sessaoResponsavelAtual = sessaoPrincipal();
+    }
+    focoAntesDoPainelResponsavel = document.activeElement;
+    document.getElementById('gramatica-modo-responsavel').hidden = false;
+    atualizarModoResponsavel();
+    elementoResponsavel('titulo').focus();
+  }
+
+  function trocarSessaoModoResponsavel(id) {
+    var configuracao = configuracaoModoResponsavel(revisaoAtiva);
+    if (!modoResponsavelAtivo || !configuracao) return;
+    var nova = configuracao.sessoes.find(function (item) {
+      return item.id === id;
+    });
+    if (!nova || nova.id === sessaoResponsavelAtual.id) return;
+    salvar();
+    window.GramaticaDitado.parar();
+    sessaoResponsavelAtual = nova;
+    estado = obterArmazenamento(revisaoAtiva, nova.chaveArmazenamento).carregar();
+    renderizar();
+    document.getElementById('gramatica-modo-responsavel').hidden = false;
+    elementoResponsavel('status').textContent =
+      'Sessão de ' + nova.nome + ' carregada sem copiar dados de outra sessão.';
+  }
+
+  function irParaQuestaoModoResponsavel(indice) {
+    if (!modoResponsavelAtivo || !sessaoResponsavelAtual) return;
+    var destino = Number(indice);
+    if (!Number.isInteger(destino) || destino < 0 || destino >= revisaoAtiva.questoes.length) {
+      elementoResponsavel('status').textContent =
+        'Informe uma questão entre 1 e ' + revisaoAtiva.questoes.length + '.';
+      return;
+    }
+    estado.questaoAtual = destino;
+    estado.finalizada = false;
+    salvar();
+    renderizar();
+    elementoResponsavel('status').textContent =
+      'Questão ' + (destino + 1) + ' aberta na sessão de ' + sessaoResponsavelAtual.nome + '.';
+  }
+
+  function encerrarModoResponsavel() {
+    if (!modoResponsavelAtivo) return;
+    salvar();
+    window.GramaticaDitado.parar();
+    modoResponsavelAtivo = false;
+    sessaoResponsavelAtual = null;
+    estado = obterArmazenamento(revisaoAtiva).carregar();
+    document.getElementById('gramatica-modo-responsavel').hidden = true;
+    focoAntesDoPainelResponsavel = null;
+    renderizar();
+  }
+
+  function instalarEventosModoResponsavel() {
+    if (eventosModoResponsavelInstalados) return;
+    eventosModoResponsavelInstalados = true;
+    var painel = document.getElementById('gramatica-modo-responsavel');
+    elementoResponsavel('fechar').addEventListener('click', fecharPainelModoResponsavel);
+    elementoResponsavel('encerrar').addEventListener('click', encerrarModoResponsavel);
+    elementoResponsavel('sessao').addEventListener('change', function (evento) {
+      trocarSessaoModoResponsavel(evento.target.value);
+    });
+    elementoResponsavel('ir').addEventListener('submit', function (evento) {
+      evento.preventDefault();
+      irParaQuestaoModoResponsavel(Number(elementoResponsavel('questao').value) - 1);
+    });
+    elementoResponsavel('anterior').addEventListener('click', function () {
+      irParaQuestaoModoResponsavel(estado.questaoAtual - 1);
+    });
+    elementoResponsavel('proxima').addEventListener('click', function () {
+      irParaQuestaoModoResponsavel(estado.questaoAtual + 1);
+    });
+    document.addEventListener('keydown', function (evento) {
+      if (
+        !revisaoAtiva ||
+        document.getElementById('tela-gramatica-mariana').hidden ||
+        !configuracaoModoResponsavel(revisaoAtiva)
+      )
+        return;
+      var alvo = evento.target;
+      var editavel =
+        alvo &&
+        (alvo.matches('input, textarea, select') || alvo.isContentEditable) &&
+        !painel.contains(alvo);
+      if (
+        evento.ctrlKey &&
+        evento.altKey &&
+        !evento.shiftKey &&
+        String(evento.key).toLocaleLowerCase('pt-BR') === 'r'
+      ) {
+        if (editavel) return;
+        evento.preventDefault();
+        if (painel.hidden) abrirPainelModoResponsavel();
+        else fecharPainelModoResponsavel();
+      } else if (evento.key === 'Escape' && !painel.hidden) {
+        evento.preventDefault();
+        fecharPainelModoResponsavel();
+      }
+    });
   }
 
   window.GramaticaQuestionarios = {
@@ -775,6 +1031,10 @@
     },
     desativar: function () {
       window.GramaticaDitado.parar();
+      fecharPainelModoResponsavel();
+      modoResponsavelAtivo = false;
+      sessaoResponsavelAtual = null;
+      document.getElementById('gramatica-faixa-modo-responsavel').hidden = true;
       document.getElementById('tela-gramatica-mariana').classList.remove('layout-desktop-amplo');
       var painel = document.getElementById('tela-gramatica-mariana');
       painel.querySelector('.migalhas strong').textContent = 'Gramática';

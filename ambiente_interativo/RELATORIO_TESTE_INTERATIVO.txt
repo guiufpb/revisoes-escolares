@@ -2115,3 +2115,34 @@ DISTINÇÃO DA AUTOMAÇÃO
 - Este registro contém somente a confirmação humana acima. A cobertura de isolamento, saltos,
   recarga, limpeza seletiva, acessibilidade e regressões pertence aos testes Playwright e está
   registrada separadamente no inventário e na documentação de testes.
+
+ALICE — GRAMÁTICA, PONTUAÇÃO, LH E X/CH — 01/10/2026
+====================================================
+
+IMPLEMENTAÇÃO
+- Revisão independente do 1º ano, com 30 questões e 30 pontos, ID
+  alice-gramatica-pontuacao-lh-xch-outubro-2026.
+- Chave principal: revisoesEscolares.alice.gramatica.pontuacaoLhXchOutubro2026.v1.
+- Chave auxiliar: revisoesEscolares.alice.gramatica.pontuacaoLhXchOutubro2026.responsavel.v1.
+- Conteúdo declarativo e quatro SVGs originais; questionário, ditado, áudio e armazenamento
+  compartilhados reutilizados. Modo Responsável opt-in acrescentado ao controlador de questionários,
+  com salto de posição sem fabricar progresso e limpeza restrita à sessão ativa.
+- Nenhum PDF, OCR, print, áudio ou ilustração do material escolar foi aberto, copiado ou incluído.
+
+VALIDAÇÃO AUTOMATIZADA
+- npm run build: PASSOU; bundles gerados somente pelo build.
+- npm run format:check: PASSOU.
+- npm run lint: PASSOU.
+- tests/gramatica-alice-pontuacao-lh-xch-outubro-2026.spec.js: 14/14 PASSARAM, incluindo
+  percurso de 30 pontos com gabarito independente, erro/correção, tentativas, ditado, Q18, Q30,
+  sessões separadas, recarga, limpeza seletiva, teclado, toque, layouts, axe-core e file://.
+- npm test: 315/315 PASSARAM em 21,9 minutos após atualização da contagem central de 54 para 55.
+- Os quatro SVGs da Q18 foram vistos em conjunto e correspondem inequivocamente a xícara,
+  caixa de papelão, nuvem com chuva e chapéu.
+- Os avisos de JSON inválido e armazenamento bloqueado nos testes adversos foram esperados.
+
+VALIDAÇÃO HUMANA — 02/10/2026
+- O responsável confirmou que a atividade funcionou corretamente no uso real e aprovou sua
+  publicação. A validação automatizada de áudio utilizou voz local simulada.
+- A observação sobre evitar itens que entreguem a resposta foi registrada em
+  pedagogia/QUALIDADE_DAS_QUESTOES.md para revisões futuras, sem alterar as questões atuais.

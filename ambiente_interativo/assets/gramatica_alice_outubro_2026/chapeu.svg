@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 135" role="img" aria-label="Um chapéu">
+  <rect width="180" height="135" rx="16" fill="#fff8ee"/>
+  <path d="M51 91l16-54c5-14 37-14 44 0l17 54" fill="#efb86e" stroke="#8b5b39" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M57 75h66l5 16H51z" fill="#8053a9" stroke="#59376f" stroke-width="3"/>
+  <ellipse cx="90" cy="96" rx="72" ry="17" fill="#efb86e" stroke="#8b5b39" stroke-width="4"/>
+  <path d="M47 92h86" stroke="#a97543" stroke-width="3"/>
+</svg>
