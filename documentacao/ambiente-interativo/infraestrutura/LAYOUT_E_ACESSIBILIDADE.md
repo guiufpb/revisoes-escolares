@@ -27,8 +27,8 @@ estrutura, bounding boxes e overflow.
 
 ## Modo Responsável opt-in
 
-O painel administrativo de Inglês fica oculto no uso infantil normal e só responde a
-`Ctrl + Alt + R` em uma unidade que declare `modoResponsavel`. Ele usa controles nativos com
+O painel administrativo de Inglês e dos questionários optantes fica oculto no uso infantil normal
+e só responde a `Ctrl + Alt + R` em uma unidade ou revisão que declare `modoResponsavel`. Ele usa controles nativos com
 rótulos, foco visível, região de status e faixa persistente quando a sessão auxiliar está ativa.
 `Escape` fecha apenas o painel, sem encerrar a sessão; o botão **Encerrar sessão responsável** volta
 à sessão principal. O atalho é ignorado em campos editáveis da atividade e deve ser validado também

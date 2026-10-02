@@ -347,6 +347,16 @@
       controladorCompartilhado: 'gramatica-questionarios',
     },
     {
+      id: 'alice-gramatica-pontuacao-lh-xch-outubro-2026',
+      aluno: 'alice',
+      titulo: 'Pontuação, LH e X/CH — Revisão da prova',
+      cartaoId: 'abrir-gramatica-pontuacao-lh-xch-alice',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento: 'revisoesEscolares.alice.gramatica.pontuacaoLhXchOutubro2026.v1',
+      totalEtapas: 30,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
       id: 'alice-gramatica-h-til-vocabulario',
       aluno: 'alice',
       titulo: 'H, til e vocabulário',

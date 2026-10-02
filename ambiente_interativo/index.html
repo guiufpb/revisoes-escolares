@@ -229,6 +229,18 @@
             <strong>Começar ou continuar →</strong>
           </button>
           <button
+            class="cartao-materia gramatica"
+            id="abrir-gramatica-pontuacao-lh-xch-alice"
+            type="button"
+            hidden
+          >
+            <img src="../assets/objetos_escolares/pencil.svg" alt="" />
+            <span>Pontuação, LH e X/CH — Revisão da prova</span>
+            <small>Gramática · 1º ano · 30 questões</small>
+            <small>Vírgula, sinais, LH, CH, NH e X</small>
+            <strong>Começar ou continuar →</strong>
+          </button>
+          <button
             class="cartao-materia historia"
             id="abrir-historia-familias-objetos"
             type="button"
@@ -323,6 +335,75 @@
             Próxima →
           </button>
         </div>
+        <div
+          class="faixa-modo-responsavel"
+          id="gramatica-faixa-modo-responsavel"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+        <aside
+          class="painel-modo-responsavel"
+          id="gramatica-modo-responsavel"
+          aria-labelledby="gramatica-modo-responsavel-titulo"
+          aria-keyshortcuts="Control+Alt+R"
+          hidden
+        >
+          <div class="cabecalho-modo-responsavel">
+            <div>
+              <p class="etiqueta">Área administrativa</p>
+              <h2 id="gramatica-modo-responsavel-titulo" tabindex="-1">Modo Responsável</h2>
+              <p>Atalho: Ctrl + Alt + R</p>
+            </div>
+            <button class="botao-secundario" id="gramatica-modo-responsavel-fechar" type="button">
+              Fechar painel
+            </button>
+          </div>
+          <div class="resumo-modo-responsavel">
+            <p>Sessão atual: <strong id="gramatica-modo-responsavel-sessao-atual">Alice</strong></p>
+            <p>
+              Questão atual: <strong id="gramatica-modo-responsavel-questao-atual">1 de 30</strong>
+            </p>
+          </div>
+          <div class="controles-modo-responsavel">
+            <label for="gramatica-modo-responsavel-sessao">Sessão de progresso</label>
+            <select id="gramatica-modo-responsavel-sessao"></select>
+            <form id="gramatica-modo-responsavel-ir">
+              <label for="gramatica-modo-responsavel-questao">Ir para questão</label>
+              <div class="ir-para-questao-modo-responsavel">
+                <input
+                  id="gramatica-modo-responsavel-questao"
+                  name="questao-modo-responsavel"
+                  type="number"
+                  inputmode="numeric"
+                  min="1"
+                  max="30"
+                  step="1"
+                  required
+                />
+                <button class="botao-principal" type="submit">Ir</button>
+              </div>
+            </form>
+          </div>
+          <div
+            class="navegacao-modo-responsavel"
+            role="group"
+            aria-label="Navegação administrativa entre questões"
+          >
+            <button class="botao-secundario" id="gramatica-modo-responsavel-anterior" type="button">
+              ← Anterior
+            </button>
+            <button class="botao-secundario" id="gramatica-modo-responsavel-proxima" type="button">
+              Próxima →
+            </button>
+          </div>
+          <div class="rodape-modo-responsavel">
+            <button class="botao-perigo" id="gramatica-modo-responsavel-encerrar" type="button">
+              Encerrar sessão responsável
+            </button>
+            <p id="gramatica-modo-responsavel-status" role="status" aria-live="polite"></p>
+          </div>
+        </aside>
       </section>
 
       <section

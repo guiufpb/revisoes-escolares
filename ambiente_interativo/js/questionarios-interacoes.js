@@ -196,7 +196,9 @@
     }
     return (
       '<div class="ordem-questionario"><p>Escolha um cartão para ocupar a próxima posição vazia. Para desfazer, clique no cartão colocado.</p>' +
-      '<ol aria-label="Do mais antigo ao mais recente">' +
+      '<ol aria-label="' +
+      escapar(item.rotuloOrdem || 'Do mais antigo ao mais recente') +
+      '">' +
       item.itens
         .map(function (_subitem, indice) {
           return (

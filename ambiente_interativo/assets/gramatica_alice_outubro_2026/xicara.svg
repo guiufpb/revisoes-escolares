@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 135" role="img" aria-label="Uma xícara">
+  <rect width="180" height="135" rx="16" fill="#f0f9ff"/>
+  <ellipse cx="78" cy="111" rx="51" ry="7" fill="#bdd3df"/>
+  <path d="M37 43h83l-9 55c-2 11-58 11-61 0z" fill="#ffcf83" stroke="#8a5b39" stroke-width="4"/>
+  <ellipse cx="78" cy="43" rx="41" ry="10" fill="#fff8e9" stroke="#8a5b39" stroke-width="4"/>
+  <path d="M119 51h18c25 0 16 34-20 32" fill="none" stroke="#8a5b39" stroke-width="8" stroke-linecap="round"/>
+  <path d="M60 22c-7-8 7-10 0-17m26 17c-7-8 7-10 0-17" fill="none" stroke="#9bb3c0" stroke-width="3" stroke-linecap="round"/>
+</svg>

@@ -11,9 +11,12 @@ As capacidades atuais incluem alternativa, associação, campo, seleção, orden
 toque e teclado; cartões podem ser retirados. Uma questão com subitens pontua apenas quando todos
 estiverem corretos.
 
-`validacaoEstritaEstado: true` normaliza IDs, opções, duplicatas, conferências e tentativas erradas.
+`validacaoEstritaEstado: true` normaliza IDs, opções, duplicatas e conferências.
 Não a ative retroativamente sem avaliar o armazenamento legado. `pontuacaoFlexivel` só flexibiliza
 os campos das matérias que o declaram.
+`registrarTentativas: true` acrescenta, somente na revisão optante, a contagem persistida de
+conferências completas por questão. Conferir com item vazio não conta como tentativa; voltar,
+recarregar e salto administrativo não incrementam a contagem.
 
 ## Campos e ditados
 
@@ -28,7 +31,9 @@ da solicitação anterior.
 ## Leitura, imagens e mapas
 
 `leitura` cria quadro de apoio sem HTML arbitrário. `ilustracaoLeitura` exige imagem local original
-ou licenciada e descrição significativa. `mapaVisual` associa botões nomeados a pontos percentuais
+ou licenciada e descrição significativa. Em itens de alternativa, `imagem` e `imagemAlt` exibem uma
+figura local própria para cada subitem, sem criar coluna vazia nos itens sem imagem. `mapaVisual`
+associa botões nomeados a pontos percentuais
 de uma imagem; cada ponto permanece acionável por teclado e o acerto não depende só de cor.
 
 No motor de Inglês, questões podem declarar `imagemEnunciadoAlt` junto de `imagemEnunciado`.
@@ -103,6 +108,15 @@ O painel pode saltar entre questões sem depender do portão de estudo ou da Sto
 existe apenas durante a sessão autorizada e altera somente `questaoAtual`; o fluxo pedagógico normal
 da questão escolhida — inclusive áudio obrigatório, conferência, revisão pós-resposta e avanço —
 continua vigente. Na ausência da configuração, o atalho, o painel e o bypass permanecem inativos.
+
+O motor compartilhado de questionários também aceita `modoResponsavel` com a mesma lista de sessões.
+A sessão principal deve usar exatamente a chave `chave` da revisão; cada sessão auxiliar usa chave
+exclusiva. O painel funciona apenas na revisão optante. Trocar de sessão salva a atual e carrega a
+outra; salto administrativo salva apenas `questaoAtual` e não cria resposta, conferência, acerto ou
+ponto. O status do cartão sempre lê a sessão principal. `Escape` fecha só o painel; **Encerrar sessão
+responsável** volta à principal. Após recarga, abrir o cartão apresenta a sessão principal, e a
+auxiliar pode ser retomada pelo painel com seu próprio progresso. Limpar remove apenas a chave da
+sessão ativa.
 
 ## Correção e feedback
 

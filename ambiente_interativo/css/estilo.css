@@ -3456,6 +3456,17 @@ footer {
   outline-offset: 3px;
 }
 
+.imagem-item-questionario {
+  display: block;
+  width: min(100%, 180px);
+  height: 135px;
+  margin: 10px 0 16px;
+  object-fit: contain;
+  border: 2px solid #d9e5ef;
+  border-radius: 16px;
+  background: #f7fbff;
+}
+
 .story-time-ingles {
   scroll-margin-top: 120px;
   margin-top: 24px;

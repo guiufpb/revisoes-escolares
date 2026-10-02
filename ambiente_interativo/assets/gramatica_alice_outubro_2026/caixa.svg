@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 135" role="img" aria-label="Uma caixa de papelão">
+  <rect width="180" height="135" rx="16" fill="#f1fbf2"/>
+  <path d="M35 48l53-19 56 19-56 20z" fill="#e9bd79" stroke="#87572e" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M35 48v56l53 21V68z" fill="#d6a565" stroke="#87572e" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M88 68v57l56-21V48z" fill="#bb854d" stroke="#87572e" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M87 30v37m18-31v24" stroke="#f6e0b0" stroke-width="8"/>
+</svg>
