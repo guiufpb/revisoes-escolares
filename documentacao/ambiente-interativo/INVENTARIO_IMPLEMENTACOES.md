@@ -471,6 +471,33 @@ Chave principal: `revisoesEscolares.alice.gramatica.pontuacaoLhXchOutubro2026.v1
 
 Chave auxiliar: `revisoesEscolares.alice.gramatica.pontuacaoLhXchOutubro2026.responsavel.v1`.
 
+### Mariana — Português e Gramática: revisão da prova (outubro de 2026)
+
+- Revisão exclusiva do 2º ano com **35 questões e 35 pontos**: interpretação, vírgula,
+  R/RR, estruturas silábicas, X/CH, sinônimos e antônimos, substantivos e gênero.
+- Q1–Q4 mantêm “A caixa da exposição” para consulta; Q33–Q35 mantêm “O boné encontrado”.
+  Ordenações Q2, Q13 e Q14 são reversíveis; questões com vários itens dão um ponto apenas após
+  todos os acertos. A distribuição das alternativas é fixa e irregular.
+- Quatro ditados locais em pt-BR (Q11, Q15, Q18 e Q32) usam `gramatica-ditado.js` e `audio.js`,
+  sem reprodução automática nem exposição da resposta nos controles. Q32 cobra maiúscula,
+  vírgula, acento e ponto na frase completa.
+- Conteúdo em `revisoes/mariana/gramatica-portugues-prova-outubro-2026.js`, no painel e
+  controlador `gramatica-questionarios` existentes. Usa `layout.desktopAmplo`,
+  `validacaoEstritaEstado`, `registrarTentativas` e **Modo Responsável** opt-in com sessão e
+  chave independentes, salto de posição sem fabricar progresso e limpeza da chave ativa.
+- Teste direcionado: `tests/gramatica-mariana-portugues-prova-outubro-2026.spec.js`.
+- Validação automatizada em 02/10/2026: build, formatação e lint aprovados; **15/15** testes
+  direcionados e **330/330** testes na suíte global. A suíte global foi executada porque a
+  integração acrescentou uma entrada de navegação em `app.js`. Áudio conferido por payload
+  simulado. Em 04/10/2026, o responsável confirmou a validação em uso real e aprovou a revisão;
+  não há registro separado de audição da voz instalada.
+
+ID: `mariana-gramatica-portugues-prova-outubro-2026`.
+
+Chave principal: `revisoesEscolares.mariana.gramatica.portuguesProvaOutubro2026.v1`.
+
+Chave auxiliar: `revisoesEscolares.mariana.gramatica.portuguesProvaOutubro2026.responsavel.v1`.
+
 ### Alice — Contos, dígrafos e vocabulário
 
 - Revisão exclusiva da Alice com **30 questões** no controlador `gramatica-questionarios`,
@@ -965,7 +992,7 @@ Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
 - Toda pull request para `main` continua executando a suíte global no GitHub Actions; a saída
   completa é consultada apenas quando houver falha ou necessidade de diagnóstico.
 
-Na data deste inventário existem **293 testes Playwright**:
+Na data deste inventário existem **330 testes Playwright**:
 
 - `tests/ambiente-interativo.spec.js`: fluxos centrais, revisões de Inglês de Alice e Mariana, Leitura, Matemática ampla, armazenamento, canvas e `file://`.
 - `tests/ingles-friends-atividade-1.spec.js`: unidade compartilhada com 25 itens e 25 questões,
@@ -987,6 +1014,9 @@ Na data deste inventário existem **293 testes Playwright**:
 - `tests/acessibilidade.spec.js`: axe e responsividade das telas principais.
 - `tests/gramatica-mariana.spec.js`: 40 questões, erro e correção, digitação, teclado, persistência,
   isolamento, limpeza seletiva, conclusão, ditado nas questões 5/7/22, celular, axe e `file://`.
+- `tests/gramatica-mariana-portugues-prova-outubro-2026.spec.js`: 35 questões, quatro ditados,
+  leitura, ordenação, subitens, tentativas, Modo Responsável, persistência, isolamento,
+  armazenamento adverso, layouts, axe-core e `file://`.
 - `tests/gramatica-contos-ortografia-pontuacao.spec.js`: 12 testes novos para cadastro exclusivo,
   sequência de 30 questões, maiúsculas/acentos/grafia/pontuação, travessão editável, ditados locais
   sem vazamento de respostas, repetir/parar/cancelar, várias edições persistidas, limpeza isolada,
