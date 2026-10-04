@@ -337,6 +337,16 @@
       controladorCompartilhado: 'gramatica-questionarios',
     },
     {
+      id: 'mariana-gramatica-portugues-prova-outubro-2026',
+      aluno: 'mariana',
+      titulo: 'Português e Gramática — Revisão da prova',
+      cartaoId: 'abrir-gramatica-portugues-prova-outubro-mariana',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento: 'revisoesEscolares.mariana.gramatica.portuguesProvaOutubro2026.v1',
+      totalEtapas: 35,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
       id: 'alice-gramatica-contos-digrafos-vocabulario',
       aluno: 'alice',
       titulo: 'Contos, dígrafos e vocabulário',

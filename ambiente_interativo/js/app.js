@@ -423,6 +423,8 @@
     document.getElementById('abrir-gramatica-contos').hidden = aluno !== 'mariana';
     document.getElementById('abrir-gramatica-pontuacao-ortografia-mariana').hidden =
       aluno !== 'mariana';
+    document.getElementById('abrir-gramatica-portugues-prova-outubro-mariana').hidden =
+      aluno !== 'mariana';
     document.getElementById('abrir-gramatica-contos-digrafos-alice').hidden = aluno !== 'alice';
     document.getElementById('abrir-gramatica-pontuacao-lh-xch-alice').hidden = aluno !== 'alice';
     document.getElementById('limpar-progresso').hidden = false;
@@ -638,6 +640,13 @@
         window.GramaticaQuestionarios.abrir(
           'mariana-gramatica-pontuacao-ortografia-vocabulario-setembro-2026'
         );
+        atualizarResumo();
+      });
+    document
+      .getElementById('abrir-gramatica-portugues-prova-outubro-mariana')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'mariana') return;
+        window.GramaticaQuestionarios.abrir('mariana-gramatica-portugues-prova-outubro-2026');
         atualizarResumo();
       });
     document

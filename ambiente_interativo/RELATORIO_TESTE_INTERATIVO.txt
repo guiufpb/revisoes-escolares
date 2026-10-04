@@ -1,6 +1,44 @@
 RELATORIO DE TESTE - AMBIENTE INTERATIVO
 =======================================
 
+NOVA REVISÃO: 02/10/2026 - PORTUGUÊS E GRAMÁTICA DA MARIANA
+===========================================================
+
+IMPLEMENTAÇÃO
+- ID: mariana-gramatica-portugues-prova-outubro-2026; 35 questões e 35 pontos.
+- Chave principal: revisoesEscolares.mariana.gramatica.portuguesProvaOutubro2026.v1.
+- Chave Responsável: revisoesEscolares.mariana.gramatica.portuguesProvaOutubro2026.responsavel.v1.
+- Q1–Q4 e Q33–Q35 mantêm os textos originais de apoio. Q11, Q15, Q18 e Q32 são quatro ditados
+  locais em pt-BR, sem reprodução automática ou exposição da resposta nos controles.
+- Modo Responsável e Desktop Amplo são opt-in. O conteúdo declarativo usa o painel, o controlador
+  gramatica-questionarios, gramatica-ditado.js, audio.js e o armazenamento já existentes.
+- Q23 exige a formação escrita de dois antônimos e a escolha escrita da palavra adequada, sem
+  mostrar as respostas prontas ao lado dos campos. O acerto dos três itens rende um ponto.
+- A integração adicionou cartão, import, registro e entrada de navegação. Nenhum controlador,
+  áudio, armazenamento, CSS, PDF.js ou bundle foi editado manualmente.
+
+VALIDAÇÃO AUTOMATIZADA
+- npm run build, npm run format:check, npm run lint e git diff --check: APROVADOS.
+- tests/gramatica-mariana-portugues-prova-outubro-2026.spec.js: 15/15 APROVADOS. Cobertura:
+  gabarito independente e 35 pontos, erro/correção, ordenação, ditados, tentativas, persistência,
+  sessões independentes, limpeza seletiva, armazenamento adverso, teclado/toque, três viewports,
+  axe-core, console e file://.
+- Regressão central de Leitura isolada: 1/1 APROVADA após trocar o resumo do cartão de “Leitura”
+  para “Interpretação”, evitando colisão no nome acessível do cartão da matéria Leitura.
+- npm test: 330/330 APROVADOS em 23,1 minutos. Executado porque a integração acrescentou
+  navegação em app.js, conforme AGENTS.md. A primeira execução foi interrompida após revelar a
+  colisão do nome acessível; a execução final completa passou.
+- O áudio foi verificado por payload simulado. Não há registro separado de audição da voz instalada.
+
+VALIDAÇÃO HUMANA — 04/10/2026
+- O responsável confirmou que validou a revisão da Mariana em uso real e a aprovou. Esta
+  confirmação se refere somente à revisão Português e Gramática da Mariana, não a Play Time.
+
+PRESERVAÇÃO
+- Nenhum PDF, OCR, print, pasta privada ou prompt local foi incluído na implementação.
+- Progresso de revisões anteriores, arquivos locais não rastreados e stash permaneceram intactos.
+- Sem commit, push, PR, merge ou publicação.
+
 ATUALIZAÇÃO: 18/09/2026 - ÁUDIO UNIFICADO E ARQUITETURA DOCUMENTAL
 ===================================================================
 
