@@ -864,6 +864,7 @@
 
   function alternativasParaExibicao(questao, indiceQuestao) {
     var alternativas = questao.alternativas.slice();
+    if (unidadeAtual.ordemAlternativasFixa === true) return alternativas;
     var correta = alternativas.find(function (alternativa) {
       return alternativa.id === questao.respostaCorreta;
     });
@@ -897,7 +898,16 @@
       var imagem = document.createElement('img');
       imagem.src = '../assets/objetos_escolares/' + questao.imagemEnunciado;
       imagem.alt = indice === 0 && questao.imagemEnunciadoAlt ? questao.imagemEnunciadoAlt : '';
-      recipiente.appendChild(imagem);
+      if (questao.imagemEnunciadoMobile) {
+        var picture = document.createElement('picture');
+        var source = document.createElement('source');
+        source.media = '(max-width: 720px)';
+        source.srcset = '../assets/objetos_escolares/' + questao.imagemEnunciadoMobile;
+        picture.append(source, imagem);
+        recipiente.appendChild(picture);
+      } else {
+        recipiente.appendChild(imagem);
+      }
     }
   }
 
@@ -1143,6 +1153,9 @@
       botao.className = 'alternativa-atividade-ingles';
       botao.dataset.alternativaAtividadeIngles = alternativa.id;
       botao.setAttribute('aria-pressed', String(resposta === alternativa.id));
+      if (alternativa.rotuloAcessivel) {
+        botao.setAttribute('aria-label', alternativa.rotuloAcessivel);
+      }
       botao.classList.toggle(
         'incorreta',
         conferencia === 'incorreta' && resposta === alternativa.id
@@ -1203,6 +1216,11 @@
       ? '../assets/objetos_escolares/' + dados.imagemResposta
       : '';
     imagemElemento.alt = dados.imagemResposta ? dados.imagemRespostaAltIngles || '' : '';
+    var imagemMobile = elemento('ingles-imagem-revisao-mobile');
+    imagemMobile.removeAttribute('srcset');
+    if (dados.imagemResposta && dados.imagemRespostaMobile) {
+      imagemMobile.srcset = '../assets/objetos_escolares/' + dados.imagemRespostaMobile;
+    }
 
     elemento('ingles-ouvir-revisao').disabled = reproduzindo;
     elemento('ingles-status-revisao-pos-resposta').textContent = reproduzindo
@@ -1242,7 +1260,8 @@
     elemento('ingles-revisao-pos-resposta').hidden = true;
     elemento('ingles-progresso-atividade').textContent =
       'Atividade ' + (estado.questaoAtual + 1) + ' de ' + atividades.length;
-    elemento('ingles-pergunta-atividade').textContent = questao.perguntaIngles;
+    elemento('ingles-pergunta-atividade').textContent =
+      questao.textoPerguntaVisivel || questao.perguntaIngles;
     elemento('ingles-instrucao-atividade').textContent = questao.instrucaoPortugues;
     renderizarImagensDoEnunciado(questao);
     renderizarAlternativasAtividade(questao);
@@ -1752,6 +1771,7 @@
     pararAudioDaAtividade();
     pararAudioDaHistoria(true);
     armazenamento = criarArmazenamento(unidadeAtual, novaSessao.chaveArmazenamento);
+    if (window.PronunciaRevisoes) window.PronunciaRevisoes.desativar();
     estado = armazenamento.carregar();
     sessaoResponsavelAtual = novaSessao;
     renderizar();
@@ -1789,6 +1809,7 @@
     salvarEstado();
     pararAudioDaAtividade();
     pararAudioDaHistoria(true);
+    if (window.PronunciaRevisoes) window.PronunciaRevisoes.desativar();
     var dadosPrincipais = dadosDoPerfil(perfilAtual, configuracaoAtual.revisaoId);
     armazenamento = dadosPrincipais.armazenamento;
     estado = armazenamento.carregar();
@@ -1835,6 +1856,7 @@
 
   function renderizar() {
     var grupo = grupoAtual();
+    elemento('tela-ingles').dataset.unidade = unidadeAtual.id;
     elemento('tela-ingles').classList.toggle(
       'layout-desktop-amplo',
       Boolean(unidadeAtual.layout && unidadeAtual.layout.desktopAmplo)
@@ -2021,6 +2043,7 @@
       revisaoPosRespostaEmReproducao = null;
       historiaEmReproducao = null;
       window.AudioRevisoes.parar({ silencioso: true, origem: 'ingles' });
+      if (window.PronunciaRevisoes) window.PronunciaRevisoes.desativar();
     },
     obterEstado: function (perfil, revisaoId) {
       var usarSessaoAtiva = arguments.length === 0;

@@ -20,6 +20,13 @@ cabeçalho, áudio, escrita, resultado e remoção da classe.
 
 ## Validação
 
+Play Time usa `data-unidade` no painel de Inglês para restringir seu tratamento visual:
+em desktop, cenas de enunciado ficam amplas e a comparação A/B ocupa a largura do cartão,
+com alternativas abaixo. Figuras alternativas ficam maiores em todas as telas. No celular,
+as versões locais de comparação empilham A/B sem alterar as cenas; as legendas também são amplas.
+A imagem opt-in das conversas é responsiva; pergunta/resposta mantêm as colunas existentes no
+desktop e uma coluna no celular. Essas regras não se aplicam às outras unidades de Inglês.
+
 Em 390 × 844 não pode haver rolagem horizontal nem conteúdo encoberto. Teste teclado, toque e mouse,
 foco após mudança de etapa, nomes acessíveis, anúncios sem repetição excessiva e axe-core sem
 violação grave ou crítica. Um screenshot ajuda a avaliar geometria, mas não substitui asserções de

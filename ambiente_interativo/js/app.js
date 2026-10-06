@@ -399,6 +399,7 @@
     document.getElementById('materia-ingles').hidden = false;
     document.getElementById('abrir-ingles-city-life').hidden = aluno !== 'mariana';
     document.getElementById('abrir-ingles-at-the-farm').hidden = aluno !== 'alice';
+    document.getElementById('abrir-ingles-play-time').hidden = aluno !== 'alice';
     document.getElementById('abrir-ingles-friends-atividade-1').hidden = false;
     document.getElementById('abrir-ingles-at-school-atividade-2').hidden = aluno !== 'mariana';
     document.getElementById('abrir-ingles-at-school-atividade-3').hidden = aluno !== 'mariana';
@@ -417,7 +418,10 @@
     document.getElementById('materia-leitura').hidden = false;
     document.getElementById('abrir-gramatica-mariana').hidden = aluno !== 'mariana';
     document.getElementById('abrir-historia-familias-objetos').hidden = aluno !== 'alice';
+    document.getElementById('abrir-historia-objetos-memorias-outubro-2026').hidden =
+      aluno !== 'alice';
     document.getElementById('abrir-historia-transportes').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-historia-memorias-outubro-mariana').hidden = aluno !== 'mariana';
     document.getElementById('abrir-geografia-transportes-comunicacao').hidden = aluno !== 'mariana';
     document.getElementById('abrir-geografia-moradias-lugares-interior').hidden = aluno !== 'alice';
     document.getElementById('abrir-gramatica-contos').hidden = aluno !== 'mariana';
@@ -543,6 +547,11 @@
       window.InglesRevisoes.abrir('alice', 'alice-ingles-at-the-farm-unidade-5');
       atualizarResumo();
     });
+    document.getElementById('abrir-ingles-play-time').addEventListener('click', function () {
+      if (alunoAtual !== 'alice') return;
+      window.InglesRevisoes.abrir('alice', 'alice-ingles-play-time-unidade-6-outubro-2026');
+      atualizarResumo();
+    });
     document
       .getElementById('abrir-ingles-friends-atividade-1')
       .addEventListener('click', function () {
@@ -594,11 +603,25 @@
       mostrarTela('gramaticaMariana');
       atualizarResumo();
     });
+    document
+      .getElementById('abrir-historia-objetos-memorias-outubro-2026')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'alice') return;
+        window.QuestionariosRevisoes.abrir('alice-historia-objetos-memorias-outubro-2026');
+        atualizarResumo();
+      });
     document.getElementById('abrir-historia-transportes').addEventListener('click', function () {
       if (alunoAtual !== 'mariana') return;
       window.QuestionariosRevisoes.abrir('mariana-historia-convivencia-transportes-agosto-2026');
       atualizarResumo();
     });
+    document
+      .getElementById('abrir-historia-memorias-outubro-mariana')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'mariana') return;
+        window.QuestionariosRevisoes.abrir('mariana-historia-transportes-memorias-outubro-2026');
+        atualizarResumo();
+      });
     document
       .getElementById('abrir-geografia-transportes-comunicacao')
       .addEventListener('click', function () {

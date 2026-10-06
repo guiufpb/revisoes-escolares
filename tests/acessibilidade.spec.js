@@ -13,7 +13,7 @@ const CHAVE_JOANINHA_ALICE = 'revisoesEscolares.alice.leitura.joaninhaPerdeuPint
 const CHAVE_FORMIGA_ESPECIAL_ALICE = 'revisoesEscolares.alice.leitura.umaFormigaEspecial.v1';
 const CHAVE_INGLES_MARIANA = 'revisoesEscolares.mariana.ingles.atSchoolUnidade3.v1';
 const CHAVE_INGLES_CITY_LIFE = 'revisoesEscolares.mariana.ingles.cityLifeUnidade5.v2';
-const CHAVE_INGLES_FAZENDA = 'revisoesEscolares.alice.ingles.atTheFarmUnidade5.v1';
+const CHAVE_INGLES_FAZENDA = 'revisoesEscolares.alice.ingles.atTheFarmUnidade5.v2';
 
 async function verificarAcessibilidade(page, nomeDaTela) {
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -151,10 +151,13 @@ test('At the Farm da Alice funciona por teclado e sem rolagem horizontal no celu
   await page.setViewportSize({ width: 390, height: 844 });
   await page.evaluate((chave) => {
     const unidade = window.RegistroIngles.obter('at-the-farm-unidade-5');
+    const itens = unidade.grupos.flatMap((grupo) => grupo.itens);
     localStorage.setItem(
       chave,
       JSON.stringify({
         itensOuvidos: unidade.grupos.flatMap((grupo) => grupo.itens.map((item) => item.id)),
+        respostasEscrita: Object.fromEntries(itens.map((item) => [item.id, item.ingles])),
+        conferenciasEscrita: Object.fromEntries(itens.map((item) => [item.id, 'correta'])),
         iniciado: true,
       })
     );
@@ -163,7 +166,7 @@ test('At the Farm da Alice funciona por teclado e sem rolagem horizontal no celu
   await page.getByRole('button', { name: /Alice/ }).click();
   await page.locator('#abrir-ingles-at-the-farm').click();
   await expect(page.getByRole('heading', { name: 'English Review - Unit 5' })).toBeVisible();
-  await page.getByRole('button', { name: 'Começar as 16 atividades →' }).click();
+  await page.getByRole('button', { name: 'Começar as 30 atividades →' }).click();
   const alternativa = page.locator('[data-alternativa-atividade-ingles]').first();
   await alternativa.focus();
   await page.keyboard.press('Enter');

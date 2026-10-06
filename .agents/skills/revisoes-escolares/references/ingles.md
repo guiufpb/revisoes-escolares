@@ -678,9 +678,9 @@ ponto, tentativa, áudio ouvido, Story Time concluída nem outro pré-requisito 
 administrativo permite acessar diretamente uma questão enquanto a sessão autorizada estiver em
 uso, sem adulterar os pré-requisitos pedagógicos persistidos.
 
-Sem `modoResponsavel.habilitado`, o comportamento legado é preservado integralmente. A
-implementação de referência atual, e única revisão habilitada neste momento, é
-`mariana-ingles-at-school-atividade-3`.
+Sem `modoResponsavel.habilitado`, o comportamento legado é preservado integralmente. As
+implementações habilitadas são `mariana-ingles-at-school-atividade-3` e
+`alice-ingles-play-time-unidade-6-outubro-2026`, cada uma com suas próprias sessões e chaves.
 
 ## 16. Estado e persistência
 

@@ -147,6 +147,13 @@
             <small>Nome, idade, números, alfabeto e cores</small>
             <strong>Começar ou continuar →</strong>
           </button>
+          <button class="cartao-materia ingles" id="abrir-ingles-play-time" type="button" hidden>
+            <img src="../assets/objetos_escolares/play-time-robot.svg" alt="" />
+            <span>Play Time · Unit 6</span>
+            <small>25 itens + preparação visual + 25 atividades</small>
+            <small>Brinquedos, cores e brincadeiras dentro e fora</small>
+            <strong>Começar ou continuar →</strong>
+          </button>
           <button
             class="cartao-materia ingles"
             id="abrir-ingles-at-school-atividade-2"
@@ -254,6 +261,18 @@
           </button>
           <button
             class="cartao-materia historia"
+            id="abrir-historia-objetos-memorias-outubro-2026"
+            type="button"
+            hidden
+          >
+            <img src="../assets/objetos_escolares/book.svg" alt="" />
+            <span>Objetos e histórias — Uma investigação da Alice</span>
+            <small>História · 1º ano · 30 questões</small>
+            <small>Lembranças, diferentes povos e mudanças entre antigo e atual</small>
+            <strong>Começar ou continuar →</strong>
+          </button>
+          <button
+            class="cartao-materia historia"
             id="abrir-historia-familias-objetos"
             type="button"
             hidden
@@ -274,6 +293,19 @@
             <span>Convivência nos transportes: ontem e hoje</span>
             <small>História · 2º ano · 30 questões</small>
             <small>Trens, bondes, ônibus, automóveis e barcos</small>
+            <strong>Começar ou continuar →</strong>
+          </button>
+          <button
+            class="cartao-materia historia"
+            id="abrir-historia-memorias-outubro-mariana"
+            type="button"
+            hidden
+          >
+            <img src="../assets/objetos_escolares/book.svg" alt="" />
+            <span>Uma viagem pelas histórias e memórias</span>
+            <small>História · 2º ano · Outubro de 2026 · Prova 06/10</small>
+            <small>Transportes, convivência, objetos, diários, cartas e fotografias</small>
+            <small>30 questões · 30 pontos</small>
             <strong>Começar ou continuar →</strong>
           </button>
           <button
@@ -789,7 +821,10 @@
                 id="ingles-imagem-revisao-pos-resposta"
                 hidden
               >
-                <img id="ingles-imagem-revisao-pos-resposta-img" src="" alt="" />
+                <picture>
+                  <source id="ingles-imagem-revisao-mobile" media="(max-width: 720px)" />
+                  <img id="ingles-imagem-revisao-pos-resposta-img" src="" alt="" />
+                </picture>
               </div>
               <p class="resposta-revisao-pos-resposta">
                 <span>Correct answer:</span>
@@ -859,7 +894,7 @@
                 <div>
                   <p class="etiqueta">Nova sessão opcional</p>
                   <h2 id="pronuncia-titulo">CONVERSAÇÃO · ESCUTE E PRONUNCIE</h2>
-                  <p>
+                  <p id="pronuncia-descricao">
                     Treine cinco conversas curtas. Esta etapa não muda seus pontos nem a conclusão
                     da Activity 3.
                   </p>
@@ -887,6 +922,9 @@
               <article class="cartao-pronuncia" aria-labelledby="pronuncia-titulo-cartao">
                 <p class="etiqueta" id="pronuncia-progresso">Conversa 1 de 5</p>
                 <h3 id="pronuncia-titulo-cartao" tabindex="-1">Pergunta e resposta</h3>
+                <figure id="pronuncia-imagem" class="imagem-apoio-pronuncia" hidden>
+                  <img id="pronuncia-imagem-img" alt="" />
+                </figure>
                 <div class="falas-pronuncia">
                   <section lang="en-US" aria-label="Pergunta em inglês">
                     <strong>Question · Pergunta</strong>
@@ -963,7 +1001,7 @@
                   Próxima conversa →
                 </button>
               </div>
-              <p class="pronuncia-indisponivel">
+              <p class="pronuncia-indisponivel" id="pronuncia-indisponivel">
                 Se o microfone, o gateway ou o Azure não estiverem disponíveis, você pode continuar
                 ouvindo e repetindo. A Activity 3 permanece concluída.
               </p>

@@ -4,7 +4,15 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra o estado de trabalho em **02/10/2026**.
+Este inventário registra o estado de trabalho em **06/10/2026**.
+
+Consolidação local das quatro revisões validadas em uso real: Alice História, Alice Play Time,
+Mariana História e Alice At the Farm v2. Catálogo com 59 registros; build, formatação, lint e
+diff aprovados. Testes direcionados: **62/62 (4.8m)**; regressões compartilhadas:
+**112/112 (8.8m)**; suíte global: **392/392 (28.6m)**. As fontes e o stash original de Farm
+permanecem preservados, sem reconstrução de progresso local. Os relatórios pedagógicos
+distinguem este resultado dos testes históricos e das validações específicas de voz/Azure.
+
 
 ## 2. Base da aplicação
 
@@ -81,6 +89,97 @@ Este inventário registra o estado de trabalho em **02/10/2026**.
 - Restauração de etapa, respostas, pontuação, canvas, página e cenas manipulativas.
 
 ## 4. História, Geografia e Ciências
+
+### Mariana — História: Uma viagem pelas histórias e memórias (outubro de 2026)
+
+- Revisão nova, exclusiva de Mariana, 2º ano, para a prova de **06/10/2026**; mantém a atividade
+  de agosto e todas as suas chaves. São **30 questões numeradas e 30 pontos**: cada questão exige
+  todos os seus subitens corretos.
+- Seis apoios completos nas aberturas dos blocos: transportes coletivos; terra/água e cuidado; objetos e
+  registros; diários/cartas; fotografias; cruzamento de fontes. Contextos, modelos e personagens
+  fictícios permanecem na própria atividade. As demais telas usam pistas específicas; Voltar permite
+  reler a abertura sem perder os acertos. Pausas, conversa e autoavaliação são opcionais,
+  fora da pontuação e sem coleta nova de dados pessoais.
+- Reutiliza `QuestionariosRevisoes`, `questionarios-interacoes.js`, `gramatica-ditado.js`,
+  `audio.js` e `armazenamento.js`. Alternativas, associações, campos com banco, V/F, seleções,
+  ordenações e subitens mistos; nenhuma extensão de controlador ou CSS.
+- Desktop amplo, validação estrita de estado, registro de tentativas e Modo Responsável são
+  opt-in. Sessões Mariana/Responsável independentes, salto sem pontos e cartão ligado à principal.
+  Q26 e Q30 ocupam a largura disponível, sem coluna de leitura vazia; frases de ditado usam campos amplos.
+- Q30 contém três frases independentes em um único ponto. Voz local pt-BR a 0,78, prefixo de
+  frase protegido, ouvir/repetir/parar e cancelamento ao trocar campo. Não há controle separado
+  de velocidade no ditado vigente. Campos toleram caixa, acentos, espaços e pontuação; Q07
+  também aceita três/quatro por extenso. Nenhuma resposta de ditado aparece antes da conferência.
+- Cenas SVG originais locais em `assets/historia-memorias-outubro/`, com textos alternativos:
+  cinco ações em ônibus; três/quatro rodas verificáveis; cinco objetos da sala; seis crianças e
+  uma professora; cenas distintas de casamento/praça e grupos diferentes em 1920/2026.
+- Integração declarativa: import, registro, cartão HTML e abertura/visibilidade em `app.js`.
+- Testes: `tests/historia-mariana-memorias-outubro-2026.spec.js` (20 casos), com gabarito
+  independente, subitens incompletos/errados, reversão, recarga, isolamento, sessões, áudio,
+  armazenamento adverso, teclado/toque, três viewports, axe-core, console e `file://` sem rede.
+- Validação automatizada em **05/10/2026**: `npm run build`, `npm run format:check` e
+  `npm run lint` aprovados; **69 regressões direcionadas aprovadas** (História de outubro e
+  agosto de Mariana, História de Alice e Gramática de outubro de Mariana); suíte global
+  `npm test` com **350 testes aprovados**.
+- Uso real validado em outubro de 2026. Clareza, fluxo e execução foram confirmados pelo
+  responsável; não há confirmação separada da acústica da voz instalada.
+
+ID: `mariana-historia-transportes-memorias-outubro-2026`.
+
+Chave principal: `revisoesEscolares.mariana.historia.transportesMemoriasOutubro2026.v1`.
+
+Chave auxiliar: `revisoesEscolares.mariana.historia.transportesMemoriasOutubro2026.responsavel.v1`.
+
+Conteúdo: `ambiente_interativo/revisoes/mariana/historia-transportes-memorias-outubro-2026.js`.
+
+Abrir `ambiente_interativo/index.html`, escolher **Mariana** e o cartão **Uma viagem pelas
+histórias e memórias**. `Ctrl + Alt + R` abre o painel apenas fora dos campos editáveis.
+
+
+### Alice — História: Objetos e histórias — Uma investigação da Alice (outubro de 2026)
+
+- Revisão exclusiva do **1º ano com ampliação gradual**, com **30 questões, 65 subitens,
+  30 etapas avaliativas e 30 pontos**, em seis blocos de cinco questões. Preserva a revisão
+  de famílias/objetos e seu progresso. Apoios e conversa opcional não criam pontos ou etapas.
+- Todas as telas têm “Leia para aprender”, tarefa, dica e consolidação. Memórias e usos,
+  fases da vida, diferentes povos no presente, materiais, antigo/atual com contexto,
+  mudanças/permanências, papel/digital, fontes, agenda, museu e exposição.
+- Reutiliza `QuestionariosRevisoes`, `questionarios-interacoes.js`, `gramatica-ditado.js`,
+  `audio.js` e `armazenamento.js`, sem extensão de controlador ou CSS. Integração declarativa
+  por import, registro, cartão exclusivo e listener com proteção do perfil Alice.
+- Desktop amplo, validação estrita de estado, tentativas e Modo Responsável são opt-in.
+  Sessões Alice/Responsável independentes; salto puro, status principal e limpeza da chave ativa.
+- Ditados Q05 (duas palavras), Q15 (uma frase) e Q30 (duas frases), em pt-BR local, rate 0,78,
+  pitch 1, prefixo protegido no mesmo utterance, repetir/parar e cancelamento por campo/tela.
+  Escrita tolera caixa, acentos, espaços e pontuação sem aceitar sequência livre de palavras.
+  Não há alvo anunciado antes da conferência ou preenchimento automático. Sem voz, o responsável
+  pode ler o gabarito editorial; os campos continuam operáveis.
+- **13 SVGs originais locais**, com descrições equivalentes, usados em 17 telas. Incluem
+  duas crianças/uma bola, galeria didática, comparação contextual de televisores, anúncio
+  fictício de fogão, agenda de sete dias e pião com ficha. Os anexos privados de História
+  não foram reabertos nem copiados para os ativos. Apoios textuais mantêm a atividade autossuficiente.
+- `tests/historia-alice-objetos-memorias-outubro-2026.spec.js`: **20 casos direcionados aprovados**,
+  com gabarito independente e percurso completo, 30 pontos, erro/correção/recarga, seleção e
+  ordenação reversíveis, escrita flexível, três ditados, sessões, isolamento, limpeza seletiva,
+  JSON impossível/inválido, fallback, teclado/toque, 1366 × 768, 1920 × 1080, 390 × 844,
+  axe-core, console e `file://` sem rede. Uso real validado em outubro de 2026. Não há confirmação separada da acústica da voz instalada.
+- Cadastro central consolidado: **59 revisões**; as três contagens do teste central foram atualizadas
+  para incluir as três revisões novas do lote, mantendo unicidade de IDs/chaves e existência dos elementos.
+- Validação local concluída em 05/10/2026: build, formatação, lint, `git diff --check`,
+  **20 testes direcionados**, **11 regressões de cadastro/Leitura** e **350 testes na suíte
+  global (`npm test`, 23,9 minutos, exit 0)**. Uso real validado em outubro de 2026. A preparação
+  dos PDFs de Leitura ocorreu somente em caminhos ignorados, com os originais preservados.
+
+ID: `alice-historia-objetos-memorias-outubro-2026`.
+
+Chave principal: `revisoesEscolares.alice.historia.objetosMemoriasOutubro2026.v1`.
+
+Chave auxiliar: `revisoesEscolares.alice.historia.objetosMemoriasOutubro2026.responsavel.v1`.
+
+Conteúdo: `ambiente_interativo/revisoes/alice/historia-objetos-memorias-outubro-2026.js`.
+
+Gabarito e uso acompanhado: [documento pedagógico](pedagogia/ALICE_HISTORIA_OBJETOS_MEMORIAS_OUTUBRO_2026.md).
+
 
 ### Alice — História: Famílias e objetos: ontem e hoje
 
@@ -644,6 +743,44 @@ Chaves:
 
 ## 7. Inglês — conteúdo, áudio e pronúncia
 
+### Alice — Play Time · Unit 6 (outubro de 2026)
+
+Uso real validado em outubro de 2026. Clareza, fluxo e execução da atividade foram confirmados;
+Azure, gateway, avaliação automática e exposição da voz instalada no navegador não recebem
+validação técnica adicional por essa confirmação.
+
+- ID: `alice-ingles-play-time-unidade-6-outubro-2026`; unidade:
+  `play-time-unidade-6-outubro-2026`.
+- Conteúdo: `ambiente_interativo/revisoes/alice/ingles-play-time-unidade-6-outubro-2026.js`.
+- Principal: `revisoesEscolares.alice.ingles.playTimeUnidade6Outubro2026.v1`.
+- Auxiliar: `revisoesEscolares.mariana.ingles.playTimeUnidade6Outubro2026Compartilhada.v1`;
+  somente pelo Modo Responsável. O cartão e seu status pertencem exclusivamente a Alice.
+- 25 cartões de áudio/escrita guiada (19 brinquedos e seis frases compostas), uma preparação
+  `historia` com seis painéis, 25 questões/25 pontos: **51 etapas obrigatórias**. Escritas e os
+  painéis internos não criam pontos ou etapas extras. Consulta disponível em todas as questões.
+- Dez pares/20 alvos opcionais de conversa, ID `play-time-unidade-6-outubro-2026-conversacao-v1`.
+- 61 SVGs locais originais `play-time-*`; geração determinística por
+  `node scripts/gerar-assets-play-time.cjs`. Comparação A/B com sete alterações e mesma base;
+  permanências e destaques auditados. Quatro versões móveis empilham as mesmas cenas A/B.
+  A revisão das sete diferenças aparece somente após Q22.
+- Reuso de RegistroIngles/ConfiguracoesIngles, Inglês, AudioRevisoes, pronúncia e armazenamento.
+  Extensões opt-in: pergunta visível, ordem fixa, rótulo acessível, imagem de conversa e fontes
+  móveis locais. Trocas de
+  sessão/saída cancelam microfone/avaliação e exigem novo consentimento.
+- Gabarito: B, D, A, C, B, A, D, C, A, B, C, D, B, A, D, C, D, B, A, C, B, D, C, A, B.
+  Distribuição A=6, B=7, C=6, D=6, preservada também na sessão auxiliar.
+- Testes específicos: `tests/ingles-alice-play-time.spec.js`; suíte global exigida pelas alterações
+  compartilhadas. Validação automatizada usa TTS, microfone e gateway simulados; acústica
+  instalada e serviço real não receberam confirmação técnica específica para Play Time.
+- Validação histórica isolada: build, `format:check`, lint e `git diff --check` aprovados; **16/16** testes
+  direcionados e **331/331** na suíte global (23,4 min). Capturas inspecionadas em 1366, 1920 e
+  390 px; sete diferenças e variantes móveis auditadas sem mudança de geometria.
+- Base: `origin/main` em `8e82c89`, branch `codex/alice-ingles-play-time-outubro-2026`.
+  A implementação original não tinha commit. A consolidação local mantém a Gramática da
+  Mariana já incorporada em `main` por `e88ad36`/`937989e` e acrescenta as duas Histórias de outubro.
+- Detalhes: [Play Time](pedagogia/ALICE_INGLES_PLAY_TIME_OUTUBRO_2026.md).
+
+
 ### Alice e Mariana — Friends · Atividade 1
 
 - Uma única unidade declarativa compartilhada oferece o mesmo conteúdo, as mesmas 25 questões,
@@ -739,7 +876,7 @@ Unidade: `at-school-atividade-2`.
 - Depois de uma resposta errada, a Activity 3 mantém **Let’s review!** aberta até o fim da sequência
   e então libera **Tentar novamente**, que volta à mesma questão. Cada novo erro invalida somente a
   revisão daquela tentativa e exige novamente EN → PT → EN → PT; o acerto libera **Próxima**.
-- A Activity 3 é, neste momento, a única revisão com **Modo Responsável** habilitado. O painel
+- A Activity 3 e Play Time são as unidades de Inglês com **Modo Responsável** habilitado. O painel
   oculto abre e fecha por `Ctrl + Alt + R`, mostra sessão e questão, permite selecionar Mariana ou
   Alice, saltar livremente e encerrar a sessão administrativa. A faixa permanece visível enquanto
   a sessão auxiliar de Alice está ativa.
@@ -845,7 +982,7 @@ Chaves:
 - É o piloto da capacidade declarativa `layout.desktopAmplo`: em monitores com pelo menos 1120 px,
   ocupa 94% da viewport e distribui áudio, grupos, resumo/escrita, cartões, atividades e resultado em
   áreas proporcionais. Em larguras menores, conserva o fluxo responsivo existente.
-- Unit 3 e At the Farm não ativam escrita e preservam suas chaves e seus comportamentos anteriores.
+- Unit 3 não ativa escrita e preserva suas chaves e seu comportamento anterior.
 - Dez SVGs locais da biblioteca Fluent Emoji Flat foram incluídos para os conceitos novos; nenhum
   PDF, imagem escolar ou recurso da internet foi incorporado.
 
@@ -855,19 +992,32 @@ Chave histórica preservada: `revisoesEscolares.mariana.ingles.cityLifeUnidade5.
 
 ### Alice — Unit 5: At the Farm
 
-- Nova revisão independente, disponível somente no perfil da Alice.
-- **41 palavras e expressões com pronúncia local** antes das atividades.
-- Quatro grupos: animais da fazenda; famílias e grupos; cuidados e alimentos; lugares e sons.
-- **16 atividades** baseadas no caderno de agosto de 2026, sem publicar o PDF, suas imagens ou
-  anotações pessoais.
-- Conteúdo sobre nomes de animais, filhotes, aves e mamíferos, contagem, alimentação de cavalos,
-  necessidades básicas, habitats, cuidado e sons dos animais.
-- Correção imediata por questão, com pista específica, nova tentativa obrigatória antes do avanço
-  e restauração da resposta, conferência, questão e progresso após voltar ou recarregar.
-- O cartão fica visível somente para Alice; Unit 3 e City Life preservam suas próprias chaves.
-- Foram acrescentados 29 SVGs locais da biblioteca Fluent Emoji Flat já licenciada no projeto.
+- **Versão 2**, no mesmo cartão e ID, somente para Alice: **97 itens + 30 atividades = 127 etapas**.
+- Preserva os 41 itens dos quatro grupos antigos e acrescenta exatamente 56 itens em seis grupos:
+  More Animals, Family & Father's Day, Toys, Where Is It?, Little Grammar e School & Special Days.
+- Ativa declarativamente `praticaEscrita` obrigatória e `layout.desktopAmplo`, reutilizando a
+  infraestrutura da City Life sem mudar controlador, áudio, HTML ou CSS compartilhados.
+- As atividades exigem 97 áudios e 97 escritas corretas. A grafia canônica permanece visível;
+  somente Father's Day e Happy Father's Day! têm variantes explícitas de pontuação para o 1º ano.
+- As 16 atividades anteriores foram reformuladas; as 14 seguintes cobrem família fictícia, datas
+  especiais, brinquedos, as cinco preposições e os padrões am/is/are e has/have.
+- Correção recuperável por questão, recarga e isolamento preservados. A v1 não é lida, migrada ou
+  apagada; limpar remove somente a v2 ativa. Mariana e Unit 3 conservam suas chaves.
+- Reutiliza a biblioteca local e acrescenta 18 SVGs originais (13 conceitos e cinco cenas de
+  posição). Nenhum PDF, scan ou desenho da professora foi incorporado.
 
-Chave: `revisoesEscolares.alice.ingles.atTheFarmUnidade5.v1`.
+Chave ativa: `revisoesEscolares.alice.ingles.atTheFarmUnidade5.v2`.
+
+Chave histórica preservada: `revisoesEscolares.alice.ingles.atTheFarmUnidade5.v1`.
+
+
+Validação técnica histórica concluída e atividade validada em uso real com Alice em outubro de
+2026. O progresso local foi posteriormente limpo pelo responsável, sem alteração da implementação
+ou da validação pedagógica realizada. Nenhum progresso foi reconstruído nesta consolidação.
+A confirmação não valida separadamente Azure, avaliação automática ou voz instalada.
+
+Detalhes: [At the Farm v2](pedagogia/ALICE_INGLES_AT_THE_FARM_V2.md).
+
 
 ### Melhorias aglutinadas de pronúncia
 
@@ -902,8 +1052,8 @@ As melhorias foram concentradas em `js/audio.js` e consumidas por `js/ingles.js`
 - O áudio separa título/controles de vozes/status; o vocabulário separa resumo e escrita da grade de
   cartões; questões só ganham área visual quando possuem imagem; alternativas e resultado usam duas
   colunas quando há espaço.
-- City Life v2 e Friends · Atividade 1 ativam o layout amplo. Unit 3 de Alice e Mariana e At the Farm
-  continuam no layout legado, inclusive depois de serem abertas na mesma sessão de uma revisão
+- City Life v2, Friends · Atividade 1, At the Farm v2 e Play Time ativam o layout amplo. Unit 3
+  de Alice e Mariana conserva o layout legado ao ser aberta depois de uma revisão
   optante.
 
 #### Áudio compartilhado
@@ -992,8 +1142,19 @@ Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
 - Toda pull request para `main` continua executando a suíte global no GitHub Actions; a saída
   completa é consultada apenas quando houver falha ou necessidade de diagnóstico.
 
-Na data deste inventário existem **330 testes Playwright**:
+Na data deste inventário existem **392 testes Playwright**:
 
+- `tests/ingles-alice-play-time.spec.js`: conteúdo, percurso, sessões, áudio, armazenamento, acessibilidade e execução local de Play Time.
+- `tests/historia-alice-objetos-memorias-outubro-2026.spec.js`: **20 casos direcionados aprovados**,
+  com gabarito independente e percurso completo, 30 pontos, erro/correção/recarga, seleção e
+  ordenação reversíveis, escrita flexível, três ditados, sessões, isolamento, limpeza seletiva,
+  JSON impossível/inválido, fallback, teclado/toque, 1366 × 768, 1920 × 1080, 390 × 844,
+  axe-core, console e `file://` sem rede. Uso real validado em outubro de 2026. Não há confirmação separada da acústica da voz instalada.
+- `tests/historia-mariana-memorias-outubro-2026.spec.js`: 30 questões e 30 pontos, gabarito
+  independente, cenas locais, seleção/ordenação mista, ditado de frases e normalização de
+  História, sessões independentes, persistência, isolamento, acessibilidade e `file://`.
+- `tests/ingles-at-the-farm-v2.spec.js`: 97 itens, 30 questões, áudio/escrita, variantes, portão,
+  chave v1 preservada, limpeza seletiva, desktop, preposições, axe-core e `file://`.
 - `tests/ambiente-interativo.spec.js`: fluxos centrais, revisões de Inglês de Alice e Mariana, Leitura, Matemática ampla, armazenamento, canvas e `file://`.
 - `tests/ingles-friends-atividade-1.spec.js`: unidade compartilhada com 25 itens e 25 questões,
   áudio e escrita obrigatórios, portão, correção recuperável, isolamento, armazenamento

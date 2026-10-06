@@ -123,3 +123,24 @@ school-close-bag.svg | fechar a mochila | ilustração SVG original | uma mão f
 school-sit-at-desk.svg | sentar na carteira | ilustração SVG original | criança sentada diante da carteira escolar
 school-pass-pen.svg | passar a caneta | ilustração SVG original | uma mão entrega a caneta para outra
 school-teacher-open-book.svg | professora pede para abrir o livro | ilustração SVG original | professora aponta para um livro aberto
+
+ICONES E CENAS DA REVISAO AT THE FARM - VERSAO 2
+
+rabbit.svg | coelho | SVG original do projeto | formas vetoriais locais, sem imagem externa
+lion.svg | leão selvagem | SVG original do projeto | formas vetoriais locais, sem imagem externa
+doll.svg | boneca | SVG original do projeto | formas vetoriais locais, sem imagem externa
+teddy-bear.svg | ursinho de pelúcia | SVG original do projeto | formas vetoriais locais, sem imagem externa
+robot.svg | robô | SVG original do projeto | formas vetoriais locais, sem imagem externa
+rocket.svg | foguete | SVG original do projeto | formas vetoriais locais, sem imagem externa
+blocks.svg | blocos de brinquedo | SVG original do projeto | formas vetoriais locais, sem imagem externa
+helicopter.svg | helicóptero | SVG original do projeto | formas vetoriais locais, sem imagem externa
+boat.svg | barco | SVG original do projeto | formas vetoriais locais, sem imagem externa
+truck.svg | caminhão | SVG original do projeto | formas vetoriais locais, sem imagem externa
+train.svg | trem | SVG original do projeto | formas vetoriais locais, sem imagem externa
+bike.svg | bicicleta | SVG original do projeto | formas vetoriais locais, sem imagem externa
+gifts.svg | presentes | SVG original do projeto | formas vetoriais locais, sem imagem externa
+ball-under-bench.svg | bola embaixo do banco | SVG original do projeto | formas vetoriais locais, sem imagem externa
+car-on-table.svg | carrinho em cima da mesa | SVG original do projeto | formas vetoriais locais, sem imagem externa
+puppy-in-toy-shop.svg | cachorrinho dentro da loja de brinquedos | SVG original do projeto | formas vetoriais locais, sem imagem externa
+doll-next-to-bear.svg | boneca ao lado do ursinho | SVG original do projeto | formas vetoriais locais, sem imagem externa
+robot-in-front-of-box.svg | robô em frente da caixa | SVG original do projeto | formas vetoriais locais, sem imagem externa
