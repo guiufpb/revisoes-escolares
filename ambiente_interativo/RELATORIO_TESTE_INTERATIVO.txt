@@ -1531,6 +1531,53 @@ REGRESSÃO E INSPEÇÃO
 - O navegador de inspeção não tinha voz inglesa local. O áudio por clique após a troca de grupos foi
   validado com voz local simulada em en-US a 0,62 nos testes automatizados.
 
+EVOLUÇÃO DE AT THE FARM PARA A VERSÃO 2 EM 30/08/2026
+====================================================
+
+ESCOPO IMPLEMENTADO
+- Mesmo cartão, ID alice-ingles-at-the-farm-unidade-5 e unidade at-the-farm-unidade-5.
+  Chave exclusiva revisoesEscolares.alice.ingles.atTheFarmUnidade5.v2, sem ler, migrar ou apagar v1.
+- Preservados os 41 itens dos quatro grupos anteriores; 56 itens novos em More Animals,
+  Family & Father's Day, Toys, Where Is It?, Little Grammar e School & Special Days: 97 no total.
+- Exatamente 30 questões: 16 reformuladas e 14 novas, incluindo as cinco posições como respostas,
+  am/is/are, has/have, família fictícia, brinquedos, escola e datas especiais. Cadastro: 127 etapas.
+- Escrita obrigatória e desktop amplo ativados somente por declaração da unidade. Controlador,
+  áudio, armazenamento compartilhado, navegação, HTML e CSS permanecem sem alterações.
+- As 30 atividades exigem os 97 áudios e as 97 escritas corretas. Father's Day e Happy Father's Day!
+  aceitam variantes declarativas de pontuação sem alterar a grafia canônica exibida.
+- Biblioteca local reutilizada e 18 SVGs originais acrescentados: 13 conceitos e cinco cenas de
+  preposição. Nenhum PDF foi aberto, extraído ou gerado, nem scan/material da professora incorporado.
+
+VALIDAÇÃO PROPORCIONAL CONCLUÍDA
+- npm run build, npm run format:check e npm run lint: PASSARAM.
+- 16 de 16 testes direcionados aprovados (1,4 minuto), incluindo seis novos testes da v2,
+  regressão City Life/Unit 3, conclusão das 30 atividades e os testes móveis existentes de Inglês.
+- Cobertura: conteúdo fechado, áudio acionado pela criança, escrita errada/correta, variantes,
+  recarga parcial e correta, quatro combinações do portão, limpeza seletiva, v1 preservada,
+  pontuação sem duplicação, teclado, axe-core, console, ausência de rolagem horizontal e file://.
+- Desktop 1366 x 768 e 1920 x 1080 verificado nos testes e nas capturas locais: escrita à esquerda,
+  grade à direita, abas legíveis e preposição com cena e alternativas. Capturas ficam em test-results,
+  ignorado pelo Git. A listagem confirma 148 testes cadastrados; não significa execução global.
+- npm test NÃO executado: primeiro conjunto declarativo após a suíte global de 142/142 do layout,
+  sem mudança compartilhada, sem interferência detectada e sem atingir a cadência de três conjuntos.
+
+INSPEÇÃO CURTA
+- npm run interativo executado. No navegador local, verificados Farm Animals, Toys e Where Is It?,
+  palavra antiga bird, palavra nova rocket, tentativa errada/correção e retorno ao menu/Unit 3.
+  Unit 3 não herdou a classe ampla nem a escrita. Console sem erros ou avisos.
+- Atividade de preposição inspecionada visualmente nas capturas dos testes nas duas resoluções;
+  as cinco respostas de posição também passaram no fluxo automatizado. Não se percorreu
+  manualmente o vocabulário inteiro nem se contornou o portão no navegador de inspeção.
+- Esse navegador continua sem voz inglesa local: exibiu o aviso previsto, sem marcar áudio como
+  ouvido. A pronúncia por ação em en-US a 0,62 foi validada com voz simulada; a audição real fica
+  para Alice no computador principal. A captura ao vivo em 1920 falhou na ferramenta; a inspeção
+  visual dessa resolução usou as capturas produzidas pelo Playwright.
+- Na implementação original não houve commit, push, merge ou publicação.
+- Confirmação posterior: atividade validada em uso real com Alice em outubro de 2026.
+  O responsável limpou o progresso depois da conclusão, sem alterar a implementação ou a
+  validação pedagógica. Nenhum estado, resposta, ponto ou tentativa foi reconstruído.
+  Azure, avaliação automática e voz instalada não recebem validação específica por esse fato.
+
 CONTOS, ORTOGRAFIA E PONTUAÇÃO — MARIANA — 30/08/2026
 ===================================================
 

@@ -41,10 +41,27 @@ Quando a mesma imagem é repetida para representar quantidade, o texto alternati
 somente à primeira ocorrência, evitando anúncios duplicados. O texto deve descrever toda a
 informação visual indispensável à atividade.
 
+`imagemEnunciadoMobile` e `imagemRespostaMobile` são opcionais no motor de Inglês: selecionam
+uma versão local por `picture` até 720 px, mantendo a descrição acessível da imagem principal.
+Sem esses campos, o recurso original permanece em todas as telas. A fonte móvel pós-resposta
+é limpa ao renderizar outra questão, inclusive quando a nova revisão não declara imagem.
+
 Não copie páginas, personagens ou imagens do material escolar. Quando a síntese pedagógica já foi
 fornecida, não reextraia PDF sem pedido ou dúvida indispensável.
 
 ## Inglês
+
+Em Play Time · Unit 6, `textoPerguntaVisivel` opcional permite mostrar **Listen and choose.**
+em Q01–Q02. Somente a pergunta visível usa esse campo; pergunta auditiva e consolidação continuam
+usando `perguntaIngles`. Não inserir o alvo ditado em title, tooltip, nome acessível ou status
+antes da conferência. Sem o campo, a apresentação anterior é preservada.
+
+`ordemAlternativasFixa: true` na unidade preserva a ordem declarada A–D, em ambas as sessões.
+Esse opt-in foi necessário porque a distribuição determinística do controlador anterior também
+reordenava o gabarito fechado de Play Time. Ausência da opção conserva a distribuição legada.
+`rotuloAcessivel` opcional na alternativa define seu nome acessível, permitindo descrever quantidade,
+móvel e posição em Q14 sem antecipar a frase inglesa. As imagens das alternativas permanecem
+decorativas quando o botão já tem uma descrição significativa.
 
 `js/ingles.js` atende várias revisões por perfil e chave. Clique ou teclado em cartão seleciona o
 item e inicia a fala normal. A prática opt-in de escrita usa
@@ -119,6 +136,14 @@ auxiliar pode ser retomada pelo painel com seu próprio progresso. Limpar remove
 sessão ativa.
 
 ## Correção e feedback
+
+A revisão `mariana-historia-transportes-memorias-outubro-2026` demonstra essas capacidades sem
+extensão compartilhada: Q08 combina alternativa e seleção; Q12 combina ordenação e alternativa;
+Q13/Q25 combinam seleção e alternativa. Bancos fechados usam alternativas ou campos existentes;
+Q07 usa campos para contagens e para a função do transporte. Isso conserva todos os subitens e
+um ponto por questão, sem presumir suporte de campo livre dentro do tipo misto. Q26 usa `imagem`
+e `imagemAlt` por subitem para manter as duas cenas legíveis. Os seis apoios usam `leitura`;
+conversa, pausas e autoavaliação permanecem fora da pontuação.
 
 Depois de erro, preserve a resposta para edição, marque `aria-invalid` e dê orientação específica
 sem entregar toda a solução. Acerto e conquista acontecem uma vez. Voltar, reabrir e recarregar não

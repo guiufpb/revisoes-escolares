@@ -101,10 +101,27 @@ Variáveis opcionais:
 
 ## Contrato declarativo
 
+Play Time · Unit 6 habilita dez pares (20 alvos separados) após suas 25 questões. As cinco
+conversas da Activity 3 continuam sem alteração. O par pode declarar `imagem` e `imagemAlt`:
+somente nomes de arquivos locais em `assets/objetos_escolares/` com extensões SVG, PNG, JPG,
+JPEG ou WebP são aceitos; URLs, diretórios, travessia, query e data URI são recusados. Uma imagem
+sem descrição é omitida. O renderer limpa src/alt e oculta o recipiente ao trocar para um par
+sem imagem, ocultar a seção ou desativar a capacidade. A imagem nunca entra no progresso.
+
+Troca de sessão no Modo Responsável, encerramento dessa sessão e saída de Inglês desativam a
+pronúncia: descartam captura, cancelam avaliação, limpam imagem e consentimento. A sessão seguinte
+solicita novo consentimento, inclusive entre sessões da mesma unidade. Não são persistidos
+consentimento, gravação, imagem nem avaliação. Os modelos continuam a 0,50 e usam apenas
+AudioRevisoes; o gateway, launcher, Azure e credenciais não foram alterados.
+
 Uma unidade pode declarar `pronuncia` com `habilitada`, identificador, URL local, duração,
 timeout, duas faixas e pares de pergunta/resposta. O controlador valida IDs e textos, e ignora a
 capacidade quando a configuração estiver ausente ou inválida. Conteúdo fica na revisão; captura,
 WAV, envio, descarte, estados e feedback ficam no controlador compartilhado.
+
+`descricao` e `mensagemIndisponibilidade` opcionais fornecem textos locais próprios da revisão,
+com limites de tamanho e uso de `textContent`. Play Time identifica dez conversas opcionais e
+preserva sua conclusão mesmo sem serviço; configurações sem esses campos mantêm o texto legado.
 
 As faixas são calibração pedagógica, não nota escolar. Mudá-las não pode alterar pontos,
 conclusão ou chaves. A validação com crianças deve observar falsos negativos e preferir incentivo.

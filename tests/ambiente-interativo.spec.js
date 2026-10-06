@@ -32,7 +32,7 @@ const CHAVE_INGLES_ALICE = 'revisoesEscolares.alice.ingles.atSchoolUnidade3.v1';
 const CHAVE_INGLES_MARIANA = 'revisoesEscolares.mariana.ingles.atSchoolUnidade3.v1';
 const CHAVE_INGLES_CITY_LIFE_V1 = 'revisoesEscolares.mariana.ingles.cityLifeUnidade5.v1';
 const CHAVE_INGLES_CITY_LIFE = 'revisoesEscolares.mariana.ingles.cityLifeUnidade5.v2';
-const CHAVE_INGLES_FAZENDA = 'revisoesEscolares.alice.ingles.atTheFarmUnidade5.v1';
+const CHAVE_INGLES_FAZENDA = 'revisoesEscolares.alice.ingles.atTheFarmUnidade5.v2';
 const CHAVE_ANTIGA = 'revisoes-escolares-progresso-v1';
 const LIVRO_DINHEIRO = 'primeiras-licoes-dinheiro';
 const LIVRO_REI = 'quem-e-o-rei-dos-animais';
@@ -189,9 +189,9 @@ test('carrega a tela inicial e registra todas as revisões sem chaves duplicadas
       ),
     }))
   );
-  expect(registro).toHaveLength(56);
-  expect(new Set(registro.map((item) => item.id)).size).toBe(56);
-  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(56);
+  expect(registro).toHaveLength(59);
+  expect(new Set(registro.map((item) => item.id)).size).toBe(59);
+  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(59);
   expect(registro.every((item) => item.elementosExistem)).toBe(true);
 });
 
@@ -467,7 +467,7 @@ test('City Life v2 registra 73 itens, 30 atividades e escrita opcional sem alter
     respostasValidas: true,
     instrucoesPortugues: true,
     escritaUnit3: null,
-    escritaFazenda: null,
+    escritaFazenda: { habilitada: true, obrigatoriaParaAtividades: true },
     cadastro: {
       chaveArmazenamento: CHAVE_INGLES_CITY_LIFE,
       totalEtapas: 103,
@@ -574,7 +574,7 @@ test('City Life ativa o layout desktop amplo em 1366 e 1920 e o remove nas revis
 
   await page.getByRole('button', { name: 'Voltar ao início' }).click();
   await page.getByRole('button', { name: /Alice/ }).click();
-  await page.locator('#abrir-ingles-at-the-farm').click();
+  await page.locator('[data-materia="ingles"]').click();
   await expect(page.locator('#tela-ingles')).not.toHaveClass(/layout-desktop-amplo/);
 });
 
@@ -921,11 +921,12 @@ test('City Life permite erro, correção, retorno, recarga e conclusão das 30 a
   );
 });
 
-test('At the Farm exige 41 pronúncias e preserva correção, recarga e isolamento', async ({
+test('At the Farm v2 exige 97 áudios e escritas e preserva correção, recarga e isolamento', async ({
   page,
 }) => {
   await page.evaluate((chave) => {
     const unidade = window.RegistroIngles.obter('at-the-farm-unidade-5');
+    const itens = unidade.grupos.flatMap((grupo) => grupo.itens);
     const itensOuvidos = unidade.grupos.flatMap((grupo) => grupo.itens.map((item) => item.id));
     localStorage.setItem(
       chave,
@@ -935,6 +936,8 @@ test('At the Farm exige 41 pronúncias e preserva correção, recarga e isolamen
         grupoAtual: unidade.grupos[0].id,
         itemAtual: unidade.grupos[0].itens[0].id,
         itensOuvidos,
+        respostasEscrita: Object.fromEntries(itens.map((item) => [item.id, item.ingles])),
+        conferenciasEscrita: Object.fromEntries(itens.map((item) => [item.id, 'correta'])),
         reproducoes: itensOuvidos.length,
         iniciado: true,
       })
@@ -967,8 +970,8 @@ test('At the Farm exige 41 pronúncias e preserva correção, recarga e isolamen
   await page.locator('#abrir-ingles-at-the-farm').click();
 
   await expect(page.getByRole('heading', { name: 'English Review - Unit 5' })).toBeVisible();
-  await expect(page.getByText('41 de 41 palavras e frases ouvidas')).toBeVisible();
-  await expect(page.locator('#ingles-grupos').getByRole('button')).toHaveCount(4);
+  await expect(page.locator('#ingles-progresso-texto')).toHaveText('97/97 áudios · 97/97 escritas');
+  await expect(page.locator('#ingles-grupos').getByRole('button')).toHaveCount(10);
   await page.locator('[data-item-ingles="pig"]').click();
   await expect(page.locator('[data-item-ingles="pig"]')).toHaveAttribute('aria-pressed', 'true');
   await expect.poll(() => page.evaluate(() => window.__falasFazenda.length)).toBe(1);
@@ -978,7 +981,7 @@ test('At the Farm exige 41 pronúncias e preserva correção, recarga e isolamen
     velocidade: 0.62,
   });
 
-  await page.getByRole('button', { name: 'Começar as 16 atividades →' }).click();
+  await page.getByRole('button', { name: 'Começar as 30 atividades →' }).click();
   const primeira = await page.evaluate(() => {
     const questao = window.RegistroIngles.obter('at-the-farm-unidade-5').atividades[0];
     return {
@@ -1005,9 +1008,9 @@ test('At the Farm exige 41 pronúncias e preserva correção, recarga e isolamen
   await page.getByRole('button', { name: /Alice/ }).click();
   await page.locator('#abrir-ingles-at-the-farm').click();
   await page.getByRole('button', { name: 'Continuar atividades →' }).click();
-  await expect(page.getByText('Atividade 2 de 16')).toBeVisible();
+  await expect(page.getByText('Atividade 2 de 30')).toBeVisible();
 
-  for (let indice = 1; indice < 16; indice += 1) {
+  for (let indice = 1; indice < 30; indice += 1) {
     const correta = await page.evaluate(() => {
       const estado = window.InglesRevisoes.obterEstado();
       return window.RegistroIngles.obter('at-the-farm-unidade-5').atividades[estado.questaoAtual]
@@ -1016,17 +1019,17 @@ test('At the Farm exige 41 pronúncias e preserva correção, recarga e isolamen
     await page.locator(`[data-alternativa-atividade-ingles="${correta}"]`).click();
     await page.getByRole('button', { name: 'Conferir resposta' }).click();
     await page
-      .getByRole('button', { name: indice === 15 ? 'Concluir revisão ✓' : 'Próxima →' })
+      .getByRole('button', { name: indice === 29 ? 'Concluir revisão ✓' : 'Próxima →' })
       .click();
   }
 
-  await expect(page.getByText('Alice, você acertou 16 de 16 atividades.')).toBeVisible();
+  await expect(page.getByText('Alice, você acertou 30 de 30 atividades.')).toBeVisible();
   const salvo = await page.evaluate(
     (chave) => JSON.parse(localStorage.getItem(chave)),
     CHAVE_INGLES_FAZENDA
   );
   expect(salvo.atividadeFinalizada).toBe(true);
-  expect(salvo.tentativasAtividade).toBe(17);
+  expect(salvo.tentativasAtividade).toBe(31);
   expect(
     await page.evaluate((chave) => localStorage.getItem(chave), CHAVE_INGLES_CITY_LIFE)
   ).toBeNull();

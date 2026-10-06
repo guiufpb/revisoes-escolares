@@ -31,6 +31,19 @@
     return Math.max(minimo, Math.min(maximo, numero));
   }
 
+  function imagemLocal(valor) {
+    return typeof valor === 'string' &&
+      /^[a-zA-Z0-9][a-zA-Z0-9_-]*\.(svg|png|jpg|jpeg|webp)$/.test(valor)
+      ? valor
+      : '';
+  }
+
+  function limparImagem() {
+    elemento('pronuncia-imagem').hidden = true;
+    elemento('pronuncia-imagem-img').removeAttribute('src');
+    elemento('pronuncia-imagem-img').alt = '';
+  }
+
   function configuracaoValida(configuracao) {
     if (!configuracao || !configuracao.habilitada || !Array.isArray(configuracao.pares)) {
       return null;
@@ -43,7 +56,13 @@
         var resposta = textoSeguro(par && par.resposta, 240);
         if (!id || !pergunta || !resposta || ids.indexOf(id) >= 0) return null;
         ids.push(id);
-        return { id: id, pergunta: pergunta, resposta: resposta };
+        return {
+          id: id,
+          pergunta: pergunta,
+          resposta: resposta,
+          imagem: imagemLocal(par.imagem),
+          imagemAlt: textoSeguro(par.imagemAlt, 1200),
+        };
       })
       .filter(Boolean);
     if (!paresValidos.length) return null;
@@ -56,6 +75,8 @@
         textoSeguro(configuracao.gatewayUrl, 300) || 'http://127.0.0.1:5190/api/pronunciation',
       duracaoMaximaSegundos: numeroEntre(configuracao.duracaoMaximaSegundos, 3, 25, 15),
       timeoutMs: numeroEntre(configuracao.timeoutMs, 3000, 30000, 12000),
+      descricao: textoSeguro(configuracao.descricao, 400),
+      mensagemIndisponibilidade: textoSeguro(configuracao.mensagemIndisponibilidade, 400),
       faixas: { muitoBem: muitoBem, quase: quase },
       pares: paresValidos,
     };
@@ -115,6 +136,12 @@
       'Conversa ' + (indicePar + 1) + ' de ' + pares.length;
     elemento('pronuncia-pergunta').textContent = par.pergunta;
     elemento('pronuncia-resposta').textContent = par.resposta;
+    limparImagem();
+    if (par.imagem && par.imagemAlt) {
+      elemento('pronuncia-imagem-img').src = '../assets/objetos_escolares/' + par.imagem;
+      elemento('pronuncia-imagem-img').alt = par.imagemAlt;
+      elemento('pronuncia-imagem').hidden = false;
+    }
     elemento('pronuncia-alvo-pergunta').setAttribute(
       'aria-pressed',
       alvoAtual === 'pergunta' ? 'true' : 'false'
@@ -547,6 +574,8 @@
       cancelarAvaliacao();
       configuracaoAtual = null;
       pares = [];
+      limparImagem();
+      elemento('pronuncia-consentimento').checked = false;
       secao.hidden = true;
       return;
     }
@@ -554,10 +583,17 @@
     var mudou = !configuracaoAtual || configuracaoAtual.id !== valida.id;
     configuracaoAtual = valida;
     pares = valida.pares;
+    elemento('pronuncia-descricao').textContent =
+      valida.descricao ||
+      'Treine cinco conversas curtas. Esta etapa não muda seus pontos nem a conclusão da Activity 3.';
+    elemento('pronuncia-indisponivel').textContent =
+      valida.mensagemIndisponibilidade ||
+      'Se o microfone, o gateway ou o Azure não estiverem disponíveis, você pode continuar ouvindo e repetindo. A Activity 3 permanece concluída.';
     secao.hidden = !opcoes.visivel;
     if (!opcoes.visivel) {
       descartarGravacao();
       cancelarAvaliacao();
+      limparImagem();
       return;
     }
     if (mudou || indicePar >= pares.length) {

@@ -1,6 +1,7 @@
 import './registro-revisoes.js';
 import './registro-leituras.js';
 import './registro-ingles.js';
+import '../revisoes/alice/ingles-play-time-unidade-6-outubro-2026.js';
 import './glossario.js';
 import './armazenamento.js';
 import './audio.js';
@@ -16,7 +17,9 @@ import './matematica-operacoes.js';
 import './gramatica-questionarios.js';
 import './questionarios-interacoes.js';
 import '../revisoes/alice/historia-familias-objetos.js';
+import '../revisoes/alice/historia-objetos-memorias-outubro-2026.js';
 import '../revisoes/mariana/historia-convivencia-transportes.js';
+import '../revisoes/mariana/historia-transportes-memorias-outubro-2026.js';
 import '../revisoes/mariana/geografia-transportes-comunicacao.js';
 import '../revisoes/mariana/ciencias-plantas-sol-setembro-2026.js';
 import '../revisoes/alice/ciencias-objetos-emocoes-alimentacao-setembro-2026.js';

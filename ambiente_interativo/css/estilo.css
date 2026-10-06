@@ -3713,6 +3713,87 @@ footer {
   object-fit: contain;
 }
 
+.imagem-apoio-pronuncia {
+  margin: 16px 0;
+}
+
+.imagem-apoio-pronuncia img {
+  display: block;
+  width: min(100%, 760px);
+  max-height: 430px;
+  margin: auto;
+  object-fit: contain;
+}
+
+.layout-desktop-amplo[data-unidade='play-time-unidade-6-outubro-2026']
+  .imagens-enunciado-ingles
+  picture {
+  display: block;
+  width: 100%;
+}
+
+.layout-desktop-amplo[data-unidade='play-time-unidade-6-outubro-2026']
+  .imagens-enunciado-ingles
+  img,
+.layout-desktop-amplo[data-unidade='play-time-unidade-6-outubro-2026']
+  .imagem-revisao-pos-resposta
+  img {
+  width: min(100%, 900px);
+  height: auto;
+  max-width: 100%;
+  max-height: none;
+}
+
+.layout-desktop-amplo[data-unidade='play-time-unidade-6-outubro-2026']
+  .alternativa-atividade-ingles:has(img) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.layout-desktop-amplo[data-unidade='play-time-unidade-6-outubro-2026']
+  .alternativa-atividade-ingles
+  img {
+  width: min(100%, 300px);
+  height: auto;
+  max-height: 220px;
+  margin: auto;
+}
+
+@media (min-width: 1000px) {
+  .layout-desktop-amplo[data-unidade='play-time-unidade-6-outubro-2026']
+    #ingles-cartao-questao.com-apoio-visual {
+    display: block;
+  }
+
+  .layout-desktop-amplo[data-unidade='play-time-unidade-6-outubro-2026']
+    .imagens-enunciado-ingles
+    img {
+    width: min(100%, 900px);
+    height: auto;
+    max-height: 400px;
+  }
+
+  .layout-desktop-amplo[data-unidade='play-time-unidade-6-outubro-2026']
+    img[src*='play-time-compare-'] {
+    width: 100%;
+    max-width: none;
+    height: auto;
+    max-height: none;
+  }
+
+  .layout-desktop-amplo[data-unidade='play-time-unidade-6-outubro-2026']
+    .alternativa-atividade-ingles:has(img) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .layout-desktop-amplo[data-unidade='play-time-unidade-6-outubro-2026']
+    .alternativa-atividade-ingles
+    img {
+    width: min(100%, 300px);
+    height: 160px;
+    margin: auto;
+  }
+}
+
 .alternativa-atividade-ingles .letra-opcao {
   display: grid;
   width: 40px;
