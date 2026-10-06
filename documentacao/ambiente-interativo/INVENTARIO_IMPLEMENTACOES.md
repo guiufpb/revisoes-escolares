@@ -1217,6 +1217,9 @@ legadas.
 - GitHub CLI instalado e autenticado.
 - Repositório público: <https://github.com/guiufpb/revisoes-escolares>.
 - Workflow `.github/workflows/validacao.yml` para `main`, pull requests e execução manual.
+- Limite do job: 60 minutos, mantendo suíte integral e um worker. Em 06/10/2026,
+  os 392 testes passaram em 44,5 minutos na CI, mas o limite anterior de 45 minutos
+  cancelou o job durante o encerramento; a janela foi ampliada para concluir o check.
 - Node.js 24, `npm ci`, Chromium, formatação, lint, PDFs de teste, build e suíte completa.
 - Artefatos de diagnóstico por 14 dias em falhas.
 - Dependabot semanal para npm e GitHub Actions.

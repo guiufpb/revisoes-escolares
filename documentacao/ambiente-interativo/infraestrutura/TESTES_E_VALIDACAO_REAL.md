@@ -38,6 +38,12 @@ Execute `npm test`:
 Uma inclusão declarativa pode ficar nos testes direcionados quando nenhum outro gatilho se aplica.
 Toda PR para `main` mantém a suíte global e aguarda “Formatação, lint e testes”.
 
+O job de CI tem limite de 60 minutos, mantendo a suíte completa e um único worker.
+Em 06/10/2026, a execução das 392 verificações passou em 44,5 minutos, mas o limite
+anterior de 45 minutos cancelou o job durante o encerramento. A janela foi ampliada
+para acomodar a execução e o encerramento, sem reduzir testes ou suas asserções.
+O resumo de testes aprovados não substitui o resultado final aprovado do check.
+
 ## O que automação não prova
 
 Playwright valida lógica, DOM, persistência, acessibilidade programática e payloads simulados. Não
