@@ -42,6 +42,9 @@ ao conteúdo. Não duplique um motor inteiro para trocar matéria ou perguntas.
   teclado, toque e axe-core.
 - [Testes e validação real](infraestrutura/TESTES_E_VALIDACAO_REAL.md): comandos, matriz de risco,
   suíte global e limites da automação.
+- [Worktrees, catálogo e entrega local](infraestrutura/WORKTREES_CATALOGO_E_ENTREGA_LOCAL.md):
+  isolamento por risco, localização das atividades, abertura local e integração à pasta
+  habitual; a apresentação do catálogo no ambiente interativo é proposta futura.
 - [Matemática e ordenação](infraestrutura/MATEMATICA_E_ORDENACAO.md): cenas, operações, cartões e
   regras manipulativas.
 - [Leitura e PDF.js](infraestrutura/LEITURA_E_PDF.md): cadastro de livros, leitor e integração.
@@ -61,6 +64,8 @@ ao conteúdo. Não duplique um motor inteiro para trocar matéria ou perguntas.
   conteúdo e progresso completamente independente por sessão e chave; isso não a torna universal.
 - `INVENTARIO_IMPLEMENTACOES.md` descreve o estado atual; o relatório interativo registra fatos
   históricos; ADRs explicam decisões; documentos temáticos guardam regras vigentes.
+- Consulte o protocolo de worktrees na escolha da cópia, na entrega isolada e na integração à
+  pasta habitual; localização, testes, validação humana e publicação são estados distintos.
 
 ## Critérios de aceite
 
