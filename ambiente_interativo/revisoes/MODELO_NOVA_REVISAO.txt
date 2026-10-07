@@ -31,6 +31,9 @@ Os caminhos js/, revisoes/ e leituras/ abaixo partem de ambiente_interativo/; <p
 - Preserve execução local sem recursos obrigatórios da internet, por servidor e,
   para a aplicação principal, por file:// com o bundle gerado.
 - Não publique PDFs escolares reais, prints, pastas das alunas ou dados privados.
+- Para isolamento, catálogo e abertura da cópia, siga o documento na raiz do repositório:
+  documentacao/ambiente-interativo/infraestrutura/WORKTREES_CATALOGO_E_ENTREGA_LOCAL.md.
+  Consulte-o na escolha da cópia, na entrega isolada e na integração local.
 
 Toda atividade editável deve preservar o ciclo:
 errar -> conferir -> corrigir -> conferir -> avancar -> voltar -> recarregar
@@ -207,6 +210,7 @@ Documentação pura: confira links/caminhos e execute somente git diff --check.
 [ ] Regressão/testes direcionados e cadência global cumpridos conforme AGENTS.md.
 [ ] Documentação atualizada quando conteúdo, arquitetura ou contratos mudarem.
 [ ] Nenhum arquivo privado incluído; nenhum bundle editado manualmente.
+[ ] Entrega e situação da cópia habitual conferidas conforme o protocolo de worktrees.
 
 9. EXEMPLOS
 

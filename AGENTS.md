@@ -60,6 +60,7 @@ na política temática. Não reduza testes para fazê-los passar.
 | Armazenamento e progresso | `documentacao/ambiente-interativo/infraestrutura/ARMAZENAMENTO_E_PROGRESSO.md` |
 | Layout e acessibilidade | `documentacao/ambiente-interativo/infraestrutura/LAYOUT_E_ACESSIBILIDADE.md` |
 | Testes e validação real | `documentacao/ambiente-interativo/infraestrutura/TESTES_E_VALIDACAO_REAL.md` |
+| Worktrees, catálogo e entrega local | `documentacao/ambiente-interativo/infraestrutura/WORKTREES_CATALOGO_E_ENTREGA_LOCAL.md` |
 | Matemática e ordenação | `documentacao/ambiente-interativo/infraestrutura/MATEMATICA_E_ORDENACAO.md` |
 | Leitura e PDF.js | `documentacao/ambiente-interativo/infraestrutura/LEITURA_E_PDF.md` |
 | Qualidade pedagógica e gabaritos | `documentacao/ambiente-interativo/pedagogia/QUALIDADE_DAS_QUESTOES.md` |

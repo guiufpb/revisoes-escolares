@@ -33,13 +33,18 @@ escopo autorizado. Nao copie para esta skill regras que mudam com frequencia; re
 Antes de qualquer escrita:
 
 - execute `git status --short --branch`;
-- identifique branch, `HEAD`, relacao com `origin/main` e arquivos pendentes;
+- identifique branch, `HEAD`, relacao com a branch remota padrao e arquivos pendentes;
 - preserve prompts locais, stashes e alteracoes alheias;
-- se houver trabalho rastreado ou codigo nao relacionado que possa conflitar com a tarefa, pare e reporte antes de misturar lotes;
+- se houver trabalho nao relacionado que possa conflitar, interrompa a mistura de lotes e consulte o protocolo de worktrees para escolher uma copia adequada;
 - nunca use `git reset --hard`, `git clean -fd`, `git add -A`, `git add .` ou `git add -f` como atalho;
 - nao faca commit, push, PR, merge ou publicacao sem autorizacao explicita para essa etapa.
 
 Para nova revisao, crie branch propria `codex/<slug>` apenas quando a base estiver adequada e o usuario tiver pedido implementacao.
+
+Para decidir sobre isolamento em worktree, manter copias localizaveis e entregar acesso local,
+consulte `documentacao/ambiente-interativo/infraestrutura/WORKTREES_CATALOGO_E_ENTREGA_LOCAL.md`.
+Releia esse protocolo tambem na integracao para confirmar o acesso pela checkout habitual;
+nao duplique suas regras nesta skill nem no prompt de criacao de cada atividade.
 
 ## 3. Separe analise pedagogica de implementacao
 
@@ -159,7 +164,7 @@ Prefira testes reais e comandos deterministas. Filtre saidas longas e retorne ap
 
 Pare e informe antes de prosseguir quando:
 
-- a base Git estiver contaminada por trabalho nao relacionado que possa conflitar;
+- nao for possivel obter uma base adequada sem interferir em trabalho alheio, mesmo apos avaliar isolamento pelo protocolo de worktrees;
 - uma inclusao aparentemente declarativa exigir mudanca compartilhada nao prevista;
 - houver necessidade de destruir ou migrar progresso antigo;
 - uma ferramenta local exigir instalacao ou elevacao nao autorizada;

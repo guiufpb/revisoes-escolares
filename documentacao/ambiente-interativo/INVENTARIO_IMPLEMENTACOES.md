@@ -36,6 +36,24 @@ distinguem este resultado dos testes históricos e das validações específicas
 - Recursos locais, sem CDN obrigatória.
 - Bundle principal e PDF.js gerados a partir dos módulos-fonte.
 
+### Localização de cópias isoladas — auditoria documental de 07/10/2026
+
+- O protocolo de [Worktrees, catálogo e entrega local](infraestrutura/WORKTREES_CATALOGO_E_ENTREGA_LOCAL.md)
+  concentra as regras de isolamento por risco, localização, abertura e integração à pasta habitual.
+- Na instalação inspecionada, existe um catálogo privado externo ao aplicativo, com índice,
+  metadados, instruções e atalhos. Seus arquivos estão excluídos localmente do Git e não fazem
+  parte deste lote. Essa organização é uma convenção da instalação, sem schema implementado
+  no aplicativo; não integra atividades nem comprova testes, progresso ou backup.
+- Inspeção estática dos launchers, comandos e auxiliar privado de abertura: o launcher principal
+  prepara a pronúncia antes de `npm run interativo`; `npm run dev` não faz essa preparação.
+  O auxiliar privado verifica a porta habitual e usa `--port 5173 --strictPort`; essa proteção
+  não está presente no launcher compartilhado. Limites e correções recomendadas constam no protocolo.
+- Esta auditoria não executou os atalhos, servidores, microfone, Azure ou simulações de porta e
+  entrada inválida. Não comprova abertura real, audição humana, uso infantil ou atualização da
+  pasta habitual; resultados automatizados da publicação são relatados separadamente na PR.
+- A interface **Minhas revisões locais não está implementada**. Permanece proposta futura,
+  sem novo controlador, serviço, cartão ou alteração do launcher neste lote.
+
 ### Interface e acessibilidade
 
 - Layout responsivo para computador e celular.
