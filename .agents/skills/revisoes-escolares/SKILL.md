@@ -160,6 +160,10 @@ A politica de testes e exclusivamente a de `AGENTS.md`. Para toda mudanca de cod
 
 Prefira testes reais e comandos deterministas. Filtre saidas longas e retorne apenas erros relevantes ou contagens PASS/FAIL. Leia `references/testes-git-publicacao.md`.
 
+Para regressao de Leitura em worktrees, diferencie material real da crianca de fixture automatizada.
+Nao copie automaticamente PDFs escolares privados entre copias nem enfraqueca a suite por sua
+ausencia. Reutilize fixtures sinteticas e o preparo oficial indicados em `references/leitura.md`.
+
 ## 11. Gates de parada
 
 Pare e informe antes de prosseguir quando:

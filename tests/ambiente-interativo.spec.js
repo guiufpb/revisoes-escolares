@@ -1,7 +1,7 @@
 const path = require('node:path');
-const { env } = require('node:process');
-const { pathToFileURL } = require('node:url');
+const { pathToFileURL, URL } = require('node:url');
 const { test, expect } = require('@playwright/test');
+const { fixtures, signature, generatePdf, sha256 } = require('./fixtures/pdfs.cjs');
 
 const CAMINHO = '/ambiente_interativo/index.html';
 const CHAVE_ALICE = 'revisoesEscolares.alice.ciencias.origemMateriais';
@@ -57,9 +57,15 @@ const DADOS_LIVROS = {
   [LIVRO_FORMIGA_ESPECIAL]: { titulo: 'Uma Formiga Especial', paginas: 31 },
 };
 
-async function conferirTamanhoPdfLocal(resposta, tamanhoEsperado) {
-  if (env.CI) return;
-  expect((await resposta.body()).byteLength).toBe(tamanhoEsperado);
+async function conferirPdfSintetico(resposta) {
+  const fixture = fixtures.find((item) => item.url === new URL(resposta.url()).pathname);
+  expect(fixture, 'PDF deve ter fixture sintetica cadastrada').toBeTruthy();
+  const expected = generatePdf(fixture);
+  const bytes = await resposta.body();
+  expect(resposta.headers()['content-type']).toBe('application/pdf');
+  expect(resposta.headers()['x-revisoes-pdf-fixture']).toBe(signature);
+  expect(bytes.byteLength).toBe(expected.byteLength);
+  expect(sha256(bytes)).toBe(sha256(expected));
 }
 
 const CHAVES_DOS_TESTES = [
@@ -1164,7 +1170,7 @@ test('serve e renderiza A Galinha dos Ovos de Ouro para os dois perfis', async (
     '/ambiente_interativo/leituras/a-galinha-dos-ovos-de-ouro/galinha-ovos-ouro.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  await conferirTamanhoPdfLocal(resposta, 3_254_433);
+  await conferirPdfSintetico(resposta);
 
   for (const perfil of ['Alice', 'Mariana']) {
     await abrirLivro(page, perfil, LIVRO_GALINHA);
@@ -1195,7 +1201,7 @@ test('serve e renderiza A Raposa e as Uvas para os dois perfis', async ({ page, 
     '/ambiente_interativo/leituras/a-raposa-e-as-uvas/raposa-e-as-uvas.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  await conferirTamanhoPdfLocal(resposta, 5_223_267);
+  await conferirPdfSintetico(resposta);
 
   for (const perfil of ['Alice', 'Mariana']) {
     await abrirLivro(page, perfil, LIVRO_RAPOSA);
@@ -1239,7 +1245,7 @@ test('serve e renderiza O dia que o Sol tirou férias para os dois perfis', asyn
     '/ambiente_interativo/leituras/o-dia-que-o-sol-tirou-ferias/o-dia-que-o-sol-tirou-ferias.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  await conferirTamanhoPdfLocal(resposta, 8_568_669);
+  await conferirPdfSintetico(resposta);
   const imagemEclipse = await request.get(
     '/ambiente_interativo/leituras/o-dia-que-o-sol-tirou-ferias/eclipse-solar.png'
   );
@@ -1299,7 +1305,7 @@ test('serve e renderiza A formiga que queria cantar para os dois perfis', async 
     '/ambiente_interativo/leituras/a-formiga-que-queria-cantar/a-formiga-que-queria-cantar.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  await conferirTamanhoPdfLocal(resposta, 7_373_329);
+  await conferirPdfSintetico(resposta);
 
   for (const perfil of ['Alice', 'Mariana']) {
     await abrirLivro(page, perfil, LIVRO_FORMIGA);
@@ -1355,7 +1361,7 @@ test('serve e renderiza Um castelo bem assombrado para os dois perfis', async ({
     '/ambiente_interativo/leituras/um-castelo-bem-assombrado/um-castelo-bem-assombrado.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  await conferirTamanhoPdfLocal(resposta, 19_039_385);
+  await conferirPdfSintetico(resposta);
 
   for (const perfil of ['Alice', 'Mariana']) {
     await abrirLivro(page, perfil, LIVRO_CASTELO);
@@ -1405,7 +1411,7 @@ test('serve e renderiza A Bela Desadormecida para os dois perfis', async ({ page
     '/ambiente_interativo/leituras/a-bela-desadormecida/a-bela-desadormecida.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  await conferirTamanhoPdfLocal(resposta, 12_308_597);
+  await conferirPdfSintetico(resposta);
 
   for (const perfil of ['Alice', 'Mariana']) {
     await abrirLivro(page, perfil, LIVRO_BELA);
@@ -1459,7 +1465,7 @@ test('serve e renderiza A Joaninha que Perdeu as Pintinhas para os dois perfis',
     '/ambiente_interativo/leituras/a-joaninha-que-perdeu-as-pintinhas/a-joaninha-que-perdeu-as-pintinhas.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  await conferirTamanhoPdfLocal(resposta, 1_133_910);
+  await conferirPdfSintetico(resposta);
 
   for (const perfil of ['Alice', 'Mariana']) {
     await abrirLivro(page, perfil, LIVRO_JOANINHA);
@@ -1510,7 +1516,7 @@ test('serve e renderiza o novo livro completo para os dois perfis', async ({ pag
     '/ambiente_interativo/leituras/quem-e-o-rei-dos-animais/rei-dos-animais.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  await conferirTamanhoPdfLocal(resposta, 4_371_565);
+  await conferirPdfSintetico(resposta);
 
   for (const perfil of ['Alice', 'Mariana']) {
     await abrirLivro(page, perfil, LIVRO_REI);
@@ -1540,7 +1546,7 @@ test('serve o PDF local completo e renderiza a primeira página no canvas', asyn
     '/ambiente_interativo/leituras/primeiras-licoes-sobre-dinheiro/infantil-dinheiro.pdf'
   );
   expect(resposta.ok()).toBe(true);
-  await conferirTamanhoPdfLocal(resposta, 14_842_959);
+  await conferirPdfSintetico(resposta);
 
   await abrirLivro(page, 'Alice');
   await expect(page.getByText('Página 1 de 25')).toBeVisible();
@@ -2582,7 +2588,7 @@ test('conclui Uma Formiga Especial com inclusão, glossário, mistura e ditados 
     '/ambiente_interativo/leituras/uma-formiga-especial/uma-formiga-especial.pdf'
   );
   expect(respostaPdf.ok()).toBe(true);
-  await conferirTamanhoPdfLocal(respostaPdf, 13_799_382);
+  await conferirPdfSintetico(respostaPdf);
 
   await abrirLivro(page, 'Alice', LIVRO_FORMIGA_ESPECIAL);
   await expect(page.getByText('Página 1 de 31')).toBeVisible();

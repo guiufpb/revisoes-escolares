@@ -21,12 +21,21 @@ assert.equal(
   0,
   'Feche o gateway local antes de executar este teste (porta 5190).'
 );
-const fixtureRoot = path.join(projectRoot, 'output');
+const fixtureRoot = path.join(projectRoot, 'tmp');
 fs.mkdirSync(fixtureRoot, { recursive: true });
 const fixture = fs.mkdtempSync(path.join(fixtureRoot, 'launcher-test-'));
 const fakeBin = path.join(fixture, 'bin');
 const noAzBin = path.join(fixture, 'no-az');
 const dummyCredential = 'DUMMY_TEST_CREDENTIAL';
+const selectedRoot = path.join(fixture, 'Copia de pronuncia com espacos');
+fs.mkdirSync(path.join(selectedRoot, 'scripts'), { recursive: true });
+fs.writeFileSync(
+  path.join(selectedRoot, 'scripts/preparar-pronuncia-azure.ps1'),
+  fs
+    .readFileSync(path.join(projectRoot, 'scripts/preparar-pronuncia-azure.ps1'), 'utf8')
+    .replace('-WindowStyle Normal', '-WindowStyle Hidden')
+);
+// Hide only the simulated gateway window; the production preparation script is unchanged.
 fs.mkdirSync(fakeBin);
 fs.mkdirSync(noAzBin);
 
@@ -45,7 +54,7 @@ writeFixture('npm.cmd', npmStub, noAzBin);
 
 writeFixture(
   'health.cjs',
-  `'use strict';\nconst fs = require('node:fs');\nconst http = require('node:http');\nfs.writeFileSync(process.env.LAUNCHER_TEST_DIR + '\\\\server-pid.txt', String(process.pid));\nhttp.createServer((request, response) => {\n  response.setHeader('Content-Type', 'application/json');\n  response.end(JSON.stringify({ ok: true, configured: Boolean(process.env.AZURE_SPEECH_KEY) && process.env.LAUNCHER_TEST_UNCONFIGURED !== 'yes' }));\n}).listen(5190, '127.0.0.1');\n`,
+  `'use strict';\nconst fs = require('node:fs');\nconst http = require('node:http');\nfs.appendFileSync(process.env.LAUNCHER_TEST_DIR + '/gateway-roots.txt', process.cwd() + '\\n');\nfs.writeFileSync(process.env.LAUNCHER_TEST_DIR + '\\\\server-pid.txt', JSON.stringify({ pid: process.pid, parentPid: process.ppid }));\nhttp.createServer((request, response) => {\n  response.setHeader('Content-Type', 'application/json');\n  response.end(JSON.stringify({ ok: true, configured: Boolean(process.env.AZURE_SPEECH_KEY) && process.env.LAUNCHER_TEST_UNCONFIGURED !== 'yes' }));\n}).listen(5190, '127.0.0.1');\n`,
   fixture
 );
 
@@ -53,6 +62,12 @@ function count(name) {
   const file = path.join(fixture, name);
   return fs.existsSync(file) ? fs.readFileSync(file, 'utf8').trim().split(/\r?\n/).length : 0;
 }
+
+writeFixture(
+  'prepare.ps1',
+  `& $env:LAUNCHER_TEST_PREPARER\nif (Test-Path Env:AZURE_SPEECH_KEY) { Add-Content -LiteralPath (Join-Path $env:LAUNCHER_TEST_DIR 'environment-leak.txt') 'leak' }\nif (Test-Path Env:AZURE_SPEECH_REGION) { Add-Content -LiteralPath (Join-Path $env:LAUNCHER_TEST_DIR 'environment-leak.txt') 'leak' }\nAdd-Content -LiteralPath (Join-Path $env:LAUNCHER_TEST_DIR 'preparation-count.txt') 'prepared'\n`,
+  fixture
+);
 
 function runLauncher(overrides = {}, input = '\r\n', isolatedPath = false) {
   const environment = { ...process.env };
@@ -68,11 +83,12 @@ function runLauncher(overrides = {}, input = '\r\n', isolatedPath = false) {
     LAUNCHER_TEST_AUTH: 'yes',
     LAUNCHER_TEST_KEY_FAIL: 'no',
     LAUNCHER_TEST_UNCONFIGURED: 'no',
+    LAUNCHER_TEST_PREPARER: path.join(selectedRoot, 'scripts/preparar-pronuncia-azure.ps1'),
     ...overrides,
   });
   const result = spawnSync(
-    process.env.ComSpec || 'C:\\Windows\\System32\\cmd.exe',
-    ['/d', '/c', 'call', path.join(projectRoot, 'abrir_ambiente_interativo.bat')],
+    'powershell.exe',
+    ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', path.join(fixture, 'prepare.ps1')],
     { cwd: projectRoot, env: environment, input, encoding: 'utf8', timeout: 20000 }
   );
   if (result.error) throw result.error;
@@ -84,10 +100,11 @@ function runLauncher(overrides = {}, input = '\r\n', isolatedPath = false) {
 function stopFixtureServer() {
   const pidFile = path.join(fixture, 'server-pid.txt');
   if (!fs.existsSync(pidFile)) return;
-  const pid = Number(fs.readFileSync(pidFile, 'utf8'));
+  const { pid, parentPid } = JSON.parse(fs.readFileSync(pidFile, 'utf8'));
   fs.rmSync(pidFile);
-  if (Number.isSafeInteger(pid) && pid > 0) {
-    spawnSync('taskkill.exe', ['/PID', String(pid), '/T', '/F'], { stdio: 'ignore' });
+  if (Number.isSafeInteger(pid) && pid > 0 && Number.isSafeInteger(parentPid) && parentPid > 0) {
+    // The fixture records its own cmd parent, which otherwise retains the working directory.
+    spawnSync('taskkill.exe', ['/PID', String(parentPid), '/T', '/F'], { stdio: 'ignore' });
   }
 }
 
@@ -95,52 +112,62 @@ try {
   const first = runLauncher();
   assert.match(first, /ok:true e configured:true/);
   assert.equal(count('gateway-count.txt'), 1);
-  assert.equal(count('interativo-count.txt'), 1);
+  assert.equal(count('preparation-count.txt'), 1);
 
   const second = runLauncher();
   assert.match(second, /reutilizando/);
   assert.equal(count('gateway-count.txt'), 1);
-  assert.equal(count('interativo-count.txt'), 2);
+  assert.equal(count('preparation-count.txt'), 2);
 
   stopFixtureServer();
   const withoutLogin = runLauncher({ LAUNCHER_TEST_AUTH: 'no' });
   assert.match(withoutLogin, /login Azure nao realizado/);
   assert.equal(count('gateway-count.txt'), 1);
-  assert.equal(count('interativo-count.txt'), 3);
+  assert.equal(count('preparation-count.txt'), 3);
   assert.equal(count('login-count.txt'), 0);
 
   const failedKey = runLauncher({ LAUNCHER_TEST_KEY_FAIL: 'yes' });
   assert.match(failedKey, /nao foi possivel recuperar a chave/);
   assert.equal(count('gateway-count.txt'), 1);
-  assert.equal(count('interativo-count.txt'), 4);
+  assert.equal(count('preparation-count.txt'), 4);
 
   const withoutCli = runLauncher({}, '\r\n', true);
   assert.match(withoutCli, /Azure CLI \(az\) nao encontrada/);
-  assert.equal(count('interativo-count.txt'), 5);
+  assert.equal(count('preparation-count.txt'), 5);
 
   const unconfigured = runLauncher({ LAUNCHER_TEST_UNCONFIGURED: 'yes' });
   assert.match(unconfigured, /configured:false/);
   assert.equal(count('gateway-count.txt'), 2);
-  assert.equal(count('interativo-count.txt'), 6);
+  assert.equal(count('preparation-count.txt'), 6);
 
   const occupied = runLauncher();
   assert.match(occupied, /configured:false/);
   assert.equal(count('gateway-count.txt'), 2);
-  assert.equal(count('interativo-count.txt'), 7);
+  assert.equal(count('preparation-count.txt'), 7);
 
   stopFixtureServer();
   const afterLogin = runLauncher({ LAUNCHER_TEST_AUTH: 'no' }, 'L\r\n');
   assert.match(afterLogin, /ok:true e configured:true/);
   assert.equal(count('login-count.txt'), 1);
   assert.equal(count('gateway-count.txt'), 3);
-  assert.equal(count('interativo-count.txt'), 8);
+  assert.equal(count('preparation-count.txt'), 8);
   assert.equal(count('environment-leak.txt'), 0);
 
-  console.log('Launcher: 8 cenarios aprovados; credencial ficticia ausente da saida e do Vite.');
+  assert.equal(
+    fs
+      .readFileSync(path.join(fixture, 'gateway-roots.txt'), 'utf8')
+      .trim()
+      .split(/\r?\n/)
+      .every((root) => root === selectedRoot),
+    true
+  );
+  console.log(
+    'Pronuncia: 8 cenarios aprovados; raiz selecionada confirmada; credencial ficticia ausente da saida e do ambiente posterior.'
+  );
 } finally {
   stopFixtureServer();
   const safeRoot = path.resolve(fixtureRoot) + path.sep;
   if (path.resolve(fixture).startsWith(safeRoot)) {
-    fs.rmSync(fixture, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
+    fs.rmSync(fixture, { recursive: true, force: true, maxRetries: 20, retryDelay: 250 });
   }
 }

@@ -4,7 +4,7 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra o estado de trabalho em **06/10/2026**.
+Este inventário registra o estado de trabalho em **07/10/2026**.
 
 Consolidação local das quatro revisões validadas em uso real: Alice História, Alice Play Time,
 Mariana História e Alice At the Farm v2. Catálogo com 59 registros; build, formatação, lint e
@@ -36,23 +36,63 @@ distinguem este resultado dos testes históricos e das validações específicas
 - Recursos locais, sem CDN obrigatória.
 - Bundle principal e PDF.js gerados a partir dos módulos-fonte.
 
-### Localização de cópias isoladas — auditoria documental de 07/10/2026
+### Abertura segura de cópias isoladas — 07/10/2026
 
+- Os launchers padrão e Chromium delegam a scripts/abrir-ambiente-local.ps1, com raiz explícita,
+  validação de dependências e comparação de identidade antes de preparar pronúncia ou abrir.
+  Vite e comandos npm usam 127.0.0.1:5173 com strictPort; não escolhem outra porta.
+- Endpoint de desenvolvimento /__revisoes_local__/identity: aplicação, schema 1 e SHA-256 da
+  raiz real normalizada. Não expõe caminho, catálogo ou ambiente Azure, não recebe comandos e
+  bloqueia catálogo/temporários privados. Outra cópia, resposta inválida ou servidor legado
+  ocupando 5173 interrompem a abertura; servidores alheios são preservados.
+- A configuração compartilhada permite iniciar cópia antiga selecionada com identidade,
+  sem modificar sua worktree. Preparador e gateway Azure de produção permanecem intactos;
+  pronúncia opcional sempre usa a raiz escolhida e falha sem bloquear estudo.
+- Playwright usa porta 5181, configurável por PLAYWRIGHT_PORT (exceto 5173), strictPort e
+  reuseExistingServer:false. Global setup confirma raiz/origem/identidade antes dos testes.
+  Três testes de Gramática e os contratos de origem do gateway passaram a usar baseURL.
+- Testes Windows: **23/23** de abertura/worktrees e **8/8** de pronúncia simulada aprovados;
+  build, formatação, lint e diff aprovados. Os 49 casos direcionados distintos passaram após
+  corrigir uma colisão de pasta de traces no teste de porta ocupada; esse teste agora usa
+  output isolado. Reexecução do caso afetado, três fluxos file:// e dois casos novos: **6/6**
+  na porta 5189; proteção final dos temporários: **2/2** adicionais aprovados.
+- Suíte global deste lote: **394/394 aprovados (27,2 min)**, `npm test` com exit code 0,
+  na porta 5181 e identidade da manutenção confirmada. A tentativa inicial com PDFs vazios
+  de CI foi interrompida; os dez PDFs reais locais foram copiados para arquivos ignorados,
+  conferidos por hash e preservados fora do Git antes da execução aprovada.
+- Catálogo privado existente: auxiliar de abertura e instruções adaptados localmente;
+  pronúncia sem entrada exige escolha/cancelamento explícitos. JSON e 17 atalhos preservados,
+  com sete verificações de seleção/delegação aprovadas. Esses arquivos não integram o Git.
+- Os dois .bat recusaram o servidor legado real em 5173. A partida real do auxiliar foi
+  testada em porta isolada. A pendência de abertura manual foi encerrada por validação humana
+  fornecida pelo responsável: ambos os launchers abriram a URL fixa 5173, com perfis e revisões
+  carregados, Vite explicitamente em 5173 e nenhuma porta alternativa observada. O responsável
+  informou gateway em 5190 e /health com ok:true e configured:true. Não é validação visual
+  executada pelo Codex nem evidência de avaliação Azure, microfone, audição ou uso infantil.
+- CI Windows permanece pendente; workflow Ubuntu preservado. A interface **Minhas revisões
+  locais não está implementada**. Não houve alteração pedagógica, de progresso ou integração.
 - O protocolo de [Worktrees, catálogo e entrega local](infraestrutura/WORKTREES_CATALOGO_E_ENTREGA_LOCAL.md)
-  concentra as regras de isolamento por risco, localização, abertura e integração à pasta habitual.
-- Na instalação inspecionada, existe um catálogo privado externo ao aplicativo, com índice,
-  metadados, instruções e atalhos. Seus arquivos estão excluídos localmente do Git e não fazem
-  parte deste lote. Essa organização é uma convenção da instalação, sem schema implementado
-  no aplicativo; não integra atividades nem comprova testes, progresso ou backup.
-- Inspeção estática dos launchers, comandos e auxiliar privado de abertura: o launcher principal
-  prepara a pronúncia antes de `npm run interativo`; `npm run dev` não faz essa preparação.
-  O auxiliar privado verifica a porta habitual e usa `--port 5173 --strictPort`; essa proteção
-  não está presente no launcher compartilhado. Limites e correções recomendadas constam no protocolo.
-- Esta auditoria não executou os atalhos, servidores, microfone, Azure ou simulações de porta e
-  entrada inválida. Não comprova abertura real, audição humana, uso infantil ou atualização da
-  pasta habitual; resultados automatizados da publicação são relatados separadamente na PR.
-- A interface **Minhas revisões locais não está implementada**. Permanece proposta futura,
-  sem novo controlador, serviço, cartão ou alteração do launcher neste lote.
+  e [Testes e validação real](infraestrutura/TESTES_E_VALIDACAO_REAL.md) descrevem o novo fluxo.
+
+### PDFs de teste reproduzíveis — 07/10/2026
+
+- A dependência de dez livros privados foi substituída por fixtures sintéticas originais,
+  determinísticas e offline, com 286 páginas A4, texto conhecido e desenho verificável.
+  Nenhum conteúdo pedagógico, chave de progresso, atividade ou gateway foi alterado.
+- `npm test` prepara automaticamente `tests/fixtures/pdfs/` por `vite.test.config.cjs`.
+  CI e Windows usam tamanho/hash, páginas e PDF.js sob o mesmo contrato; o gerador exclusivo
+  de páginas vazias foi removido. Os launchers comuns continuam usando livros reais locais.
+- As dez cópias privadas temporárias desta manutenção foram removidas após conferência de
+  proveniência/hash/ignore. Originais e outras worktrees preservados. A execução global ocorreu
+  com zero PDF em `ambiente_interativo/leituras`, sem cópia nem preparo manual de livros.
+- Validação: **401/401 PASS, 28,0 minutos, exit 0**; 22 casos direcionados distintos de
+  PDF/Leitura/acessibilidade; abertura CJS **23/23**, pronúncia **8/8** e identidade **2/2**.
+  Build, formatação, lint, skill e referências aprovados. Os 401 casos são os 394 anteriores
+  mais sete regressões novas; os 416 da worktree isolada de Ciências incluíam 22 casos
+  específicos dessa revisão, que não integram esta base.
+- Contrato em [Testes e validação real](infraestrutura/TESTES_E_VALIDACAO_REAL.md#pdfs-sintéticos-e-preparo-reproduzível)
+  e [Leitura e PDF.js](infraestrutura/LEITURA_E_PDF.md). Sem publicação de PDFs, redução de
+  cobertura, commit, push, PR ou merge. O workflow foi atualizado; CI remota ainda não executada.
 
 ### Interface e acessibilidade
 
@@ -946,8 +986,9 @@ Unidade: `at-school-atividade-2`.
   O payload-modelo é verificado a `0.50` nas cinco perguntas e respostas, com repetição, retorno e
   nova audição após tentativa simulada, sem consumir Azure.
 - Launcher de pronúncia: `tests/launcher-pronuncia.cjs` (8 cenários simulados) cobre autenticação,
-  login, reutilização do gateway, CLI ausente, falha na chave, `configured:false` e continuidade do
-  ambiente principal. A chave real não é usada nesses testes.
+  login, reutilização do gateway, CLI ausente, falha na chave, `configured:false`, raiz selecionada
+  e limpeza das variáveis. A continuidade do ambiente e os wrappers são cobertos pelo teste de
+  abertura/worktrees. A chave real não é usada nesses testes.
 
 ID: `mariana-ingles-at-school-atividade-3`.
 
@@ -1120,8 +1161,12 @@ A fonte normativa de payloads, idiomas, velocidades, privacidade, controles e va
 
 - PDFs escolares reais ficam no computador e são ignorados pelo Git.
 - Capas e recursos publicáveis são versionados.
-- Na CI, `scripts/gerar_pdfs_teste_ci.js` cria PDFs vazios válidos com a quantidade exata de páginas apenas quando estão ausentes.
-- O gerador nunca sobrescreve livros reais locais.
+- CI e Windows usam dez fixtures sintéticas originais, com 286 páginas, texto conhecido e desenhos
+  verificáveis, geradas em `tests/fixtures/pdfs/` pelo manifesto `tests/fixtures/pdfs.cjs`.
+- O servidor Playwright usa `vite.test.config.cjs` e prepara automaticamente as fixtures;
+  `npm run preparar:pdfs-teste` oferece preparo explícito. Não lê nem sobrescreve livros reais.
+- Tamanho/hash e PDF.js usam o mesmo contrato local/CI. Sete novos casos cobrem preparo em outra
+  raiz, idempotência, privacidade, corrupção, links, HTTP e renderização de todas as páginas.
 
 ## 9. Prevenções de regressão incorporadas
 
@@ -1160,7 +1205,11 @@ Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
 - Toda pull request para `main` continua executando a suíte global no GitHub Actions; a saída
   completa é consultada apenas quando houver falha ou necessidade de diagnóstico.
 
-Na data deste inventário existem **392 testes Playwright**:
+Na data deste inventário existem **401 testes Playwright**:
+
+- `tests/pdfs-sinteticos.spec.js`: sete casos de preparo, integridade, privacidade, portabilidade e PDF.js.
+
+- `tests/infra-abertura-local.spec.js`: dois casos de identidade, raiz, porta de testes, recusa de comandos/origem externa e arquivos privados.
 
 - `tests/ingles-alice-play-time.spec.js`: conteúdo, percurso, sessões, áudio, armazenamento, acessibilidade e execução local de Play Time.
 - `tests/historia-alice-objetos-memorias-outubro-2026.spec.js`: **20 casos direcionados aprovados**,

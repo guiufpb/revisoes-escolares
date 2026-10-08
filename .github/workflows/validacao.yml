@@ -42,9 +42,6 @@ jobs:
       - name: Executar lint
         run: npm run lint
 
-      - name: Preparar PDFs vazios para testes
-        run: node scripts/gerar_pdfs_teste_ci.js
-
       - name: Executar todos os testes
         run: npm test
 

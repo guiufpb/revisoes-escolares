@@ -44,6 +44,70 @@ anterior de 45 minutos cancelou o job durante o encerramento. A janela foi ampli
 para acomodar a execução e o encerramento, sem reduzir testes ou suas asserções.
 O resumo de testes aprovados não substitui o resultado final aprovado do check.
 
+## Servidor conhecido e testes de abertura
+
+[playwright.config.js](../../../playwright.config.js) usa `127.0.0.1:5181` por padrão.
+`PLAYWRIGHT_PORT` pode definir outra porta entre 1024 e 65535, exceto 5173, reservada ao estudo.
+O servidor inicia na raiz desta configuração com porta explícita, `strictPort` e
+`reuseExistingServer: false`. Uma porta de testes ocupada interrompe a execução, mesmo que
+o servidor pareça pertencer à mesma cópia; não encerre processos alheios para liberar testes.
+
+O global setup consulta `/__revisoes_local__/identity`, compara todos os campos com a identidade
+calculada da raiz e registra raiz/origem confirmadas antes dos testes. Falha nessa confirmação
+invalida a execução. Use caminhos relativos em `page.goto` e `baseURL` para contratos de origem;
+não fixe 5173 nos testes. Outra porta de testes não migra nem comprova progresso da origem habitual.
+
+### PDFs sintéticos e preparo reproduzível
+
+Testes de Leitura usam exclusivamente as fixtures originais de
+[tests/fixtures/pdfs.cjs](../../../tests/fixtures/pdfs.cjs). Não copie automaticamente PDFs
+escolares privados entre worktrees nem reduza a suíte por sua ausência. Material real da criança
+serve à análise pedagógica ou ao uso local autorizado; fixture automatizada serve à regressão.
+
+O servidor Playwright seleciona [vite.test.config.cjs](../../../vite.test.config.cjs), que prepara
+automaticamente dez PDFs em `tests/fixtures/pdfs/`, fora dos diretórios de livros reais. Para
+preparo explícito, execute `npm run preparar:pdfs-teste`. O comando é offline, determinístico e
+idempotente; valida arquivos existentes sem sobrescrevê-los. Corrupção, versão divergente ou link
+simbólico interrompem o preparo com diagnóstico. Remova somente a fixture sintética indicada
+quando precisar regenerá-la; nunca remova documentos privados para preparar testes.
+
+Windows e CI usam o mesmo contrato, sem exceções por `CI`: tamanho e SHA-256 dos bytes gerados,
+páginas, texto conhecido, dimensões A4 e desenho não branco via PDF.js. As URLs dos livros são
+atendidas apenas por fixtures no servidor de teste; outros PDFs são recusados sem ler arquivos
+privados. A configuração comum e os launchers de estudo continuam usando os livros locais.
+O antigo gerador de páginas vazias da CI foi substituído por esse preparo compartilhado.
+
+Ao adicionar livro ou cenário, reutilize ou estenda o manifesto sintético com as páginas exigidas
+pelo registro. Preserve asserções de navegação, progresso, questionário, glossário e acessibilidade;
+uma fixture não comprova a integridade ou a adequação pedagógica do documento escolar original.
+
+`tests/pdfs-sinteticos.spec.js` cobre sete casos: raiz vazia diferente, CI/local e idempotência,
+proibição de leitura privada, corrupção sem sobrescrita, links recusados, HTTP/HEAD/ranges,
+texto e renderização de todas as páginas e separação entre configuração comum e de teste.
+
+No Windows, execute também:
+
+```text
+node tests/worktrees-abertura-local.cjs
+node tests/launcher-pronuncia.cjs
+```
+
+O primeiro cobre 23 cenários de raízes, identidade, dependências, portas, pronúncia opcional e
+recusa real do Playwright a HTTP desconhecido. O segundo cobre oito cenários do preparador Azure
+com CLI, npm, credencial e saúde simulados, conferindo a raiz escolhida e ausência de segredo
+na saída ou no ambiente posterior. Não usam Azure real ou microfone. A porta 5190 deve estar
+livre para o segundo teste; não encerre um gateway alheio automaticamente.
+
+`tests/infra-abertura-local.spec.js` acrescenta dois casos à suíte global: identidade da raiz,
+aplicação disponível, recusa de comandos/origem externa e proteção dos arquivos privados.
+Os testes de launcher Windows continuam fora do workflow Ubuntu; CI Windows é pendência
+explícita, sem ampliação do workflow neste lote.
+
+Não execute testes Playwright concorrentes com a mesma pasta de resultados. O cenário de
+porta ocupada do teste CJS usa `--output` dentro da própria fixture. Na validação inicial deste
+lote, uma execução concorrente sem essa separação removeu um trace; após isolar a saída,
+o caso afetado passou novamente. Isso não autoriza reduzir asserções ou desativar traces.
+
 ## O que automação não prova
 
 Playwright valida lógica, DOM, persistência, acessibilidade programática e payloads simulados. Não

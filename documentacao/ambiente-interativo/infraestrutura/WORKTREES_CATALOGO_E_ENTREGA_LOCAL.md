@@ -24,60 +24,95 @@ Registre qual cópia serve para desenvolvimento e qual é a pasta de uso habitua
 por Git e pelo launcher efetivamente utilizado, sem fixar um caminho de máquina na documentação
 versionada. A pasta habitual não precisa estar na branch `main`: confirme sua branch real.
 
+Uma worktree nova prepara os PDFs sintéticos de regressão pelo mecanismo oficial de
+[Testes e validação real](TESTES_E_VALIDACAO_REAL.md#pdfs-sintéticos-e-preparo-reproduzível).
+Não use cópia automática de materiais escolares privados como dependência da suíte.
+
 ## Launcher, servidor e pronúncia
 
-O [launcher principal](../../../abrir_ambiente_interativo.bat) usa `cd /d "%~dp0"`: inicia
-o projeto da pasta em que está e não reúne atividades de outras branches ou worktrees. Após
-verificar as dependências, chama o [auxiliar de pronúncia](../../../scripts/preparar-pronuncia-azure.ps1)
-e então `npm run interativo`. Os comandos em [package.json](../../../package.json) são distintos:
-`npm run dev` inicia Vite; `npm run interativo` inicia Vite e pede abertura do navegador.
-Nenhum deles prepara o gateway por si só. A pronúncia Azure é opcional; sua indisponibilidade
-não impede usar a revisão ou o áudio local. Para o protocolo do gateway, consulte
-[Pronúncia com Azure](PRONUNCIA_AZURE.md).
+O [launcher principal](../../../abrir_ambiente_interativo.bat) e o
+[launcher Chromium](../../../abrir_chromium_ambiente_interativo.bat) são wrappers de
+[scripts/abrir-ambiente-local.ps1](../../../scripts/abrir-ambiente-local.ps1). Ambos passam
+explicitamente a própria raiz; Chromium acrescenta a opção de navegador. O auxiliar valida
+package.json, arquivos essenciais e dependências da cópia selecionada. Não troca de
+worktree nem reúne atividades de outras branches.
+
+Antes de preparar pronúncia ou abrir navegador, verifica a porta habitual e a identidade do
+servidor. A preparação chama somente o
+[auxiliar de pronúncia](../../../scripts/preparar-pronuncia-azure.ps1) da raiz selecionada.
+O gateway existente continua opcional: falha não impede estudo ou áudio local. Consulte
+[Pronúncia com Azure](PRONUNCIA_AZURE.md). Os comandos npm run dev e npm run interativo
+continuam disponíveis, com porta 5173 e strictPort; o segundo solicita abertura do navegador.
+Esses comandos diretos não preparam pronúncia nem reutilizam servidores. Para o fluxo completo,
+use o auxiliar compartilhado.
 
 Uma entrega isolada deve oferecer acesso por duplo clique, além do diretório e do caminho até
-o cartão. Reutilize o launcher ou seus auxiliares vigentes; não duplique gateway, credenciais,
-fila de áudio ou controlador. Não altere o launcher compartilhado automaticamente para
-redirecioná-lo à tarefa mais recente. Verifique os destinos dos atalhos e a presença das
-dependências locais. Diferencie inspeção dos atalhos de abertura efetivamente testada.
+o cartão. Reutilize os auxiliares; não duplique gateway, credenciais, fila de áudio ou controlador.
+Não redirecione o launcher automaticamente à tarefa mais recente. Verifique destinos dos atalhos
+e dependências; diferencie inspeção de abertura efetivamente testada.
 
-Confirme que o servidor apresenta a atividade da cópia escolhida. Preserve servidores de outras
-tarefas. Na origem habitual, use uma cópia por vez: diante de porta ocupada, identifique o
-servidor, avise e não encerre processo alheio nem escolha silenciosamente outra porta. Separar
-portas para testes é possível pela configuração suportada, mas não equivale a preservar o
-acesso habitual ao progresso. Antes de Playwright, confirme também a cópia servida e as
-dependências privadas conforme [Testes e validação real](TESTES_E_VALIDACAO_REAL.md).
-
-Para abertura isolada na origem habitual, a configuração suportada é
-`npm run interativo -- --port 5173 --strictPort`, executada na cópia escolhida após verificar
-dependências e, quando aplicável, preparar a pronúncia pelo auxiliar existente. Isso permite
-falhar se a porta for ocupada entre a conferência e o início. O acesso por duplo clique deve
-usar essa proteção por meio dos auxiliares locais disponíveis; o comando sozinho não é um atalho.
+Na origem habitual, o auxiliar inicia Vite com --host 127.0.0.1 --port 5173 --strictPort.
+A proteção também está em vite.config.js e nos comandos npm; impede porta alternativa mesmo
+se a ocupação ocorrer entre conferência e início. A identidade é confirmada após iniciar e
+imediatamente antes de abrir, inclusive após atrasos de login Azure. O Vite criado fica oculto;
+mantenha a janela do launcher aberta durante o estudo. A limpeza só pode encerrar o processo
+criado pela própria invocação. Ao reutilizar um servidor confirmado, não assume sua propriedade
+nem o encerra.
 
 Progresso depende de protocolo, host, porta, perfil do navegador e chaves da aplicação. Mudança
 de origem ou perfil pode mostrar armazenamento separado; não diagnostique perda nem limpe,
 copie ou migre progresso automaticamente. Mantenha os contratos de
 [Armazenamento e progresso](ARMAZENAMENTO_E_PROGRESSO.md).
 
-### Limites observados na auditoria documental de 07/10/2026
+### Identidade e ocupação da porta
 
-Estas evidências são inspeção estática, sem executar launchers ou serviços. São pendências para
-tarefa própria; este protocolo não altera o funcionamento atual:
+O plugin de desenvolvimento em
+[scripts/identidade-ambiente-local.cjs](../../../scripts/identidade-ambiente-local.cjs) fornece
+GET /__revisoes_local__/identity (e HEAD). A resposta contém somente application:
+revisoes-escolares, schema: 1 e copyId. O ID é SHA-256 da raiz real normalizada, com namespace
+e versão; normaliza caixa no Windows. Não inclui branch, caminho absoluto, usuário, catálogo
+ou variáveis Azure. Identifica a cópia para impedir reuso acidental; não autentica contra
+processos locais maliciosos capazes de imitar o protocolo.
 
-- O launcher principal chama `npm run interativo` sem porta explícita ou `--strictPort`, e
-  [vite.config.js](../../../vite.config.js) não define essas opções. Não há garantia de falha
-  diante de porta ocupada. Recomenda-se explicitar a origem habitual e a falha no launcher.
-- O [launcher Chromium](../../../abrir_chromium_ambiente_interativo.bat) inicia `npm run dev`
-  e aceita qualquer HTTP 200 no endereço habitual, sem identificar a cópia servida nem preparar
-  a pronúncia. Pode abrir um servidor anterior. Recomenda-se conferir a identidade da cópia e
-  tratar ocupação antes da abertura, mantendo a preparação opcional como etapa distinta.
-- [playwright.config.js](../../../playwright.config.js) usa `reuseExistingServer: true` sem
-  conferir a identidade da cópia. Recomenda-se tornar essa identidade verificável ou impedir
-  reutilização indevida na futura correção; um resultado contra outro servidor não valida a entrega.
-- Na instalação inspecionada, o auxiliar privado usa a primeira entrada do catálogo no modo
-  de preparação de pronúncia, sem identificar o servidor atual. O nome do atalho não comprova
-  esse destino. Recomenda-se seleção explícita da cópia ou conferência do servidor antes de
-  anunciar preparação do ambiente atual; essa particularidade não é capacidade do aplicativo.
+O endpoint é de desenvolvimento, não entra no bundle e não executa ações ou comandos. Recusa
+métodos diferentes de GET/HEAD, Host não local e Origin diferente do próprio servidor; usa
+Cache-Control: no-store. O Vite bloqueia o catálogo privado e os diretórios locais tmp,
+output, .codex e .git, também nas URLs /@fs/ correspondentes à raiz servida.
+
+| Situação em 5173 | Comportamento do auxiliar |
+| --- | --- |
+| Livre | Prepara pronúncia opcional da raiz escolhida, inicia com strictPort e confirma identidade. |
+| Mesma cópia, identidade válida | Compara o ID esperado e revalida antes de reutilizar/abrir. |
+| Outra cópia | Recusa abertura e preparação; não encerra o servidor. |
+| Identidade ausente, inválida ou serviço estranho | Informa identidade indisponível; exige identificação e ação explícita do responsável. |
+
+Um servidor legado ativo não recebe identidade inventada nem é presumido como entrada do
+catálogo. Quando a porta está livre, o auxiliar pode servir uma cópia antiga explicitamente
+selecionada usando o executável Vite dela e a configuração de desenvolvimento da infraestrutura.
+A nova instância recebe identidade sem editar essa worktree. As dependências da cópia e da
+infraestrutura devem permanecer instaladas; não remova a cópia que fornece o auxiliar enquanto
+os atalhos privados dependerem dela.
+
+Opções locais: -Raiz, -Navegador Chromium, -SomentePronuncia, -SemPronuncia e -Verificar.
+-Verificar apenas valida e diagnostica, sem pronúncia, servidor ou navegador. Não há parâmetro
+de porta habitual nem seleção de raiz pelo navegador. -SomentePronuncia também recusa um
+servidor de outra cópia ou sem identidade na porta habitual.
+
+### Evidências e limites da validação de 07/10/2026
+
+Os testes Windows cobrem duas raízes, espaços/acentos, dependências, porta livre, mesma/outra
+cópia, respostas inválidas, strictPort e corrida de porta. A partida real do auxiliar em cópia
+legada foi verificada em porta isolada explicitamente pelo harness. Os dois .bat também foram
+executados contra o servidor legado real em 5173 e recusaram a abertura.
+
+Na auditoria inicial, esse servidor foi preservado e a abertura manual com 5173 livre ficou
+pendente. Posteriormente, o responsável forneceu validação humana dos dois launchers: navegador
+padrão e Chromium abriram http://127.0.0.1:5173/ambiente_interativo/index.html, com perfis e revisões
+carregados. O Vite exibiu Local: http://127.0.0.1:5173/ e nenhuma porta alternativa foi observada.
+O responsável também informou gateway em http://127.0.0.1:5190 e /health com ok:true e configured:true.
+Essa é evidência humana fornecida pelo responsável, não validação visual executada pelo Codex;
+ela não comprova avaliação de pronúncia, uso de microfone, audição ou uso infantil. Comandos,
+isolamento e limitação de CI Windows constam em [Testes e validação real](TESTES_E_VALIDACAO_REAL.md).
 
 ## Catálogo privado de revisões locais
 
@@ -104,6 +139,14 @@ instruções e atalhos. Essa organização não é um formato obrigatório para 
 Seus registros de estado são descritivos; eles não formam um controlador de progresso nem um
 novo schema do aplicativo. Preserve compatibilidade dos auxiliares ao alterar o formato.
 Metadados estruturados adicionais precisam ser definidos e verificados na tarefa correspondente.
+
+O auxiliar privado existente pode delegar a abertura ao auxiliar compartilhado com raiz
+explicitamente selecionada. Preserve os argumentos dos atalhos antes de adaptá-lo. No modo de
+pronúncia, escolha a entrada indicada ou solicite seleção/cancelamento sem uma entrada padrão;
+nunca use a primeira disponível. Na adaptação local de 07/10/2026, JSON e 17 atalhos foram
+preservados; apenas auxiliar e instruções privados mudaram. O atalho .url para ambiente já
+em execução continua sendo acesso explícito ao servidor atual, sem seleção de cópia ou garantia
+de identidade; suas instruções distinguem esse acesso do fluxo verificado.
 
 Mantenha caminhos absolutos, comandos locais, atalhos e registros privados fora do Git, usando
 exclusão local apropriada. Não publique o catálogo da máquina, PDFs, OCR, prints ou credenciais.

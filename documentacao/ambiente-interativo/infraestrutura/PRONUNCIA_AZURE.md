@@ -27,16 +27,21 @@ disponível.
 
 ## Configuração local
 
-O fluxo normal do responsável é dar duplo clique em `abrir_ambiente_interativo.bat`. Depois de
-verificar as dependências, ele chama `scripts/preparar-pronuncia-azure.ps1`. Se o gateway já estiver
+O fluxo normal do responsável é dar duplo clique em `abrir_ambiente_interativo.bat` ou no launcher
+Chromium. Ambos delegam a `scripts/abrir-ambiente-local.ps1`, que valida a raiz explicitamente
+selecionada, as dependências e a identidade de eventual servidor em 5173 antes de preparar
+pronúncia. Outra cópia ou identidade indisponível interrompem a preparação e a abertura;
+nenhum processo alheio é encerrado. Consulte [Worktrees e entrega local](WORKTREES_CATALOGO_E_ENTREGA_LOCAL.md).
+O auxiliar chama `scripts/preparar-pronuncia-azure.ps1` somente da raiz selecionada. Se o gateway já estiver
 saudável e configurado em `127.0.0.1:5190`, o launcher o reutiliza. Caso contrário, verifica se a
 Azure CLI está instalada e autenticada, recupera em memória a chave do recurso
 `revisoes-escolares-speech` no grupo `revisoes-escolares-rg`, define temporariamente
 `AZURE_SPEECH_KEY` e `AZURE_SPEECH_REGION=brazilsouth` e inicia `npm run pronuncia:gateway` em uma
 janela separada. A chave chega ao processo filho apenas por herança de ambiente: não aparece no
 comando, no navegador ou em arquivo. O launcher confirma `ok:true` e `configured:true` em
-`/health` antes de anunciar que a pronúncia está pronta. Em seguida, executa o comando habitual
-`npm run interativo`.
+`/health` antes de anunciar que a pronúncia está pronta. O auxiliar de abertura então inicia ou
+reutiliza somente o servidor confirmado da cópia escolhida, com porta habitual 5173 e strictPort,
+revalidando a identidade antes do navegador. Os comandos npm diretos não preparam pronúncia.
 
 Se a sessão da CLI expirou, o launcher oferece ao responsável a escolha de executar `az login`.
 O login e qualquer consentimento são realizados pela Azure CLI, nunca dentro do script. Se a CLI
@@ -136,9 +141,14 @@ Os modelos também são verificados no payload efetivo do sintetizador: `en-US` 
 as perguntas e respostas, ao repetir e voltar, sem microfone ou chamada ao gateway.
 Incluem resposta REST 200 com escores diretos, formato aninhado, resultado sem avaliação, erro
 Azure 401, contrato dos headers, ausência de fala/segredo nos logs e descarte do buffer no gateway.
-Com a porta 5190 livre, `node tests/launcher-pronuncia.cjs` exercita o `.bat` com CLI, npm e
+Com a porta 5190 livre, `node tests/launcher-pronuncia.cjs` exercita o preparador com CLI, npm e
 `/health` simulados:
 autenticação válida, reutilização, login recusado/feito pelo responsável, CLI ausente, falha na
 recuperação da chave e gateway sem configuração. O teste usa apenas uma credencial fictícia e
-confere que ela não aparece na saída. Um `/health` real confirma a preparação local sem enviar áudio
+confere que ela não aparece na saída nem no ambiente posterior e que o gateway inicia na raiz
+escolhida. A simulação oculta sua janela e encerra apenas seus próprios processos. Os wrappers,
+seleção/identidade e falha opcional são verificados separadamente por
+`node tests/worktrees-abertura-local.cjs`; os dois `.bat` também foram executados contra a porta
+habitual ocupada por servidor legado, sem Azure. O preparador e o gateway de produção não foram
+alterados neste lote. Um `/health` real confirma a preparação local sem enviar áudio
 ao Azure; a gravação de uma tentativa continua sendo uma validação humana separada.

@@ -184,7 +184,9 @@ test('lê escores REST diretos, preserva formato aninhado e recusa resultado sem
   });
 });
 
-test('gateway processa resposta REST 200 e diagnostica erro Azure sem fala nem credenciais', async () => {
+test('gateway processa resposta REST 200 e diagnostica erro Azure sem fala nem credenciais', async ({
+  baseURL,
+}) => {
   const previousKey = process.env.AZURE_SPEECH_KEY;
   const previousRegion = process.env.AZURE_SPEECH_REGION;
   const originalFetch = globalThis.fetch;
@@ -254,7 +256,7 @@ test('gateway processa resposta REST 200 e diagnostica erro Azure sem fala nem c
     const options = {
       method: 'POST',
       headers: {
-        Origin: 'http://127.0.0.1:5173',
+        Origin: baseURL,
         'Content-Type': 'audio/wav',
         'X-Reference-Text': Buffer.from('Thank you.', 'utf8').toString('base64'),
         'X-Pronunciation-Locale': 'en-US',
@@ -306,7 +308,9 @@ test('gateway processa resposta REST 200 e diagnostica erro Azure sem fala nem c
   }
 });
 
-test('gateway local não expõe credencial, recusa origem externa e avisa quando não configurado', async () => {
+test('gateway local não expõe credencial, recusa origem externa e avisa quando não configurado', async ({
+  baseURL,
+}) => {
   const previousKey = process.env.AZURE_SPEECH_KEY;
   const previousRegion = process.env.AZURE_SPEECH_REGION;
   delete process.env.AZURE_SPEECH_KEY;
@@ -332,7 +336,7 @@ test('gateway local não expõe credencial, recusa origem externa e avisa quando
     const response = await globalThis.fetch(`${base}/api/pronunciation`, {
       method: 'POST',
       headers: {
-        Origin: 'http://127.0.0.1:5173',
+        Origin: baseURL,
         'Content-Type': 'audio/wav',
         'X-Reference-Text': Buffer.from("What's this?", 'utf8').toString('base64'),
         'X-Pronunciation-Locale': 'en-US',
@@ -341,7 +345,7 @@ test('gateway local não expõe credencial, recusa origem externa e avisa quando
     });
     expect(response.status).toBe(503);
     expect(await response.json()).toMatchObject({ error: 'gateway_unconfigured' });
-    expect(response.headers.get('access-control-allow-origin')).toBe('http://127.0.0.1:5173');
+    expect(response.headers.get('access-control-allow-origin')).toBe(baseURL);
   } finally {
     await new Promise((resolve) => server.close(resolve));
     if (previousKey === undefined) delete process.env.AZURE_SPEECH_KEY;
