@@ -532,7 +532,7 @@ test('celular 390 × 844 aceita toque, campos, seleção e ordenação sem overf
   page.on('console', (mensagem) => {
     if (mensagem.type() === 'error') erros.push(mensagem.text());
   });
-  await page.goto('http://127.0.0.1:5173' + URL);
+  await page.goto(URL);
   await abrir(page);
   await page
     .locator('[data-item-gramatica]')

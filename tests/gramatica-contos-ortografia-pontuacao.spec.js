@@ -481,7 +481,7 @@ test('celular 390 × 844, toque, ditado, campos e pontuação acessíveis sem er
     if (m.type() === 'error') erros.push(m.text());
   });
   await audioSimulado(page);
-  await page.goto('http://127.0.0.1:5173' + CAMINHO);
+  await page.goto(CAMINHO);
   await abrir(page);
   await page.getByRole('button', { name: 'conto', exact: true }).tap();
   await page.locator('[data-conferir-gramatica]').tap();

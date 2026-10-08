@@ -444,7 +444,7 @@ test('celular 390 × 844 com toque, ditado e axe sem overflow ou erros', async (
     if (mensagem.type() === 'error') erros.push(mensagem.text());
   });
   await audioSimulado(page);
-  await page.goto('http://127.0.0.1:5173' + CAMINHO);
+  await page.goto(CAMINHO);
   await abrir(page);
   await page.getByRole('button', { name: 'conto', exact: true }).tap();
   await page.locator('[data-conferir-gramatica]').tap();
