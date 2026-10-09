@@ -123,3 +123,58 @@ confirmação do usuário; não a infira de mocks ou screenshots.
 Use `INVENTARIO_IMPLEMENTACOES.md` para estado atual e `RELATORIO_TESTE_INTERATIVO.txt` para fatos
 cronológicos. Relate apenas comandos realmente executados, contagens aprovadas, falhas, limites e
 validação humana pendente. Finalize com `git diff --check`, status, auditoria de privacidade e stash.
+
+## Processamento e observação do servidor de desenvolvimento
+
+O CSS atual é comum e não depende de plugins PostCSS externos. Declare essa configuração em
+`vite.config.js`; não dependa de descoberta automática em diretórios ancestrais. Uma futura
+necessidade de plugin deve ser explícita na configuração do projeto e validada com CSS servido,
+build, layout e regressões. A investigação no Windows encontrou espera de acesso a configurações
+ausentes fora da raiz, concorrendo com a observação inicial de artefatos.
+
+O watcher exclui somente `tmp`, `output` e `MINHAS_REVISOES_LOCAIS` da raiz desta configuração;
+exclusão do Git não equivale a exclusão do watcher. Não copie essa regra como uma exclusão global
+de qualquer diretório chamado `tmp`: uma checkout pode estar numa pasta temporária. Preserve a
+observação de fontes, CSS e configuração. A descoberta de dependências usa apenas `index.html`
+e `leitor.html` do ambiente, sem varrer HTMLs de diagnóstico ou capturas. Novos HTMLs funcionais
+precisam ser incluídos deliberadamente; novas revisões declarativas não criam outra entrada.
+
+A regra usa a raiz do arquivo de configuração. Ao servir outra cópia com configuração externa,
+confira separadamente a raiz efetivamente servida; não presuma que as exclusões foram transferidas.
+Isso não modifica o auxiliar externo do catálogo nem substitui as proteções HTTP de identidade
+e `fs.deny`. Preserve também a composição de plugins em `vite.test.config.cjs` e os PDFs sintéticos.
+
+Observar fontes não recompõe automaticamente o bundle clássico carregado por `index.html`.
+Após editar seus módulos-fonte, execute o build oficial. Alterações no CSS podem ser refletidas
+pelo cliente Vite; a mudança do bundle gerado pode recarregar a página. Não confunda observação,
+recarregamento e reconstrução, nem edite bundles manualmente.
+
+Compare inicialização fria e recargas quentes, HTTP/transformação, execução no navegador e
+condições de carga antes de alterar testes. Considere o orçamento acumulado do teste e separe
+hooks/teardown do corpo. Não diagnostique perda de progresso, erro de imagem ou falha de um
+controle apenas pela última tela de um timeout. Não aumente prazos ou reduza asserções para
+compensar processamento redundante.
+
+Use raiz absoluta, porta exclusiva, `strictPort` e `reuseExistingServer: false` nas reproduções.
+Preserve os servidores de estudo e a origem de cada cópia; portas/perfis diferentes têm progresso
+separado. Não execute vários servidores de medição simultaneamente sem que a concorrência seja
+a hipótese explícita. Catálogos privados localizam worktrees; não as integram nem migram progresso.
+
+Preview é uma comparação complementar: neste projeto serve a checkout construída, não um `dist`
+convencional. Confira HTML, CSS, bundles, imagens, worker e PDFs sintéticos nos testes de Leitura.
+Ele não cobre transformações, watcher e cliente Vite do dev; mantenha regressões direcionadas
+nesse modo. Os mapas acrescentados ao bundle pelo dev não são prova de custo integral da suíte.
+Não remova diagnóstico ou recursos funcionais sem demonstrar o efeito. Alterar o modo preferencial
+da global é uma decisão explícita, com equivalência relevante e cobertura dev preservada.
+
+Imagens amplas podem ter poucos bytes. Antes de otimizar, registre tamanho real, `viewBox`, variante
+selecionada e requisições de elementos ocultos/duplicados. Reutilize recursos e componentes;
+não reduza ilustrações, remova responsividade ou multiplique variantes móveis sem necessidade
+pedagógica e técnica. Permanecem os contratos existentes de teclado, foco, toque, fonte, layout e
+testes móveis; uma mudança de política para revisões futuras exige decisão própria.
+
+`tests/infraestrutura-vite.spec.js` verifica a configuração resolvida, CSS servido sem alteração,
+artefatos próprios realmente ausentes do watcher, observação de CSS/JS/configuração e identidade
+com proteção HTTP. As exclusões também são verificadas para raízes irmãs e fontes internas.
+Esse teste não mede desempenho nem comprova sozinho o ciclo completo de HMR ou a atualização do
+bundle; combine-o com os contratos de carregamento, navegação e PDF e a suíte global da base atual.

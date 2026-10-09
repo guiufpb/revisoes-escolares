@@ -58,6 +58,11 @@ ao conteúdo. Não duplique um motor inteiro para trocar matéria ou perguntas.
 - Uma rodada com novo significado recebe ID ou chave versionada nova; a anterior não é apagada.
 - A aplicação continua sem dependência obrigatória da internet e sem serviço externo de voz.
 - Bundles gerados nunca são editados manualmente.
+- O servidor observa fontes, não artefatos de testes ou catálogos privados. A política de
+  processamento CSS, entradas Vite e comparação dev/preview fica em
+  [Testes e validação real](infraestrutura/TESTES_E_VALIDACAO_REAL.md).
+- Preserve a qualidade das imagens; meça bytes, requisições e variantes antes de atribuir
+  lentidão às dimensões visuais ou acrescentar outra infraestrutura de carregamento.
 - Conteúdo privado orienta a análise, mas não entra no repositório.
 - Interface global, controladores e persistência só mudam quando a capacidade precisa ser comum.
 - Uma capacidade compartilhada entre sessões deve, quando apropriado, manter uma fonte única de
