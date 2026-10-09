@@ -92,7 +92,7 @@ node tests/worktrees-abertura-local.cjs
 node tests/launcher-pronuncia.cjs
 ```
 
-O primeiro cobre 23 cenários de raízes, identidade, dependências, portas, pronúncia opcional e
+O primeiro cobre 24 cenários de raízes, identidade, dependências, portas, pronúncia opcional e
 recusa real do Playwright a HTTP desconhecido. O segundo cobre oito cenários do preparador Azure
 com CLI, npm, credencial e saúde simulados, conferindo a raiz escolhida e ausência de segredo
 na saída ou no ambiente posterior. Não usam Azure real ou microfone. A porta 5190 deve estar
@@ -107,6 +107,72 @@ Não execute testes Playwright concorrentes com a mesma pasta de resultados. O c
 porta ocupada do teste CJS usa `--output` dentro da própria fixture. Na validação inicial deste
 lote, uma execução concorrente sem essa separação removeu um trace; após isolar a saída,
 o caso afetado passou novamente. Isso não autoriza reduzir asserções ou desativar traces.
+
+## Configuração Vite externa e watcher da raiz servida
+
+`tests/infra-vite-externo.spec.js` acrescenta três contratos ao Playwright. Serve raízes diferentes
+da localização da configuração, inclusive duas simultâneas, com espaços, acentos e ancestrais
+`.codex/tmp`. Verifica PostCSS explícito, fontes e configuração observadas, artefatos de primeiro
+nível ausentes do watcher, pastas internas homônimas e raízes irmãs preservadas, identidade,
+bloqueios HTTP normais e `/@fs/`, CSS, JavaScript, SVG, PNG e bundle clássico.
+
+A fixture executa o Vite da própria raiz servida, reproduzindo o auxiliar, com arquivos mínimos
+da instalação existente e sem instalação pela internet. HTMLs de diagnóstico contêm imports
+inválidos deliberados: a descoberta deve considerar somente as entradas funcionais explícitas.
+O caso sem `leitor.html` confirma que somente a dependência da entrada principal é otimizada.
+O caso com leitor confirma ambas as dependências, atualização real de CSS pelo cliente Vite e
+recarga após alterar apenas um bundle sintético. Alterar o módulo-fonte não reconstrói esse bundle;
+continue usando o build oficial para fontes reais, sem processo de build paralelo.
+
+Execute o teste em porta temporária livre com `PLAYWRIGHT_PORT`, `strictPort` e
+`reuseExistingServer:false`. As instâncias internas usam portas efêmeras e recusam 5173, 5187 e 5190. Fixtures privadas ficam em subdiretórios exclusivos de `tmp`, com limpeza limitada às
+pastas criadas pela invocação. Não use PDFs escolares privados nem perfil habitual do navegador.
+
+O harness `node tests/worktrees-abertura-local.cjs` passa a cobrir 24 cenários: acrescenta duas
+partidas reais concorrentes na mesma porta explícita, exige um único vencedor, falha da segunda
+instância e reutilização confirmada sem nova partida. Mantém os testes existentes de outra raiz,
+identidade inválida, corrida de ocupação e recusa do Playwright a servidor desconhecido. Nenhum
+launcher de produção foi alterado. O preparador de pronúncia em 5190 não integra esta validação.
+
+Para esta mudança compartilhada, execute uma regressão global da base alterada após os contratos
+direcionados, localmente ou pelo check obrigatório do PR; não repita a suíte da pasta habitual. Não altere timeouts,
+retries ou asserções para compensar falhas. Antes de publicar, confira hashes dos auxiliares,
+atalhos, catálogo, saídas de build e conteúdo das cópias atendidas, além de Git, stash e servidores.
+Medições de inicialização isoladas não substituem essa regressão nem comprovam ganho geral.
+
+### Histórico da implementação isolada — 09/10/2026
+
+- Build, `format:check`, lint e `git diff --check` aprovados; configuração Vite e harness CJS
+  também conferidos explicitamente por Prettier/ESLint, além dos padrões dos comandos npm.
+- Teste novo: **3/3** aprovado. Harness Windows: **24/24** aprovado, sem Azure real ou microfone.
+- Suíte global da worktree original de infraestrutura: **404/404 em 27,3 minutos**, exit code 0, sem falhas, retries ou
+  skips, na porta temporária 62208 com identidade confirmada e sem reutilizar servidor.
+  Inclui carregamento, Leitura/PDF sintético, armazenamento, sessões, Desktop Amplo e `file://`.
+- Nove entradas conferidas por inspeção de atalhos, branch e conteúdo. Resolução da configuração
+  nas nove raízes e processamento do CSS real preservaram integralmente o texto CSS, sem iniciar
+  servidores nessas cópias. O responsável confirmou posteriormente a abertura real das entradas 03, 06 e 09 e a
+  recusa de outra cópia em 5173 ocupada; veja o documento de worktrees. O Codex não acessou
+  progresso habitual.
+- Medição controlada após a global: três pares em ordem alternada, com dois HTMLs funcionais e
+  90 HTMLs temporários sintéticos. Medianas de partida: 52 → 47 ms na primeira e 58 → 46 ms na
+  segunda abertura; até CSS e descoberta concluírem: 375 → 65 ms e 305 → 63 ms. Diretórios de
+  artefatos observados: 3 → 0 em todas as amostras. Cache do sistema operacional não controlado;
+  primeira/segunda partida não comprova ganho geral, uso infantil ou desempenho das nove cópias.
+
+A reconciliação com a main preserva os testes e as otimizações do PR #37. Os resultados
+históricos acima não validam automaticamente essa combinação. Execute build, formatação, lint,
+contratos Vite internos/externos, harness Windows e regressões de Leitura/armazenamento na base
+reconciliada, em portas temporárias; a global também é obrigatória no check do PR para main.
+
+### Validação local da base reconciliada — 09/10/2026
+
+Na branch de integração baseada em `73813eb` (PR #37), build, formatação do código, lint e
+diff aprovados. Contratos Vite/HTTP/PDF: **13/13**; regressões de Leitura, armazenamento,
+restauração, isolamento, leitor dedicado e `file://`: **15/15**. Harness Windows: **24/24**.
+Porta temporária 60338, identidade confirmada, contextos isolados e sem reuso de servidor.
+Os testes internos usam portas efêmeras; 5173, 5187 e 5190 não foram utilizadas nesta rodada.
+A global desta combinação fica no check obrigatório do PR; a contagem histórica de 404 não
+é apresentada como resultado da base reconciliada. Nenhum timeout, retry, skip ou asserção mudou.
 
 ## O que automação não prova
 
@@ -132,15 +198,15 @@ necessidade de plugin deve ser explícita na configuração do projeto e validad
 build, layout e regressões. A investigação no Windows encontrou espera de acesso a configurações
 ausentes fora da raiz, concorrendo com a observação inicial de artefatos.
 
-O watcher exclui somente `tmp`, `output` e `MINHAS_REVISOES_LOCAIS` da raiz desta configuração;
+O watcher exclui somente `tmp`, `output` e `MINHAS_REVISOES_LOCAIS` da raiz efetivamente servida;
 exclusão do Git não equivale a exclusão do watcher. Não copie essa regra como uma exclusão global
 de qualquer diretório chamado `tmp`: uma checkout pode estar numa pasta temporária. Preserve a
 observação de fontes, CSS e configuração. A descoberta de dependências usa apenas `index.html`
 e `leitor.html` do ambiente, sem varrer HTMLs de diagnóstico ou capturas. Novos HTMLs funcionais
 precisam ser incluídos deliberadamente; novas revisões declarativas não criam outra entrada.
 
-A regra usa a raiz do arquivo de configuração. Ao servir outra cópia com configuração externa,
-confira separadamente a raiz efetivamente servida; não presuma que as exclusões foram transferidas.
+A regra captura a raiz final em `configResolved`, tanto no uso habitual quanto com configuração
+externa. Confira a raiz efetivamente servida ao testar outra cópia.
 Isso não modifica o auxiliar externo do catálogo nem substitui as proteções HTTP de identidade
 e `fs.deny`. Preserve também a composição de plugins em `vite.test.config.cjs` e os PDFs sintéticos.
 

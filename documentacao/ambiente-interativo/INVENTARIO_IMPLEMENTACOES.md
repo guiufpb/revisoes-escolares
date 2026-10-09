@@ -36,8 +36,35 @@ distinguem este resultado dos testes históricos e das validações específicas
 - Recursos locais, sem CDN obrigatória.
 - Bundle principal e PDF.js gerados a partir dos módulos-fonte.
 - Vite declara PostCSS sem plugins externos, restringe a descoberta aos dois HTMLs da aplicação
-  e exclui `tmp`, `output` e `MINHAS_REVISOES_LOCAIS` da observação na própria raiz. Fontes e
+  e exclui `tmp`, `output` e `MINHAS_REVISOES_LOCAIS` da observação na raiz efetivamente servida. Fontes e
   recarregamento de desenvolvimento permanecem disponíveis; não houve mudança de launcher/origem.
+
+### Otimização da configuração externa — 09/10/2026
+
+- Configuração compartilhada declara PostCSS sem plugins e restringe descoberta aos dois HTMLs
+  funcionais relativos à raiz servida; leitor opcional ausente não amplia a varredura.
+- Plugin local captura a raiz final em `configResolved` e exclui somente seus artefatos de
+  primeiro nível (`tmp`, `output`, `MINHAS_REVISOES_LOCAIS`) do watcher. Preserva fontes,
+  recursos, raízes irmãs, identidade, proteções HTTP, bloco de build, auxiliares e portas.
+- Três testes de configuração externa cobrem duas raízes simultâneas, ausência de leitor,
+  dependências, CSS e bundle sintético recarregados. Harness Windows estendido para 24 cenários,
+  incluindo partidas concorrentes e reutilização. Procedimentos e limites em
+  [Testes e validação real](infraestrutura/TESTES_E_VALIDACAO_REAL.md) e
+  [Worktrees, catálogo e entrega local](infraestrutura/WORKTREES_CATALOGO_E_ENTREGA_LOCAL.md).
+- Instâncias de estudo existentes só carregam a configuração nova após reinício controlado.
+  A atualização não migra progresso nem reorganiza o catálogo privado.
+- Validação histórica da implementação isolada: build, formatação, lint e diff aprovados; **3/3** contratos novos,
+  **24/24** cenários Windows e **404/404** globais em **27,3 min**, sem falhas, retries ou skips.
+  Nove raízes/CSS conferidos sem abrir seus servidores. Medição sintética e limites registrados
+  no documento de testes. O responsável confirmou posteriormente as entradas 03, 06 e 09 e
+  a recusa de outra cópia com 5173 ocupada; etapa humana planejada concluída.
+- Integração separada baseada na main do PR #37 preserva sua configuração e contratos; apenas
+  a exclusão estática do watcher passa a usar a raiz resolvida. Auxiliares já publicados,
+  sem dependências exclusivas da branch antiga. Essa combinação exige validação própria e
+  check global do PR; publicar não integra automaticamente a pasta habitual.
+- Na base reconciliada: build, formatação do código, lint e diff aprovados; **28/28** testes
+  direcionados de Vite/HTTP/PDF, Leitura e armazenamento e **24/24** cenários Windows.
+  A suíte global desta combinação é conferida pelo check obrigatório do PR para main.
 
 ### Abertura segura de cópias isoladas — 07/10/2026
 
