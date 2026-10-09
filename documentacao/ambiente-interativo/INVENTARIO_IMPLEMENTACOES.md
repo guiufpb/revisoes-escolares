@@ -35,6 +35,9 @@ distinguem este resultado dos testes históricos e das validações específicas
 - Atalho para Chromium do Playwright.
 - Recursos locais, sem CDN obrigatória.
 - Bundle principal e PDF.js gerados a partir dos módulos-fonte.
+- Vite declara PostCSS sem plugins externos, restringe a descoberta aos dois HTMLs da aplicação
+  e exclui `tmp`, `output` e `MINHAS_REVISOES_LOCAIS` da observação na própria raiz. Fontes e
+  recarregamento de desenvolvimento permanecem disponíveis; não houve mudança de launcher/origem.
 
 ### Abertura segura de cópias isoladas — 07/10/2026
 
