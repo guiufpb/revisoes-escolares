@@ -114,6 +114,55 @@ Essa é evidência humana fornecida pelo responsável, não validação visual e
 ela não comprova avaliação de pronúncia, uso de microfone, audição ou uso infantil. Comandos,
 isolamento e limitação de CI Windows constam em [Testes e validação real](TESTES_E_VALIDACAO_REAL.md).
 
+### Otimização da configuração externa — 09/10/2026
+
+O auxiliar continua executando o Vite instalado na cópia selecionada, com raiz explícita e
+configuração da infraestrutura. A configuração não deve usar seu próprio `__dirname` para
+excluir artefatos de outra cópia. O plugin local de observação captura `config.root` em
+`configResolved`, antes da criação do watcher, e adiciona um predicado específico por servidor.
+Ele exclui somente `tmp`, `output` e `MINHAS_REVISOES_LOCAIS` no primeiro nível da raiz servida.
+Raízes irmãs, fontes internas homônimas e uma checkout localizada sob `.codex` ou `tmp` não
+são excluídas por esse predicado. Configuração, fontes, CSS, imagens e bundles seguem observados.
+Opções de observação recebidas são preservadas, inclusive a desativação explícita do watcher.
+
+PostCSS é explícito, sem plugins externos. A descoberta usa os padrões relativos
+`ambiente_interativo/index.html` e `ambiente_interativo/leitor.html`: Vite considera somente
+os arquivos existentes na raiz servida. A ausência do leitor opcional não habilita uma busca
+geral por HTML. Ao acrescentar outro HTML funcional, inclua-o deliberadamente e teste a cópia
+antiga sem esse arquivo. Não exclua imagens, SVGs, PDFs ou fontes para reduzir descoberta.
+
+Uma configuração interna pode usar sua própria raiz quando ela coincide com a aplicação;
+isso não é uma garantia para configurações externas. Não transplante o arquivo inteiro:
+preserve identidade, bloqueios HTTP, `fs.deny`, host, porta estrita e bloco de build. O ajuste
+de desenvolvimento não muda launcher, gateway, portas ou chaves de progresso.
+
+Para novos atalhos, confira destino, argumentos, branch e conteúdo, e execute os contratos de
+configuração externa e abertura descritos em [Testes e validação real](TESTES_E_VALIDACAO_REAL.md).
+Use portas temporárias, contextos isolados e fixtures sintéticas; não dispute origens de estudo.
+O caso de recarregamento precisa executar o Vite da raiz servida, como faz o auxiliar real.
+Um teste que empresta o runtime de outra raiz introduz URLs absolutas de dependências externas
+e não representa integralmente esse contrato.
+
+Identidade continua identificando a raiz, não versão de configuração nem progresso. Cópias na
+mesma origem/perfil podem acessar a mesma chave de revisão; portas diferentes têm armazenamento
+separado. Não copie, migre ou limpe dados para conferir a atualização. Instâncias já abertas
+precisam de reinício controlado pelo responsável para carregar a nova configuração; o auxiliar
+pode reutilizar uma instância da mesma raiz ainda com a configuração anterior.
+
+A integração remota concilia este plugin com a configuração habitual do PR #37: quando a
+configuração está dentro da aplicação, a raiz resolvida coincide com a raiz habitual; quando
+externa, a regra acompanha a cópia atendida. PostCSS, entradas HTML, build/PDF.js, identidade,
+host, porta estrita e proteções HTTP permanecem. Os auxiliares necessários já estão na main;
+novas worktrees não dependem de arquivos exclusivos da branch original.
+
+O responsável confirmou a validação humana das entradas 03 (Play Time, 5173, gateway
+disponível, imagens e progresso), 06 (Transportes, 5173 após liberação, questões 16/17,
+progresso e novas respostas) e 09 (Ciências, 5187, ilustrações, Desktop Amplo e progresso).
+Também confirmou a recusa de outra worktree em 5173 ocupada. São relatos humanos da
+implementação local, sem alegação de avaliação real de pronúncia ou validação da nova base.
+Essa etapa humana está concluída; a base reconciliada recebe validação automatizada própria.
+Publicar o PR não atualiza atalhos, catálogo, servidores nem a pasta habitual.
+
 ## Catálogo privado de revisões locais
 
 Ao entregar uma revisão ainda isolada, registre ou atualize sua entrada no catálogo local,

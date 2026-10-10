@@ -347,6 +347,51 @@ try {
     }
   );
 
+  await scenario('partidas simultaneas: somente um Vite ocupa a porta explicita', async () => {
+    const probe = net.createServer();
+    const port = await listen(probe);
+    await close(probe);
+    assert.ok(![5173, 5187, 5190].includes(port));
+    await psOK(
+      `
+$studyPort = [int]$env:WORKTREES_PORT
+$localOrigin = "http://127.0.0.1:$studyPort"
+$identityUri = "$localOrigin/__revisoes_local__/identity"
+$one = $null
+$two = $null
+try {
+    $one = Start-StudyServer $first
+    $two = Start-StudyServer $first
+    $limit = (Get-Date).AddSeconds(10)
+    do {
+        $one.Refresh(); $two.Refresh()
+        if ($one.HasExited -or $two.HasExited) { break }
+        Start-Sleep -Milliseconds 100
+    } while ((Get-Date) -lt $limit)
+    Assert-Equal ($one.HasExited -xor $two.HasExited) $true
+    $winner = $one
+    $loser = $two
+    if ($one.HasExited) { $winner = $two; $loser = $one }
+    if ($loser.ExitCode -eq 0) { throw 'Partida concorrente deveria falhar' }
+    Wait-StudyServer (Get-ExpectedIdentity $first) $winner
+    Assert-Equal (Get-StudyServerState (Get-ExpectedIdentity $first)) 'same'
+    function Start-StudyServer { throw 'NAO_DEVERIA_INICIAR' }
+    function Open-StudyBrowser { param($Root, $Browser); Assert-Equal $Root $first }
+    Assert-Equal (Invoke-StudyOpening -Root $first -SkipPronunciation) 0
+} finally {
+    foreach ($own in @($one, $two)) {
+        if ($null -ne $own) {
+            $own.Refresh()
+            if (-not $own.HasExited) { $own.Kill(); $own.WaitForExit() }
+            $own.Dispose()
+        }
+    }
+}
+`,
+      { WORKTREES_PORT: String(port) }
+    );
+  });
+
   await scenario('corrida: porta ocupada depois do preflight nao abre outra copia', async () => {
     const occupied = net.createServer();
     const port = await listen(occupied);
