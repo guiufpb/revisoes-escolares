@@ -20,6 +20,18 @@ cabeçalho, áudio, escrita, resultado e remoção da classe.
 
 ## Validação
 
+A Geografia de Mariana de outubro de 2026 usa `css/geografia-paisagens-outubro.css` para figuras
+compostas. Seu seletor combina `.layout-desktop-amplo` com o prefixo de imagem
+`../assets/geografia-paisagens-outubro/`: largura integral e altura proporcional, sem o teto
+genérico que encolheria comparações empilhadas. O ajuste acompanha a figura no celular e não
+se aplica às outras pastas de assets.
+
+A revisão `alice-ciencias-sustentabilidade-rotina-objetos-outubro-2026` carrega
+`css/ciencias-sustentabilidade-outubro-2026.css`. Os seletores são restritos à sua família de
+assets: as composições verticais mantêm altura natural e o mapa não recebe o recorte legado de
+celular. Isso permite legibilidade e relações completas sem alterar controladores ou imagens
+de outras revisões. Esta inclusão de CSS/HTML exige a suíte global, além dos direcionados.
+
 Play Time usa `data-unidade` no painel de Inglês para restringir seu tratamento visual:
 em desktop, cenas de enunciado ficam amplas e a comparação A/B ocupa a largura do cartão,
 com alternativas abaixo. Figuras alternativas ficam maiores em todas as telas. No celular,

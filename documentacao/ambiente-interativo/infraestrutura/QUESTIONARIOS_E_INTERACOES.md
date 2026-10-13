@@ -137,6 +137,28 @@ sessão ativa.
 
 ## Correção e feedback
 
+A revisão alice-geografia-brincadeiras-lazer-outubro-2026 reutiliza mapa visual em Q13,
+ordenação de três cartões num único subitem misto em Q14, seleção/opções em Q26 e opções em Q28.
+Q09 usa banco textual e campos; Q10/Q30 usam ditado com pontuação flexível, sem requisitos
+ortográficos. São 30 questões, 58 subitens e 30 pontos. Nenhum controlador foi estendido.
+Os campos Q30 têm largura local pelo prefixo dos seus IDs, sem ativar fraseCompleta.
+Os quatro rótulos do croqui Q13 também ficam visíveis antes da conferência, por CSS local.
+Validação automatizada em 06/10/2026: 20/20 direcionados, 36/36 regressões e 412/412 globais.
+Registro histórico da origem: uso real e audição ainda não confirmados naquela data.
+O responsável confirmou a validação humana antes da integração de 13/10/2026.
+
+A revisão `mariana-geografia-paisagens-qualidade-vida-outubro-2026` reutiliza os opt-ins vigentes:
+seleções em várias partes usam tipo misto, Q10 combina ordenação e duas alternativas, Q5/Q30
+usam campos de ditado separados das questões mistas. Apoios, pistas, consolidações e 75 subitens
+permanecem declarativos, com um ponto por questão, sem extensão do motor.
+
+A revisão `mariana-ciencias-sol-sombras-materiais-outubro-2026` reutiliza essas capacidades:
+Q06/Q12/Q15 são questões mistas com um único grupo de ordenação, para contar uma sequência
+inteira como uma unidade de resposta; Q30 combina seleção, alternativa e ordenação. Q05 mantém
+o apoio do gnômon em `ilustracaoLeitura` e as previsões sem sombras prontas em `imagem` por
+subitem. O mapa Q02 alinha os valores das opções e pontos sem pontuação incidental e usa SVG
+com a proporção do recorte móvel existente. Essas adaptações são de conteúdo, sem extensão do motor.
+
 A revisão `mariana-historia-transportes-memorias-outubro-2026` demonstra essas capacidades sem
 extensão compartilhada: Q08 combina alternativa e seleção; Q12 combina ordenação e alternativa;
 Q13/Q25 combinam seleção e alternativa. Bancos fechados usam alternativas ou campos existentes;

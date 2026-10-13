@@ -394,8 +394,10 @@
       aluno === 'alice' ? 'Olá, Alice!' : 'Olá, Mariana!';
     document.getElementById('materia-ciencias').hidden = aluno !== 'alice';
     document.getElementById('abrir-ciencias-plantas-sol').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-ciencias-sol-sombras-materiais').hidden = aluno !== 'mariana';
     document.getElementById('abrir-ciencias-alice-objetos-emocoes-alimentacao').hidden =
       aluno !== 'alice';
+    document.getElementById('abrir-ciencias-sustentabilidade-alice').hidden = aluno !== 'alice';
     document.getElementById('materia-ingles').hidden = false;
     document.getElementById('abrir-ingles-city-life').hidden = aluno !== 'mariana';
     document.getElementById('abrir-ingles-at-the-farm').hidden = aluno !== 'alice';
@@ -423,7 +425,11 @@
     document.getElementById('abrir-historia-transportes').hidden = aluno !== 'mariana';
     document.getElementById('abrir-historia-memorias-outubro-mariana').hidden = aluno !== 'mariana';
     document.getElementById('abrir-geografia-transportes-comunicacao').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-geografia-paisagens-outubro-mariana').hidden =
+      aluno !== 'mariana';
     document.getElementById('abrir-geografia-moradias-lugares-interior').hidden = aluno !== 'alice';
+    document.getElementById('abrir-geografia-brincadeiras-lazer-outubro-2026').hidden =
+      aluno !== 'alice';
     document.getElementById('abrir-gramatica-contos').hidden = aluno !== 'mariana';
     document.getElementById('abrir-gramatica-pontuacao-ortografia-mariana').hidden =
       aluno !== 'mariana';
@@ -527,6 +533,13 @@
       atualizarResumo();
     });
     document
+      .getElementById('abrir-ciencias-sol-sombras-materiais')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'mariana') return;
+        window.QuestionariosRevisoes.abrir('mariana-ciencias-sol-sombras-materiais-outubro-2026');
+        atualizarResumo();
+      });
+    document
       .getElementById('abrir-ciencias-alice-objetos-emocoes-alimentacao')
       .addEventListener('click', function () {
         if (alunoAtual !== 'alice') return;
@@ -539,6 +552,15 @@
       window.InglesRevisoes.abrir(alunoAtual, IDS_INGLES[alunoAtual]);
       atualizarResumo();
     });
+    document
+      .getElementById('abrir-ciencias-sustentabilidade-alice')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'alice') return;
+        window.QuestionariosRevisoes.abrir(
+          'alice-ciencias-sustentabilidade-rotina-objetos-outubro-2026'
+        );
+        atualizarResumo();
+      });
     document.getElementById('abrir-ingles-city-life').addEventListener('click', function () {
       window.InglesRevisoes.abrir('mariana', 'mariana-ingles-city-life-unidade-5');
       atualizarResumo();
@@ -623,6 +645,16 @@
         atualizarResumo();
       });
     document
+      .getElementById('abrir-geografia-paisagens-outubro-mariana')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'mariana') return;
+        window.QuestionariosRevisoes.abrir(
+          'mariana-geografia-paisagens-qualidade-vida-outubro-2026'
+        );
+        atualizarResumo();
+      });
+
+    document
       .getElementById('abrir-geografia-transportes-comunicacao')
       .addEventListener('click', function () {
         if (alunoAtual !== 'mariana') return;
@@ -638,6 +670,13 @@
         window.QuestionariosRevisoes.abrir(
           'alice-geografia-moradias-lugares-interior-setembro-2026'
         );
+        atualizarResumo();
+      });
+    document
+      .getElementById('abrir-geografia-brincadeiras-lazer-outubro-2026')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'alice') return;
+        window.QuestionariosRevisoes.abrir('alice-geografia-brincadeiras-lazer-outubro-2026');
         atualizarResumo();
       });
     document

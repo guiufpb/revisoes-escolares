@@ -3,6 +3,52 @@
 
   var revisoes = [
     {
+      id: 'alice-geografia-brincadeiras-lazer-outubro-2026',
+      aluno: 'alice',
+      titulo: 'Brincar, conviver e descobrir lugares',
+      cartaoId: 'abrir-geografia-brincadeiras-lazer-outubro-2026',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento: 'revisoesEscolares.alice.geografia.brincadeirasLazerOutubro2026.v1',
+      totalEtapas: 30,
+      possuiAudio: true,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
+      id: 'mariana-geografia-paisagens-qualidade-vida-outubro-2026',
+      aluno: 'mariana',
+      titulo: 'Lugares de viver, cuidar e transformar',
+      cartaoId: 'abrir-geografia-paisagens-outubro-mariana',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento:
+        'revisoesEscolares.mariana.geografia.paisagensQualidadeVidaOutubro2026.v1',
+      totalEtapas: 30,
+      possuiAudio: true,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
+      id: 'alice-ciencias-sustentabilidade-rotina-objetos-outubro-2026',
+      aluno: 'alice',
+      titulo: 'Objetos, rotina e cuidado com o ambiente',
+      cartaoId: 'abrir-ciencias-sustentabilidade-alice',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento:
+        'revisoesEscolares.alice.ciencias.sustentabilidadeRotinaObjetosOutubro2026.v1',
+      totalEtapas: 30,
+      possuiAudio: false,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
+      id: 'mariana-ciencias-sol-sombras-materiais-outubro-2026',
+      aluno: 'mariana',
+      titulo: 'Investigando o Sol, as sombras e os materiais',
+      cartaoId: 'abrir-ciencias-sol-sombras-materiais',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento: 'revisoesEscolares.mariana.ciencias.solSombrasMateriaisOutubro2026.v1',
+      totalEtapas: 30,
+      possuiAudio: true,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
       id: 'alice-historia-objetos-memorias-outubro-2026',
       aluno: 'alice',
       titulo: 'Objetos e histórias — Uma investigação da Alice',

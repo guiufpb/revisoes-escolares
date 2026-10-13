@@ -4,7 +4,26 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra o estado de trabalho em **07/10/2026**.
+Este inventário registra o estado de trabalho em **13/10/2026**.
+
+Integração controlada de Ciências e Geografia em 13/10/2026: quatro revisões existentes
+transportadas seletivamente para uma nova cópia sobre a main, com **63 registros**.
+Conteúdo, assets, IDs e chaves foram preservados. A validação humana foi confirmada pelo
+responsável antes desta etapa; não se infere dela audição específica do Windows ou Azure real.
+Resultados históricos nas seções abaixo descrevem as cópias de origem. Validação técnica
+desta combinação sobre a main confirmada: build, formatação, lint e diff aprovados;
+**79/79 direcionados (6,6 min)**, **73/73 regressões (5,7 min)** e **484 passed (33.8m)**
+na suíte global, sem falhas, retries ou skips. Contratos Windows de abertura: **24/24**;
+pronúncia simulada: **8/8**, sem Azure real ou microfone. Testes em origem isolada, porta 5189,
+com identidade da cópia confirmada; os livros de regressão são fixtures sintéticas originais.
+
+Os 59 cadastros anteriores permanecem idênticos; os quatro novos cartões, IDs e chaves
+são exclusivos. Conteúdo, 97 SVGs e quatro testes conferidos por hash com as fontes.
+Modo Responsável, Desktop Amplo, teclado/toque, erro/correção, retorno/recarga, limpeza
+seletiva e progresso por perfil foram exercitados pelos testes direcionados e regressões.
+Controladores, áudio, armazenamento, Vite e launcher da main foram reutilizados sem alteração.
+Fontes, alterações locais e stash preservados com backup verificável. A integração está
+na cópia exclusiva, sem atualizar a pasta habitual e sem commit ou publicação nesta etapa.
 
 Consolidação local das quatro revisões validadas em uso real: Alice História, Alice Play Time,
 Mariana História e Alice At the Farm v2. Catálogo com 59 registros; build, formatação, lint e
@@ -177,6 +196,125 @@ distinguem este resultado dos testes históricos e das validações específicas
 - Restauração de etapa, respostas, pontuação, canvas, página e cenas manipulativas.
 
 ## 4. História, Geografia e Ciências
+
+### Alice — Geografia: Brincar, conviver e descobrir lugares — outubro de 2026
+
+- 30 questões em seis blocos de cinco; 58 subitens, 30 pontos e seis ampliações correlatas.
+- Conteúdo exclusivo de Alice: tempos, brinquedos, materiais, lugares, lazer e convivência.
+- Motor de questionários existente, Desktop Amplo, tentativas e Modo Responsável opt-in.
+- Q09: banco e campos; Q10/Q30: ditados; Q13: mapa; Q14: ordenação reversível em um subitem;
+  Q26/Q28: mistos. Um ponto só após todos os subitens corretos.
+- 14 SVGs originais locais em assets/geografia-brincadeiras-lazer-outubro-2026/.
+- CSS restrito aos campos Q30 oferece largura sem impor objetivo ortográfico.
+- Rótulos do mapa Q13 são visíveis antes da conferência, com CSS restrito a este croqui.
+- Testes: tests/geografia-alice-brincadeiras-lazer-outubro-2026.spec.js, **20/20 aprovados**.
+  Regressões de revisões equivalentes e ditado: **36/36**; suíte global: **412/412**.
+  Build, formatação, lint e diff aprovados. Uso real e audição da voz instalada pendentes.
+
+ID: alice-geografia-brincadeiras-lazer-outubro-2026.
+
+Chave: revisoesEscolares.alice.geografia.brincadeirasLazerOutubro2026.v1.
+
+Auxiliar: revisoesEscolares.alice.geografia.brincadeirasLazerOutubro2026.responsavel.v1.
+
+Conteúdo: ambiente_interativo/revisoes/alice/geografia-brincadeiras-lazer-outubro-2026.js.
+
+Detalhes e resultados:
+[Geografia de Alice — outubro de 2026](pedagogia/ALICE_GEOGRAFIA_BRINCADEIRAS_LAZER_OUTUBRO_2026.md).
+
+### Mariana — Geografia: Lugares de viver, cuidar e transformar (outubro de 2026)
+
+- Exclusiva de Mariana, 2º ano, prova 07/10: **30 questões, 75 subitens e 30 pontos**. Apoios
+  em todas as telas e seis aberturas; 57 opções, 12 seleções, uma ordenação e cinco ditados.
+- Reutiliza questionários, interações mistas, áudio local, validação estrita, tentativas,
+  Desktop Amplo e sessões independentes Mariana/Responsável, sem alterar controladores.
+- 23 SVGs originais em `assets/geografia-paisagens-outubro/`, com descrições equivalentes.
+  CSS restrito à pasta e ao opt-in conserva largura integral das comparações empilhadas.
+- Integração em `app.entry.js`, `registro-revisoes.js`, `app.js` e `index.html`; catálogo
+  passa de 59 a **60 registros**. A asserção geral do catálogo acompanha a inclusão.
+- Validação concluída em **06/10/2026**: build, formatação, lint e diff aprovados; figuras
+  inspecionadas e 21 telas verificadas em três viewports. **31/31 testes direcionados (3,1 min)**,
+  sendo 17 da nova revisão e 14 das Geografias anteriores; **409/409 na suíte global (30,8 min)**.
+  Testes novos: `tests/geografia-mariana-paisagens-outubro-2026.spec.js`.
+- A worktree recebeu cópias conferidas dos dez PDFs locais de leitura já existentes, ignorados
+  pelo Git, para viabilizar a regressão global. Capturas e logs permanecem locais. Uso real e
+  acústica desta revisão ainda não confirmados.
+- Detalhes: [Geografia Mariana — paisagens](pedagogia/GEOGRAFIA_MARIANA_PAISAGENS_OUTUBRO_2026.md).
+
+ID: `mariana-geografia-paisagens-qualidade-vida-outubro-2026`.
+
+Chave principal: `revisoesEscolares.mariana.geografia.paisagensQualidadeVidaOutubro2026.v1`.
+
+Chave auxiliar: `revisoesEscolares.mariana.geografia.paisagensQualidadeVidaOutubro2026.responsavel.v1`.
+
+Conteúdo: `ambiente_interativo/revisoes/mariana/geografia-paisagens-qualidade-vida-outubro-2026.js`.
+
+### Alice — Ciências: Objetos, rotina e cuidado com o ambiente (outubro de 2026)
+
+- **30 questões, 60 subitens, 30 pontos**, com um ponto por questão integralmente correta.
+  Blocos: objetos (9/17), rotina (8/15), ambiente (10/21), missão final (3/7).
+- ID: `alice-ciencias-sustentabilidade-rotina-objetos-outubro-2026`.
+- Conteúdo: `ambiente_interativo/revisoes/alice/ciencias-sustentabilidade-rotina-objetos-outubro-2026.js`.
+- Chave principal: `revisoesEscolares.alice.ciencias.sustentabilidadeRotinaObjetosOutubro2026.v1`.
+  Auxiliar: `revisoesEscolares.alice.ciencias.sustentabilidadeRotinaObjetosOutubro2026.responsavel.v1`.
+- Reutiliza `QuestionariosRevisoes`/`QuestionariosInteracoes`: mapa, campos, oito seleções,
+  quatro sequências e escolhas únicas; Q11 usa um subitem de ordenação em `misto` para preservar
+  a contagem aprovada. Nenhum ditado, microfone, payload de áudio ou novo controlador.
+- Opt-ins: Desktop Amplo, validação estrita, tentativas e Modo Responsável, com Alice principal
+  e Responsável auxiliar. Cartão consulta apenas a principal; chaves antigas preservadas.
+- 27 composições SVG originais em `assets/ciencias-sustentabilidade-rotina-objetos-outubro-2026/`.
+  CSS próprio mantém imagens verticais e remove o recorte celular somente nessa família.
+- Documento pedagógico, conteúdo integral, gabarito e contratos:
+  `pedagogia/CIENCIAS_ALICE_SUSTENTABILIDADE_OUTUBRO_2026.md`.
+- Teste: `tests/ciencias-alice-sustentabilidade-rotina-objetos-outubro-2026.spec.js`.
+  Build, formatação, lint e diff-check aprovados. Matriz direcionada: **24/24**;
+  suíte global: **416/416**, em 7 de outubro de 2026, obrigatória pelo CSS/HTML.
+  Cobertura: gabarito independente, percurso dos 60 subitens com erro/correção e 30 pontos,
+  restauração/edição, campos Q03, conjuntos exatos, sequências reversíveis, sessões/limpeza,
+  dados inválidos, armazenamento bloqueado, file://, toque, teclado, axe-core e geometria
+  em 390 × 844, 1366 × 768 e 1920 × 1080. Os dez livros originais necessários foram copiados com
+  hashes/páginas conferidos e mantidos ignorados; nenhum PDF sintético foi usado.
+  Inspeção dos 27 SVGs realizada; screenshots de telas
+  representativas nos três viewports gerados e geometria sem overflow horizontal nessas telas.
+- Situação: implementação e validação automatizada concluídas em cópia isolada; acesso pelo
+  cartão de Alice conferido na origem habitual. Uso real por Alice pendente;
+  nenhuma integração à pasta habitual ou publicação.
+
+### Mariana — Investigando o Sol, as sombras e os materiais (outubro de 2026)
+
+- Nova revisão exclusiva do 2º ano: **30 questões, 64 subitens e 30 pontos**, com luz/sombras,
+  materiais, calor/água, usos da energia, plantas, rotação e cuidados. A anterior permanece intacta.
+- Reutiliza o questionário, interações, ditado, áudio e armazenamento existentes. Desktop Amplo,
+  validação estrita, tentativas e Modo Responsável são opt-ins; principal e auxiliar isoladas.
+- **33 SVGs originais locais**, incluindo três imagens por subitem na Q05 e apoio do gnômon
+  separado. Sequências inteiras usam um único subitem misto; Q10 tem três ditados opcionais e
+  escrita flexível; Q20 tem banco sem ditado. Mapa com geometria ajustada ao recorte no celular.
+- Validação retomada e concluída: **15/15 cenários novos** e **27 regressões equivalentes**
+  aprovados. `npm test`: **415/416 aprovados em 29,8 min**; a contagem fixa antiga do cadastro
+  foi atualizada de 59 para 60 e passou no reteste **1/1**, preservando unicidade e elementos.
+  Não houve repetição global integral após esse ajuste ao teste. Build, formatação, lint e
+  diff aprovados; abertura Windows **23/23** e pronúncia simulada **8/8**. 90 telas renderizadas
+  nos três viewports sem overflow. Sem audição humana ou uso infantil.
+- Testes: `tests/ciencias-mariana-sol-sombras-materiais-outubro-2026.spec.js`.
+- Detalhes e alcance: [registro pedagógico](pedagogia/MARIANA_CIENCIAS_SOL_SOMBRAS_MATERIAIS_OUTUBRO_2026.md).
+
+ID: `mariana-ciencias-sol-sombras-materiais-outubro-2026`.
+
+Principal: `revisoesEscolares.mariana.ciencias.solSombrasMateriaisOutubro2026.v1`.
+
+Auxiliar: `revisoesEscolares.mariana.ciencias.solSombrasMateriaisOutubro2026.responsavel.v1`.
+
+Conteúdo: `ambiente_interativo/revisoes/mariana/ciencias-sol-sombras-materiais-outubro-2026.js`.
+
+Diagnóstico de Q16 em 09/10/2026: três novos testes por mouse, teclado e toque passaram,
+cobrindo desmarcar nas duas partes antes/depois de conferir, correção, tentativa incompleta,
+avançar/voltar/recarga e pontuação única. A falha relatada não foi reproduzida nessa cópia;
+nenhum controlador, conteúdo, chave ou resposta foi alterado. Rodada da unidade: 17/18, com
+prazo excedido no percurso de layout 1366; reteste desse caso: 1/1 aprovado, sem alterar prazos
+ou asserções. Build, formatação, lint e diff aprovados. Sem nova suíte global, pois o diagnóstico
+adicionou apenas testes. Posteriormente, em 09/10/2026, o responsável esclareceu que o erro
+original era em Inglês da Mariana e retirou a atribuição a Ciências; os três testes permanecem
+como cobertura de regressão, sem indicar uma falha confirmada ou corrigida em Ciências.
 
 ### Mariana — História: Uma viagem pelas histórias e memórias (outubro de 2026)
 

@@ -195,9 +195,31 @@ test('carrega a tela inicial e registra todas as revisões sem chaves duplicadas
       ),
     }))
   );
-  expect(registro).toHaveLength(59);
-  expect(new Set(registro.map((item) => item.id)).size).toBe(59);
-  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(59);
+  expect(registro).toHaveLength(63);
+  expect(new Set(registro.map((item) => item.id)).size).toBe(63);
+  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(63);
+  expect(registro).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        id: 'alice-geografia-brincadeiras-lazer-outubro-2026',
+        chaveArmazenamento: 'revisoesEscolares.alice.geografia.brincadeirasLazerOutubro2026.v1',
+      }),
+      expect.objectContaining({
+        id: 'mariana-geografia-paisagens-qualidade-vida-outubro-2026',
+        chaveArmazenamento:
+          'revisoesEscolares.mariana.geografia.paisagensQualidadeVidaOutubro2026.v1',
+      }),
+      expect.objectContaining({
+        id: 'alice-ciencias-sustentabilidade-rotina-objetos-outubro-2026',
+        chaveArmazenamento:
+          'revisoesEscolares.alice.ciencias.sustentabilidadeRotinaObjetosOutubro2026.v1',
+      }),
+      expect.objectContaining({
+        id: 'mariana-ciencias-sol-sombras-materiais-outubro-2026',
+        chaveArmazenamento: 'revisoesEscolares.mariana.ciencias.solSombrasMateriaisOutubro2026.v1',
+      }),
+    ])
+  );
   expect(registro.every((item) => item.elementosExistem)).toBe(true);
 });
 
