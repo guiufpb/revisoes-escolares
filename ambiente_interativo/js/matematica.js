@@ -33,6 +33,9 @@
     base.etapaAtual = Math.max(0, Math.min(maximo, Math.trunc(Number(valor.etapaAtual) || 0)));
 
     var cenasSalvas = objeto(valor.cenas);
+    var conferenciaAtual = revisao.etapas.some(function (etapa) {
+      return etapa.cena && etapa.cena.conferenciaPorSubitem;
+    });
     revisao.etapas.forEach(function (etapa) {
       if (etapa.tipo === 'cena' && cenasSalvas[etapa.id]) {
         base.cenas[etapa.id] = window.MatematicaManipulaveis.normalizarEstado(
@@ -40,9 +43,18 @@
           etapa.cena
         );
       }
-      if (objeto(valor.concluidas)[etapa.id] === true) base.concluidas[etapa.id] = true;
+      if (etapa.cena && etapa.cena.conferenciaPorSubitem) {
+        if (base.cenas[etapa.id] && base.cenas[etapa.id].concluida)
+          base.concluidas[etapa.id] = true;
+      } else if (objeto(valor.concluidas)[etapa.id] === true) base.concluidas[etapa.id] = true;
       var pontos = Number(objeto(valor.pontuacoes)[etapa.id]);
-      if (Number.isFinite(pontos) && pontos >= 0 && pontos <= 1) {
+      if (conferenciaAtual && etapa.tipo === 'cena' && base.concluidas[etapa.id]) {
+        base.pontuacoes[etapa.id] = 1;
+      } else if (
+        conferenciaAtual
+          ? etapa.tipo === 'cena' && pontos === 1
+          : Number.isFinite(pontos) && pontos >= 0 && pontos <= 1
+      ) {
         base.pontuacoes[etapa.id] = pontos;
       }
     });
@@ -50,6 +62,15 @@
       return total + base.pontuacoes[id];
     }, 0);
     base.finalizada = Boolean(valor.finalizada);
+    if (conferenciaAtual) {
+      var pendente = revisao.etapas.findIndex(function (etapa) {
+        return etapa.tipo === 'cena' && !base.concluidas[etapa.id];
+      });
+      if (pendente >= 0) {
+        base.etapaAtual = Math.min(base.etapaAtual, pendente);
+        base.finalizada = false;
+      }
+    }
     return base;
   }
 
@@ -135,6 +156,19 @@
   }
 
   function renderizarApresentacao(etapa) {
+    if (etapa.textos) {
+      return (
+        '<article class="apresentacao-centenas"><p class="etiqueta">Matemática</p><h1 id="matematica-cena-titulo">' +
+        escapar(etapa.titulo) +
+        '</h1>' +
+        etapa.textos
+          .map(function (texto) {
+            return '<p>' + escapar(texto) + '</p>';
+          })
+          .join('') +
+        '<button type="button" class="botao-principal botao-gigante" data-math-start>Começar a aventura</button></article>'
+      );
+    }
     return (
       '<article class="apresentacao-centenas"><p class="etiqueta">Matemática manipulativa</p><h1 id="matematica-cena-titulo">' +
       escapar(etapa.titulo) +
@@ -193,6 +227,9 @@
           if (novoEstado.concluida) {
             estado.concluidas[etapa.id] = true;
             estado.pontuacoes[etapa.id] = 1;
+          } else if (etapa.cena.conferenciaPorSubitem) {
+            delete estado.concluidas[etapa.id];
+            estado.finalizada = false;
           }
           estado.pontos = Object.keys(estado.pontuacoes).reduce(function (total, id) {
             return total + estado.pontuacoes[id];
@@ -213,6 +250,14 @@
   function irPara(indice) {
     if (!revisaoAtiva) return;
     var estado = obterEstado(revisaoAtiva.id);
+    var etapaAtual = revisaoAtiva.etapas[estado.etapaAtual];
+    if (
+      indice > estado.etapaAtual &&
+      etapaAtual.cena &&
+      etapaAtual.cena.conferenciaPorSubitem &&
+      !estado.concluidas[etapaAtual.id]
+    )
+      return;
     estado.etapaAtual = Math.max(0, Math.min(revisaoAtiva.etapas.length - 1, Number(indice) || 0));
     salvar('navegar');
     renderizar();

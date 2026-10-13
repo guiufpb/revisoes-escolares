@@ -185,21 +185,30 @@ test('carrega a tela inicial e registra todas as revisões sem chaves duplicadas
   await expect(page.locator('html')).toHaveClass(/aplicacao-pronta/);
 
   const registro = await page.evaluate(() =>
-    window.RegistroRevisoes.listar().map(({ id, cartaoId, painelId, chaveArmazenamento }) => ({
-      id,
-      cartaoId,
-      painelId,
-      chaveArmazenamento,
-      elementosExistem: Boolean(
-        document.getElementById(cartaoId) && document.getElementById(painelId)
-      ),
-    }))
+    window.RegistroRevisoes.listar().map(
+      ({ id, cartaoId, painelId, chaveArmazenamento, totalEtapas }) => ({
+        id,
+        cartaoId,
+        painelId,
+        chaveArmazenamento,
+        totalEtapas,
+        elementosExistem: Boolean(
+          document.getElementById(cartaoId) && document.getElementById(painelId)
+        ),
+      })
+    )
   );
-  expect(registro).toHaveLength(64);
-  expect(new Set(registro.map((item) => item.id)).size).toBe(64);
-  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(64);
+  expect(registro).toHaveLength(65);
+  expect(new Set(registro.map((item) => item.id)).size).toBe(65);
+  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(65);
   expect(registro).toEqual(
     expect.arrayContaining([
+      expect.objectContaining({
+        id: 'mariana-matematica-medir-calcular-descobrir-outubro-2026',
+        chaveArmazenamento:
+          'revisoesEscolares.mariana.matematica.medirCalcularDescobrirOutubro2026.v1',
+        totalEtapas: 32,
+      }),
       expect.objectContaining({
         id: 'alice-matematica-dezenas-numeros-dinheiro-outubro-2026',
         chaveArmazenamento:

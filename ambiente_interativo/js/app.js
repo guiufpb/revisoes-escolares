@@ -416,6 +416,7 @@
     document.getElementById('abrir-centenas-em-acao').hidden = aluno !== 'mariana';
     document.getElementById('abrir-formas-mosaicos-medidas').hidden = aluno !== 'mariana';
     document.getElementById('abrir-formas-medidas-setembro').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-medir-calcular-descobrir').hidden = aluno !== 'mariana';
     document.getElementById('abrir-capacidade-operacoes-numeros').hidden = aluno !== 'alice';
     document.getElementById('abrir-matematica-dezenas-numeros-dinheiro-outubro-2026').hidden =
       aluno !== 'alice';
@@ -753,6 +754,12 @@
       window.MatematicaRevisoes.abrir(ID_FORMAS_MEDIDAS_SETEMBRO);
       atualizarResumo();
     });
+    document
+      .getElementById('abrir-medir-calcular-descobrir')
+      .addEventListener('click', function () {
+        window.MatematicaRevisoes.abrir('mariana-matematica-medir-calcular-descobrir-outubro-2026');
+        atualizarResumo();
+      });
     document
       .getElementById('abrir-capacidade-operacoes-numeros')
       .addEventListener('click', function () {
