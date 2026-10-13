@@ -417,6 +417,8 @@
     document.getElementById('abrir-formas-mosaicos-medidas').hidden = aluno !== 'mariana';
     document.getElementById('abrir-formas-medidas-setembro').hidden = aluno !== 'mariana';
     document.getElementById('abrir-capacidade-operacoes-numeros').hidden = aluno !== 'alice';
+    document.getElementById('abrir-matematica-dezenas-numeros-dinheiro-outubro-2026').hidden =
+      aluno !== 'alice';
     document.getElementById('materia-leitura').hidden = false;
     document.getElementById('abrir-gramatica-mariana').hidden = aluno !== 'mariana';
     document.getElementById('abrir-historia-familias-objetos').hidden = aluno !== 'alice';
@@ -601,6 +603,15 @@
       window.MatematicaOperacoes.abrir(IDS_OPERACOES[alunoAtual]);
       atualizarResumo();
     });
+    document
+      .getElementById('abrir-matematica-dezenas-numeros-dinheiro-outubro-2026')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'alice') return;
+        window.QuestionariosRevisoes.abrir(
+          'alice-matematica-dezenas-numeros-dinheiro-outubro-2026'
+        );
+        atualizarResumo();
+      });
     document.getElementById('abrir-operacoes-tabuada').addEventListener('click', function () {
       window.MatematicaOperacoes.abrir(IDS_OPERACOES_TABUADA[alunoAtual]);
       atualizarResumo();

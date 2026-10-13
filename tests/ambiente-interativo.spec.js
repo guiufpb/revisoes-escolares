@@ -195,11 +195,16 @@ test('carrega a tela inicial e registra todas as revisões sem chaves duplicadas
       ),
     }))
   );
-  expect(registro).toHaveLength(63);
-  expect(new Set(registro.map((item) => item.id)).size).toBe(63);
-  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(63);
+  expect(registro).toHaveLength(64);
+  expect(new Set(registro.map((item) => item.id)).size).toBe(64);
+  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(64);
   expect(registro).toEqual(
     expect.arrayContaining([
+      expect.objectContaining({
+        id: 'alice-matematica-dezenas-numeros-dinheiro-outubro-2026',
+        chaveArmazenamento:
+          'revisoesEscolares.alice.matematica.dezenasNumerosDinheiroOutubro2026.v1',
+      }),
       expect.objectContaining({
         id: 'alice-geografia-brincadeiras-lazer-outubro-2026',
         chaveArmazenamento: 'revisoesEscolares.alice.geografia.brincadeirasLazerOutubro2026.v1',

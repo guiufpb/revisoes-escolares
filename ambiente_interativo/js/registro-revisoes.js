@@ -3,6 +3,17 @@
 
   var revisoes = [
     {
+      id: 'alice-matematica-dezenas-numeros-dinheiro-outubro-2026',
+      aluno: 'alice',
+      titulo: 'Dezenas, números e dinheiro — descobertas da Alice',
+      cartaoId: 'abrir-matematica-dezenas-numeros-dinheiro-outubro-2026',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento: 'revisoesEscolares.alice.matematica.dezenasNumerosDinheiroOutubro2026.v1',
+      totalEtapas: 25,
+      possuiAudio: true,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
       id: 'alice-geografia-brincadeiras-lazer-outubro-2026',
       aluno: 'alice',
       titulo: 'Brincar, conviver e descobrir lugares',

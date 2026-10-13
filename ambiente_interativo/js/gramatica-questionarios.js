@@ -272,7 +272,7 @@
               '"' +
               (item.unidadeDitado ? ' spellcheck="false"' : '') +
               '>' +
-              window.GramaticaDitado.botaoHtml(indice, item.unidadeDitado) +
+              window.GramaticaDitado.botaoHtml(indice, item.unidadeDitado, subitem.rotuloDitado) +
               '</div>' +
               (subitem.inserirTravessao
                 ? '<button class="botao-secundario" type="button" data-inserir-travessao="' +
@@ -307,7 +307,15 @@
             (subitem.fraseCompleta ? ' campo-gramatica-frase' : '') +
             '"><span>' +
             escapar(subitem.pergunta) +
-            '</span><input type="text" data-resposta-gramatica="' +
+            '</span>' +
+            (subitem.imagem
+              ? '<img class="imagem-campo-questionario" src="' +
+                escapar(subitem.imagem) +
+                '" alt="' +
+                escapar(subitem.imagemAlt || '') +
+                '">'
+              : '') +
+            '<input type="text" data-resposta-gramatica="' +
             indice +
             '" value="' +
             escapar(respostas[indice] || '') +
@@ -380,7 +388,11 @@
           escapar(subitem.pergunta) +
           '</legend>' +
           (subitem.imagem
-            ? '<img class="imagem-item-questionario" src="' +
+            ? '<img class="' +
+              (subitem.imagemAmpla
+                ? 'imagem-item-questionario-ampla'
+                : 'imagem-item-questionario') +
+              '" src="' +
               escapar(subitem.imagem) +
               '" alt="' +
               escapar(subitem.imagemAlt || '') +
@@ -700,7 +712,9 @@
           '</div>'
         : '') +
       '<div class="respostas-gramatica">' +
-      (item.ditado ? window.GramaticaDitado.painelHtml(item.unidadeDitado) : '') +
+      (item.ditado
+        ? window.GramaticaDitado.painelHtml(item.unidadeDitado, item.instrucaoDitado)
+        : '') +
       (window.QuestionariosInteracoes.aceita(item)
         ? '<div data-interacao-questionario>' +
           window.QuestionariosInteracoes.montar(item, respostas, escapar) +

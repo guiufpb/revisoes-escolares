@@ -11,6 +11,21 @@ Trocas exigem exatamente dez peças e preservam valor: 10 U → 1 D, 10 D → 1 
 Desfazer e recarregar preservam a representação. Em ábaco, declare montar ou ler e descreva cada
 haste de forma acessível.
 
+## Questionário de dezenas, nomes e reais — Alice, outubro de 2026
+
+matematica-dezenas-numeros-dinheiro-outubro-2026 utiliza QuestionariosRevisoes, configurado
+com matéria Matemática: 25 questões, 55 subitens e um ponto por questão completa. Inclui campos,
+associação por banco fixo, alternativas, seleção exata e ordenação integral reversível. A Q22
+usa um único subitem de ordenação no tipo misto; suas quatro colocações não criam quatro pontos.
+Desktop Amplo e Modo Responsável são opt-in, com principal Alice e auxiliar independente.
+
+As 22 cenas SVG originais usam geometria determinística: dez células por barra, D à esquerda
+de U, ausência de argolas nas unidades igual a zero, dinheiro pedagógico e gráfico com grade
+unitária de zero a 17. A tabela equivalente do gráfico permanece em texto acessível.
+Q6 ensina os nove nomes das dezenas somente após acerto; Q11 ensina catorze/quatorze antes
+de Q12. Campos monetários usam variantes finitas e conservam a vírgula, rejeitando centavos
+não nulos. Q14 separa nomes falados dos numerais corrigidos pelo módulo de ditado compartilhado.
+
 ## Operações digitadas
 
 Use `matematica-operacoes.js`; enunciados, respostas e progressão ficam no conteúdo por perfil.

@@ -6,6 +6,32 @@ O **Revisões Escolares** evoluiu para uma aplicação educacional local com per
 
 Este inventário registra o estado de trabalho em **13/10/2026**.
 
+Etapa 2 — Matemática de Alice, integração local em 13/10/2026: **64 cadastros**,
+com os 63 anteriores preservados.
+
+Validação desta integração: **20 passed (1.4m)** próprios, **177 passed (13.9m)** em regressões
+e **504 passed (35.3m)** na suíte global completa, sem falhas, retries ou skips. Build, formatação,
+lint e diff aprovados. Windows: **24/24** contratos de abertura e **8/8** cenários simulados
+de pronúncia, sem Azure real ou microfone. Playwright usou porta 5188, um worker e identidade
+da nova cópia confirmada; leitura usa somente as fixtures PDF sintéticas oficiais.
+
+Os 63 cadastros anteriores, inclusive as quatro revisões do PR #39, permanecem preservados.
+O teste central conserva as verificações de unicidade/existência e as quatro asserções do
+PR #39, acrescenta a nova revisão e exige 64 cadastros, IDs e chaves únicos. Conteúdo,
+22 SVGs e teste próprio conferidos por hash com a fonte preservada. As extensões de
+questionários e ditado são opt-in, sem alterações nos padrões das revisões anteriores.
+
+Revisão visual reaproveitou seis folhas de contato e tela móvel Q19 existentes, sem nova
+renderização. Conferência estrutural das peças, células, argolas, dinheiro e grade integrou
+os testes. Chaves principal e auxiliar mantidas, com erro/correção, restauração, pontuação
+única, limpeza seletiva, Modo Responsável, Desktop Amplo, teclado, toque e file:// exercitados.
+
+Validação humana geral das atividades locais informada pelo responsável em 13/10/2026;
+audição específica do ditado numérico Q14 permanece sem confirmação. Fontes, worktrees,
+stash e pasta habitual preservados. Sem commit ou publicação nesta etapa.
+
+Registro histórico da etapa 1, publicada pelo PR #39:
+
 Integração controlada de Ciências e Geografia em 13/10/2026: quatro revisões existentes
 transportadas seletivamente para uma nova cópia sobre a main, com **63 registros**.
 Conteúdo, assets, IDs e chaves foram preservados. A validação humana foi confirmada pelo
@@ -31,6 +57,27 @@ diff aprovados. Testes direcionados: **62/62 (4.8m)**; regressões compartilhada
 **112/112 (8.8m)**; suíte global: **392/392 (28.6m)**. As fontes e o stash original de Farm
 permanecem preservados, sem reconstrução de progresso local. Os relatórios pedagógicos
 distinguem este resultado dos testes históricos e das validações específicas de voz/Azure.
+
+
+## Registro histórico da fonte — Alice, Matemática, preparação em 12/10/2026
+
+- ID: alice-matematica-dezenas-numeros-dinheiro-outubro-2026; arquivo específico em
+  ambiente_interativo/revisoes/alice/matematica-dezenas-numeros-dinheiro-outubro-2026.js.
+- Título: **Dezenas, números e dinheiro — descobertas da Alice**. Cinco blocos,
+  25 questões, 55 subitens e 25 pontos; cartão exclusivo em Alice → Matemática.
+- Reutiliza QuestionariosRevisoes, seleção/ordenação, armazenamento e áudio existentes.
+  Desktop Amplo e Modo Responsável ativados somente nesta revisão; salto não pontua.
+- Principal: revisoesEscolares.alice.matematica.dezenasNumerosDinheiroOutubro2026.v1.
+  Auxiliar: revisoesEscolares.alice.matematica.dezenasNumerosDinheiroOutubro2026.responsavel.v1.
+- 22 SVGs originais, sem materiais escolares privados. Extensões compartilhadas opt-in:
+  estímulo oral independente da resposta, rótulos de ditado e cenas responsivas por campo.
+- Testes próprios em tests/matematica-alice-dezenas-numeros-dinheiro-outubro-2026.spec.js.
+  20/20 testes próprios aprovados (1,4 min); global 424/425 (29,5 min), com única falha na
+  contagem antiga do cadastro, corrigida e aprovada no reteste 1/1 (3,3 s). Não houve nova
+  execução global integral após esse ajuste exclusivo ao teste. Windows: 24/24 de abertura
+  e 8/8 de pronúncia simulada. Build, formatação, lint e diff aprovados; 22 cenas inspecionadas.
+  Situação histórica da fonte: implementação isolada, audição e uso infantil pendentes naquela data. Sem integração à pasta habitual
+  ou publicação. Evidências em pedagogia/ALICE_MATEMATICA_OUTUBRO_2026.md.
 
 
 ## 2. Base da aplicação

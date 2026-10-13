@@ -3511,6 +3511,16 @@ input[id^='gramatica-resposta-geografia-brincadeiras-lazer-q30-'] {
   background: #f7fbff;
 }
 
+/* Opt-in visual: cenas contáveis usam a largura do campo sem reduzir o desenho. */
+.imagem-campo-questionario,
+.imagem-item-questionario-ampla {
+  display: block;
+  width: min(100%, 420px);
+  height: auto;
+  margin: 12px 0;
+  border-radius: 12px;
+}
+
 .story-time-ingles {
   scroll-margin-top: 120px;
   margin-top: 24px;
