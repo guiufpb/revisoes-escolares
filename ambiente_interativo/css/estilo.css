@@ -1809,6 +1809,50 @@ footer {
   text-align: left;
 }
 
+/* Frases de Geografia: largura local, sem ativar exigência ortográfica. */
+.campo-mariana-ditado:has(input[id^='gramatica-resposta-geografia-brincadeiras-lazer-q30-']) {
+  grid-template-columns: minmax(0, 1fr);
+  grid-column: 1 / -1;
+}
+
+.campo-mariana-ditado:has(input[id^='gramatica-resposta-geografia-brincadeiras-lazer-q30-'])
+  .campo-resposta-ditado {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+input[id^='gramatica-resposta-geografia-brincadeiras-lazer-q30-'] {
+  min-width: 0;
+  padding-inline: 12px;
+  text-align: left;
+}
+
+/* Os setores deste croqui também permanecem nomeados antes da conferência. */
+.questao-mapa-visual:has(img[src$='geografia-brincadeiras-lazer-outubro-2026/croqui-parque.svg'])
+  .ponto-mapa-visual
+  .rotulo-ponto-mapa {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: auto;
+  height: auto;
+  padding: 2px 4px;
+  margin: 3px 0 0;
+  overflow: visible;
+  clip: auto;
+  transform: translateX(-50%);
+  border-radius: 4px;
+  background: white;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .campo-mariana-ditado:has(input[id^='gramatica-resposta-geografia-brincadeiras-lazer-q30-'])
+    .campo-resposta-ditado {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .leitura-gramatica {
   margin-bottom: 22px;
   padding: clamp(18px, 3vw, 32px);

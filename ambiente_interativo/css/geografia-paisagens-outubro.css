@@ -1,0 +1,8 @@
+/* As figuras desta revisão contêm comparações e precisam conservar sua proporção inteira. */
+.layout-desktop-amplo
+  .ilustracao-leitura-questionario[src^='../assets/geografia-paisagens-outubro/'] {
+  width: 100%;
+  max-width: none;
+  height: auto;
+  max-height: none;
+}

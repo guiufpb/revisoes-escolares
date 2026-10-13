@@ -1,0 +1,24 @@
+/* Composições originais verticais desta revisão; outras imagens mantêm seu layout. */
+.ilustracao-leitura-questionario[src*='/ciencias-sustentabilidade-rotina-objetos-outubro-2026/'] {
+  width: min(100%, 480px);
+  max-height: none;
+}
+
+.mapa-visual-questionario > img[src*='/ciencias-sustentabilidade-rotina-objetos-outubro-2026/'] {
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+
+/* Os quatro nomes ficam legíveis antes da primeira conferência. */
+.mapa-visual-questionario
+  > img[src*='/ciencias-sustentabilidade-rotina-objetos-outubro-2026/']
+  ~ .ponto-mapa-visual
+  .rotulo-ponto-mapa {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
