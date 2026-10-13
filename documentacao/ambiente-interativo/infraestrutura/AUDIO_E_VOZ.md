@@ -74,6 +74,13 @@ estados genéricos como preparação, reprodução, conclusão, interrupção e 
 
 ## Testes automáticos e audição humana
 
+Nos questionários, textoDitado opcional no subitem separa o estímulo oral da resposta
+avaliada. Sem ele, o módulo conserva a fala de respostas[0]. O conteúdo declara a unidade
+explicitamente; audio.js continua aplicando o prefixo uma única vez. rotuloDitado no subitem
+e instrucaoDitado na questão personalizam apenas textos da interface, com escape de HTML,
+sem renderizar o estímulo. Na Matemática de Alice de outubro, a Q14 fala os nomes dos números
+e recebe algarismos, com repetir, parar, cancelamento e mediação quando não há voz local.
+
 Mocks verificam o payload efetivo, quantidade de utterances, idioma, voz local, velocidade,
 repetição, parada, cancelamento, ausência de início automático e ausência de vazamento no DOM.
 Cubra revisão antiga e atual de Inglês, ditado legado, Gramática atual e `file://` conforme o risco.

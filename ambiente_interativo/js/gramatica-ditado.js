@@ -1,14 +1,25 @@
 (function () {
   'use strict';
 
-  function painelHtml(unidade) {
+  function escaparTexto(valor) {
+    return String(valor)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function painelHtml(unidade, instrucao) {
     var frase = unidade === 'frase';
     return (
       '<section class="painel-ditado-gramatica" aria-label="Ditado em português">' +
       '<p>' +
-      (frase
-        ? 'Ouça a frase e escreva com atenção às letras e aos sinais de pontuação.'
-        : 'Se a palavra da lacuna não estiver clara, ouça o ditado e escreva o que você ouviu.') +
+      (instrucao
+        ? escaparTexto(instrucao)
+        : frase
+          ? 'Ouça a frase e escreva com atenção às letras e aos sinais de pontuação.'
+          : 'Se a palavra da lacuna não estiver clara, ouça o ditado e escreva o que você ouviu.') +
       '</p>' +
       '<div class="controles-ditado-gramatica">' +
       '<button class="botao-secundario" type="button" data-repetir-ditado-gramatica disabled>↻ Repetir última ' +
@@ -22,18 +33,16 @@
     );
   }
 
-  function botaoHtml(indice, unidade) {
+  function botaoHtml(indice, unidade, rotulo) {
     var nome = unidade === 'frase' ? 'frase' : 'palavra';
     return (
       '<button class="botao-secundario botao-ouvir-palavra" type="button" ' +
       'data-ouvir-ditado-gramatica="' +
       indice +
-      '" aria-label="Ouvir a ' +
-      nome +
-      ' da lacuna ' +
-      (indice + 1) +
+      '" aria-label="' +
+      escaparTexto(rotulo || 'Ouvir a ' + nome + ' da lacuna ' + (indice + 1)) +
       '">🔊 Ouvir ' +
-      nome +
+      escaparTexto(rotulo ? rotulo.replace(/^Ouvir /, '') : nome) +
       '</button>'
     );
   }
@@ -77,7 +86,11 @@
       botao.addEventListener('click', function () {
         var indice = Number(botao.dataset.ouvirDitadoGramatica);
         var subitem = item.itens[indice];
-        var texto = subitem && subitem.respostas && subitem.respostas[0];
+        var texto =
+          subitem &&
+          (typeof subitem.textoDitado === 'string'
+            ? subitem.textoDitado
+            : subitem.respostas && subitem.respostas[0]);
         var iniciou = window.AudioRevisoes.falar({
           texto: texto,
           idioma: 'pt-BR',

@@ -17,6 +17,7 @@ import './matematica-operacoes.js';
 import './gramatica-questionarios.js';
 import './questionarios-interacoes.js';
 import '../revisoes/alice/historia-familias-objetos.js';
+import '../revisoes/alice/matematica-dezenas-numeros-dinheiro-outubro-2026.js';
 import '../revisoes/alice/historia-objetos-memorias-outubro-2026.js';
 import '../revisoes/mariana/historia-convivencia-transportes.js';
 import '../revisoes/mariana/historia-transportes-memorias-outubro-2026.js';

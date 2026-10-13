@@ -49,6 +49,15 @@ Sem esses campos, o recurso original permanece em todas as telas. A fonte móvel
 Não copie páginas, personagens ou imagens do material escolar. Quando a síntese pedagógica já foi
 fornecida, não reextraia PDF sem pedido ou dúvida indispensável.
 
+## Cenas contáveis em campos e alternativas
+
+Campos simples podem declarar imagem e imagemAlt no subitem; a cena local fica junto do
+rótulo e do campo, sem alterar a resposta ou a persistência. Alternativas podem ativar
+imagemAmpla: true para cenas que precisam preservar peças contáveis, usando largura
+responsiva e altura natural. Sem a opção, a geometria anterior das imagens de alternativas
+permanece vigente. A revisão de Matemática de Alice de outubro utiliza esses opt-ins para
+ábacos, barras, carteiras e comparação de representações.
+
 ## Inglês
 
 Em Play Time · Unit 6, `textoPerguntaVisivel` opcional permite mostrar **Listen and choose.**

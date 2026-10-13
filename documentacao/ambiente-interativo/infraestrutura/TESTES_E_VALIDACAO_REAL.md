@@ -244,3 +244,22 @@ artefatos próprios realmente ausentes do watcher, observação de CSS/JS/config
 com proteção HTTP. As exclusões também são verificadas para raízes irmãs e fontes internas.
 Esse teste não mede desempenho nem comprova sozinho o ciclo completo de HMR ou a atualização do
 bundle; combine-o com os contratos de carregamento, navegação e PDF e a suíte global da base atual.
+
+## Matemática de Alice — outubro de 2026
+
+`tests/matematica-alice-dezenas-numeros-dinheiro-outubro-2026.spec.js` acrescenta 20 testes
+para a revisão de dezenas, números e dinheiro: gabarito independente dos 55 subitens, cinco
+blocos, variantes numéricas/extenso/monetárias, seleção exata, ordenação reversível, ditado
+com estímulo oral independente da resposta, indisponibilidade de voz, sessões separadas,
+restauração, armazenamento inválido/bloqueado, conclusão e limpeza seletiva. Confere também
+geometria determinística, teclado, toque, três larguras, axe-core e contrato `file://`.
+
+Mudanças compartilhadas exigem a global além desse arquivo. A contagem literal do teste de
+registro acompanha a inclusão de uma revisão, preservando unicidade e existência dos elementos.
+Os resultados da execução, a inspeção visual e as pendências humanas estão em
+[pedagogia/ALICE_MATEMATICA_OUTUBRO_2026.md](../pedagogia/ALICE_MATEMATICA_OUTUBRO_2026.md).
+
+Resultado da integração em 13/10/2026: 20 passed (1.4m) próprios; 177 passed (13.9m) no recorte
+compartilhado e das quatro revisões do PR #39; 504 passed (35.3m) globais. A base passou de 63
+para 64 registros mantendo unicidade, chaves e asserções das revisões anteriores. O resultado
+424/425 da preparação original permanece apenas como histórico, sem substituir esta execução.
