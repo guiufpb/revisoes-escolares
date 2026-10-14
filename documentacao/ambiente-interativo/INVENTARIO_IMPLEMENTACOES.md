@@ -6,7 +6,31 @@ O **Revisões Escolares** evoluiu para uma aplicação educacional local com per
 
 Este inventário registra o estado de trabalho em **13/10/2026**.
 
-Etapa 2 — Matemática de Alice, integração local em 13/10/2026: **64 cadastros**,
+Etapa 3 — Matemática de Mariana: **65 cadastros, 65 IDs e 65 chaves únicos**,
+com os 64 registros anteriores idênticos à main do PR #41. Integração em cópia exclusiva
+sobre `a3ed65b248487bc62c4885295b67f45272af50e4`.
+
+Validação desta integração: 48/48 testes próprios (2,9 min); rodada de regressões 261/262 (20,4 min),
+com única falha na coleta do teste central recém-ampliado: a asserção exigia totalEtapas, mas
+o campo não era projetado. Corrigida somente a coleta, preservando a asserção; reteste 1/1
+(3,7 s). Nenhum controlador precisou de correção. Suíte global completa: **552/552 (40.4m)**,
+exit code 0, sem falhas, retries ou skips. Windows: 24/24 (17 s); pronúncia simulada: 8/8 (23 s).
+Build, format:check, lint e diff aprovados novamente após a correção exclusiva do teste.
+
+Ajuste local após a CI do PR #42 (551/552): o percurso de 30 questões esgotou o limite
+de 30 segundos na Q21, após 20 pontos. O trace mostra o clique final cancelado após cerca de
+102 ms pelo orçamento total, sem evidência de instabilidade persistente. Somente esse teste
+passa a usar `test.setTimeout(180000)`, conforme o percurso equivalente já existente.
+As 30 questões, duas conferências por questão e todas as asserções permanecem intactas.
+Reteste direcionado: 1/1 (13,7 s); suíte global local não repetida. Nova CI ainda pendente.
+
+Conteúdo e 21 SVGs + README idênticos à origem; teste próprio preservado com o ajuste
+individual de timeout documentado acima. As 17 worktrees, os 935 arquivos
+pendentes, as branches anteriores e o stash foram preservados por conferência final. Catálogo privado
+atualizado somente na pasta habitual, com os 12 registros anteriores intactos. Uso infantil
+e duplo clique humano nesta cópia permanecem pendentes. Sem commit ou publicação.
+
+Histórico da Etapa 2 — Matemática de Alice, integração local em 13/10/2026: **64 cadastros**,
 com os 63 anteriores preservados.
 
 Validação desta integração: **20 passed (1.4m)** próprios, **177 passed (13.9m)** em regressões
@@ -811,6 +835,35 @@ Chave: `revisoesEscolares.mariana.matematica.formasMosaicosMedidas.v1`.
   contagem, mosaico, régua, balança, recipientes de capacidade, campos e operação D-U.
 - A revisão anterior Formas, mosaicos e medidas e os respectivos progressos permanecem intactos.
 
+### Mariana — Medir, calcular e descobrir (outubro de 2026)
+
+- Implementada para o 2º ano, com apresentação, **30 questões / 75 subitens / 30 pontos** e
+  encerramento: 32 etapas. Seis blocos de comprimento, massa, capacidade, adição, subtração e
+  interpretação de informações. Os 49 campos numéricos e 26 escolhas preservam a ordem aprovada.
+- ID: `mariana-matematica-medir-calcular-descobrir-outubro-2026`.
+- Chave: `revisoesEscolares.mariana.matematica.medirCalcularDescobrirOutubro2026.v1`.
+- Conteúdo: `revisoes/mariana/matematica-medir-calcular-descobrir-outubro-2026.js`; cartão
+  **Medir, calcular e descobrir** em Mariana → Matemática. Motor `MatematicaRevisoes`, com
+  `conferenciaPorSubitem` opt-in em `atividade-visual`. Sem mudança de chave ou migração legada.
+- Ensino antes das dependências, 75 pistas por subitem depois de tentativa, 30 consolidações
+  após acerto integral e pausas sem pontuação. Edição remove conferência/consolidação e bloqueia
+  avanço, preservando um único ponto histórico. Inteiros aceitam espaços externos/zeros iniciais;
+  vazio continua distinto de zero. Alternativas extensas preservam conteúdo completo.
+- 21 SVGs originais determinísticos: réguas cm/mm, contorno, três balanças, pacotes, recipientes,
+  copos/alvos, quatro cartões de base dez, gráfico, carteiras, transferência e dados. Q28 usa
+  tabela HTML com cabeçalhos associados. Sem imagem gerativa, material escolar privado ou
+  dependência de internet. CSS novo limitado a `[data-math-subitens]`.
+- Desktop Amplo, Modo Responsável e áudio não habilitados: o motor matemático não oferece os
+  opt-ins compatíveis. Mantido layout responsivo comum e leitura pelo responsável.
+- Testes: `tests/matematica-mariana-medir-calcular-descobrir.spec.js`, com oráculo
+  independente, fluxo completo, erros, edição, recarga, isolamento, dados inválidos, modo em
+  memória, toque/teclado, axe-core, figuras e capturas em 390, 1366 e 1920 pixels, e `file://`.
+- Integração local Etapa 3 sobre a main do PR #41 em 13/10/2026. Conteúdo, chave, questões,
+  assets e teste próprio transportados sem reconstrução. Nesta cópia: 48/48 próprios,
+  261/262 regressões iniciais e reteste do cadastro 1/1 após corrigir somente sua projeção;
+  global 552/552, Windows 24/24 e pronúncia simulada 8/8. A execução integral valida a base
+  final com todas as asserções preservadas. Uso infantil e duplo clique humano pendentes.
+
 ## 6. Gramática
 
 ### Alice — Pontuação, LH e X/CH (outubro de 2026)
@@ -1420,7 +1473,7 @@ Ferramentas: Playwright, axe-core, ESLint, Prettier e Vite.
 - Toda pull request para `main` continua executando a suíte global no GitHub Actions; a saída
   completa é consultada apenas quando houver falha ou necessidade de diagnóstico.
 
-Na data deste inventário existem **401 testes Playwright**:
+Na data desta integração existem **552 testes Playwright**, todos aprovados na suíte global:
 
 - `tests/pdfs-sinteticos.spec.js`: sete casos de preparo, integridade, privacidade, portabilidade e PDF.js.
 
@@ -1499,7 +1552,7 @@ legadas.
 - GitHub CLI instalado e autenticado.
 - Repositório público: <https://github.com/guiufpb/revisoes-escolares>.
 - Workflow `.github/workflows/validacao.yml` para `main`, pull requests e execução manual.
-- Limite do job: 60 minutos, mantendo suíte integral e um worker. Em 06/10/2026,
+- Limite do job: 120 minutos desde o PR #41, mantendo suíte integral e um worker. Em 06/10/2026,
   os 392 testes passaram em 44,5 minutos na CI, mas o limite anterior de 45 minutos
   cancelou o job durante o encerramento; a janela foi ampliada para concluir o check.
 - Node.js 24, `npm ci`, Chromium, formatação, lint, PDFs de teste, build e suíte completa.

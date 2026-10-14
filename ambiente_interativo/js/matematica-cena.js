@@ -510,6 +510,69 @@
             (estado.concluida ? 'Etapa concluída. Você pode tentar outra construção.' : '')
         ) +
         '</p>';
+      if (configuracao.conferenciaPorSubitem) atualizarRevisao();
+    }
+
+    function atualizarRevisao(edicao) {
+      var consolidacao = recipiente.querySelector('[data-math-consolidacao]');
+      if (consolidacao) consolidacao.remove();
+      var status = recipiente.querySelector('[data-math-status]');
+      var resultados = window.MatematicaGeometriaMedidas.avaliarSubitens(estado, configuracao);
+      var correta =
+        resultados.length > 0 &&
+        resultados.every(function (item) {
+          return item.correta;
+        });
+      resultados.forEach(function (item) {
+        var campo = Array.from(
+          recipiente.querySelectorAll('[data-math-visual-input], [data-math-visual-select]')
+        ).find(function (elemento) {
+          return (
+            (elemento.dataset.mathVisualInput || elemento.dataset.mathVisualSelect) === item.id
+          );
+        });
+        if (campo) {
+          if (estado.tentativas > 0) campo.setAttribute('aria-invalid', String(!item.correta));
+          else campo.removeAttribute('aria-invalid');
+        }
+      });
+      if (edicao) {
+        // Não repetir todas as pistas no leitor de tela a cada algarismo digitado.
+        var mensagemEdicao = 'Resposta alterada. Confira novamente quando terminar.';
+        if (status.textContent !== mensagemEdicao) status.textContent = mensagemEdicao;
+        status.className = 'matematica-feedback';
+      } else if (estado.concluida && correta) {
+        status.textContent = 'Muito bem! Você conferiu toda a questão.';
+        status.className = 'matematica-feedback sucesso';
+        var painel = document.createElement('section');
+        painel.dataset.mathConsolidacao = '';
+        painel.className = 'leitura-gramatica';
+        painel.setAttribute('aria-label', 'Vamos consolidar');
+        var texto = document.createElement('p');
+        texto.textContent = configuracao.consolidacao;
+        painel.appendChild(texto);
+        if (configuracao.pausa) {
+          var pausa = document.createElement('p');
+          pausa.textContent = configuracao.pausa;
+          painel.appendChild(pausa);
+        }
+        status.after(painel);
+      } else if (estado.tentativas > 0) {
+        var pistas = resultados
+          .filter(function (item) {
+            return !item.correta;
+          })
+          .map(function (item) {
+            return item.pergunta + ' Pista: ' + (item.orientacaoFormato || item.pista);
+          });
+        status.textContent = pistas.length
+          ? 'Confira e corrija. ' + pistas.join(' ')
+          : 'Confira novamente para confirmar suas respostas.';
+        status.className = 'matematica-feedback tente-novamente';
+      } else {
+        status.textContent = '';
+        status.className = 'matematica-feedback';
+      }
     }
 
     function alterar(mutacao, motivo, mensagem) {
@@ -725,6 +788,16 @@
         renderizar('Somente esta cena foi limpa.', '');
         emitir('limpar');
       } else if (alvo.hasAttribute('data-math-hint')) {
+        if (configuracao.conferenciaPorSubitem) {
+          if (estado.tentativas > 0) atualizarRevisao();
+          else
+            definirStatus(
+              'Primeiro tente responder e confira. Depois, as pistas ajudam a rever cada item.',
+              'dica'
+            );
+          recipiente.querySelector('[data-math-status]').focus({ preventScroll: true });
+          return;
+        }
         estado.dicas += 1;
         var dicas = configuracao.dicas || ['Observe o valor de cada ordem.'];
         var dica = dicas[Math.min(estado.dicas - 1, dicas.length - 1)];
@@ -752,8 +825,11 @@
       );
       if (campoVisual) {
         var idVisual = campoVisual.dataset.mathVisualInput || campoVisual.dataset.mathVisualSelect;
-        estado.escolhas[idVisual] = String(campoVisual.value).slice(0, 40);
+        estado.escolhas[idVisual] = configuracao.conferenciaPorSubitem
+          ? String(campoVisual.value)
+          : String(campoVisual.value).slice(0, 40);
         estado.concluida = false;
+        if (configuracao.conferenciaPorSubitem) atualizarRevisao(true);
         emitir(campoVisual.dataset.mathVisualSelect != null ? 'selecionar-resposta' : 'digitar');
         return;
       }
@@ -859,6 +935,18 @@
       return modelo.normalizarEstado(estado, configuracao);
     }
 
+    function aoTeclar(evento) {
+      if (
+        configuracao.conferenciaPorSubitem &&
+        evento.key === 'Enter' &&
+        !evento.isComposing &&
+        evento.target.matches('[data-math-visual-input]')
+      ) {
+        evento.preventDefault();
+        recipiente.querySelector('[data-math-check]').click();
+      }
+    }
+
     function restaurar(novoEstado) {
       guardarHistorico();
       estado = modelo.normalizarEstado(novoEstado, configuracao);
@@ -879,6 +967,7 @@
       destruida = true;
       recipiente.removeEventListener('click', aoClicar);
       recipiente.removeEventListener('input', aoDigitar);
+      recipiente.removeEventListener('keydown', aoTeclar);
       recipiente.removeEventListener('pointerdown', aoPointerDown);
       recipiente.removeEventListener('pointermove', aoPointerMove);
       recipiente.removeEventListener('pointerup', aoPointerFim);
@@ -890,6 +979,7 @@
 
     recipiente.addEventListener('click', aoClicar);
     recipiente.addEventListener('input', aoDigitar);
+    recipiente.addEventListener('keydown', aoTeclar);
     recipiente.addEventListener('pointerdown', aoPointerDown);
     recipiente.addEventListener('pointermove', aoPointerMove);
     recipiente.addEventListener('pointerup', aoPointerFim);

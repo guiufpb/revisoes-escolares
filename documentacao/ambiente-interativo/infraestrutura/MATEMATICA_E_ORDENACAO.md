@@ -26,6 +26,38 @@ Q6 ensina os nove nomes das dezenas somente após acerto; Q11 ensina catorze/qua
 de Q12. Campos monetários usam variantes finitas e conservam a vírgula, rejeitando centavos
 não nulos. Q14 separa nomes falados dos numerais corrigidos pelo módulo de ditado compartilhado.
 
+## Cena visual com conferência por subitem
+
+Uma cena `atividade-visual` pode declarar `conferenciaPorSubitem: true`. Esse opt-in permite
+misturar campos numéricos e escolhas em `campos`, sem dividir a questão nem criar outro progresso.
+Cada campo declara `id`, `pergunta`, `resposta` e `pista`; escolhas declaram `opcoes` em ordem
+estável e guardam o conteúdo completo selecionado. Alternativas longas não são truncadas.
+Campos numéricos declaram `unidade` externa e usam entrada com `inputmode="numeric"`, aceitando
+algarismos inteiros não negativos, espaços externos e zeros iniciais: `008` equivale a `8`.
+Vazio não equivale a zero. Formatos diferentes recebem orientação recuperável, sem preenchimento.
+
+`apoios` e `textos` apresentam parágrafos sem HTML arbitrário. `figuras` da cena ou do campo
+declaram `src` local e `alt` significativo. `tabela` declara `titulo`, `cabecalhos` e `linhas`, com
+escopos de linha/coluna. Esses dados não pontuam. Apresentações podem declarar `textos`, sem as
+instruções fixas sobre arrasto. Use figuras originais determinísticas, sem soluções derivadas
+antecipadas; um dado escondido não recebe pontos desenhados nem solução no texto alternativo.
+
+Depois de uma tentativa, a região `aria-live` mostra somente pistas dos subitens que precisam de
+revisão. Antes disso, Dica orienta a tentar e conferir. `consolidacao` e a eventual `pausa` só
+aparecem após conferência correta de todos os campos. Voltar/recarregar restaura a consolidação
+apenas quando a conferência salva ainda corresponde a respostas válidas.
+
+Qualquer edição invalida a conferência e remove a consolidação imediatamente, bloqueando avanço
+até nova conferência. O ponto já conquistado permanece no histórico, limitado a um por questão.
+A normalização optante revalida as conclusões e restringe posição/conclusão final aos pré-requisitos
+efetivos. Limpar cena não remove chaves de outras revisões; recomeçar revisão usa a limpeza
+seletiva existente. Revisões sem o opt-in mantêm correção textual e navegação anteriores.
+
+Regressões exigidas: questão mista, alternativas longas, `008`, vazio/zero, erro parcial sem
+solução, edição após acerto, retorno/recarga, pontuação única, dados inválidos, limpeza seletiva,
+armazenamento bloqueado, teclado/toque, figuras, tabelas, layouts e revisões antigas. Alteração
+nesses controladores exige build, formatação, lint, regressões direcionadas e `npm test` global.
+
 ## Operações digitadas
 
 Use `matematica-operacoes.js`; enunciados, respostas e progressão ficam no conteúdo por perfil.

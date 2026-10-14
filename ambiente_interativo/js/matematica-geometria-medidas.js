@@ -41,10 +41,26 @@
     var escolhas = objeto(valor.escolhas);
     base.escolhas = chaves.reduce(function (resultado, id) {
       if (typeof escolhas[id] === 'string' || Number.isFinite(Number(escolhas[id]))) {
-        resultado[id] = String(escolhas[id]).slice(0, 40);
+        var texto = String(escolhas[id]);
+        if (configuracao.conferenciaPorSubitem) {
+          var campo = (configuracao.campos || []).find(function (item) {
+            return item.id === id;
+          });
+          // Uma escolha é identificada pelo conteúdo inteiro, inclusive alternativas longas.
+          if (campo && campo.opcoes) {
+            if (campo.opcoes.indexOf(texto) >= 0) resultado[id] = texto;
+          } else if (texto.length <= 40) resultado[id] = texto;
+        } else resultado[id] = texto.slice(0, 40);
       }
       return resultado;
     }, {});
+    if (configuracao.conferenciaPorSubitem) {
+      (configuracao.campos || []).forEach(function (campo) {
+        if (campo.opcoes && campo.opcoes.indexOf(base.escolhas[campo.id]) < 0)
+          delete base.escolhas[campo.id];
+      });
+      base.concluida = base.concluida && base.tentativas > 0 && validar(base, configuracao).correta;
+    }
 
     base.selecoes = listaUnica(valor.selecoes, itens, itens.length);
     var marcadoresPermitidos = ids(configuracao, 'marcadores');
@@ -634,6 +650,9 @@
 
   function renderVisual(configuracao, estado, escapar) {
     var visual = configuracao.visual || {};
+    if (configuracao.conferenciaPorSubitem) {
+      return renderContexto(configuracao, escapar);
+    }
     if (visual.tipo === 'contagem-formas') return renderContagem(configuracao, estado, escapar);
     if (visual.tipo === 'forma') return renderForma(visual, escapar);
     if (visual.tipo === 'regua') return renderRegua(visual);
@@ -661,6 +680,52 @@
   }
 
   function renderCampos(configuracao, estado, escapar) {
+    if (configuracao.conferenciaPorSubitem) {
+      return (
+        '<div class="lista-campos-mariana" data-math-subitens>' +
+        (configuracao.campos || [])
+          .map(function (campo) {
+            var valor = estado.escolhas[campo.id] == null ? '' : estado.escolhas[campo.id];
+            var controle = campo.opcoes
+              ? '<select data-math-visual-select="' +
+                escapar(campo.id) +
+                '"><option value="">Escolha</option>' +
+                campo.opcoes
+                  .map(function (opcao, indice) {
+                    return (
+                      '<option value="' +
+                      escapar(opcao) +
+                      '"' +
+                      (opcao === valor ? ' selected' : '') +
+                      '>' +
+                      String.fromCharCode(65 + indice) +
+                      ') ' +
+                      escapar(opcao) +
+                      '</option>'
+                    );
+                  })
+                  .join('') +
+                '</select>'
+              : '<span class="entrada-com-unidade"><input type="text" inputmode="numeric" maxlength="40" autocomplete="off" spellcheck="false" data-math-visual-input="' +
+                escapar(campo.id) +
+                '" value="' +
+                escapar(valor) +
+                '">' +
+                (campo.unidade ? '<strong>' + escapar(campo.unidade) + '</strong>' : '') +
+                '</span>';
+            return (
+              renderFiguras(campo.figuras, escapar) +
+              '<label class="campo-medida cartao-associacao"><span>' +
+              escapar(campo.pergunta) +
+              '</span>' +
+              controle +
+              '</label>'
+            );
+          })
+          .join('') +
+        '</div>'
+      );
+    }
     return (
       '<div class="campos-medidas">' +
       (configuracao.campos || [])
@@ -827,9 +892,107 @@
     return atual.slice().sort().join('|') === esperado.map(String).slice().sort().join('|');
   }
 
+  function inteiroNormalizado(valor) {
+    var texto = String(valor == null ? '' : valor).trim();
+    if (!/^\d+$/.test(texto)) return null;
+    var numero = Number(texto);
+    return Number.isSafeInteger(numero) ? numero : null;
+  }
+
+  function avaliarSubitens(estado, configuracao) {
+    return (configuracao.campos || []).map(function (campo) {
+      var valor = estado.escolhas[campo.id];
+      var correta = campo.opcoes
+        ? campo.opcoes.indexOf(valor) >= 0 && valor === campo.resposta
+        : inteiroNormalizado(valor) !== null && inteiroNormalizado(valor) === campo.resposta;
+      return {
+        id: campo.id,
+        correta: correta,
+        pista: campo.pista,
+        pergunta: campo.pergunta,
+        orientacaoFormato:
+          !campo.opcoes &&
+          String(valor == null ? '' : valor).trim() !== '' &&
+          inteiroNormalizado(valor) === null
+            ? 'Escreva o número inteiro usando somente algarismos, sem unidade nem sinais. Depois confira novamente.'
+            : '',
+      };
+    });
+  }
+
+  function renderFiguras(figuras, escapar) {
+    return (figuras || [])
+      .map(function (figura) {
+        return (
+          '<img class="ilustracao-leitura-questionario" src="' +
+          escapar(figura.src) +
+          '" alt="' +
+          escapar(figura.alt) +
+          '">'
+        );
+      })
+      .join('');
+  }
+
+  function renderContexto(configuracao, escapar) {
+    var apoio = (configuracao.apoios || [])
+      .map(function (texto) {
+        return '<p>' + escapar(texto) + '</p>';
+      })
+      .join('');
+    var contexto = (configuracao.textos || [])
+      .map(function (texto) {
+        return '<p>' + escapar(texto) + '</p>';
+      })
+      .join('');
+    var tabela = configuracao.tabela;
+    if (tabela) {
+      contexto +=
+        '<table class="tabela-matematica"><caption>' +
+        escapar(tabela.titulo) +
+        '</caption><thead><tr>' +
+        tabela.cabecalhos
+          .map(function (titulo) {
+            return '<th scope="col">' + escapar(titulo) + '</th>';
+          })
+          .join('') +
+        '</tr></thead><tbody>' +
+        tabela.linhas
+          .map(function (linha) {
+            return (
+              '<tr>' +
+              linha
+                .map(function (celula, indice) {
+                  return indice === 0
+                    ? '<th scope="row">' + escapar(celula) + '</th>'
+                    : '<td>' + escapar(celula) + '</td>';
+                })
+                .join('') +
+              '</tr>'
+            );
+          })
+          .join('') +
+        '</tbody></table>';
+    }
+    return (
+      (apoio
+        ? '<aside class="leitura-gramatica" aria-label="Vamos aprender">' + apoio + '</aside>'
+        : '') +
+      contexto +
+      renderFiguras(configuracao.figuras, escapar)
+    );
+  }
+
   function validar(estado, configuracao) {
     var correta = false;
-    if (configuracao.tipo === 'atividade-visual') {
+    if (configuracao.conferenciaPorSubitem) {
+      var resultados = avaliarSubitens(estado, configuracao);
+      correta =
+        resultados.length > 0 &&
+        resultados.every(function (item) {
+          return item.correta;
+        });
+    } else if (configuracao.tipo === 'atividade-visual') {
       correta = (configuracao.campos || []).every(function (campo, indice) {
         var id = String(campo.id == null ? indice : campo.id);
         return (
@@ -877,6 +1040,7 @@
       return renderVisual({ visual: visual }, estadoInicial(), escapar);
     },
     validar: validar,
+    avaliarSubitens: avaliarSubitens,
     resumo: resumo,
   };
 })();

@@ -38,7 +38,7 @@ Execute `npm test`:
 Uma inclusão declarativa pode ficar nos testes direcionados quando nenhum outro gatilho se aplica.
 Toda PR para `main` mantém a suíte global e aguarda “Formatação, lint e testes”.
 
-O job de CI tem limite de 60 minutos, mantendo a suíte completa e um único worker.
+O job de CI tem limite de 120 minutos desde o PR #41, mantendo a suíte completa e um único worker.
 Em 06/10/2026, a execução das 392 verificações passou em 44,5 minutos, mas o limite
 anterior de 45 minutos cancelou o job durante o encerramento. A janela foi ampliada
 para acomodar a execução e o encerramento, sem reduzir testes ou suas asserções.
@@ -263,3 +263,34 @@ Resultado da integração em 13/10/2026: 20 passed (1.4m) próprios; 177 passed 
 compartilhado e das quatro revisões do PR #39; 504 passed (35.3m) globais. A base passou de 63
 para 64 registros mantendo unicidade, chaves e asserções das revisões anteriores. O resultado
 424/425 da preparação original permanece apenas como histórico, sem substituir esta execução.
+
+
+## Matemática de Mariana — integração Etapa 3
+
+`tests/matematica-mariana-medir-calcular-descobrir.spec.js` conserva os 48 testes da
+implementação original: gabarito independente de 30 questões/75 subitens, percurso completo,
+erro parcial e correção, 30 pontos únicos, edição após acerto, normalização de inteiros,
+retorno/recarga, isolamento, limpeza seletiva, armazenamento inválido/bloqueado, teclado, toque,
+figuras determinísticas, tabela acessível, três viewports, axe-core, console e `file://`.
+
+A inclusão reutiliza a conferência por subitem opt-in da Cena Matemática. O teste central exige
+65 cadastros, IDs e chaves únicos e mantém as asserções das quatro revisões do PR #39 e da
+Matemática da Alice do PR #41. A auditoria da integração compara os 64 registros anteriores
+com a base e o conteúdo/teste/21 SVGs com a origem, sem importar materiais privados.
+
+Resultado da integração local em 13/10/2026: 48/48 testes próprios (2,9 min); rodada de regressões 261/262 (20,4 min),
+com única falha na coleta do teste central recém-ampliado: a asserção exigia totalEtapas, mas
+o campo não era projetado. Corrigida somente a coleta, preservando a asserção; reteste 1/1
+(3,7 s). Nenhum controlador precisou de correção. Suíte global completa: **552/552 (40.4m)**,
+exit code 0, sem falhas, retries ou skips. Windows: 24/24 (17 s); pronúncia simulada: 8/8 (23 s).
+Build, format:check, lint e diff aprovados novamente após a correção exclusiva do teste.
+Porta 5189, identidade confirmada, um worker, sem reutilização de servidor.
+A rodada inicial permanece registrada; o reteste isolado não substitui a passagem global final.
+Testes não comprovam uso infantil, abertura humana por duplo clique ou voz instalada.
+
+Ajuste local após a CI do PR #42 (551/552): o percurso de 30 questões esgotou o limite
+de 30 segundos na Q21, após 20 pontos. O trace mostra o clique final cancelado após cerca de
+102 ms pelo orçamento total, sem evidência de instabilidade persistente. Somente esse teste
+passa a usar `test.setTimeout(180000)`, conforme o percurso equivalente já existente.
+As 30 questões, duas conferências por questão e todas as asserções permanecem intactas.
+Reteste direcionado: 1/1 (13,7 s); suíte global local não repetida. Nova CI ainda pendente.

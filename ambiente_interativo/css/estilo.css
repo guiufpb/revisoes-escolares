@@ -1715,6 +1715,17 @@ footer {
   gap: 16px;
 }
 
+/* Somente cenas optantes: a escolha extensa cabe no campo nativo em telas estreitas. */
+[data-math-subitens],
+[data-math-subitens] .cartao-associacao,
+[data-math-subitens] select {
+  min-width: 0;
+}
+
+[data-math-subitens] .cartao-associacao {
+  justify-items: stretch;
+}
+
 .campo-mariana {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(120px, 220px);
