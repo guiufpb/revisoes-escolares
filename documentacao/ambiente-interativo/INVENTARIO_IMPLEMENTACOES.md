@@ -41,6 +41,15 @@ Sem Azure real, microfone, staging, commit ou publicação. Audição Windows, d
 humano e uso infantil desta cópia permanecem pendentes.
 Pasta habitual, origem e stash preservados; sem push, PR ou merge.
 
+Correção local após a CI #107 do PR #43 (570/571): o teste dos 20 ditados esgotou
+o orçamento total de 30 segundos no item 14. O trace registra 14 áudios/13 escritas e
+o clique final interrompido após cerca de 493 ms, sem evidência de instabilidade persistente.
+Somente esse teste recebe `test.setTimeout(120_000)`, conforme o percurso de 25 questões.
+Os 20 itens, variantes e todas as asserções permanecem intactos. Teste direcionado com
+duas execuções: **2/2 (17,0 s)**. Build, formatação, lint e diff aprovados.
+A suíte global local de 571/571 acima é o resultado anterior; não foi repetida nesta correção.
+Nova CI completa depende de futura autorização de push. Sem staging, commit ou push deste ajuste.
+
 Registro histórico da Etapa 3 — Matemática de Mariana: **65 cadastros, 65 IDs e 65 chaves únicos**,
 com os 64 registros anteriores idênticos à main do PR #41. Integração em cópia exclusiva
 sobre `a3ed65b248487bc62c4885295b67f45272af50e4`.

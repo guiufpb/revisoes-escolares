@@ -262,6 +262,7 @@ test('catálogo, contratos e 61 respostas no percurso completo, com quatro falas
 test('ditado separado, 20 escutas/escritas, variantes, revisão do estudo e edição sem escuta fabricada', async ({
   page,
 }) => {
+  test.setTimeout(120_000);
   await audio(page);
   await abrir(page);
   await expect(page.locator('#ingles-pratica-escrita')).toBeHidden();
