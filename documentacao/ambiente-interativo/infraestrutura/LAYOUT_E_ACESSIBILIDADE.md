@@ -52,3 +52,17 @@ rótulos, foco visível, região de status e faixa persistente quando a sessão 
 `Escape` fecha apenas o painel, sem encerrar a sessão; o botão **Encerrar sessão responsável** volta
 à sessão principal. O atalho é ignorado em campos editáveis da atividade e deve ser validado também
 em 390 × 844 sem overflow horizontal.
+
+
+## Subitens de Inglês
+
+Moving Around usa fieldsets/legends, campos e botões nativos com foco visível, estados
+aria-pressed/aria-invalid e feedback aria-live existente. Seleção permite desmarcar;
+ordenar permite retirar e recolocar. Tabelas incluem caption, cabeçalhos e escopos.
+O tratamento visual fica sob `.ingles-interacoes` e `.interacoes-multiplas`; esta última
+classe é atualizada por questão. Cenas de enunciado ficam amplas e alternativas ilustradas
+usam figura acima do texto, sem estreitar palavras em uma coluna lateral.
+A pasta de imagens é local e opcional, com padrão legado preservado.
+Conferência visual de Q25 em 1366/1920/390 pixels sem overflow. Testes novos nessas larguras
+e regressões de teclado, toque, axe, restauração e retorno ao legado passaram, assim como
+a suíte global de 407 testes em 07/10/2026. Ergonomia infantil não foi validada.

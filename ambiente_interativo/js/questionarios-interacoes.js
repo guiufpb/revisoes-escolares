@@ -344,6 +344,7 @@
   }
 
   window.QuestionariosInteracoes = {
+    mesmoConjunto: mesmoConjunto,
     aceita: aceita,
     montar: montar,
     configurar: configurar,

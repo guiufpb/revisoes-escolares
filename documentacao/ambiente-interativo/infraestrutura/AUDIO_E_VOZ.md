@@ -93,3 +93,19 @@ a confirmar.
 A arquitetura vigente desde 18/09/2026 teve validação acústica humana concluída com sucesso no
 Chromium/Windows em Português e Inglês. Mudanças compartilhadas futuras exigem nova validação
 proporcional ao risco.
+
+
+## Separação de estudo e ditado em Inglês
+
+O opt-in `ditadoOculto.habilitado` separa estudo ilustrado e tentativa de ditado. O estudo
+usa ordem própria; o ditado exibe somente IDs opacos/Item N e campos, sem imagem ou alvo em
+nomes acessíveis. A reprodução de estudo não conta como audição de ditado. Apenas a conclusão
+válida de áudio no modo de ditado registra o item; callbacks conferem geração, unidade,
+sessão, modo e item. Parada, navegação e troca de sessão invalidam solicitações anteriores.
+Ao retornar ao ditado, limpe superfícies antigas de feedback/resultado/pronúncia.
+Normalização tolerante e variantes de escrita são declarativas e restritas à unidade optante.
+
+Nas questões optantes com estímulos separados, ouvir a pergunta não substitui ouvir a/b.
+Os botões anunciam somente o identificador do estímulo e usam AudioRevisoes. Respostas ficam
+bloqueadas até o término da pergunta; a conferência exige também todos os estímulos obrigatórios.
+Não houve alteração no motor audio.js nem introdução de fila própria de síntese.

@@ -3,6 +3,17 @@
 
   var revisoes = [
     {
+      id: 'mariana-ingles-means-of-transportation-outubro-2026',
+      aluno: 'mariana',
+      titulo: 'Moving Around · Transport & Safety',
+      cartaoId: 'abrir-ingles-transportes-outubro',
+      painelId: 'tela-ingles',
+      chaveArmazenamento: 'revisoesEscolares.mariana.ingles.meansOfTransportationOutubro2026.v1',
+      totalEtapas: 46,
+      possuiAudio: true,
+      controladorCompartilhado: 'ingles',
+    },
+    {
       id: 'alice-matematica-dezenas-numeros-dinheiro-outubro-2026',
       aluno: 'alice',
       titulo: 'Dezenas, números e dinheiro — descobertas da Alice',

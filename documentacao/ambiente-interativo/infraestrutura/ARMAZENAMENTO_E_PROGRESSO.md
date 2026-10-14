@@ -42,3 +42,19 @@ Migração só é apropriada quando o significado anterior pode ser preservado c
 atividade mudou de sentido, use chave nova. Não simplifique implementação destruindo ou reinterpretando
 progresso já existente. Alterações compartilhadas de armazenamento, limpeza ou restauração exigem
 regressões direcionadas e `npm test`.
+
+
+## Estado opt-in de Inglês com subitens
+
+Moving Around usa duas chaves novas v1, principal de Mariana e auxiliar genérica do responsável;
+não há migração nem reutilização das chaves antigas. `ditadoEmExibicao` e
+`estimulosOuvidos` são campos da unidade optante. A lista de estímulos aceita apenas IDs
+declarados; respostas estruturadas mantêm somente subitens/opções válidos, eliminam duplicações,
+ordenam seleções e preservam sequências. Campos conservam texto para edição.
+
+Conferência e consolidação são revalidadas contra a resposta normalizada inteira. Assinatura
+incompatível invalida a consolidação; progresso incompatível com unidade/versão é ignorado.
+O ponto deriva de resposta correta com consolidação válida, sem incremento duplicado.
+Posição, modo, respostas, audições e progresso visual são restaurados juntos; abrir novamente
+a unidade retoma atividade/resultado quando cabível. Sessões usam o armazenamento existente.
+Mudança de resposta invalida conclusão anterior. Limpeza seletiva permanece obrigatória.

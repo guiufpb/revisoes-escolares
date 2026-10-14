@@ -198,9 +198,17 @@ test('carrega a tela inicial e registra todas as revisões sem chaves duplicadas
       })
     )
   );
-  expect(registro).toHaveLength(65);
-  expect(new Set(registro.map((item) => item.id)).size).toBe(65);
-  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(65);
+  expect(registro).toHaveLength(66);
+  expect(new Set(registro.map((item) => item.id)).size).toBe(66);
+  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(66);
+  expect(registro).toContainEqual({
+    id: 'mariana-ingles-means-of-transportation-outubro-2026',
+    cartaoId: 'abrir-ingles-transportes-outubro',
+    painelId: 'tela-ingles',
+    chaveArmazenamento: 'revisoesEscolares.mariana.ingles.meansOfTransportationOutubro2026.v1',
+    totalEtapas: 46,
+    elementosExistem: true,
+  });
   expect(registro).toEqual(
     expect.arrayContaining([
       expect.objectContaining({

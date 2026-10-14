@@ -294,3 +294,49 @@ de 30 segundos na Q21, após 20 pontos. O trace mostra o clique final cancelado 
 passa a usar `test.setTimeout(180000)`, conforme o percurso equivalente já existente.
 As 30 questões, duas conferências por questão e todas as asserções permanecem intactas.
 Reteste direcionado: 1/1 (13,7 s); suíte global local não repetida. Nova CI ainda pendente.
+
+## Inglês de Mariana — Transportes, integração Etapa 4
+
+`tests/ingles-mariana-transportes-outubro-2026.spec.js` conserva os 19 testes atuais da origem,
+incluindo gabarito independente das 61 respostas, percurso de 25 questões, 20 ditados,
+callbacks tardios, bloqueios de áudio, variantes de escrita, conjuntos exatos, ordenação
+reversível por mouse/teclado/toque, sessões independentes, limpeza seletiva, armazenamento
+adverso, dez modelos opcionais, recusa simulada de microfone, três viewports, axe e file://.
+O percurso completo já usa timeout individual de 120 segundos na origem; preservado.
+O percurso longo de Matemática da Mariana mantém 180 segundos do PR #42.
+CI continua com 120 minutos; workers, paralelismo e asserções preservados.
+
+O teste central exige 66 cadastros/IDs/chaves únicos e os metadados de Transportes,
+preservando as asserções dos cadastros anteriores. Auditoria local compara todos os 65
+objetos completos com a base autorizada e os hashes dos ativos/conteúdo/testes com a origem.
+A validação usa porta 5188, identidade confirmada e PDFs sintéticos oficiais.
+Validação final da integração em 14/10/2026: próprios 19 passed (1.3m); regressões iniciais
+133/134 (10,1 min), com única falha na asserção nova central (campo elementosExistem
+ausente no esperado), corrigida sem alterar aplicação ou reduzir cobertura; reteste
+1 passed (3.7s). Suíte global completa: **571 passed (40.0m)**, exit code 0.
+Windows: 24/24 de abertura e 8/8 de launcher/pronúncia simulada. Build, format:check,
+lint e diff aprovados. Porta 5188, identidade confirmada, um worker e PDFs sintéticos.
+Sem Azure real, microfone, staging, commit ou publicação. Audição Windows, duplo clique
+humano e uso infantil desta cópia permanecem pendentes.
+Mocks não comprovam audição no Windows, Azure real ou utilização infantil.
+
+### Ajuste direcionado após a CI #107 do PR #43 — 14/10/2026
+
+A CI do commit `598da7ae2a59dd97cbfa7aad300f4c23282fb644` terminou 570/571,
+com formatação e lint aprovados. O teste dos 20 ditados atingiu o timeout total de
+30 segundos no clique de conferência do item 14, não um timeout individual de ação.
+Log e trace mostram 14 áudios/13 escritas; o último clique durou cerca de 493 ms,
+enquanto as conferências anteriores concluíram em 397–933 ms. Os registros de
+instabilidade breve não demonstram um defeito persistente no botão.
+
+Somente o teste `ditado separado, 20 escutas/escritas, variantes, revisão do estudo e
+edição sem escuta fabricada` passa a declarar `test.setTimeout(120_000)`, seguindo
+o percurso equivalente de 25 questões. Preservados todos os 20 itens, variantes,
+conferências, verificações de áudio/escrita/progresso e asserções. Timeout global,
+workers, controladores, áudio, dependências e workflow permanecem inalterados.
+
+Validação local: **2/2 execuções direcionadas (17,0 s)** na porta 5188, com identidade
+confirmada e um worker; build, format:check, lint e diff aprovados. Nenhuma global
+local foi repetida: 571/571 permanece evidência histórica da versão anterior ao ajuste.
+Nova CI completa será executada após autorização futura de push; este ajuste local
+não inclui staging, commit ou publicação.

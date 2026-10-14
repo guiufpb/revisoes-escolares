@@ -184,3 +184,31 @@ Teste gabarito independente, primeira tentativa errada, correção, desfazer, pe
 ações, troca de perfil/revisão, armazenamento adverso, teclado, toque, celular, axe-core e console.
 Qualidade de enunciados e distribuição de alternativas seguem
 [Qualidade das questões](../pedagogia/QUALIDADE_DAS_QUESTOES.md).
+
+
+## Inglês com subitens opt-in
+
+Moving Around de Mariana declara `interacoes.habilitadas` e questões com `itens` identificados
+por a/b/c. `ingles-interacoes.js` renderiza e valida campos, alternativas, associações, categorias,
+bancos, ordenação e seleção; `ingles.js` conserva todo o ciclo de vida existente. O comparador
+`QuestionariosInteracoes.mesmoConjunto` é reutilizado nas seleções exatas.
+A resposta é um objeto por subitem: string ou lista de IDs. Seleções são canônicas sem depender
+da ordem; sequências preservam ordem. Bancos podem reutilizar opção entre subitens. Ordenação
+permite retirada/reinserção por botões. Nenhuma interação depende de arrastar.
+
+Nas ordenações de Inglês, o próprio cartão permanece acionável depois de colocado:
+clicar/tocar novamente ou usar Espaço/Enter retira esse cartão da sequência. O rótulo muda
+de **Colocar** para **Retirar**, mantendo `aria-pressed` coerente com a sequência salva.
+Os botões **Retirar** na lista continuam disponíveis. Ambos os caminhos respeitam o bloqueio
+de áudio; uma ordem incompleta impede conferência. A Q16 de Moving Around cobre retirada,
+recolocação, desmarcação do sinal, erro/correção, avanço, retorno e recarga por mouse, teclado
+e toque, sem usar salto administrativo durante o percurso.
+
+Todos os subitens devem ser respondidos e corretos para o único ponto da questão. A revisão
+EN/PT/EN/PT liga-se à assinatura da resposta inteira; editar invalida conferência e consolidação.
+A tela pós-resposta oferece **Editar respostas** também após acerto. A conclusão exige todos os
+portões, todas as questões e consolidações. Unidades sem opt-in preservam respostas escalares.
+
+A unidade pode declarar `diretorioImagens` com slug de uma pasta local; nomes de imagem aceitam
+somente basename SVG/PNG/JPG/JPEG/WebP. O padrão permanece objetos_escolares. URLs, diretórios
+no nome e travessia não são aceitos. História, tabelas e apoios estão no conteúdo local.

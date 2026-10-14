@@ -4,9 +4,53 @@
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra o estado de trabalho em **13/10/2026**.
+Este inventário registra o estado de trabalho em **14/10/2026**.
 
-Etapa 3 — Matemática de Mariana: **65 cadastros, 65 IDs e 65 chaves únicos**,
+## Etapa 4 — Inglês de Mariana: Transportes (integração local)
+
+Moving Around · Transport & Safety foi transportada seletivamente da implementação original,
+sobre a base autorizada `4f447cf1a93c123478783acab0634bc305e7e7e1` (PRs #39, #41 e #42).
+Auditoria determinística: **66 cadastros, 66 IDs e 66 chaves únicos**; os 65 objetos anteriores
+continuam integralmente idênticos à base. Os registros das etapas anteriores abaixo são históricos.
+
+- ID: `mariana-ingles-means-of-transportation-outubro-2026`.
+- Unidade: `means-of-transportation-outubro-2026`, versão 1, exclusiva de Mariana.
+- Chave principal: `revisoesEscolares.mariana.ingles.meansOfTransportationOutubro2026.v1`.
+- Auxiliar: `revisoesEscolares.responsavel.ingles.marianaMeansOfTransportationOutubro2026.v1`.
+- 20 ditados/cartões em três grupos (9/4/7), história em quatro cenas, 25 questões,
+  61 subitens, 25 pontos e 46 etapas cadastradas (20 ditados + história + 25 questões).
+- 57 SVGs locais, conteúdo, gerador e testes próprios preservados por SHA-256.
+- Estudo separado do ditado, escrita obrigatória, pergunta ouvida, estímulos separados em
+  Q03/Q07, consolidação EN/PT/EN/PT, edição reversível, Desktop Amplo e Modo Responsável.
+- Cinco conversas/dez modelos opcionais já existiam na origem. Preservados pelo controlador
+  de pronúncia atual, com consentimento; nenhum microfone ou Azure real acionado.
+
+Conciliados apenas os acréscimos da origem em HTML/CSS, imports, navegação, registro,
+`ingles.js`, imagens opcionais de `pronuncia.js` e exposição do comparador de conjuntos.
+`ingles-interacoes.js` renderiza/valida subitens; sessões, pontuação, navegação e áudio
+continuam nos controladores existentes. `audio.js`, armazenamento, gateway, launcher,
+dependências, workers, configuração Playwright e timeout CI de 120 minutos preservados.
+
+Validação final da integração em 14/10/2026: próprios 19 passed (1.3m); regressões iniciais
+133/134 (10,1 min), com única falha na asserção nova central (campo elementosExistem
+ausente no esperado), corrigida sem alterar aplicação ou reduzir cobertura; reteste
+1 passed (3.7s). Suíte global completa: **571 passed (40.0m)**, exit code 0.
+Windows: 24/24 de abertura e 8/8 de launcher/pronúncia simulada. Build, format:check,
+lint e diff aprovados. Porta 5188, identidade confirmada, um worker e PDFs sintéticos.
+Sem Azure real, microfone, staging, commit ou publicação. Audição Windows, duplo clique
+humano e uso infantil desta cópia permanecem pendentes.
+Pasta habitual, origem e stash preservados; sem push, PR ou merge.
+
+Correção local após a CI #107 do PR #43 (570/571): o teste dos 20 ditados esgotou
+o orçamento total de 30 segundos no item 14. O trace registra 14 áudios/13 escritas e
+o clique final interrompido após cerca de 493 ms, sem evidência de instabilidade persistente.
+Somente esse teste recebe `test.setTimeout(120_000)`, conforme o percurso de 25 questões.
+Os 20 itens, variantes e todas as asserções permanecem intactos. Teste direcionado com
+duas execuções: **2/2 (17,0 s)**. Build, formatação, lint e diff aprovados.
+A suíte global local de 571/571 acima é o resultado anterior; não foi repetida nesta correção.
+Nova CI completa depende de futura autorização de push. Sem staging, commit ou push deste ajuste.
+
+Registro histórico da Etapa 3 — Matemática de Mariana: **65 cadastros, 65 IDs e 65 chaves únicos**,
 com os 64 registros anteriores idênticos à main do PR #41. Integração em cópia exclusiva
 sobre `a3ed65b248487bc62c4885295b67f45272af50e4`.
 

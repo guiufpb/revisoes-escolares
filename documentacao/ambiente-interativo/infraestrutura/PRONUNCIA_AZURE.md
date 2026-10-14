@@ -152,3 +152,14 @@ seleção/identidade e falha opcional são verificados separadamente por
 habitual ocupada por servidor legado, sem Azure. O preparador e o gateway de produção não foram
 alterados neste lote. Um `/health` real confirma a preparação local sem enviar áudio
 ao Azure; a gravação de uma tentativa continua sendo uma validação humana separada.
+
+
+## Moving Around de Mariana
+
+A unidade de transportes declara cinco pares/dez modelos opcionais após suas 25 questões.
+`diretorioImagens` opcional aceita somente um slug local e mantém objetos_escolares como
+padrão; basename/extensões e descrição continuam validados. Usa o mesmo controlador, consentimento
+por sessão, modelos a 0,50 e descarte em memória. Texto de indisponibilidade identifica
+Moving Around. Não há mudança no gateway, launcher ou contrato Azure.
+Validação desta inclusão deve usar mocks; serviço real, microfone e calibração infantil não foram
+validados nesta implementação. Indisponibilidade não bloqueia a conclusão escolar.

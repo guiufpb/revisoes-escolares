@@ -6210,3 +6210,110 @@ input[id^='gramatica-resposta-geografia-brincadeiras-lazer-q30-'] {
     transition: none;
   }
 }
+
+/* Optional English subitems: each relationship keeps its own reversible controls. */
+.ingles-interacoes {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+.ingles-interacoes fieldset {
+  min-width: 0;
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 2px solid #8aa2b7;
+  border-radius: 16px;
+}
+.ingles-interacoes legend {
+  font-weight: 700;
+  padding: 0 0.4rem;
+}
+.ingles-interacoes img {
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  margin: 0.6rem auto;
+}
+.ingles-interacoes .ingles-opcoes-subitem {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  gap: 0.65rem;
+}
+.ingles-interacoes .ingles-opcoes-subitem img {
+  max-height: 155px;
+  object-fit: contain;
+}
+.ingles-interacoes .alternativa-atividade-ingles {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+  min-width: 0;
+  min-height: 48px;
+  overflow-wrap: anywhere;
+}
+.ingles-interacoes [aria-pressed='true'] {
+  outline: 3px solid #285e91;
+  background: #e5f3ff;
+}
+.ingles-interacoes [aria-invalid='true'] {
+  border-color: #ad3535;
+}
+.ingles-interacoes input,
+.ingles-interacoes select {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-height: 48px;
+  padding: 0.7rem;
+  font: inherit;
+}
+.ingles-interacoes table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  table-layout: fixed;
+}
+.ingles-interacoes th,
+.ingles-interacoes td {
+  padding: 0.6rem;
+  border: 1px solid #839bb0;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+.ingles-interacoes caption,
+.ingles-interacoes summary {
+  font-weight: 700;
+  padding: 0.6rem;
+}
+.ingles-interacoes details {
+  border-radius: 12px;
+  background: #eff6ef;
+  padding: 0.7rem;
+}
+.ingles-interacoes button:focus-visible,
+.ingles-interacoes input:focus-visible,
+.ingles-interacoes select:focus-visible {
+  outline: 3px solid #79429b;
+  outline-offset: 3px;
+}
+#ingles-modos-estudo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin: 1rem 0;
+}
+#ingles-modos-estudo[hidden] {
+  display: none;
+}
+
+#ingles-cartao-questao.interacoes-multiplas.com-apoio-visual {
+  display: block;
+}
+.interacoes-multiplas .imagens-enunciado-ingles img {
+  width: min(100%, 640px);
+  height: auto;
+  max-width: 100%;
+  max-height: none;
+  padding: 0;
+}
