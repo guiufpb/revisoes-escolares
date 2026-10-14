@@ -405,6 +405,7 @@
     document.getElementById('abrir-ingles-friends-atividade-1').hidden = false;
     document.getElementById('abrir-ingles-at-school-atividade-2').hidden = aluno !== 'mariana';
     document.getElementById('abrir-ingles-at-school-atividade-3').hidden = aluno !== 'mariana';
+    document.getElementById('abrir-ingles-transportes-outubro').hidden = aluno !== 'mariana';
     document.getElementById('materia-matematica').hidden = false;
     document.getElementById('materia-matematica-descricao').textContent =
       aluno === 'alice' ? 'Contas, problemas e tabuada' : 'Revisões, problemas e tabuada';
@@ -595,6 +596,16 @@
       .addEventListener('click', function () {
         if (alunoAtual !== 'mariana') return;
         window.InglesRevisoes.abrir('mariana', ID_INGLES_AT_SCHOOL_ATIVIDADE_3);
+        atualizarResumo();
+      });
+    document
+      .getElementById('abrir-ingles-transportes-outubro')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'mariana') return;
+        window.InglesRevisoes.abrir(
+          'mariana',
+          'mariana-ingles-means-of-transportation-outubro-2026'
+        );
         atualizarResumo();
       });
     document.querySelector('[data-materia="matematica"]').addEventListener('click', function () {

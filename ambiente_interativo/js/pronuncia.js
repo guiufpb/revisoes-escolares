@@ -71,6 +71,7 @@
     var quase = numeroEntre(configuracao.faixas && configuracao.faixas.quase, 0, muitoBem, 45);
     return {
       id: textoSeguro(configuracao.id, 80) || 'pronuncia-opt-in',
+      diretorioImagens: configuracao.diretorioImagens,
       gatewayUrl:
         textoSeguro(configuracao.gatewayUrl, 300) || 'http://127.0.0.1:5190/api/pronunciation',
       duracaoMaximaSegundos: numeroEntre(configuracao.duracaoMaximaSegundos, 3, 25, 15),
@@ -138,7 +139,10 @@
     elemento('pronuncia-resposta').textContent = par.resposta;
     limparImagem();
     if (par.imagem && par.imagemAlt) {
-      elemento('pronuncia-imagem-img').src = '../assets/objetos_escolares/' + par.imagem;
+      elemento('pronuncia-imagem-img').src = window.InglesInteracoes.imagem(
+        par.imagem,
+        configuracaoAtual
+      );
       elemento('pronuncia-imagem-img').alt = par.imagemAlt;
       elemento('pronuncia-imagem').hidden = false;
     }

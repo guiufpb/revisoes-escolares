@@ -294,3 +294,28 @@ de 30 segundos na Q21, após 20 pontos. O trace mostra o clique final cancelado 
 passa a usar `test.setTimeout(180000)`, conforme o percurso equivalente já existente.
 As 30 questões, duas conferências por questão e todas as asserções permanecem intactas.
 Reteste direcionado: 1/1 (13,7 s); suíte global local não repetida. Nova CI ainda pendente.
+
+## Inglês de Mariana — Transportes, integração Etapa 4
+
+`tests/ingles-mariana-transportes-outubro-2026.spec.js` conserva os 19 testes atuais da origem,
+incluindo gabarito independente das 61 respostas, percurso de 25 questões, 20 ditados,
+callbacks tardios, bloqueios de áudio, variantes de escrita, conjuntos exatos, ordenação
+reversível por mouse/teclado/toque, sessões independentes, limpeza seletiva, armazenamento
+adverso, dez modelos opcionais, recusa simulada de microfone, três viewports, axe e file://.
+O percurso completo já usa timeout individual de 120 segundos na origem; preservado.
+O percurso longo de Matemática da Mariana mantém 180 segundos do PR #42.
+CI continua com 120 minutos; workers, paralelismo e asserções preservados.
+
+O teste central exige 66 cadastros/IDs/chaves únicos e os metadados de Transportes,
+preservando as asserções dos cadastros anteriores. Auditoria local compara todos os 65
+objetos completos com a base autorizada e os hashes dos ativos/conteúdo/testes com a origem.
+A validação usa porta 5188, identidade confirmada e PDFs sintéticos oficiais.
+Validação final da integração em 14/10/2026: próprios 19 passed (1.3m); regressões iniciais
+133/134 (10,1 min), com única falha na asserção nova central (campo elementosExistem
+ausente no esperado), corrigida sem alterar aplicação ou reduzir cobertura; reteste
+1 passed (3.7s). Suíte global completa: **571 passed (40.0m)**, exit code 0.
+Windows: 24/24 de abertura e 8/8 de launcher/pronúncia simulada. Build, format:check,
+lint e diff aprovados. Porta 5188, identidade confirmada, um worker e PDFs sintéticos.
+Sem Azure real, microfone, staging, commit ou publicação. Audição Windows, duplo clique
+humano e uso infantil desta cópia permanecem pendentes.
+Mocks não comprovam audição no Windows, Azure real ou utilização infantil.

@@ -8,6 +8,7 @@
   var armazenamento = null;
   var estado = null;
   var inicializado = false;
+  var geracaoAudioLocal = 0;
   var revisaoPosRespostaEmReproducao = null;
   var historiaEmReproducao = null;
   var modoResponsavelAtivo = false;
@@ -177,28 +178,180 @@
   }
 
   function pararAudioDaAtividade() {
+    geracaoAudioLocal += 1;
     revisaoPosRespostaEmReproducao = null;
     window.AudioRevisoes.parar({ silencioso: true, origem: 'ingles-atividade' });
   }
 
-  function normalizarRespostaEscrita(valor) {
+  function ditadoOculto(unidade) {
+    return Boolean(unidade && unidade.ditadoOculto && unidade.ditadoOculto.habilitado);
+  }
+
+  function interacaoAtiva(questao, unidade) {
+    return window.InglesInteracoes.ativa(unidade || unidadeAtual, questao);
+  }
+
+  function imagemIngles(nome) {
+    return window.InglesInteracoes.imagem(nome, unidadeAtual);
+  }
+
+  function assinaturaResposta(questao, resposta) {
+    return interacaoAtiva(questao)
+      ? window.InglesInteracoes.assinatura(questao, resposta)
+      : resposta;
+  }
+
+  function respostaCompleta(questao, resposta) {
+    return interacaoAtiva(questao)
+      ? window.InglesInteracoes.completa(questao, resposta)
+      : Boolean(resposta);
+  }
+
+  function respostaCorreta(questao, resposta) {
+    return interacaoAtiva(questao)
+      ? window.InglesInteracoes.correta(questao, resposta)
+      : resposta === questao.respostaCorreta;
+  }
+
+  function estimulosCompletos(questao, dados) {
+    return (
+      !interacaoAtiva(questao) ||
+      questao.itens.every(function (item) {
+        return (
+          !item.estimulo ||
+          (dados || estado).estimulosOuvidos.indexOf(questao.id + ':' + item.id) >= 0
+        );
+      })
+    );
+  }
+
+  function cancelarAudioLocal() {
+    geracaoAudioLocal += 1;
+    window.AudioRevisoes.parar({ silencioso: true, origem: 'ingles' });
+    elemento('ingles-repetir').disabled = true;
+  }
+
+  function mudarModoDitado(exibir) {
+    if (!ditadoOculto(unidadeAtual)) return;
+    cancelarAudioLocal();
+    estado.ditadoEmExibicao = Boolean(exibir);
+    salvarEstado();
+    renderizar();
+    elemento(exibir ? 'ingles-campo-escrita' : 'ingles-titulo-grupo').focus();
+  }
+
+  function alterarSubitem(item, valor, remontar, opcaoId) {
+    var questao = questaoAtual();
+    if (!interacaoAtiva(questao) || perguntaAtualBloqueadaPorAudio()) return;
+    var respostas = objeto(estado.respostasAtividades[questao.id]);
+    respostas[item.id] = valor;
+    estado.respostasAtividades[questao.id] = window.InglesInteracoes.normalizar(questao, respostas);
+    delete estado.conferenciasAtividades[questao.id];
+    delete estado.revisoesPosRespostaConcluidas[questao.id];
+    estado.atividadeFinalizada = false;
+    estado.atividadeIniciada = true;
+    estado.iniciado = true;
+    salvarEstado();
+    if (remontar) {
+      renderizarQuestaoAtividade();
+      var campo = elemento('ingles-alternativas-atividade').querySelector(
+        '[data-subitem-ingles="' + item.id + '"]'
+      );
+      var foco =
+        campo &&
+        (campo.querySelector('[data-opcao-ingles="' + opcaoId + '"]:not(:disabled)') ||
+          campo.querySelector('button:not(:disabled), input'));
+      if (foco) foco.focus({ preventScroll: true });
+    } else {
+      elemento('ingles-conferir-atividade').disabled =
+        !respostaCompleta(questao, estado.respostasAtividades[questao.id]) ||
+        !estimulosCompletos(questao);
+      elemento('ingles-atividade-proxima').disabled = true;
+      elemento('ingles-alternativas-atividade')
+        .querySelectorAll('[aria-invalid]')
+        .forEach(function (campo) {
+          campo.setAttribute('aria-invalid', 'false');
+        });
+    }
+    elemento('ingles-status-atividade').textContent =
+      'Resposta em edição. Complete todas as partes e confira.';
+  }
+
+  function ouvirApoio(texto, idioma, unidade) {
+    geracaoAudioLocal += 1;
+    window.AudioRevisoes.falar({
+      texto: texto,
+      idioma: idioma,
+      velocidade: idioma === 'en-US' ? 0.62 : 0.82,
+      unidadeAudio: unidade || 'frase',
+      origem: 'ingles-apoio',
+    });
+  }
+
+  function ouvirEstimulo(item, devagar) {
+    var questao = questaoAtual();
+    if (!interacaoAtiva(questao) || !item.estimulo) return;
+    var sessao = identificadorSessaoAtiva();
+    var revisao = configuracaoAtual.revisaoId;
+    var id = questao.id;
+    var geracao = ++geracaoAudioLocal;
+    window.AudioRevisoes.falar({
+      texto: item.estimulo.texto,
+      idioma: 'en-US',
+      velocidade: devagar ? 0.5 : 0.62,
+      unidadeAudio: item.estimulo.unidadeAudio,
+      origem: 'ingles-estimulo',
+      contexto: 'ditado',
+      aoEstado: function (detalhe) {
+        if (
+          geracao !== geracaoAudioLocal ||
+          !configuracaoAtual ||
+          configuracaoAtual.revisaoId !== revisao ||
+          identificadorSessaoAtiva() !== sessao ||
+          !questaoAtual() ||
+          questaoAtual().id !== id ||
+          elemento('ingles-painel-atividades').hidden
+        )
+          return;
+        if (detalhe.fase === 'concluido') {
+          var chave = id + ':' + item.id;
+          if (estado.estimulosOuvidos.indexOf(chave) < 0) estado.estimulosOuvidos.push(chave);
+          salvarEstado();
+          renderizarQuestaoAtividade();
+        }
+        elemento('ingles-status-atividade').textContent =
+          detalhe.fase === 'concluido'
+            ? '✓ Item ' + item.id + ' ouvido até o fim.'
+            : detalhe.mensagem;
+      },
+    });
+  }
+
+  function normalizarRespostaEscrita(valor, unidade) {
+    if (ditadoOculto(unidade || unidadeAtual)) return window.InglesInteracoes.texto(valor, true);
     return String(valor || '')
       .trim()
       .replace(/\s+/g, ' ')
       .toLocaleLowerCase('en-US');
   }
 
-  function respostasAceitasParaEscrita(item) {
+  function respostasAceitasParaEscrita(item, argumentsUnidade) {
     return [item.ingles]
       .concat(Array.isArray(item.variantesEscrita) ? item.variantesEscrita : [])
-      .map(normalizarRespostaEscrita)
+      .map(function (resposta) {
+        return normalizarRespostaEscrita(resposta, argumentsUnidade);
+      })
       .filter(function (resposta, indice, lista) {
         return resposta && lista.indexOf(resposta) === indice;
       });
   }
 
-  function respostaEscritaCorreta(item, resposta) {
-    return respostasAceitasParaEscrita(item).indexOf(normalizarRespostaEscrita(resposta)) >= 0;
+  function respostaEscritaCorreta(item, resposta, unidade) {
+    return (
+      respostasAceitasParaEscrita(item, unidade).indexOf(
+        normalizarRespostaEscrita(resposta, unidade)
+      ) >= 0
+    );
   }
 
   function quantidadeEscritasCorretas(estadoDoPerfil) {
@@ -233,7 +386,7 @@
   }
 
   function estadoInicial(unidade) {
-    return {
+    var inicial = {
       unidadeId: unidade.id,
       versao: unidade.versao,
       grupoAtual: unidade.grupos[0].id,
@@ -257,10 +410,20 @@
       tentativasAtividade: 0,
       atualizadoEm: null,
     };
+    if (ditadoOculto(unidade)) inicial.ditadoEmExibicao = false;
+    if (unidade.interacoes && unidade.interacoes.habilitadas) inicial.estimulosOuvidos = [];
+    return inicial;
   }
 
   function normalizarEstado(valor, base, unidade) {
     valor = objeto(valor);
+    if (
+      unidade.interacoes &&
+      unidade.interacoes.habilitadas &&
+      ((valor.unidadeId && valor.unidadeId !== unidade.id) ||
+        (valor.versao !== undefined && valor.versao !== unidade.versao))
+    )
+      return base;
     var gruposValidos = unidade.grupos.map(function (grupo) {
       return grupo.id;
     });
@@ -294,13 +457,58 @@
       if (
         ['correta', 'incorreta'].indexOf(conferenciasEscritaRecebidas[item.id]) >= 0 &&
         (conferenciasEscritaRecebidas[item.id] !== 'correta' ||
-          respostaEscritaCorreta(item, respostasEscritaValidas[item.id]))
+          respostaEscritaCorreta(item, respostasEscritaValidas[item.id], unidade))
       ) {
         conferenciasEscritaValidas[item.id] = conferenciasEscritaRecebidas[item.id];
       }
     });
 
+    if (ditadoOculto(unidade)) base.ditadoEmExibicao = Boolean(valor.ditadoEmExibicao);
+    if (unidade.interacoes && unidade.interacoes.habilitadas) {
+      var validos = atividades.flatMap(function (q) {
+        return (q.itens || [])
+          .filter(function (item) {
+            return item.estimulo;
+          })
+          .map(function (item) {
+            return q.id + ':' + item.id;
+          });
+      });
+      base.estimulosOuvidos = (
+        Array.isArray(valor.estimulosOuvidos) ? valor.estimulosOuvidos : []
+      ).filter(function (id, indice, lista) {
+        return validos.indexOf(id) >= 0 && lista.indexOf(id) === indice;
+      });
+    }
     atividades.forEach(function (atividade) {
+      if (interacaoAtiva(atividade, unidade)) {
+        var resposta = window.InglesInteracoes.normalizar(
+          atividade,
+          respostasRecebidas[atividade.id]
+        );
+        if (!Object.keys(resposta).length) return;
+        if (exigeAudioDaPergunta(unidade) && perguntasOuvidasValidas.indexOf(atividade.id) < 0)
+          return;
+        respostasValidas[atividade.id] = resposta;
+        if (!window.InglesInteracoes.completa(atividade, resposta)) return;
+        if (
+          !atividade.itens.every(function (item) {
+            return (
+              !item.estimulo || base.estimulosOuvidos.indexOf(atividade.id + ':' + item.id) >= 0
+            );
+          })
+        )
+          return;
+        var correta = window.InglesInteracoes.correta(atividade, resposta);
+        var conferencia = conferenciasRecebidas[atividade.id];
+        if (conferencia === (correta ? 'correta' : 'incorreta')) {
+          conferenciasValidas[atividade.id] = conferencia;
+          var assinatura = window.InglesInteracoes.assinatura(atividade, resposta);
+          if (revisoesRecebidas[atividade.id] === assinatura)
+            revisoesValidas[atividade.id] = assinatura;
+        }
+        return;
+      }
       var idsAlternativas = atividade.alternativas.map(function (alternativa) {
         return alternativa.id;
       });
@@ -357,7 +565,12 @@
       Object.keys(respostasValidas).length === atividades.length &&
       (!unidade.correcaoPorQuestao ||
         atividades.every(function (atividade) {
-          return conferenciasValidas[atividade.id] === 'correta';
+          return (
+            conferenciasValidas[atividade.id] === 'correta' &&
+            (!interacaoAtiva(atividade, unidade) ||
+              revisoesValidas[atividade.id] ===
+                window.InglesInteracoes.assinatura(atividade, respostasValidas[atividade.id]))
+          );
         }));
     var historia = historiaDaUnidade(unidade);
     var quantidadeCenas = historia ? historia.cenas.length : 0;
@@ -381,6 +594,14 @@
       base.itensOuvidos.length === itens.length &&
       (!praticaEscritaObrigatoria(unidade) || quantidadeEscritasCorretas(base) === itens.length)
     );
+    if (unidade.interacoes && unidade.interacoes.habilitadas) {
+      base.atividadeFinalizada = Boolean(
+        base.atividadeFinalizada &&
+        base.itensOuvidos.length === itens.length &&
+        quantidadeEscritasCorretas(base) === itens.length &&
+        (!historia || base.historiaConcluida)
+      );
+    }
     base.tentativasAtividade = Math.max(0, Math.trunc(Number(valor.tentativasAtividade) || 0));
     var possuiConteudoIniciado =
       base.itensOuvidos.length > 0 ||
@@ -635,7 +856,16 @@
 
   function atualizarItemSelecionado() {
     var item = itemAtual();
-    elemento('ingles-item-imagem').src = '../assets/objetos_escolares/' + item.imagem;
+    if (ditadoOculto(unidadeAtual) && estado.ditadoEmExibicao) {
+      elemento('ingles-item-imagem').removeAttribute('src');
+      elemento('ingles-item-imagem').alt = '';
+      elemento('ingles-item-imagem').hidden = true;
+      elemento('ingles-item-ingles').textContent = 'Item ' + (grupoAtual().itens.indexOf(item) + 1);
+      elemento('ingles-item-portugues').textContent = 'Ouça e escreva este item.';
+      return;
+    }
+    elemento('ingles-item-imagem').hidden = false;
+    elemento('ingles-item-imagem').src = imagemIngles(item.imagem);
     elemento('ingles-item-imagem').alt = 'Ilustração de ' + item.portugues;
     elemento('ingles-item-ingles').textContent = item.ingles;
     elemento('ingles-item-portugues').textContent = item.portugues;
@@ -643,6 +873,33 @@
 
   function mensagemDeEscrita(item) {
     var conferencia = estado.conferenciasEscrita[item.id];
+    if (ditadoOculto(unidadeAtual)) {
+      if (conferencia === 'correta')
+        return (
+          'Muito bem! Você ouviu e escreveu este item. Modelo: ' +
+          item.ingles +
+          ' — ' +
+          item.portugues
+        );
+      if (conferencia === 'incorreta') {
+        var sinonimos = {
+          lorry: 'Truck também significa caminhão.',
+          bike: 'Bicycle também significa bicicleta.',
+          plane: 'Airplane também significa avião.',
+          motorbike: 'Motorcycle também significa moto.',
+        };
+        var convite =
+          item.sinonimo &&
+          normalizarRespostaEscrita(estado.respostasEscrita[item.id]) ===
+            normalizarRespostaEscrita(item.sinonimo)
+            ? sinonimos[item.ingles] + ' Agora, ouça de novo e escreva a palavra usada nesta fala.'
+            : 'Ouça novamente, de preferência devagar. Confira as letras e a ordem das palavras que você escreveu.';
+        if (item.id === 'd13') convite += ' São duas palavras, e a expressão está no plural.';
+        if (item.unidadeAudio === 'frase') convite += ' Ouça também artigos, pronomes e negação.';
+        return convite;
+      }
+      return 'Ouça o item e escreva o que ouviu. Você pode rever o estudo.';
+    }
     if (conferencia === 'correta') {
       return (
         '✓ Great! You typed "' +
@@ -660,15 +917,26 @@
 
   function atualizarPraticaEscrita() {
     var painel = elemento('ingles-pratica-escrita');
-    if (!praticaEscritaAtiva(unidadeAtual)) {
+    if (
+      !praticaEscritaAtiva(unidadeAtual) ||
+      (ditadoOculto(unidadeAtual) && !estado.ditadoEmExibicao)
+    ) {
       painel.hidden = true;
+      elemento('ingles-palavra-copia').textContent = '';
+      elemento('ingles-campo-escrita').value = '';
+      elemento('ingles-status-escrita').textContent = '';
       return;
     }
     var item = itemAtual();
     var conferencia = estado.conferenciasEscrita[item.id];
     var campo = elemento('ingles-campo-escrita');
     painel.hidden = false;
-    elemento('ingles-palavra-copia').textContent = item.ingles;
+    elemento('ingles-palavra-copia').previousSibling.textContent = ditadoOculto(unidadeAtual)
+      ? 'Ouça e escreva: '
+      : 'Copie: ';
+    elemento('ingles-palavra-copia').textContent = ditadoOculto(unidadeAtual)
+      ? 'Item ' + (grupoAtual().itens.indexOf(item) + 1)
+      : item.ingles;
     campo.value = estado.respostasEscrita[item.id] || '';
     campo.classList.toggle('correto', conferencia === 'correta');
     campo.classList.toggle('incorreto', conferencia === 'incorreta');
@@ -716,20 +984,30 @@
   }
 
   function selecionarItem(id) {
+    if (ditadoOculto(unidadeAtual)) cancelarAudioLocal();
     estado.itemAtual = id;
     if (!praticaEscritaAtiva(unidadeAtual)) estado.iniciado = true;
     salvarEstado();
     renderizarItens();
     atualizarItemSelecionado();
     atualizarPraticaEscrita();
-    ouvirIngles(false);
+    if (!ditadoOculto(unidadeAtual) || !estado.ditadoEmExibicao) ouvirIngles(false);
   }
 
   function renderizarItens() {
     var grupo = grupoAtual();
     var grade = elemento('ingles-grade-itens');
     grade.innerHTML = '';
-    grupo.itens.forEach(function (item) {
+    var emDitado = ditadoOculto(unidadeAtual) && estado.ditadoEmExibicao;
+    var itens =
+      !emDitado && Array.isArray(grupo.ordemEstudo)
+        ? grupo.ordemEstudo.map(function (id) {
+            return grupo.itens.find(function (item) {
+              return item.id === id;
+            });
+          })
+        : grupo.itens;
+    itens.forEach(function (item) {
       var botao = document.createElement('button');
       var imagem = document.createElement('img');
       var ingles = document.createElement('strong');
@@ -743,12 +1021,16 @@
       botao.classList.toggle('selecionado', estado.itemAtual === item.id);
       botao.classList.toggle('ouvido', ouvido);
       botao.classList.toggle('escrito', escrito);
-      imagem.src = '../assets/objetos_escolares/' + item.imagem;
+      imagem.src = imagemIngles(item.imagem);
       imagem.alt = '';
       ingles.lang = 'en-US';
       ingles.textContent = item.ingles;
       portugues.textContent = item.portugues;
-      botao.append(imagem, ingles, portugues);
+      if (emDitado) {
+        ingles.textContent = 'Item ' + (grupo.itens.indexOf(item) + 1);
+        portugues.textContent = 'Ouça e escreva';
+        botao.append(ingles, portugues);
+      } else botao.append(imagem, ingles, portugues);
       if (ouvido) {
         var marca = document.createElement('small');
         marca.textContent = '✓ Ouvido';
@@ -768,6 +1050,7 @@
   }
 
   function escolherGrupo(id) {
+    if (ditadoOculto(unidadeAtual)) cancelarAudioLocal();
     var grupo = localizarGrupo(id);
     if (!grupo) return;
     estado.grupoAtual = grupo.id;
@@ -803,7 +1086,10 @@
   function ouvirInstrucao() {
     var grupo = grupoAtual();
     window.AudioRevisoes.falar({
-      texto: grupo.instrucao,
+      texto:
+        ditadoOculto(unidadeAtual) && estado.ditadoEmExibicao
+          ? 'Ouça cada item e escreva o que ouviu. Confira a escrita e corrija quando precisar.'
+          : grupo.instrucao,
       idioma: 'pt-BR',
       velocidade: 0.88,
       origem: 'ingles',
@@ -816,6 +1102,11 @@
 
   function ouvirIngles(devagar) {
     var item = itemAtual();
+    var geracao = ++geracaoAudioLocal;
+    var sessao = identificadorSessaoAtiva();
+    var revisao = configuracaoAtual.revisaoId;
+    var registrar = !ditadoOculto(unidadeAtual) || estado.ditadoEmExibicao;
+    elemento('ingles-repetir').disabled = false;
     window.AudioRevisoes.falar({
       texto: item.ingles,
       idioma: 'en-US',
@@ -823,7 +1114,16 @@
       origem: 'ingles',
       unidadeAudio: item.unidadeAudio || 'palavra',
       aoEstado: function (detalhe) {
-        aoEstadoDoAudio(detalhe, item.id);
+        if (
+          ditadoOculto(unidadeAtual) &&
+          (geracao !== geracaoAudioLocal ||
+            configuracaoAtual.revisaoId !== revisao ||
+            identificadorSessaoAtiva() !== sessao ||
+            itemAtual().id !== item.id ||
+            elemento('tela-ingles').hidden)
+        )
+          return;
+        aoEstadoDoAudio(detalhe, registrar ? item.id : null);
       },
     });
   }
@@ -887,6 +1187,10 @@
   function renderizarImagensDoEnunciado(questao) {
     var recipiente = elemento('ingles-imagens-enunciado');
     elemento('ingles-cartao-questao').classList.toggle(
+      'interacoes-multiplas',
+      interacaoAtiva(questao)
+    );
+    elemento('ingles-cartao-questao').classList.toggle(
       'com-apoio-visual',
       Boolean(questao.imagemEnunciado)
     );
@@ -896,13 +1200,13 @@
     var repeticoes = Math.max(1, Number(questao.repeticoesImagem) || 1);
     for (var indice = 0; indice < repeticoes; indice += 1) {
       var imagem = document.createElement('img');
-      imagem.src = '../assets/objetos_escolares/' + questao.imagemEnunciado;
+      imagem.src = imagemIngles(questao.imagemEnunciado);
       imagem.alt = indice === 0 && questao.imagemEnunciadoAlt ? questao.imagemEnunciadoAlt : '';
       if (questao.imagemEnunciadoMobile) {
         var picture = document.createElement('picture');
         var source = document.createElement('source');
         source.media = '(max-width: 720px)';
-        source.srcset = '../assets/objetos_escolares/' + questao.imagemEnunciadoMobile;
+        source.srcset = imagemIngles(questao.imagemEnunciadoMobile);
         picture.append(source, imagem);
         recipiente.appendChild(picture);
       } else {
@@ -938,7 +1242,7 @@
     elemento('ingles-story-time-cena-subtitulo').textContent = cena.tituloPortugues;
     elemento('ingles-story-time-texto-ingles').textContent = cena.textoIngles;
     elemento('ingles-story-time-texto-portugues').textContent = cena.textoPortugues;
-    elemento('ingles-story-time-imagem').src = '../assets/objetos_escolares/' + cena.imagem;
+    elemento('ingles-story-time-imagem').src = imagemIngles(cena.imagem);
     elemento('ingles-story-time-imagem').alt = cena.imagemAlt;
     elemento('ingles-story-time-fechar').textContent = veioDaQuestao
       ? '← Voltar à questão'
@@ -1123,7 +1427,8 @@
   function revisaoDaQuestaoConcluida(questao) {
     return Boolean(
       questao &&
-      estado.revisoesPosRespostaConcluidas[questao.id] === estado.respostasAtividades[questao.id]
+      estado.revisoesPosRespostaConcluidas[questao.id] ===
+        assinaturaResposta(questao, estado.respostasAtividades[questao.id])
     );
   }
 
@@ -1144,6 +1449,21 @@
     var conferencia = estado.conferenciasAtividades[questao.id];
     var bloqueadaPorAudio = perguntaAtualBloqueadaPorAudio();
     grade.innerHTML = '';
+    grade.classList.remove('ingles-interacoes');
+    if (interacaoAtiva(questao)) {
+      window.InglesInteracoes.montar(grade, unidadeAtual, questao, resposta, {
+        bloqueada: bloqueadaPorAudio,
+        conferida: Boolean(conferencia),
+        alterar: alterarSubitem,
+        conferir: conferirRespostaAtividade,
+        ouvir: ouvirEstimulo,
+        ler: ouvirApoio,
+        ouvido: function (item) {
+          return estado.estimulosOuvidos.indexOf(questao.id + ':' + item.id) >= 0;
+        },
+      });
+      return;
+    }
     alternativasParaExibicao(questao, estado.questaoAtual).forEach(function (alternativa, indice) {
       var botao = document.createElement('button');
       var texto = document.createElement('span');
@@ -1165,7 +1485,7 @@
       if (bloqueadaPorAudio) botao.setAttribute('aria-describedby', 'ingles-status-atividade');
       if (alternativa.imagem) {
         var imagem = document.createElement('img');
-        imagem.src = '../assets/objetos_escolares/' + alternativa.imagem;
+        imagem.src = imagemIngles(alternativa.imagem);
         imagem.alt = '';
         botao.appendChild(imagem);
       } else {
@@ -1210,16 +1530,19 @@
       'Question ' + (estado.questaoAtual + 1) + ' of ' + atividades.length;
     elemento('ingles-pergunta-revisao-pos-resposta').textContent = questao.perguntaIngles;
     elemento('ingles-resposta-revisao-pos-resposta').textContent = dados.respostaIngles;
+    elemento('ingles-feedback-revisao').textContent = interacaoAtiva(questao)
+      ? tentativaIncorreta
+        ? questao.feedbackErro
+        : questao.explicacao
+      : '';
 
     imagem.hidden = !dados.imagemResposta;
-    imagemElemento.src = dados.imagemResposta
-      ? '../assets/objetos_escolares/' + dados.imagemResposta
-      : '';
+    imagemElemento.src = dados.imagemResposta ? imagemIngles(dados.imagemResposta) : '';
     imagemElemento.alt = dados.imagemResposta ? dados.imagemRespostaAltIngles || '' : '';
     var imagemMobile = elemento('ingles-imagem-revisao-mobile');
     imagemMobile.removeAttribute('srcset');
     if (dados.imagemResposta && dados.imagemRespostaMobile) {
-      imagemMobile.srcset = '../assets/objetos_escolares/' + dados.imagemRespostaMobile;
+      imagemMobile.srcset = imagemIngles(dados.imagemRespostaMobile);
     }
 
     elemento('ingles-ouvir-revisao').disabled = reproduzindo;
@@ -1231,7 +1554,10 @@
           : '✓ Review complete. You can continue.'
         : 'Listen to the full review to continue.';
 
-    botaoAnterior.hidden = true;
+    botaoAnterior.hidden = !interacaoAtiva(questao);
+    botaoAnterior.disabled = estado.questaoAtual === 0;
+    elemento('ingles-editar-respostas').hidden = !interacaoAtiva(questao);
+    elemento('ingles-editar-respostas').disabled = reproduzindo;
     botaoConferir.hidden = true;
     botaoProxima.hidden = false;
     botaoProxima.disabled =
@@ -1258,6 +1584,7 @@
     }
     elemento('ingles-conteudo-questao').hidden = false;
     elemento('ingles-revisao-pos-resposta').hidden = true;
+    elemento('ingles-editar-respostas').hidden = true;
     elemento('ingles-progresso-atividade').textContent =
       'Atividade ' + (estado.questaoAtual + 1) + ' de ' + atividades.length;
     elemento('ingles-pergunta-atividade').textContent =
@@ -1274,7 +1601,11 @@
     elemento('ingles-atividade-anterior').hidden = false;
     elemento('ingles-atividade-anterior').disabled = estado.questaoAtual === 0;
     botaoConferir.hidden = !imediata;
-    botaoConferir.disabled = bloqueadaPorAudio || !resposta || conferencia === 'correta';
+    botaoConferir.disabled =
+      bloqueadaPorAudio ||
+      !respostaCompleta(questao, resposta) ||
+      !estimulosCompletos(questao) ||
+      conferencia === 'correta';
     elemento('ingles-atividade-proxima').hidden = false;
     elemento('ingles-atividade-proxima').disabled =
       bloqueadaPorAudio || (imediata ? conferencia !== 'correta' : !resposta);
@@ -1311,9 +1642,18 @@
     }
     var questao = questaoAtual();
     var resposta = questao && estado.respostasAtividades[questao.id];
-    if (!questao || !resposta) return;
-    estado.conferenciasAtividades[questao.id] =
-      resposta === questao.respostaCorreta ? 'correta' : 'incorreta';
+    if (!questao || !respostaCompleta(questao, resposta) || !estimulosCompletos(questao)) {
+      elemento('ingles-status-atividade').textContent =
+        'Complete todas as partes e ouça os itens de escuta até o fim antes de conferir.';
+      var primeiro = elemento('ingles-alternativas-atividade').querySelector(
+        'input:not(:disabled), button:not(:disabled)'
+      );
+      if (primeiro) primeiro.focus();
+      return;
+    }
+    estado.conferenciasAtividades[questao.id] = respostaCorreta(questao, resposta)
+      ? 'correta'
+      : 'incorreta';
     delete estado.revisoesPosRespostaConcluidas[questao.id];
     estado.tentativasAtividade += 1;
     salvarEstado();
@@ -1329,7 +1669,12 @@
 
   function quantidadeDeAcertos() {
     return todasAsAtividades(unidadeAtual).filter(function (questao) {
-      return estado.respostasAtividades[questao.id] === questao.respostaCorreta;
+      return (
+        respostaCorreta(questao, estado.respostasAtividades[questao.id]) &&
+        (!interacaoAtiva(questao) ||
+          (estado.conferenciasAtividades[questao.id] === 'correta' &&
+            revisaoDaQuestaoConcluida(questao)))
+      );
     }).length;
   }
 
@@ -1355,9 +1700,13 @@
     lista.innerHTML = '';
     atividades.forEach(function (questao, indice) {
       var respostaId = estado.respostasAtividades[questao.id];
-      var correta = respostaId === questao.respostaCorreta;
-      var resposta = alternativaDaQuestao(questao, respostaId);
-      var respostaCorreta = alternativaDaQuestao(questao, questao.respostaCorreta);
+      var correta = respostaCorreta(questao, respostaId);
+      var resposta = interacaoAtiva(questao)
+        ? { texto: window.InglesInteracoes.resumo(questao, respostaId) }
+        : alternativaDaQuestao(questao, respostaId);
+      var respostaCerta = interacaoAtiva(questao)
+        ? { texto: questao.revisaoPosResposta.respostaIngles }
+        : alternativaDaQuestao(questao, questao.respostaCorreta);
       var cartao = document.createElement('article');
       var titulo = document.createElement('h3');
       var selo = document.createElement('p');
@@ -1372,13 +1721,14 @@
         var certa = document.createElement('p');
         var explicacao = document.createElement('p');
         certa.innerHTML = '<strong>Resposta certa:</strong> ';
-        certa.append(document.createTextNode(textoDaAlternativa(respostaCorreta)));
+        certa.append(document.createTextNode(textoDaAlternativa(respostaCerta)));
         explicacao.innerHTML = '<strong>Por quê?</strong> ';
         explicacao.append(document.createTextNode(questao.explicacao));
         cartao.append(certa, explicacao);
       }
       lista.appendChild(cartao);
     });
+    window.InglesInteracoes.enriquecimentos(lista, unidadeAtual, ouvirApoio);
     atualizarPronuncia(true);
   }
 
@@ -1415,7 +1765,10 @@
     if (
       correcaoPorQuestao() &&
       !atividades.every(function (atividade) {
-        return estado.conferenciasAtividades[atividade.id] === 'correta';
+        return (
+          estado.conferenciasAtividades[atividade.id] === 'correta' &&
+          (!interacaoAtiva(atividade) || revisaoDaQuestaoConcluida(atividade))
+        );
       })
     ) {
       return;
@@ -1470,6 +1823,8 @@
   function refazerAtividades() {
     pararAudioDaAtividade();
     estado.questaoAtual = 0;
+    if (unidadeAtual.interacoes && unidadeAtual.interacoes.habilitadas)
+      estado.estimulosOuvidos = [];
     estado.perguntasOuvidasAtividades = [];
     estado.respostasAtividades = {};
     estado.conferenciasAtividades = {};
@@ -1543,7 +1898,7 @@
     var revisaoId = configuracaoAtual.revisaoId;
     var unidadeId = unidadeAtual.id;
     var questaoId = questao.id;
-    var respostaId = estado.respostasAtividades[questao.id];
+    var respostaId = assinaturaResposta(questao, estado.respostasAtividades[questao.id]);
     var sessaoId = identificadorSessaoAtiva();
     revisaoPosRespostaEmReproducao = questao.id;
     renderizarRevisaoPosResposta(questao);
@@ -1867,14 +2222,52 @@
     elemento('ingles-descricao-unidade').textContent =
       unidadeAtual.descricao ||
       'Clique ou pressione Enter em uma palavra ou frase para ouvir em inglês. O ambiente também pode ler as instruções em português.';
-    elemento('ingles-imagem-cabecalho').src =
-      '../assets/objetos_escolares/' + (unidadeAtual.imagemCabecalho || 'school.svg');
+    elemento('ingles-imagem-cabecalho').src = imagemIngles(
+      unidadeAtual.imagemCabecalho || 'school.svg'
+    );
     elemento('ingles-titulo-grupo').textContent = grupo.titulo;
     elemento('ingles-traducao-grupo').textContent = grupo.traducao;
-    elemento('ingles-instrucao-grupo').textContent = grupo.instrucao;
+    elemento('ingles-instrucao-grupo').textContent =
+      ditadoOculto(unidadeAtual) && estado.ditadoEmExibicao
+        ? 'Escolha um item, ouça até o fim, escreva e confira. Rever o estudo é permitido.'
+        : grupo.instrucao;
+    elemento('ingles-modos-estudo').hidden = !ditadoOculto(unidadeAtual);
+    elemento('ingles-estudar').setAttribute('aria-pressed', String(!estado.ditadoEmExibicao));
+    elemento('ingles-ditar').setAttribute('aria-pressed', String(Boolean(estado.ditadoEmExibicao)));
+    elemento('ingles-repetir').disabled = ditadoOculto(unidadeAtual);
     elemento('ingles-painel-atividades').hidden = true;
     elemento('ingles-story-time').hidden = true;
     atualizarPronuncia(false);
+    if (ditadoOculto(unidadeAtual) && estado.ditadoEmExibicao) {
+      // Hidden panels from an earlier visit must not leak dictation models into the DOM.
+      [
+        'ingles-pergunta-atividade',
+        'ingles-instrucao-atividade',
+        'ingles-pergunta-revisao-pos-resposta',
+        'ingles-resposta-revisao-pos-resposta',
+        'ingles-feedback-revisao',
+        'ingles-story-time-texto-ingles',
+        'ingles-story-time-texto-portugues',
+        'ingles-story-time-cena-titulo',
+        'ingles-story-time-cena-subtitulo',
+        'pronuncia-pergunta',
+        'pronuncia-resposta',
+        'pronuncia-alvo-atual',
+      ].forEach(function (id) {
+        elemento(id).textContent = '';
+      });
+      ['ingles-alternativas-atividade', 'ingles-imagens-enunciado', 'ingles-lista-revisao'].forEach(
+        function (id) {
+          elemento(id).replaceChildren();
+        }
+      );
+      ['ingles-story-time-imagem', 'ingles-imagem-revisao-pos-resposta-img'].forEach(function (id) {
+        elemento(id).removeAttribute('src');
+        elemento(id).alt = '';
+      });
+      elemento('ingles-imagem-revisao-mobile').removeAttribute('srcset');
+      elemento('ingles-revisao-pos-resposta').hidden = true;
+    }
     renderizarGrupos();
     renderizarItens();
     atualizarItemSelecionado();
@@ -1901,6 +2294,7 @@
     carregarPerfil(perfil, revisaoId);
     renderizar();
     controladorApp.mostrarTela('ingles');
+    if (unidadeAtual.interacoes && unidadeAtual.interacoes.habilitadas) restaurarTelaDaSessao();
     if (estado.historiaEmExibicao && !elemento('ingles-story-time').hidden) {
       window.requestAnimationFrame(function () {
         elemento('ingles-story-time').scrollIntoView({ block: 'start' });
@@ -1911,6 +2305,7 @@
   function limparProgresso() {
     if (!armazenamento || !unidadeAtual) return false;
     if (!window.confirm('Limpar somente o progresso desta revisão de Inglês?')) return false;
+    geracaoAudioLocal += 1;
     window.AudioRevisoes.parar({ silencioso: true, origem: 'ingles' });
     historiaEmReproducao = null;
     armazenamento.remover();
@@ -1927,6 +2322,23 @@
   }
 
   function registrarEventos() {
+    elemento('ingles-estudar').addEventListener('click', function () {
+      mudarModoDitado(false);
+    });
+    elemento('ingles-ditar').addEventListener('click', function () {
+      mudarModoDitado(true);
+    });
+    elemento('ingles-editar-respostas').addEventListener('click', function () {
+      var questao = questaoAtual();
+      if (!interacaoAtiva(questao)) return;
+      pararAudioDaAtividade();
+      delete estado.conferenciasAtividades[questao.id];
+      delete estado.revisoesPosRespostaConcluidas[questao.id];
+      estado.atividadeFinalizada = false;
+      salvarEstado();
+      renderizarQuestaoAtividade();
+      elemento('ingles-pergunta-atividade').focus();
+    });
     elemento('ingles-ouvir-instrucao').addEventListener('click', ouvirInstrucao);
     elemento('ingles-ouvir-normal').addEventListener('click', function () {
       ouvirIngles(false);
@@ -1939,6 +2351,7 @@
       elemento('ingles-status-audio').textContent = 'Repetindo o último áudio.';
     });
     elemento('ingles-parar').addEventListener('click', function () {
+      geracaoAudioLocal += 1;
       window.AudioRevisoes.parar({ origem: 'ingles' });
       elemento('ingles-status-audio').textContent = 'Áudio interrompido.';
       if (!elemento('ingles-painel-atividades').hidden && perguntaAtualBloqueadaPorAudio()) {
@@ -2040,6 +2453,7 @@
     abrir: abrir,
     limparProgresso: limparProgresso,
     pararAudio: function () {
+      geracaoAudioLocal += 1;
       revisaoPosRespostaEmReproducao = null;
       historiaEmReproducao = null;
       window.AudioRevisoes.parar({ silencioso: true, origem: 'ingles' });
