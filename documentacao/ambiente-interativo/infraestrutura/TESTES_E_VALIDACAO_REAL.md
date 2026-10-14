@@ -287,3 +287,10 @@ Build, format:check, lint e diff aprovados novamente após a correção exclusiv
 Porta 5189, identidade confirmada, um worker, sem reutilização de servidor.
 A rodada inicial permanece registrada; o reteste isolado não substitui a passagem global final.
 Testes não comprovam uso infantil, abertura humana por duplo clique ou voz instalada.
+
+Ajuste local após a CI do PR #42 (551/552): o percurso de 30 questões esgotou o limite
+de 30 segundos na Q21, após 20 pontos. O trace mostra o clique final cancelado após cerca de
+102 ms pelo orçamento total, sem evidência de instabilidade persistente. Somente esse teste
+passa a usar `test.setTimeout(180000)`, conforme o percurso equivalente já existente.
+As 30 questões, duas conferências por questão e todas as asserções permanecem intactas.
+Reteste direcionado: 1/1 (13,7 s); suíte global local não repetida. Nova CI ainda pendente.

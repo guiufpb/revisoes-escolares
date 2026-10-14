@@ -17,8 +17,16 @@ o campo não era projetado. Corrigida somente a coleta, preservando a asserção
 exit code 0, sem falhas, retries ou skips. Windows: 24/24 (17 s); pronúncia simulada: 8/8 (23 s).
 Build, format:check, lint e diff aprovados novamente após a correção exclusiva do teste.
 
-Conteúdo, teste próprio e 21 SVGs + README idênticos à origem; 17 worktrees, 935 arquivos
-pendentes, branches anteriores e stash preservados por conferência final. Catálogo privado
+Ajuste local após a CI do PR #42 (551/552): o percurso de 30 questões esgotou o limite
+de 30 segundos na Q21, após 20 pontos. O trace mostra o clique final cancelado após cerca de
+102 ms pelo orçamento total, sem evidência de instabilidade persistente. Somente esse teste
+passa a usar `test.setTimeout(180000)`, conforme o percurso equivalente já existente.
+As 30 questões, duas conferências por questão e todas as asserções permanecem intactas.
+Reteste direcionado: 1/1 (13,7 s); suíte global local não repetida. Nova CI ainda pendente.
+
+Conteúdo e 21 SVGs + README idênticos à origem; teste próprio preservado com o ajuste
+individual de timeout documentado acima. As 17 worktrees, os 935 arquivos
+pendentes, as branches anteriores e o stash foram preservados por conferência final. Catálogo privado
 atualizado somente na pasta habitual, com os 12 registros anteriores intactos. Uso infantil
 e duplo clique humano nesta cópia permanecem pendentes. Sem commit ou publicação.
 

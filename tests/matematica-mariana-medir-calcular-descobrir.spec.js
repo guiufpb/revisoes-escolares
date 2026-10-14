@@ -169,6 +169,7 @@ test('registro exclusivo e conteúdo aprovado 30/75/30, bancos e ordem', async (
 });
 
 test('errar, pistas específicas, corrigir, 30 pontos únicos, final e recarga', async ({ page }) => {
+  test.setTimeout(180000);
   await abrir(page);
   await page.locator('[data-math-hint]').click();
   await expect(page.locator('[data-math-status]')).toContainText('Primeiro tente');
