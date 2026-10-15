@@ -75,6 +75,19 @@ Após essa revisão, o pin do corpus passou de
 Essa renovação não resolve A1/A3 nem reescreve planos/relatórios anteriores, que preservam a
 política e o snapshot de sua própria coleta. Anotações em prosa ficam fora do corpus executável.
 
+### Reatestação por checkout completo da PR #44 — 15/10/2026
+
+A CI #110 interrompeu no teste CLI porque o checkout raso não continha o commit-base histórico.
+A única superfície executável/configuração alterada nesta correção é
+`.github/workflows/validacao.yml`: `actions/checkout@v6` recebe `fetch-depth: 0`.
+O delta não cria consumidor, sink ou referência a screenshots. Produtores e bloqueio HTTP
+conservaram hashes/âncoras; privacidade, precedência de entradas, namespaces, dez fixtures
+sintéticas e lista exata de 29 diagnósticos permanecem iguais. As demais superfícies
+coincidem com a atestação anterior. Depois dessa revisão, o pin passa de
+`a8655c9e25d3b244eb24da079d793f17e08013169c4f2f994c376a31b2d3c5e0` para
+`cbe8500004c9c96385a4a2e0f3f6597fed4cb80287eb294345ac98cbdd10d505`.
+A renovação é restrita a esse delta e não corrige A1/A3 nem altera evidências históricas.
+
 | Produtor                                               | Captura diagnóstica exata                              |
 | ------------------------------------------------------ | ------------------------------------------------------ |
 | `tests/historia-mariana-memorias-outubro-2026.spec.js` | `output/historia-outubro-1366.png`                     |

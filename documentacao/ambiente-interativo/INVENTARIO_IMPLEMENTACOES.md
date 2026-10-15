@@ -6,6 +6,14 @@ O **Revisões Escolares** evoluiu para uma aplicação educacional local com per
 
 Este inventário registra o estado de trabalho em **14/10/2026**.
 
+## Correção de checkout da CI — PR #44
+
+`actions/checkout@v6` passa a usar `fetch-depth: 0` para disponibilizar a base Git histórica
+exigida pelo teste CLI. A CI #110 parou em 54/55 Node, antes de build/Playwright; a nova
+execução remota permanece pendente nesta anotação. Referência e asserções preservadas,
+com reatestação restrita ao delta de workflow documentada em `validacao/IDENTIDADE.md`.
+Global obrigatória, check, worker, retries, timeouts, A1/A3 e PR Draft preservados.
+
 ## Correção A2 — Descritores do manifesto no comparador
 
 O comparador exige descritores presentes e válidos no plano e no relatório: schema 1, versão

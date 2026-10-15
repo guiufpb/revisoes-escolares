@@ -171,7 +171,7 @@
     }
   ],
   "diagnosticAudit": {
-    "corpusSha256": "a8655c9e25d3b244eb24da079d793f17e08013169c4f2f994c376a31b2d3c5e0",
+    "corpusSha256": "cbe8500004c9c96385a4a2e0f3f6597fed4cb80287eb294345ac98cbdd10d505",
     "scope": "All indexed executable/configuration/reference surfaces (including SVG and forced bundles), excluding this policy and prose; exact bytes. Any change invalidates exclusion pending explicit review.",
     "httpDeny": {
       "source": "scripts/identidade-ambiente-local.cjs",

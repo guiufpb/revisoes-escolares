@@ -412,3 +412,14 @@ comparáveis: 571 propostos, zero omitidos, entradas/política/manifesto estáve
 nenhum caminho sem tratamento. Projeção de tentativas com redução zero; sem estimar tempo
 seletivo. Os 42 relatórios anteriores e a base histórica permanecem imutáveis. Esta anotação
 documental foi feita após a coleta e não é apresentada como parte dos bytes testados.
+
+## Histórico Git na CI — correção da PR #44
+
+O checkout do workflow usa `fetch-depth: 0`, disponibilizando a base explícita
+`14584b2fee618fc900bb3d5657b9cfa16482bf33` exigida pelo teste CLI e comparações históricas.
+Na CI #110, o checkout raso impediu esse teste (54/55 Node); build e global Playwright
+não chegaram a executar. A correção conserva a referência, as asserções, o check obrigatório,
+Ubuntu, timeout, worker e `npm test` integral. A reatestação restrita do corpus está
+documentada em [IDENTIDADE.md](../../../validacao/IDENTIDADE.md). A nova CI deve executar
+a global completa e publicar o relatório estruturado; a falha antiga não comprova regressão
+dos 571 casos não executados.
