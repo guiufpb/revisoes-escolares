@@ -14,7 +14,11 @@ module.exports = defineConfig({
   testDir: './tests',
   fullyParallel: false,
   workers: 1,
-  reporter: process.env.CI ? [['line'], ['html', { open: 'never' }]] : 'line',
+  reporter: [
+    ['line'],
+    ...(process.env.CI ? [['html', { open: 'never' }]] : []),
+    ['./scripts/validacao/reporter.cjs'],
+  ],
   use: {
     baseURL,
     trace: 'retain-on-failure',

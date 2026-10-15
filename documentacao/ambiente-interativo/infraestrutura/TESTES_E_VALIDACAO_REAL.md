@@ -340,3 +340,86 @@ confirmada e um worker; build, format:check, lint e diff aprovados. Nenhuma glob
 local foi repetida: 571/571 permanece evidência histórica da versão anterior ao ajuste.
 Nova CI completa será executada após autorização futura de push; este ajuste local
 não inclui staging, commit ou publicação.
+
+## Manifesto e métricas estruturadas — Etapa 1
+
+A capacidade implementada está descrita em [validacao/README.md](../../../validacao/README.md).
+O manifesto versionado mapeia a base de 66 revisões e 42 arquivos/571 casos, com motores efetivos,
+capacidades, sessões, contratos e lacunas. `npm run validar:manifesto` verifica integridade e
+descoberta; `npm run test:validacao` cobre o validador e o reporter com fixtures sintéticas.
+O pretest global executa ambos e um único build.
+
+O reporter adicional grava resultados sanitizados em `tmp/validacao/`, também em sucesso.
+A CI retém essa saída por 14 dias com upload `always()`, preservando os diagnósticos em falha.
+Execuções direcionadas registram seu próprio conjunto esperado; não exigem 571 casos.
+Commit/árvore e alterações locais são distintos; duração não separa hooks/corpo artificialmente.
+
+As associações agregadas, referências calculadas, gabaritos mistos, áudio próprio de Leitura e
+a divergência do controlador declarado da Gramática ampla são limitações explícitas. Não houve
+seleção, redução, promoção de maturidade, mudança de worker/timeout/retry/servidor, cadência ou
+CI Windows. A global em toda PR e todos os gatilhos acima permanecem obrigatórios.
+
+### Correções delimitadas da Etapa 1
+
+A referência histórica continua imutável e protege presença de IDs/arquivos e chaves principais.
+O catálogo atual deve coincidir integralmente com os registradores observados, sem duplicatas.
+Acréscimos coerentes são permitidos. Expectativas atuais explícitas por arquivo (`expectedCases`)
+e totais (`discovery`) são revisáveis, conferidas independentemente contra a descoberta completa.
+Os 571 casos da base são contexto histórico, sem impor teto ou igualdade permanente.
+
+O procedimento de acréscimo e os limites estão no [README](../../../validacao/README.md).
+Remoções/renomes históricos e mudanças de chaves continuam falhando; mecanismo de transição
+fica fora deste escopo. Contagens não congelam identidades ou semântica de todos os casos.
+Execuções direcionadas do reporter permanecem aceitas. Global e check obrigatório preservados.
+
+## Planejador observacional — Etapa 2
+
+A capacidade local está em [validacao/PLANEJADOR.md](../../../validacao/PLANEJADOR.md).
+`planejar:testes` exige comparação explícita entre refs ou base/worktree; `test:planejador` cobre
+provas/impacto/identidades e `comparar:plano` confronta a hipótese com uma global estruturada.
+São hipóteses explicáveis: não há comando de execução seletiva nem observação nova na CI.
+`npm test`, o check obrigatório e todos os gatilhos globais permanecem integrais.
+
+R1 exige prova AST e integração efetiva; R2 é restrito a SVG simples com consumidores resolvidos.
+CSS, assets com lacunas, fontes compartilhadas, estrutura, infraestrutura, renomes/exclusões e
+alcance incerto ampliam para global. O mapa por arquivo continua superset, sem alegação de
+cobertura universal por caso. Audio de Leitura e estados próprios não são equiparados.
+Identidade sem tratamento demonstrado ou relatório incompleto impede conclusão; durações
+de tentativas são projeções condicionais, sem previsão de tempo seletivo ou certificação.
+
+## Identidade de entradas e artefatos — Etapa 2.1
+
+Na correção pontual A2, os testes do comparador cobrem descritores de manifesto ausentes em um ou
+ambos os lados, nulos, vazios, malformados ou incompatíveis, além do par válido. Resultado e
+`identity.manifestCompatible` usam a mesma verificação; manifesto inválido impede projeção.
+Alterações de fontes/testes requerem revisão deliberada do corpus antes de renovar seu pin,
+conforme [IDENTIDADE.md](../../../validacao/IDENTIDADE.md), sem reescrever evidências anteriores.
+
+A [política comum versionada](../../../validacao/IDENTIDADE.md) é usada por reporter, planejador
+e comparador. Formato 2 inclui bytes de recursos públicos e entradas sintéticas explicitamente
+permitidas. Os 29 screenshots têm produtores, bloqueio HTTP e corpus de consumidores revisados
+e fixados por hash. Não existe exceção geral para output/tmp; entrada prevalece sobre diagnóstico.
+Mudança de fonte/configuração/SVG invalida o pin e exige nova revisão deliberada.
+
+Git, entradas da worktree e artefatos têm identidades distintas. Fontes incompletas, desconhecidas,
+instáveis ou incompatíveis impedem conclusão/projeção. Legados mantêm limitações e bytes originais.
+As capturas de início/fim não são monitor contínuo; não editar durante a global. Privacidade,
+suíte integral, check obrigatório e configuração de execução permanecem preservados.
+
+Evidência real da Etapa 2.1: 52/52 Node, manifesto 66/42/571, abertura 2/2, harnesses 24/24 e
+8/8; nova global 571/571 em 40,7 minutos (exit 0). Novo plano e relatório formato 2 são
+comparáveis: 571 propostos, zero omitidos, entradas/política/manifesto estáveis e completos,
+nenhum caminho sem tratamento. Projeção de tentativas com redução zero; sem estimar tempo
+seletivo. Os 42 relatórios anteriores e a base histórica permanecem imutáveis. Esta anotação
+documental foi feita após a coleta e não é apresentada como parte dos bytes testados.
+
+## Histórico Git na CI — correção da PR #44
+
+O checkout do workflow usa `fetch-depth: 0`, disponibilizando a base explícita
+`14584b2fee618fc900bb3d5657b9cfa16482bf33` exigida pelo teste CLI e comparações históricas.
+Na CI #110, o checkout raso impediu esse teste (54/55 Node); build e global Playwright
+não chegaram a executar. A correção conserva a referência, as asserções, o check obrigatório,
+Ubuntu, timeout, worker e `npm test` integral. A reatestação restrita do corpus está
+documentada em [IDENTIDADE.md](../../../validacao/IDENTIDADE.md). A nova CI deve executar
+a global completa e publicar o relatório estruturado; a falha antiga não comprova regressão
+dos 571 casos não executados.
