@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "identityFormat": 2,
+  "normalization": "none; SHA-256 of exact bytes, including binary data",
+  "inputRoots": [
+    "ambiente_interativo/",
+    "assets/",
+    "scripts/",
+    "tests/",
+    "validacao/",
+    "documentacao/",
+    ".agents/",
+    ".github/"
+  ],
+  "inputExtensions": [
+    ".js",
+    ".cjs",
+    ".mjs",
+    ".html",
+    ".css",
+    ".json",
+    ".md",
+    ".txt",
+    ".yaml",
+    ".yml",
+    ".ps1",
+    ".bat",
+    ".py",
+    ".svg",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".webp",
+    ".gif",
+    ".ico",
+    ".woff",
+    ".woff2",
+    ".ttf"
+  ],
+  "rootInputs": [
+    ".gitattributes",
+    ".gitignore",
+    ".prettierrc",
+    ".prettierignore",
+    "AGENTS.md",
+    "package.json",
+    "package-lock.json",
+    "playwright.config.js",
+    "eslint.config.js",
+    "vite.config.js",
+    "vite.pdfjs.config.js",
+    "vite.test.config.cjs",
+    "abrir_ambiente_interativo.bat",
+    "abrir_chromium_ambiente_interativo.bat",
+    "abrir_chromium_revisoes.bat",
+    "README_FERRAMENTAS.txt",
+    "PROMPT_IMPLEMENTAR_MATERIA_LEITURA.md",
+    "PROMPT_NIVELAR_INFRAESTRUTURA_LEITURA_COMPUTADOR_RESERVA.md",
+    "PROMPT_NIVELAR_MELHORIAS_AMBIENTE_INTERATIVO.md"
+  ],
+  "forcedInputs": ["ambiente_interativo/js/app.bundle.js"],
+  "syntheticInputs": [
+    {
+      "path": "tests/fixtures/pdfs/leitor-01.pdf",
+      "expectedSha256": "0466bc7ea22eeb55e2e5831e405d73cb313afcb0376855bb9decf3139536e436",
+      "producer": "tests/fixtures/pdfs.cjs"
+    },
+    {
+      "path": "tests/fixtures/pdfs/leitor-02.pdf",
+      "expectedSha256": "2acbfa80a890afc9d8065adeff945f38209d54c5a3e9e5f0653e1eaba24aeaeb",
+      "producer": "tests/fixtures/pdfs.cjs"
+    },
+    {
+      "path": "tests/fixtures/pdfs/leitor-03.pdf",
+      "expectedSha256": "836b7da80663ed0a1b350539a3b4b5215d9ed6228843ea78915fb262707abfcb",
+      "producer": "tests/fixtures/pdfs.cjs"
+    },
+    {
+      "path": "tests/fixtures/pdfs/leitor-04.pdf",
+      "expectedSha256": "a267cb85f684a1c66af01fec4d51538402a8499022172432604751df9f89123b",
+      "producer": "tests/fixtures/pdfs.cjs"
+    },
+    {
+      "path": "tests/fixtures/pdfs/leitor-05.pdf",
+      "expectedSha256": "047a7d6954554919d86adb32bf697518bae7567673a4b750ce4dc745e6e36109",
+      "producer": "tests/fixtures/pdfs.cjs"
+    },
+    {
+      "path": "tests/fixtures/pdfs/leitor-06.pdf",
+      "expectedSha256": "8c2816da46b94b1a389c24fd348facd935aa9b8c7556ba0961e67cf5fc18d99f",
+      "producer": "tests/fixtures/pdfs.cjs"
+    },
+    {
+      "path": "tests/fixtures/pdfs/leitor-07.pdf",
+      "expectedSha256": "2574a6e193aedc7d4fca7c8ef83aac2504bd11bb988b543b7a60bc1208e51967",
+      "producer": "tests/fixtures/pdfs.cjs"
+    },
+    {
+      "path": "tests/fixtures/pdfs/leitor-08.pdf",
+      "expectedSha256": "65f84878f77c36b5c39a8ca7a29cc134600a7bda25d70d441a15df168946d819",
+      "producer": "tests/fixtures/pdfs.cjs"
+    },
+    {
+      "path": "tests/fixtures/pdfs/leitor-09.pdf",
+      "expectedSha256": "a449b569768200915510460ac0341e40f215658a435f0d3cca53c28654105bb3",
+      "producer": "tests/fixtures/pdfs.cjs"
+    },
+    {
+      "path": "tests/fixtures/pdfs/leitor-10.pdf",
+      "expectedSha256": "62795c24b5aeacc3c1dd3f4b093360b2f2b1561f779a26c2971a992e197dadf3",
+      "producer": "tests/fixtures/pdfs.cjs"
+    }
+  ],
+  "diagnosticProducers": [
+    {
+      "id": "historia-viewports",
+      "source": "tests/historia-mariana-memorias-outubro-2026.spec.js",
+      "sha256": "74f453d5e3e01ca2a4b610cecef72799fdb55095ad9354290443ca99e960b7d4",
+      "operation": "page.screenshot",
+      "anchor": "path: `output/historia-outubro-${viewport.width}.png`",
+      "paths": [
+        "output/historia-outubro-1366.png",
+        "output/historia-outubro-1920.png",
+        "output/historia-outubro-390.png"
+      ]
+    },
+    {
+      "id": "playtime-viewports",
+      "source": "tests/ingles-alice-play-time.spec.js",
+      "sha256": "358dd1d191d4671f7423e7ea397aaffdd5ca81f9ce0c9965f674ac49d888ab9f",
+      "operation": "locator.screenshot",
+      "anchor": "../output/play-time/comparison-${viewport.width}.png",
+      "paths": [
+        "output/play-time/comparison-1366.png",
+        "output/play-time/comparison-1920.png",
+        "output/play-time/comparison-390.png",
+        "output/play-time/pronunciation-1366.png",
+        "output/play-time/pronunciation-1920.png",
+        "output/play-time/pronunciation-390.png"
+      ]
+    },
+    {
+      "id": "playtime-assets",
+      "source": "tests/ingles-alice-play-time.spec.js",
+      "sha256": "358dd1d191d4671f7423e7ea397aaffdd5ca81f9ce0c9965f674ac49d888ab9f",
+      "operation": "locator.screenshot",
+      "anchor": ".screenshot({ path: path.join(__dirname, '../output/play-time/assets', name + '.png') })",
+      "paths": [
+        "output/play-time/assets/children-balloons.png",
+        "output/play-time/assets/four-balls.png",
+        "output/play-time/assets/doll-on-table.png",
+        "output/play-time/assets/robot-under-table.png",
+        "output/play-time/assets/two-bears-on-bed.png",
+        "output/play-time/assets/two-bears-under-bed.png",
+        "output/play-time/assets/four-bears-on-bed.png",
+        "output/play-time/assets/two-bears-on-table.png",
+        "output/play-time/assets/learn-positions.png",
+        "output/play-time/assets/learn-colors-numbers.png",
+        "output/play-time/assets/learn-places.png",
+        "output/play-time/assets/read-inside.png",
+        "output/play-time/assets/fly-kite-outside.png",
+        "output/play-time/assets/ride-bike-outside.png",
+        "output/play-time/assets/play-doll-inside.png",
+        "output/play-time/assets/metal-bike.png",
+        "output/play-time/assets/fabric-doll.png",
+        "output/play-time/assets/paper-kite-plastic-lorry.png",
+        "output/play-time/assets/compare-review-7.png",
+        "output/play-time/assets/toys-gallery.png"
+      ]
+    }
+  ],
+  "diagnosticAudit": {
+    "corpusSha256": "a8655c9e25d3b244eb24da079d793f17e08013169c4f2f994c376a31b2d3c5e0",
+    "scope": "All indexed executable/configuration/reference surfaces (including SVG and forced bundles), excluding this policy and prose; exact bytes. Any change invalidates exclusion pending explicit review.",
+    "httpDeny": {
+      "source": "scripts/identidade-ambiente-local.cjs",
+      "sha256": "e471c327c9f6086eb1998d2c4ef41940f55f0f24440af039d1132c0b5113e604",
+      "anchor": "/i.test(relative)"
+    }
+  },
+  "review": "29 screenshots verified as outputs; no application/test reader; producer sources pinned, HTTP output denied, full consumer corpus pinned. Explicit input reference always wins."
+}

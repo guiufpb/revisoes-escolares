@@ -45,6 +45,15 @@ jobs:
       - name: Executar todos os testes
         run: npm test
 
+      - name: Guardar resultados estruturados
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: resultados-validacao-${{ github.run_attempt }}
+          path: tmp/validacao/
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Guardar diagnósticos em caso de falha
         if: failure()
         uses: actions/upload-artifact@v7

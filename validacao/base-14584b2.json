@@ -1,0 +1,316 @@
+{
+  "schemaVersion": 1,
+  "commit": "14584b2fee618fc900bb3d5657b9cfa16482bf33",
+  "tree": "0546fb7d4ce6f1ec44ce0d0a084a9331fdb7d0e3",
+  "revisions": [
+    {
+      "id": "mariana-ingles-means-of-transportation-outubro-2026",
+      "primaryKey": "revisoesEscolares.mariana.ingles.meansOfTransportationOutubro2026.v1"
+    },
+    {
+      "id": "alice-matematica-dezenas-numeros-dinheiro-outubro-2026",
+      "primaryKey": "revisoesEscolares.alice.matematica.dezenasNumerosDinheiroOutubro2026.v1"
+    },
+    {
+      "id": "alice-geografia-brincadeiras-lazer-outubro-2026",
+      "primaryKey": "revisoesEscolares.alice.geografia.brincadeirasLazerOutubro2026.v1"
+    },
+    {
+      "id": "mariana-geografia-paisagens-qualidade-vida-outubro-2026",
+      "primaryKey": "revisoesEscolares.mariana.geografia.paisagensQualidadeVidaOutubro2026.v1"
+    },
+    {
+      "id": "alice-ciencias-sustentabilidade-rotina-objetos-outubro-2026",
+      "primaryKey": "revisoesEscolares.alice.ciencias.sustentabilidadeRotinaObjetosOutubro2026.v1"
+    },
+    {
+      "id": "mariana-ciencias-sol-sombras-materiais-outubro-2026",
+      "primaryKey": "revisoesEscolares.mariana.ciencias.solSombrasMateriaisOutubro2026.v1"
+    },
+    {
+      "id": "alice-historia-objetos-memorias-outubro-2026",
+      "primaryKey": "revisoesEscolares.alice.historia.objetosMemoriasOutubro2026.v1"
+    },
+    {
+      "id": "mariana-historia-transportes-memorias-outubro-2026",
+      "primaryKey": "revisoesEscolares.mariana.historia.transportesMemoriasOutubro2026.v1"
+    },
+    {
+      "id": "alice-historia-familias-objetos-agosto-2026",
+      "primaryKey": "revisoesEscolares.alice.historia.familiasObjetosAgosto2026.v1"
+    },
+    {
+      "id": "mariana-historia-convivencia-transportes-agosto-2026",
+      "primaryKey": "revisoesEscolares.mariana.historia.convivenciaTransportesAgosto2026.v2"
+    },
+    {
+      "id": "mariana-geografia-transportes-comunicacao-setembro-2026",
+      "primaryKey": "revisoesEscolares.mariana.geografia.transportesComunicacaoSetembro2026.v1"
+    },
+    {
+      "id": "alice-geografia-moradias-lugares-interior-setembro-2026",
+      "primaryKey": "revisoesEscolares.alice.geografia.moradiasLugaresInteriorSetembro2026.v1"
+    },
+    {
+      "id": "alice-ciencias-origem-materiais",
+      "primaryKey": "revisoesEscolares.alice.ciencias.origemMateriais"
+    },
+    {
+      "id": "alice-ciencias-objetos-emocoes-alimentacao-setembro-2026",
+      "primaryKey": "revisoesEscolares.alice.ciencias.objetosEmocoesAlimentacaoSetembro2026.v1"
+    },
+    {
+      "id": "mariana-ciencias-plantas-sol-setembro-2026",
+      "primaryKey": "revisoesEscolares.mariana.ciencias.plantasSolSetembro2026.v1"
+    },
+    {
+      "id": "alice-ingles-at-school-unidade-3",
+      "primaryKey": "revisoesEscolares.alice.ingles.atSchoolUnidade3.v1"
+    },
+    {
+      "id": "mariana-ingles-at-school-unidade-3",
+      "primaryKey": "revisoesEscolares.mariana.ingles.atSchoolUnidade3.v1"
+    },
+    {
+      "id": "mariana-ingles-city-life-unidade-5",
+      "primaryKey": "revisoesEscolares.mariana.ingles.cityLifeUnidade5.v2"
+    },
+    {
+      "id": "alice-ingles-at-the-farm-unidade-5",
+      "primaryKey": "revisoesEscolares.alice.ingles.atTheFarmUnidade5.v2"
+    },
+    {
+      "id": "alice-ingles-play-time-unidade-6-outubro-2026",
+      "primaryKey": "revisoesEscolares.alice.ingles.playTimeUnidade6Outubro2026.v1"
+    },
+    {
+      "id": "alice-ingles-friends-atividade-1",
+      "primaryKey": "revisoesEscolares.alice.ingles.friendsAtividade1.v1"
+    },
+    {
+      "id": "mariana-ingles-friends-atividade-1",
+      "primaryKey": "revisoesEscolares.mariana.ingles.friendsAtividade1.v1"
+    },
+    {
+      "id": "mariana-ingles-at-school-atividade-2",
+      "primaryKey": "revisoesEscolares.mariana.ingles.atSchoolAtividade2.v1"
+    },
+    {
+      "id": "mariana-ingles-at-school-atividade-3",
+      "primaryKey": "revisoesEscolares.mariana.ingles.atSchoolAtividade3.v1"
+    },
+    {
+      "id": "mariana-matematica-revisao-ampla",
+      "primaryKey": "revisoesEscolares.mariana.matematica.revisaoAmpla"
+    },
+    {
+      "id": "mariana-matematica-centenas-em-acao",
+      "primaryKey": "revisoesEscolares.mariana.matematica.centenasEmAcao.v2"
+    },
+    {
+      "id": "mariana-matematica-formas-mosaicos-medidas",
+      "primaryKey": "revisoesEscolares.mariana.matematica.formasMosaicosMedidas.v1"
+    },
+    {
+      "id": "mariana-matematica-formas-medidas-setembro-2026",
+      "primaryKey": "revisoesEscolares.mariana.matematica.formasMedidasSetembro2026.v1"
+    },
+    {
+      "id": "mariana-matematica-medir-calcular-descobrir-outubro-2026",
+      "primaryKey": "revisoesEscolares.mariana.matematica.medirCalcularDescobrirOutubro2026.v1"
+    },
+    {
+      "id": "alice-matematica-capacidade-operacoes-numeros",
+      "primaryKey": "revisoesEscolares.alice.matematica.capacidadeOperacoesNumeros.v1"
+    },
+    {
+      "id": "alice-matematica-contas-dia-a-dia",
+      "primaryKey": "revisoesEscolares.alice.matematica.contasDiaADia.v1"
+    },
+    {
+      "id": "mariana-matematica-contas-dia-a-dia",
+      "primaryKey": "revisoesEscolares.mariana.matematica.contasDiaADia.v1"
+    },
+    {
+      "id": "alice-matematica-contas-e-tabuada",
+      "primaryKey": "revisoesEscolares.alice.matematica.contasETabuada.v1"
+    },
+    {
+      "id": "mariana-matematica-contas-e-tabuada",
+      "primaryKey": "revisoesEscolares.mariana.matematica.contasETabuada.v1"
+    },
+    {
+      "id": "alice-matematica-mais-contas-e-tabuada",
+      "primaryKey": "revisoesEscolares.alice.matematica.maisContasETabuada.v1"
+    },
+    {
+      "id": "mariana-matematica-mais-contas-e-tabuada",
+      "primaryKey": "revisoesEscolares.mariana.matematica.maisContasETabuada.v1"
+    },
+    {
+      "id": "alice-matematica-dezenas-dinheiro-contas-tabuadas-setembro-2026",
+      "primaryKey": "revisoesEscolares.alice.matematica.dezenasDinheiroContasTabuadasSetembro2026.v1"
+    },
+    {
+      "id": "mariana-matematica-dezenas-dinheiro-contas-tabuadas-setembro-2026",
+      "primaryKey": "revisoesEscolares.mariana.matematica.dezenasDinheiroContasTabuadasSetembro2026.v1"
+    },
+    {
+      "id": "mariana-gramatica-revisao-ampla",
+      "primaryKey": "revisoesEscolares.mariana.gramatica.revisaoAmpla.v1"
+    },
+    {
+      "id": "mariana-gramatica-contos-ortografia-pontuacao",
+      "primaryKey": "revisoesEscolares.mariana.gramatica.contosOrtografiaPontuacao.v1"
+    },
+    {
+      "id": "mariana-gramatica-pontuacao-ortografia-vocabulario-setembro-2026",
+      "primaryKey": "revisoesEscolares.mariana.gramatica.pontuacaoOrtografiaVocabularioSetembro2026.v1"
+    },
+    {
+      "id": "mariana-gramatica-portugues-prova-outubro-2026",
+      "primaryKey": "revisoesEscolares.mariana.gramatica.portuguesProvaOutubro2026.v1"
+    },
+    {
+      "id": "alice-gramatica-contos-digrafos-vocabulario",
+      "primaryKey": "revisoesEscolares.alice.gramatica.contosDigrafosVocabulario.v1"
+    },
+    {
+      "id": "alice-gramatica-pontuacao-lh-xch-outubro-2026",
+      "primaryKey": "revisoesEscolares.alice.gramatica.pontuacaoLhXchOutubro2026.v1"
+    },
+    {
+      "id": "alice-gramatica-h-til-vocabulario",
+      "primaryKey": "revisoesEscolares.alice.gramatica.hTilVocabulario.v1"
+    },
+    {
+      "id": "mariana-gramatica-h-til-vocabulario",
+      "primaryKey": "revisoesEscolares.mariana.gramatica.hTilVocabulario.v1"
+    },
+    {
+      "id": "alice-leitura-primeiras-licoes-dinheiro",
+      "primaryKey": "revisoesEscolares.alice.leitura.primeirasLicoesDinheiro.v1"
+    },
+    {
+      "id": "mariana-leitura-primeiras-licoes-dinheiro",
+      "primaryKey": "revisoesEscolares.mariana.leitura.primeirasLicoesDinheiro.v1"
+    },
+    {
+      "id": "alice-leitura-quem-e-o-rei-dos-animais",
+      "primaryKey": "revisoesEscolares.alice.leitura.quemEReiAnimais.v1"
+    },
+    {
+      "id": "mariana-leitura-quem-e-o-rei-dos-animais",
+      "primaryKey": "revisoesEscolares.mariana.leitura.quemEReiAnimais.v1"
+    },
+    {
+      "id": "alice-leitura-a-galinha-dos-ovos-de-ouro",
+      "primaryKey": "revisoesEscolares.alice.leitura.galinhaOvosOuro.v1"
+    },
+    {
+      "id": "mariana-leitura-a-galinha-dos-ovos-de-ouro",
+      "primaryKey": "revisoesEscolares.mariana.leitura.galinhaOvosOuro.v1"
+    },
+    {
+      "id": "alice-leitura-a-raposa-e-as-uvas",
+      "primaryKey": "revisoesEscolares.alice.leitura.raposaEUvas.v1"
+    },
+    {
+      "id": "mariana-leitura-a-raposa-e-as-uvas",
+      "primaryKey": "revisoesEscolares.mariana.leitura.raposaEUvas.v1"
+    },
+    {
+      "id": "alice-leitura-o-dia-que-o-sol-tirou-ferias",
+      "primaryKey": "revisoesEscolares.alice.leitura.solTirouFerias.v1"
+    },
+    {
+      "id": "mariana-leitura-o-dia-que-o-sol-tirou-ferias",
+      "primaryKey": "revisoesEscolares.mariana.leitura.solTirouFerias.v1"
+    },
+    {
+      "id": "alice-leitura-a-formiga-que-queria-cantar",
+      "primaryKey": "revisoesEscolares.alice.leitura.formigaQueriaCantar.v1"
+    },
+    {
+      "id": "mariana-leitura-a-formiga-que-queria-cantar",
+      "primaryKey": "revisoesEscolares.mariana.leitura.formigaQueriaCantar.v1"
+    },
+    {
+      "id": "alice-leitura-um-castelo-bem-assombrado",
+      "primaryKey": "revisoesEscolares.alice.leitura.casteloBemAssombrado.v1"
+    },
+    {
+      "id": "mariana-leitura-um-castelo-bem-assombrado",
+      "primaryKey": "revisoesEscolares.mariana.leitura.casteloBemAssombrado.v1"
+    },
+    {
+      "id": "alice-leitura-a-bela-desadormecida",
+      "primaryKey": "revisoesEscolares.alice.leitura.belaDesadormecida.v1"
+    },
+    {
+      "id": "mariana-leitura-a-bela-desadormecida",
+      "primaryKey": "revisoesEscolares.mariana.leitura.belaDesadormecida.v1"
+    },
+    {
+      "id": "alice-leitura-a-joaninha-que-perdeu-as-pintinhas",
+      "primaryKey": "revisoesEscolares.alice.leitura.joaninhaPerdeuPintinhas.v1"
+    },
+    {
+      "id": "mariana-leitura-a-joaninha-que-perdeu-as-pintinhas",
+      "primaryKey": "revisoesEscolares.mariana.leitura.joaninhaPerdeuPintinhas.v1"
+    },
+    {
+      "id": "alice-leitura-uma-formiga-especial",
+      "primaryKey": "revisoesEscolares.alice.leitura.umaFormigaEspecial.v1"
+    },
+    {
+      "id": "mariana-leitura-uma-formiga-especial",
+      "primaryKey": "revisoesEscolares.mariana.leitura.umaFormigaEspecial.v1"
+    }
+  ],
+  "testFiles": [
+    "tests/acessibilidade.spec.js",
+    "tests/ambiente-interativo.spec.js",
+    "tests/ciencias-alice-objetos-emocoes-alimentacao.spec.js",
+    "tests/ciencias-alice-sustentabilidade-rotina-objetos-outubro-2026.spec.js",
+    "tests/ciencias-mariana-plantas-sol.spec.js",
+    "tests/ciencias-mariana-sol-sombras-materiais-outubro-2026.spec.js",
+    "tests/geografia-alice-brincadeiras-lazer-outubro-2026.spec.js",
+    "tests/geografia-alice-moradias-interior.spec.js",
+    "tests/geografia-mariana-paisagens-outubro-2026.spec.js",
+    "tests/geografia-mariana-transportes-comunicacao.spec.js",
+    "tests/gramatica-alice-contos-digrafos-vocabulario.spec.js",
+    "tests/gramatica-alice-pontuacao-lh-xch-outubro-2026.spec.js",
+    "tests/gramatica-contos-ortografia-pontuacao.spec.js",
+    "tests/gramatica-h-til-vocabulario.spec.js",
+    "tests/gramatica-mariana-pontuacao-ortografia-vocabulario-setembro-2026.spec.js",
+    "tests/gramatica-mariana-portugues-prova-outubro-2026.spec.js",
+    "tests/gramatica-mariana.spec.js",
+    "tests/historia-alice-familias-objetos.spec.js",
+    "tests/historia-alice-objetos-memorias-outubro-2026.spec.js",
+    "tests/historia-mariana-memorias-outubro-2026.spec.js",
+    "tests/historia-mariana-transportes.spec.js",
+    "tests/infra-abertura-local.spec.js",
+    "tests/infra-vite-externo.spec.js",
+    "tests/infraestrutura-vite.spec.js",
+    "tests/ingles-alice-play-time.spec.js",
+    "tests/ingles-at-the-farm-v2.spec.js",
+    "tests/ingles-friends-atividade-1.spec.js",
+    "tests/ingles-mariana-at-school-atividade-2.spec.js",
+    "tests/ingles-mariana-at-school-atividade-3.spec.js",
+    "tests/ingles-mariana-transportes-outubro-2026.spec.js",
+    "tests/ingles-pronuncia-azure.spec.js",
+    "tests/matematica-alice-dezenas-numeros-dinheiro-outubro-2026.spec.js",
+    "tests/matematica-capacidade-operacoes-numeros.spec.js",
+    "tests/matematica-contas-tabuada.spec.js",
+    "tests/matematica-dezenas-dinheiro-tabuadas-setembro.spec.js",
+    "tests/matematica-formas-mosaicos-medidas.spec.js",
+    "tests/matematica-mais-contas-tabuada.spec.js",
+    "tests/matematica-manipulativa.spec.js",
+    "tests/matematica-mariana-formas-medidas-setembro-2026.spec.js",
+    "tests/matematica-mariana-medir-calcular-descobrir.spec.js",
+    "tests/matematica-operacoes.spec.js",
+    "tests/pdfs-sinteticos.spec.js"
+  ],
+  "caseCount": 571
+}

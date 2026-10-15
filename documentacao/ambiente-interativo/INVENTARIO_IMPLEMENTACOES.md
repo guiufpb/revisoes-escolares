@@ -6,6 +6,88 @@ O **Revisões Escolares** evoluiu para uma aplicação educacional local com per
 
 Este inventário registra o estado de trabalho em **14/10/2026**.
 
+## Correção A2 — Descritores do manifesto no comparador
+
+O comparador exige descritores presentes e válidos no plano e no relatório: schema 1, versão
+numérica e SHA-256, com versão/fingerprint iguais. Ausência unilateral ou bilateral, nulidade,
+formato inválido e divergência impedem conclusão e projeção; a decisão é a mesma exposta em
+`identity.manifestCompatible`. Cobertura unitária em `tests/validacao/planejador.unit.cjs`;
+a fixture de identidade usa o descritor completo. Contrato em
+[validacao/PLANEJADOR.md](../../validacao/PLANEJADOR.md). A1/A3 e execução global preservados.
+
+## Etapa 2.1 — Identidade das entradas e artefatos
+
+Infraestrutura compartilhada em `scripts/validacao/identidade.cjs`, política 1.0.0 e formato 2
+para novos planos/relatórios/comparações. Assets públicos são entradas em bytes; os 29 screenshots
+têm evidência exata de produtor/bloqueio/corpus revisado. Desconhecidos bloqueiam comparação;
+legados continuam imutáveis e inconclusivos quanto à identidade não capturada.
+Detalhes e manutenção em [validacao/IDENTIDADE.md](../../validacao/IDENTIDADE.md).
+Validação final: **52/52 Node**, manifesto **66/42/571**, build, formatação, lint e diff aprovados;
+harnesses Windows **24/24** e **8/8**, abertura/identidade **2/2**. Nova global: **571/571 em
+40,7 minutos**, exit code 0, sem falhas, retries, flakiness, skips ou interrupções.
+Novo plano mantém **57 caminhos, 571 propostos e zero omitidos**. Comparação formato 2
+**concluída**, sem caminhos desconhecidos: entradas/política/manifesto compatíveis e estáveis.
+Identidade testada: **751 entradas**, incluindo **477 assets**, todos os **225 assets do manifesto**,
+mais **29 diagnósticos** separados. Soma de tentativas: **2.396.444 ms**, redução projetada **0%**;
+tempo seletivo não estimado. Os 42 relatórios anteriores, base histórica e 29 capturas/backups
+continuam intactos. Relatório novo: `2026-10-15T02-55-01-261Z-dad13733-a45f-4f70-b5a8-c4a242b51829`.
+O registro destes resultados na documentação é posterior à coleta e não foi atribuído à identidade
+testada. Nenhuma mudança de política de execução ou publicação.
+
+## Etapa 2 — Planejador observacional de testes
+
+Implementação local preservando a Etapa 1/correções, manifesto 1.1.0 e base histórica imutável.
+[Entradas, regras e limites](../../validacao/PLANEJADOR.md): diff explícito refs/base-worktree,
+prova AST restrita para R1, SVG fechado para R2, consumidores/dependentes e contratos por motor.
+Arquivos inteiros, identidades lógicas e fallback global para R3/R4, desconhecidos e lacunas.
+Comparador separa identidade/completude, falhas omitidas e projeção condicional de tentativas.
+Comandos locais `planejar:testes`, `test:planejador` e `comparar:plano`; nenhuma execução seletiva,
+redução, mudança do check obrigatório ou integração observacional nova na CI.
+Validação final em 14/10/2026: **40/40 Node** (19 do planejador), manifesto **66/42/571**,
+build, format:check, lint e diff aprovados; abertura **2/2**, Windows **24/24 + 8/8**.
+Nova global: **571/571 em 40,7 minutos**, exit code 0, sem falhas, flakiness, retries, skips,
+interrupções ou timeouts; fontes estáveis durante a rodada. Plano real: **53 arquivos,
+571 propostos, zero omitidos**. Fontes/manifesto compatíveis na comparação com a global; resultado
+inconclusivo para identidade integral por 29 PNGs de output fora do fingerprint, sem projeção
+real de custo. Fixtures R1/R2: 6/7; fallback: 7/7; projeção sintética 60/70 ms de tentativas.
+Auditoria read-only concluída após correção dos contadores do comparador. Após a global,
+somente este registro documental foi atualizado na worktree; código e manifesto testados
+permanecem iguais. Nenhuma execução seletiva, publicação ou validação remota alegada.
+
+## Etapa 1 — Manifesto e métricas de validação
+
+Implementação isolada sobre `14584b2fee618fc900bb3d5657b9cfa16482bf33`.
+[Manifesto e manutenção](../../validacao/README.md): 66 revisões, oito motores efetivos,
+42 arquivos Playwright e 571 casos preservados. Schema fechado, referência independente
+congelada de IDs/chaves, verificação de consumidores/fontes/casos e lacunas explícitas.
+Reporter adicional sanitizado retém sucesso/falha e distingue execução direcionada, tentativas,
+checkout modificada e base Git. CI preserva global/check obrigatório e diagnósticos; retenção
+estruturada adicional de 14 dias. Sem alteração de conteúdo, chaves ou interface infantil.
+Validação local em 14/10/2026: manifesto 66/42/571 aprovado; testes Node 13/13;
+abertura/identidade 2/2; build, format:check, lint e diff aprovados. Global completa: **571/571
+em 41,9 minutos**, sem falhas, retries, skips ou interrupções. Relatório estruturado completo,
+571 tentativas/casos associados, checkout modificada identificada e fontes estáveis durante
+a rodada. Sucesso, falha sintética isolada e invocação direcionada verificados. Sem dados
+privados exportados; não houve execução de CI remota ou validação humana inferida.
+Após a rodada, somente este registro documental de resultados foi atualizado.
+Sem seletor, redução, cadência nova, certificação ou publicação.
+
+### Correções delimitadas da Etapa 1
+
+Validador agora compara os conjuntos completos de IDs nos dois sentidos e rejeita duplicatas
+observadas. A referência histórica continua imutável e obrigatória como subconjunto preservado;
+acréscimos atuais coerentes são aceitos. Manifesto 1.1.0 registra expectativas atuais explícitas
+por arquivo e totais, separados dos 571 casos históricos. Procedimento e limites de manutenção
+estão no README; não há mecanismo de transição para remoções/renomes históricos.
+
+Validação final desta correção em 14/10/2026: testes Node **21/21**, manifesto **66/42/571**,
+abertura/identidade **2/2**, build, format:check, lint e diff aprovados. Nova global completa:
+**571/571 em 39,8 minutos**, exit code 0, sem falhas, flakiness, retries, skips, interrupções ou
+timeouts. Relatório completo, 571 tentativas/casos associados e fontes estáveis durante a rodada.
+Base histórica preservada byte a byte e digest semântico congelado. A simulação 67/66 agora
+falha; acréscimos sintéticos coerentes passam. Após a global, somente este registro documental
+de resultados foi atualizado na worktree. Sem staging, commit ou publicação.
+
 ## Etapa 4 — Inglês de Mariana: Transportes (integração local)
 
 Moving Around · Transport & Safety foi transportada seletivamente da implementação original,

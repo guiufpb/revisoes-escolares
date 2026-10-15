@@ -51,6 +51,28 @@ module.exports = [
     },
   },
   {
+    files: ['scripts/validacao/**/*.cjs', 'tests/validacao/**/*.cjs', 'playwright.config.js'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'commonjs',
+      globals: {
+        __dirname: 'readonly',
+        require: 'readonly',
+        module: 'readonly',
+        process: 'readonly',
+        console: 'readonly',
+        Buffer: 'readonly',
+        structuredClone: 'readonly',
+      },
+    },
+    rules: {
+      'no-constant-condition': 'error',
+      'no-undef': 'error',
+      'no-unreachable': 'error',
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+    },
+  },
+  {
     files: ['tests/**/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
