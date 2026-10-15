@@ -9,6 +9,87 @@ const policy = require('../../validacao/identidade-politica.json');
 // Compatibility alias; classification rules live only in identidade.cjs/policy.
 const reporterPath = (file) => !!inputRule(file, policy);
 const split = (value) => value.split('\0').filter(Boolean);
+const materializationAttributes = [
+  'text',
+  'eol',
+  'filter',
+  'working-tree-encoding',
+  'ident',
+  'crlf',
+];
+
+// Only compatibility may account for checkout conversion. Neither identity is rewritten.
+function lfToCrlfEvidence(root, ref, file, blob, working, git, readBytes) {
+  if (!file.endsWith('.bat') || !blob || !working || blob.includes(0) || blob.includes(13))
+    throw new Error('Only LF text .bat materialization is supported');
+  if (!blob.includes(10)) throw new Error('No LF to materialize');
+  if (process.env.GIT_ATTR_SOURCE) throw new Error('External attribute source is unsupported');
+  // --source still honors info/attributes. Never let that override authorize a conversion.
+  const info = path.resolve(root, git('rev-parse', '--git-path', 'info/attributes').trim());
+  if (fs.lstatSync(info, { throwIfNoEntry: false }))
+    throw new Error('Local info/attributes override is unsupported');
+  // Check every applicable versioned attribute file, including nested/untracked overrides.
+  let directory = path.posix.dirname(file);
+  while (true) {
+    const attributes = directory === '.' ? '.gitattributes' : directory + '/.gitattributes';
+    const expected = readBytes(attributes);
+    const actual = safeRead(root, attributes);
+    if (
+      (expected && (!actual || !expected.equals(actual))) ||
+      (!expected && fs.lstatSync(path.join(root, attributes), { throwIfNoEntry: false }))
+    )
+      throw new Error('Attribute file differs from Git revision: ' + attributes);
+    if (directory === '.') break;
+    directory = path.posix.dirname(directory);
+  }
+  const parse = (raw) => {
+    const fields = split(raw);
+    if (fields.length !== materializationAttributes.length * 3)
+      throw new Error('Incomplete Git attribute evidence');
+    return Object.fromEntries(
+      materializationAttributes.map((attribute, i) => {
+        if (fields[i * 3] !== file || fields[i * 3 + 1] !== attribute)
+          throw new Error('Unexpected Git attribute evidence');
+        return [attribute, fields[i * 3 + 2]];
+      })
+    );
+  };
+  // Isolate versioned rules from global/system attributes; no filters are executed.
+  const declared = parse(
+    execFileSync(
+      'git',
+      [
+        '-C',
+        root,
+        '-c',
+        'core.attributesFile=',
+        'check-attr',
+        '--source=' + ref,
+        '-z',
+        ...materializationAttributes,
+        '--',
+        file,
+      ],
+      {
+        encoding: 'utf8',
+        windowsHide: true,
+        env: { ...process.env, GIT_OPTIONAL_LOCKS: '0', GIT_ATTR_NOSYSTEM: '1' },
+      }
+    )
+  );
+  const effective = parse(git('check-attr', '-z', ...materializationAttributes, '--', file));
+  if (
+    JSON.stringify(declared) !== JSON.stringify(effective) ||
+    declared.text !== 'set' ||
+    declared.eol !== 'crlf' ||
+    materializationAttributes.slice(2).some((attribute) => declared[attribute] !== 'unspecified')
+  )
+    throw new Error('Unsupported or divergent Git materialization attributes');
+  // latin1 is a reversible byte mapping; no Unicode decoding or general normalization.
+  const materialized = Buffer.from(blob.toString('latin1').replace(/\n/g, '\r\n'), 'latin1');
+  if (!materialized.equals(working)) throw new Error('Content differs beyond LF to CRLF');
+  return { path: file, conversion: 'lf-to-crlf', source: ref, attributes: declared };
+}
 function parseChanges(raw) {
   const parts = split(raw),
     changes = [];
@@ -62,39 +143,83 @@ function gitRepository(root) {
     }
   };
   const refIdentity = (ref, worktreeSource) => {
+    ref = resolve(ref);
     const paths = split(git('ls-tree', '-r', '--name-only', '-z', ref));
+    const referenceBytes = new Map();
     const readBytes = (file) => {
+      if (referenceBytes.has(file)) return referenceBytes.get(file);
       try {
-        return execFileSync('git', ['-C', root, 'show', ref + ':' + file], {
+        const bytes = execFileSync('git', ['-C', root, 'show', ref + ':' + file], {
           maxBuffer: 64 * 1024 * 1024,
           windowsHide: true,
           stdio: ['ignore', 'pipe', 'ignore'],
           env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' },
         });
+        referenceBytes.set(file, bytes);
+        return bytes;
       } catch {
+        referenceBytes.set(file, null);
         return null;
       }
     };
     const identity = captureIdentity({ paths, readBytes, gitScope: true });
+    const workingBytes = new Map();
     const workingScope = captureIdentity({
       paths,
-      readBytes: (file) => safeRead(root, file),
+      readBytes: (file) => {
+        const bytes = safeRead(root, file);
+        workingBytes.set(file, bytes);
+        return bytes;
+      },
       gitScope: true,
     });
     const derived = new Set([...policy.forcedInputs, ...policy.syntheticInputs.map((p) => p.path)]);
     const extraInputs = (worktreeSource?.identity?.inputs || [])
       .filter((e) => !paths.includes(e.path) && !derived.has(e.path))
       .map((e) => e.path);
+    const materializedInputs = [],
+      materializationErrors = [];
+    const workingInputs = new Map(workingScope.inputs.map((entry) => [entry.path, entry]));
+    let compatible =
+      identity.complete &&
+      workingScope.complete &&
+      !extraInputs.length &&
+      identity.policy.fingerprint === workingScope.policy.fingerprint &&
+      identity.inputs.length === workingScope.inputs.length;
+    if (compatible) {
+      for (const entry of identity.inputs) {
+        const current = workingInputs.get(entry.path);
+        if (!current) {
+          compatible = false;
+          materializationErrors.push({ path: entry.path, reason: 'Input scope differs' });
+        } else if (entry.sha256 !== current.sha256 || entry.bytes !== current.bytes) {
+          try {
+            materializedInputs.push(
+              lfToCrlfEvidence(
+                root,
+                ref,
+                entry.path,
+                readBytes(entry.path),
+                workingBytes.get(entry.path),
+                git,
+                readBytes
+              )
+            );
+          } catch (error) {
+            compatible = false;
+            materializationErrors.push({ path: entry.path, reason: error.message });
+          }
+        }
+      }
+    }
     return {
       ...identity,
       gitTreeScope: true,
       workingScopeFingerprint: workingScope.inputFingerprint,
       extraInputs,
-      compatibleWithWorktree:
-        identity.complete &&
-        workingScope.complete &&
-        identity.inputFingerprint === workingScope.inputFingerprint &&
-        !extraInputs.length,
+      materializedInputs,
+      materializationErrors,
+      compatibleWithWorktree: compatible,
     };
   };
   const refFingerprint = (ref) => refIdentity(ref).inputFingerprint;

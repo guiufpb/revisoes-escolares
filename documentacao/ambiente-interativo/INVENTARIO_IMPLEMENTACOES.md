@@ -6,6 +6,26 @@ O **Revisões Escolares** evoluiu para uma aplicação educacional local com per
 
 Este inventário registra o estado de trabalho em **14/10/2026**.
 
+## Etapa 3 — Integração observacional à CI (15/10/2026)
+
+O workflow mantém `npm test` integral e acrescenta planejamento após build/preparo sintético,
+com confronto `always()` usando o relatório real único. PR compara base efetiva e commit integrado;
+push main compara before/after. Refs inválidas, A3/identidade incompleta e resultados incompletos
+ficam inconclusivos, sem projeção. Resumo do job e índice estruturado reutilizam os artefatos
+de 14 dias. Sem seleção, novo planejador, mudança de check ou configuração Playwright.
+Nove testes novos reutilizam fixtures R1/R2/global: Node passa a 64 casos; catálogo permanece
+66 revisões, 42 arquivos e 571 casos Playwright. Contagens futuras continuam verificadas pelo
+manifesto. Contrato, exemplos e limites em [validacao/PLANEJADOR.md](../../validacao/PLANEJADOR.md).
+A1 e a necessidade de reatestação deliberada permanecem em `validacao/IDENTIDADE.md`.
+Integração local em revisão; validação remota Ubuntu depende de futura PR autorizada.
+
+A correção P1 separa compatibilidade de materialização e identidades brutas: `.bat` LF no Git
+pode corresponder a CRLF na checkout somente com atributos Git e locais comprovadamente coerentes,
+sem filtros ou outras transformações. Diferenças de conteúdo, binários e atributos incertos
+continuam rejeitados. Testes positivos de PR integrada/push agora usam Git e `refIdentity` reais,
+plano válido e comparação com global sintética completa; não autorizam seleção. Reatestação e
+limites Windows/Ubuntu em `validacao/IDENTIDADE.md`; resultados locais registrados separadamente.
+
 ## Correção de checkout da CI — PR #44
 
 `actions/checkout@v6` passa a usar `fetch-depth: 0` para disponibilizar a base Git histórica

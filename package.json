@@ -17,7 +17,7 @@
     "test:interativo": "playwright test tests/ambiente-interativo.spec.js",
     "pretest:a11y": "npm run build",
     "test:a11y": "playwright test tests/acessibilidade.spec.js",
-    "pretest:e2e": "npm run validar:manifesto && npm run test:validacao && npm run build",
+    "pretest:e2e": "npm run validar:manifesto && npm run test:validacao && npm run build && node scripts/validacao/ci-observacional.cjs planejar",
     "test:e2e": "playwright test",
     "test": "npm run test:e2e",
     "validar:manifesto": "node scripts/validacao/manifesto.cjs",
