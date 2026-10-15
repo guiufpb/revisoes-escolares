@@ -38,6 +38,28 @@ Execute `npm test`:
 Uma inclusão declarativa pode ficar nos testes direcionados quando nenhum outro gatilho se aplica.
 Toda PR para `main` mantém a suíte global e aguarda “Formatação, lint e testes”.
 
+### CI observacional — Etapa 3
+
+O [contrato do planejador](../../../validacao/PLANEJADOR.md) define a instrumentação experimental
+do workflow. `npm test` permanece integral: manifesto, testes Node, build e Playwright sem filtros.
+O hook CI prepara as dez fixtures com a função existente e gera plano após o build; a etapa
+`always()` confronta o relatório real único e publica resumo/artefatos. Erro experimental não
+substitui o resultado da global. `valid=true` isolado não basta (A3); identidade/completude
+incompatíveis impedem conclusão e projeção. Sem execução seletiva, sharding ou redução da suíte.
+
+Mudanças nessa infraestrutura exigem testes Node direcionados, manifesto, build, formatação,
+lint, diff e uma global do snapshot final. No Windows, a evidência local não substitui a futura
+PR Ubuntu. Conserve referências, estado e relatórios de execuções anteriores; a atestação dos
+29 diagnósticos segue manutenção deliberada em `validacao/IDENTIDADE.md` (A1 preservado).
+
+A correção P1 acrescenta checkouts Git temporários reais: LF→CRLF declarado nos `.bat`,
+identidades brutas preservadas, diferenças de conteúdo/binários e atributos inválidos recusados.
+PR integrada e push main positivos precisam atravessar `refIdentity`/`collectComparison` reais,
+plano válido e comparação conclusiva com relatório global sintético coerente. Consultar somente
+`eventReferences` não comprova esse contrato. Nenhum desses cenários substitui a global final
+nem a futura execução Ubuntu; atributos ausentes ou Git sem suporte ficam conservadoramente
+incompatíveis. A3/identidade incompleta continua impedindo projeção.
+
 O job de CI tem limite de 120 minutos desde o PR #41, mantendo a suíte completa e um único worker.
 Em 06/10/2026, a execução das 392 verificações passou em 44,5 minutos, mas o limite
 anterior de 45 minutos cancelou o job durante o encerramento. A janela foi ampliada

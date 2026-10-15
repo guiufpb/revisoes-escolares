@@ -15,11 +15,21 @@ const {
   parseChanges,
   collectComparison,
   reporterPath,
+  gitRepository,
 } = require('../../scripts/validacao/planejador-git.cjs');
 const { provenance } = require('../../scripts/validacao/reporter.cjs');
 const { ROOT } = require('../../scripts/validacao/manifesto.cjs');
 const { logicalId } = require('../../scripts/validacao/catalogo.cjs');
-const { captureIdentity } = require('../../scripts/validacao/identidade.cjs');
+const { captureIdentity, identityUsable } = require('../../scripts/validacao/identidade.cjs');
+const {
+  DIRECTORY,
+  eventReferences,
+  prepareObservation,
+  finishObservation,
+  evaluateObservation,
+  summary,
+  main: ciMain,
+} = require('../../scripts/validacao/ci-observacional.cjs');
 
 const source = 'ambiente_interativo/revisoes/alice/conteúdo com espaços.js';
 const asset = 'assets/unidade/figura local.svg';
@@ -214,6 +224,454 @@ function reportFor(plan) {
   };
 }
 
+// All Git objects/index/checkout below belong exclusively to a temporary test repository.
+function materializationFixture(attributes = '*.bat text eol=crlf\n*.png binary\n') {
+  const root = fs.mkdtempSync(path.join(ROOT, 'tmp/git-materializacao-'));
+  const input = fixture();
+  const scripts = [
+    'abrir_ambiente_interativo.bat',
+    'abrir_chromium_ambiente_interativo.bat',
+    'abrir_chromium_revisoes.bat',
+  ];
+  const files = new Map([
+    ['.gitignore', Buffer.from('/tmp/\n')],
+    ['package.json', Buffer.from('{"version":"2"}\n')],
+    ...scripts.map((file) => [file, Buffer.from('@echo off\necho fixture\n')]),
+    [asset, Buffer.from(svg)],
+    ['assets/bytes.png', Buffer.from([0x89, 0x50, 0, 0x0a, 0xff])],
+    ['assets/plain.txt', Buffer.from('plain\ntext\n')],
+    ['validacao/manifesto.json', Buffer.from(JSON.stringify(input.manifest))],
+  ]);
+  if (attributes !== null) files.set('.gitattributes', Buffer.from(attributes));
+  const identityPolicy = {
+    ...JSON.parse(fs.readFileSync(path.join(ROOT, 'validacao/identidade-politica.json'))),
+    forcedInputs: [],
+    syntheticInputs: [],
+    diagnosticProducers: [],
+    diagnosticAudit: {
+      corpusSha256: 'isolated-no-diagnostics',
+      scope: 'synthetic fixture',
+      httpDeny: { source: 'absent', sha256: 'none', anchor: 'none' },
+    },
+  };
+  files.set('validacao/identidade-politica.json', Buffer.from(JSON.stringify(identityPolicy)));
+  const git = (args, stdin) =>
+    execFileSync('git', ['-C', root, ...args], {
+      input: stdin,
+      encoding: 'utf8',
+      windowsHide: true,
+      env: {
+        ...process.env,
+        GIT_AUTHOR_NAME: 'Fixture',
+        GIT_AUTHOR_EMAIL: 'fixture@example.invalid',
+        GIT_COMMITTER_NAME: 'Fixture',
+        GIT_COMMITTER_EMAIL: 'fixture@example.invalid',
+        GIT_ATTR_NOSYSTEM: '1',
+      },
+    }).trim();
+  git(['init', '--quiet']);
+  git(['config', 'core.autocrlf', 'false']);
+  git(['config', 'core.attributesFile', '']);
+  git(['symbolic-ref', 'HEAD', 'refs/heads/main']);
+  const tree = (entries) => {
+    const groups = new Map();
+    for (const [file, bytes] of entries) {
+      const [name, ...rest] = file.split('/');
+      if (rest.length) {
+        if (!groups.has(name)) groups.set(name, []);
+        groups.get(name).push([rest.join('/'), bytes]);
+      } else groups.set(name, bytes);
+    }
+    const rows = [...groups].map(([name, value]) =>
+      Array.isArray(value)
+        ? '040000 tree ' + tree(value) + '\t' + name
+        : '100644 blob ' + git(['hash-object', '-w', '--stdin'], value) + '\t' + name
+    );
+    return git(['mktree'], rows.join('\n') + '\n');
+  };
+  const baseline = new Map(files);
+  baseline.set('package.json', Buffer.from('{"version":"1"}\n'));
+  const base = git(['commit-tree', tree(baseline), '-m', 'base fixture']);
+  const targetTree = tree(files);
+  const head = git(['commit-tree', targetTree, '-p', base, '-m', 'head fixture']);
+  const integrated = git([
+    'commit-tree',
+    targetTree,
+    '-p',
+    base,
+    '-p',
+    head,
+    '-m',
+    'merge fixture',
+  ]);
+  git(['update-ref', 'HEAD', integrated]);
+  git(['read-tree', integrated]);
+  git(['checkout-index', '--all']);
+  const repository = gitRepository(root);
+  const inspect = () => repository.refIdentity(integrated, provenance(root));
+  return { root, input, files, scripts, git, base, head, integrated, repository, inspect };
+}
+
+test('materialização: Git real aceita LF→CRLF declarado sem alterar identidades', () => {
+  const f = materializationFixture();
+  const source = provenance(f.root);
+  const result = f.inspect();
+  assert.equal(result.compatibleWithWorktree, true);
+  assert.deepEqual(result.materializationErrors, []);
+  assert.equal(result.materializedInputs.length, 3);
+  assert.notEqual(result.inputFingerprint, result.workingScopeFingerprint);
+  for (const file of f.scripts) {
+    assert.match(f.git(['ls-files', '--eol', '--', file]), /i\/lf\s+w\/crlf/);
+    assert.equal(result.inputs.find((e) => e.path === file).bytes, f.files.get(file).length);
+    assert.equal(
+      source.identity.inputs.find((e) => e.path === file).bytes,
+      f.files.get(file).length + 2
+    );
+  }
+  assert.equal(provenance(f.root).sourceFingerprint, source.sourceFingerprint);
+});
+
+for (const eventName of ['pull_request', 'push']) {
+  test(
+    'refs positivos: ' + eventName + ' integrado usa identidade Git real e comparação completa',
+    () => {
+      const f = materializationFixture();
+      const env = { GITHUB_EVENT_NAME: eventName, GITHUB_SHA: f.integrated };
+      const event =
+        eventName === 'pull_request'
+          ? { pull_request: { base: { ref: 'main', sha: f.base }, head: { sha: f.head } } }
+          : { ref: 'refs/heads/main', before: f.base, after: f.integrated };
+      const references = eventReferences(f.root, env, event);
+      const collected = collectComparison(f.root, references, f.repository);
+      assert.deepEqual(collected.comparison.identityErrors, []);
+      assert.equal(collected.comparison.target.gitInputIdentity.compatibleWithWorktree, true);
+      assert.equal(collected.comparison.target.gitInputIdentity.materializedInputs.length, 3);
+      const plan = makePlan({ ...f.input, ...collected });
+      assert.equal(plan.valid, true, JSON.stringify(plan.errors));
+      assert.equal(identityUsable(plan.comparison.target.identity), true);
+      const result = evaluateObservation(
+        { event: eventName, references, diagnostics: [] },
+        plan,
+        reportFor(plan),
+        'success'
+      );
+      assert.equal(result.comparable, true, JSON.stringify(result.diagnostics));
+      assert.equal(result.executionPolicy, 'global');
+      assert.equal(result.global.counts.executed, 7);
+      assert.equal(result.costProjection.selectiveWallMs, null);
+      assert.equal(result.identity, 'completa');
+      const incomplete = structuredClone(plan);
+      incomplete.comparison.target.identity.complete = false;
+      assert.equal(
+        evaluateObservation({ diagnostics: [] }, incomplete, reportFor(plan), 'success')
+          .costProjection.available,
+        false
+      );
+      assert.throws(() => eventReferences(f.root, { ...env, GITHUB_SHA: f.head }, event));
+      assert.throws(() => eventReferences(f.root, { ...env, GITHUB_SHA: 'missing' }, event));
+    }
+  );
+}
+
+test('materialização: conteúdo alterado, binário e demais entradas exigem bytes exatos', () => {
+  const f = materializationFixture();
+  for (const [file, bytes] of [
+    [f.scripts[0], Buffer.from('@echo off\r\necho changed\r\n')],
+    ['assets/bytes.png', Buffer.from([0x89, 0x50, 0, 0x0d, 0x0a, 0xff])],
+    ['assets/plain.txt', Buffer.from('plain\r\ntext\r\n')],
+  ]) {
+    const original = fs.readFileSync(path.join(f.root, file));
+    fs.writeFileSync(path.join(f.root, file), bytes);
+    assert.equal(f.inspect().compatibleWithWorktree, false, file);
+    const collected = collectComparison(f.root, {
+      mode: 'refs',
+      base: f.base,
+      target: f.integrated,
+    });
+    assert.ok(collected.comparison.identityErrors.length, file);
+    assert.equal(makePlan({ ...f.input, ...collected }).valid, false);
+    fs.writeFileSync(path.join(f.root, file), original);
+  }
+  assert.equal(f.inspect().compatibleWithWorktree, true);
+});
+
+for (const attributes of [
+  null,
+  '*.bat text eol=lf\n',
+  '*.bat text=auto eol=crlf\n',
+  '*.bat -text eol=crlf\n',
+  '*.bat text eol=crlf filter=unexpected\n',
+  '*.bat text eol=crlf ident\n',
+  '*.bat text eol=crlf working-tree-encoding=UTF-8\n',
+]) {
+  test(
+    'materialização: rejeita atributos ausentes/incompatíveis ' + JSON.stringify(attributes),
+    () => {
+      const f = materializationFixture(attributes);
+      for (const file of f.scripts)
+        fs.writeFileSync(path.join(f.root, file), '@echo off\r\necho fixture\r\n');
+      assert.equal(f.inspect().compatibleWithWorktree, false);
+    }
+  );
+}
+
+test('materialização: recusa atributos locais divergentes e overrides externos', () => {
+  const f = materializationFixture();
+  const attributesPath = path.join(f.root, '.gitattributes');
+  const original = fs.readFileSync(attributesPath);
+  fs.writeFileSync(attributesPath, '*.bat text eol=lf\n');
+  assert.equal(f.inspect().compatibleWithWorktree, false);
+  fs.writeFileSync(attributesPath, original);
+  const infoPath = path.join(f.root, '.git/info/attributes');
+  fs.writeFileSync(infoPath, '*.bat text eol=crlf\n');
+  assert.equal(f.inspect().compatibleWithWorktree, false);
+  fs.renameSync(infoPath, infoPath + '.fixture-backup');
+  const globalPath = path.join(f.root, 'tmp/global-attributes');
+  fs.mkdirSync(path.dirname(globalPath), { recursive: true });
+  fs.writeFileSync(globalPath, '*.bat filter=unexpected\n');
+  f.git(['config', 'core.attributesFile', globalPath]);
+  assert.equal(f.inspect().compatibleWithWorktree, false);
+  f.git(['config', 'core.attributesFile', '']);
+  assert.equal(f.inspect().compatibleWithWorktree, true);
+});
+
+test('materialização: declaração somente local não autoriza conversão', () => {
+  const f = materializationFixture(null);
+  fs.writeFileSync(path.join(f.root, '.gitattributes'), '*.bat text eol=crlf\n');
+  for (const file of f.scripts)
+    fs.writeFileSync(path.join(f.root, file), '@echo off\r\necho fixture\r\n');
+  assert.equal(f.inspect().compatibleWithWorktree, false);
+});
+
+function ciFixture(plan, report = reportFor(plan)) {
+  const root = fs.mkdtempSync(path.join(ROOT, 'tmp/ci-observacional-unit-'));
+  const save = (file, value) => {
+    fs.mkdirSync(path.dirname(path.join(root, file)), { recursive: true });
+    fs.writeFileSync(path.join(root, file), JSON.stringify(value));
+  };
+  // A stale report must never be mistaken for the current mandatory invocation.
+  save('tmp/validacao/old/run.json', report);
+  const state = prepareObservation(
+    root,
+    { GITHUB_EVENT_NAME: 'push' },
+    {},
+    {
+      references: () => ({ mode: 'refs', base: 'a'.repeat(40), target: 'b'.repeat(40) }),
+      fixtures: () => {},
+      plan: () => plan,
+    }
+  );
+  return { root, save, state, report };
+}
+
+test('CI: referências reais de PR usam commit integrado, push usa before/after', () => {
+  const root = fs.mkdtempSync(path.join(ROOT, 'tmp/ci-git-unit-'));
+  const git = (...args) =>
+    execFileSync('git', ['-C', root, ...args], {
+      encoding: 'utf8',
+      windowsHide: true,
+      env: {
+        ...process.env,
+        GIT_AUTHOR_NAME: 'Fixture',
+        GIT_AUTHOR_EMAIL: 'fixture@example.invalid',
+        GIT_COMMITTER_NAME: 'Fixture',
+        GIT_COMMITTER_EMAIL: 'fixture@example.invalid',
+      },
+    }).trim();
+  git('init', '--quiet');
+  const tree = git('mktree');
+  const base = git('commit-tree', tree, '-m', 'base sintética');
+  const head = git('commit-tree', tree, '-p', base, '-m', 'head sintético');
+  const integrated = git('commit-tree', tree, '-p', base, '-p', head, '-m', 'merge sintético');
+  git('update-ref', 'HEAD', integrated);
+  const env = { GITHUB_EVENT_NAME: 'pull_request', GITHUB_SHA: integrated };
+  const event = { pull_request: { base: { ref: 'main', sha: base }, head: { sha: head } } };
+  assert.deepEqual(eventReferences(root, env, event), { mode: 'refs', base, target: integrated });
+  assert.notEqual(integrated, head);
+  assert.deepEqual(
+    eventReferences(
+      root,
+      { GITHUB_EVENT_NAME: 'push', GITHUB_SHA: integrated },
+      { ref: 'refs/heads/main', before: base, after: integrated }
+    ),
+    { mode: 'refs', base, target: integrated }
+  );
+  assert.throws(
+    () =>
+      eventReferences(root, env, {
+        pull_request: { ...event.pull_request, base: { ref: 'main', sha: 'f'.repeat(40) } },
+      }),
+    /indisponível/
+  );
+  assert.throws(() => eventReferences(root, { ...env, GITHUB_SHA: head }, event), /checkout/);
+  assert.throws(
+    () =>
+      eventReferences(
+        root,
+        { GITHUB_EVENT_NAME: 'push', GITHUB_SHA: integrated },
+        { ref: 'refs/heads/main', before: '0'.repeat(40), after: integrated }
+      ),
+    /SHA/
+  );
+  assert.throws(
+    () => eventReferences(root, { GITHUB_EVENT_NAME: 'workflow_dispatch' }, {}),
+    /não suportado/
+  );
+  fs.writeFileSync(path.join(root, '.git/shallow'), integrated + '\n');
+  assert.throws(() => eventReferences(root, env, event), /Histórico raso/);
+});
+
+test('CI: preparação antecede plano; falha experimental conserva diagnóstico e permite global', () => {
+  const root = fs.mkdtempSync(path.join(ROOT, 'tmp/ci-order-unit-'));
+  const order = [];
+  const state = prepareObservation(
+    root,
+    { GITHUB_EVENT_NAME: 'push' },
+    {},
+    {
+      references: () => {
+        order.push('refs');
+        return {};
+      },
+      fixtures: () => {
+        order.push('fixtures');
+        throw new Error('fixture indisponível');
+      },
+      plan: () => {
+        order.push('plan');
+      },
+    }
+  );
+  assert.deepEqual(order, ['refs', 'fixtures']);
+  assert.equal(state.plan, null);
+  assert.match(state.diagnostics.join(), /Preparação/);
+  const unavailable = prepareObservation(
+    root,
+    { GITHUB_EVENT_NAME: 'push' },
+    {},
+    {
+      references: () => {
+        throw new Error('Commit indisponível');
+      },
+    }
+  );
+  assert.match(unavailable.diagnostics.join(), /Commit indisponível/);
+  assert.doesNotThrow(() =>
+    ciMain('planejar', root, {
+      VALIDACAO_CI_OBSERVACIONAL: '1',
+      GITHUB_EVENT_PATH: 'arquivo-inexistente',
+    })
+  );
+  assert.ok(fs.existsSync(path.join(root, DIRECTORY, 'erro.json')));
+});
+
+for (const risk of ['R1', 'R2', 'global']) {
+  test('CI: hipótese ' + risk + ' confronta global integral e publica índice/resumo', () => {
+    const plan =
+      risk === 'R1' ? makePlan(fixture()) : planWith(risk === 'R2' ? asset : 'shared.js');
+    const f = ciFixture(plan);
+    f.save('tmp/validacao/current/run.json', f.report);
+    const result = finishObservation(f.root, { GLOBAL_OUTCOME: 'success' });
+    assert.equal(result.comparable, true);
+    assert.equal(result.executionPolicy, 'global');
+    assert.equal(result.global.counts.executed, plan.available.caseCount);
+    assert.equal(result.counts.actuallyExecuted, 7);
+    assert.equal(result.counts.proposed, risk === 'global' ? 7 : 6);
+    assert.equal(result.costProjection.selectiveWallMs, null);
+    const index = JSON.parse(fs.readFileSync(path.join(f.root, DIRECTORY, 'indice.json')));
+    assert.equal(index.run, 'tmp/validacao/current/run.json');
+    assert.ok(fs.existsSync(path.join(f.root, index.comparison)));
+    const markdown = fs.readFileSync(path.join(f.root, index.summary), 'utf8');
+    assert.match(markdown, /realmente executados: 7/);
+    assert.match(markdown, /R[1-4]/);
+    assert.match(markdown, /10–15 minutos é experimental/);
+    assert.match(markdown, /não estimam tempo seletivo/);
+    if (risk === 'global') assert.ok(result.fallbackReasons.length);
+  });
+}
+
+test('CI: A3 mantém plano válido separado da identidade incompleta e impede projeção', () => {
+  const plan = makePlan(fixture());
+  assert.equal(plan.valid, true);
+  plan.comparison.target.identity.complete = false;
+  const f = ciFixture(plan);
+  f.save('tmp/validacao/current/run.json', f.report);
+  const result = finishObservation(f.root, { GLOBAL_OUTCOME: 'success' });
+  assert.equal(result.planValid, true);
+  assert.equal(result.comparable, false);
+  assert.equal(result.costProjection.available, false);
+  assert.match(result.diagnostics.join(), /A3/);
+  assert.match(result.identity, /incompleta/);
+});
+
+test('CI: falha global permanece visível inclusive com falha omitida no candidato', () => {
+  const plan = makePlan(fixture());
+  const report = reportFor(plan);
+  const omitted = report.cases.find((c) => c.file === 'tests/2.spec.js');
+  omitted.outcome = 'unexpected';
+  omitted.attempts[0].status = 'failed';
+  report.status = 'failed';
+  report.counts.passed -= 1;
+  report.counts.failed = 1;
+  const f = ciFixture(plan, report);
+  f.save('tmp/validacao/current/run.json', report);
+  const result = finishObservation(f.root, { GLOBAL_OUTCOME: 'failure' });
+  assert.equal(result.global.outcome, 'failure');
+  assert.equal(result.comparisonResult, 'omitted-failure-observed');
+  assert.equal(result.omittedFailures.length, 1);
+  assert.match(summary(result), /npm test: \*\*failure\*\*/);
+});
+
+test('CI: relatório parcial, identidade divergente, zero/múltiplos relatórios são inconclusivos', () => {
+  const plan = makePlan(fixture());
+  for (const mutate of [
+    (r) => {
+      r.complete = false;
+    },
+    (r) => {
+      r.sourceAtEnd.sourceFingerprint = 'diferente';
+    },
+    (r) => {
+      r.cases.pop();
+    },
+  ]) {
+    const report = reportFor(plan);
+    mutate(report);
+    const result = evaluateObservation({ diagnostics: [] }, plan, report, 'failure');
+    assert.equal(result.comparable, false);
+    assert.equal(result.costProjection.available, false);
+  }
+  const f = ciFixture(plan);
+  assert.equal(finishObservation(f.root, { GLOBAL_OUTCOME: 'failure' }).comparable, false);
+  f.save('tmp/validacao/one/run.json', f.report);
+  f.save('tmp/validacao/two/run.json', f.report);
+  assert.match(finishObservation(f.root, {}).diagnostics.join(), /Relatórios novos encontrados: 2/);
+  assert.match(
+    finishObservation(f.root, { GITHUB_RUN_ID: 'outro-job' }).diagnostics.join(),
+    /não iniciado/
+  );
+  const empty = fs.mkdtempSync(path.join(ROOT, 'tmp/ci-empty-unit-'));
+  const early = finishObservation(empty, { GLOBAL_OUTCOME: 'skipped' });
+  assert.equal(early.global.outcome, 'skipped');
+  assert.equal(early.global.reportStatus, null);
+  assert.equal(early.costProjection.available, false);
+  assert.match(early.diagnostics.join(), /não iniciado/);
+});
+
+test('CI: hook local sem opt-in é inerte e Markdown de caminhos externos é escapado', () => {
+  const root = path.join(ROOT, 'tmp/ci-nao-deve-ser-criada-' + Date.now());
+  ciMain('planejar', root, {});
+  assert.equal(fs.existsSync(root), false);
+  const result = evaluateObservation(
+    { diagnostics: [], event: '<script>*externo*\n# título' },
+    null,
+    null,
+    'failure'
+  );
+  assert.doesNotMatch(summary(result), /<script>/);
+  assert.match(summary(result), /&lt;script&gt;/);
+});
+
 test('R1: AST, integração efetiva, dependência Alice → Mariana e recorte menor', () => {
   const input = fixture(),
     plan = makePlan(input);
@@ -396,6 +854,7 @@ test('identidades lógicas não usam linhas, conservam projeto/repetição e rej
   assert.equal(makePlan(input).result, 'invalid');
 });
 
+fs.mkdirSync(path.join(ROOT, 'tmp'), { recursive: true });
 const temp = fs.mkdtempSync(path.join(ROOT, 'tmp/planejador-git-espaços-'));
 after(() => {
   assert.ok(path.resolve(temp).startsWith(path.join(ROOT, 'tmp') + path.sep));

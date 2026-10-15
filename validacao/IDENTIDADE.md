@@ -2,8 +2,8 @@
 
 A execução obrigatória continua global. Reporter, planejador e comparador compartilham
 `scripts/validacao/identidade.cjs` e a política versionada
-[identidade-politica.json](identidade-politica.json). Não há seleção executável nem integração
-observacional nova na CI.
+[identidade-politica.json](identidade-politica.json). Não há seleção executável. A integração
+observacional da Etapa 3 está descrita em [PLANEJADOR.md](PLANEJADOR.md); usa a mesma identidade.
 
 ## Formato e escopo
 
@@ -88,6 +88,36 @@ coincidem com a atestação anterior. Depois dessa revisão, o pin passa de
 `cbe8500004c9c96385a4a2e0f3f6597fed4cb80287eb294345ac98cbdd10d505`.
 A renovação é restrita a esse delta e não corrige A1/A3 nem altera evidências históricas.
 
+### Reatestação da integração observacional — Etapa 3, 15/10/2026
+
+O corpus anterior foi reconstruído a partir da base `6d3cff0`, conservando a materialização local
+do bundle: reproduziu exatamente o pin
+`cbe8500004c9c96385a4a2e0f3f6597fed4cb80287eb294345ac98cbdd10d505`.
+Foram revistas as únicas quatro superfícies executáveis/configuração alteradas:
+`.github/workflows/validacao.yml`, `package.json`, `scripts/validacao/ci-observacional.cjs` (nova)
+e `tests/validacao/planejador.unit.cjs`. As demais superfícies conservaram seus hashes; as mudanças
+em prosa não pertencem ao corpus executável, embora continuem entradas da identidade.
+
+O adaptador lê somente o evento GitHub, o próprio estado/plano e o relatório JSON do reporter;
+escreve JSON/Markdown no diretório observacional. A descoberta dos relatórios é limitada aos
+subdiretórios imediatos do reporter; não procura nem consome capturas ou arquivos privados.
+Seus caminhos dinâmicos derivam dessas saídas próprias. Os novos testes usam os mesmos planos
+sintéticos, relatórios JSON e repositório Git isolado; não criam leitor de screenshot. O workflow
+mantém o upload estruturado existente e acrescenta resumo, sem consumidor de imagens.
+
+Hashes e âncoras dos dois arquivos produtores e do bloqueio HTTP foram reconferidos e permaneceram
+iguais. O bloqueio conserva recusa de `tmp/output/.codex/.git`, inclusive acesso `/@fs/`, e as
+regressões de privacidade continuam na global. Precedência de entrada, nomes exatos dos 29
+diagnósticos, proteção de privados e dez PDFs sintéticos não mudaram. Nenhuma captura existente
+foi apagada, substituída, lida para publicação ou incluída no Git. A worktree nova materializa
+somente suas próprias capturas quando a global as produz.
+
+Após essa revisão deliberada, o novo pin é
+`e0e93ccb2d59bb5f56c101e38bf1ccaf9fca48fdfbdabc48c8c98fb47f694d80`.
+A1 continua como risco operacional: mudança posterior do corpus invalida novamente a atestação.
+A3 permanece no planejador; a integração exige identidade utilizável e comparação completa,
+separadas de `valid=true`. Não há exceção global de output/tmp nem atualização automática de pin.
+
 | Produtor                                               | Captura diagnóstica exata                              |
 | ------------------------------------------------------ | ------------------------------------------------------ |
 | `tests/historia-mariana-memorias-outubro-2026.spec.js` | `output/historia-outubro-1366.png`                     |
@@ -136,6 +166,38 @@ Em modo refs, a identidade dos blobs Git é calculada em bytes e conferida separ
 escopo na worktree. Entradas locais adicionais não derivadas impedem equivalência; bundle e PDFs
 sintéticos locais são observados como materialização e nunca atribuídos aos blobs Git.
 
+### Compatibilidade de materialização LF→CRLF — correção P1
+
+Os três atalhos `.bat` são armazenados em LF no Git e materializados em CRLF por
+`*.bat text eol=crlf`. Igualdade direta dos fingerprints desses escopos rejeitava até uma
+checkout correta. `planejador-git.cjs` agora conserva ambas as identidades originais e verifica
+separadamente cada entrada divergente. Somente `.bat` com blob LF sem CR/NUL pode receber a
+transformação exata LF→CRLF; todo o restante dos bytes precisa coincidir. Entradas binárias e
+outras diferenças continuam exigindo igualdade exata. Não há normalização do fingerprint.
+
+A prova usa `git check-attr --source=<commit>` isolado de atributos globais/sistema e exige
+`text=set`, `eol=crlf`, sem filter, ident, crlf legado ou working-tree-encoding. Os atributos
+efetivos locais precisam coincidir; cada `.gitattributes` aplicável deve corresponder aos bytes
+da revisão Git. Overrides em info/attributes, fonte externa GIT_ATTR_SOURCE, atributos ausentes,
+divergentes/não suportados ou Git sem suporte à consulta impedem a exceção. Nenhum filtro é
+executado. `materializedInputs` registra caminho, conversão, commit e atributos comprovados;
+`materializationErrors` registra recusas, sem conteúdo dos arquivos.
+
+Os testes usam objetos e checkouts reais de repositórios temporários, separados do Git do
+projeto. Os fluxos positivos de PR integrada e push percorrem eventReferences, collectComparison
+e refIdentity reais, makePlan e o comparador existente com inventário global sintético completo.
+As identidades originais diferentes permanecem verificáveis; A3 continua impedindo projeção
+com identidade incompleta. Ubuntu definitivo permanece dependente de futura PR autorizada.
+
+### Reatestação da correção P1 — 15/10/2026
+
+Além das quatro superfícies da Etapa 3 já atestadas, esta correção modifica somente
+`scripts/validacao/planejador-git.cjs` e acrescenta testes em `tests/validacao/planejador.unit.cjs`.
+A nova leitura é restrita aos atributos Git e entradas já comparadas; não cria consumidor de
+screenshots nem exceção de output/tmp. Produtores, bloqueio HTTP, política de privados,
+precedência de entradas e lista dos 29 diagnósticos são preservados. A prova e o novo pin após
+revisão deliberada ficam registrados abaixo e nas evidências locais da correção.
+
 Reporter captura início e fim; planejador confere estabilidade durante a própria coleta. Remoção,
 rename, entrada ausente/ilegível ou corrida percebida durante leitura produz digest distinto ou
 identidade incompleta. Comparador exige identidades completas e coerentes com os próprios digests,
@@ -167,3 +229,5 @@ privacidade. A evidência real exige novo plano e global completos, sem segunda 
 Uma comparação concluída permite somente projeção da soma observada de tentativas; não certifica
 recorte nem prevê tempo seletivo. Política de execução, check obrigatório, workers, retries,
 timeouts, servidor e testes originais da aplicação permanecem preservados.
+
+Reatestação P1 concluída: o pin passa de `e0e93ccb2d59bb5f56c101e38bf1ccaf9fca48fdfbdabc48c8c98fb47f694d80` para `c74ec14472974ca446788687ed1ec603a6ee76fdffb3675a8081dc9cd48dd253`. Somente as duas superfícies descritas mudaram desde a atestação da Etapa 3; hashes/âncoras dos produtores e do bloqueio HTTP conferem, e os 29 diagnósticos anteriores foram preservados em cópia local ignorada.

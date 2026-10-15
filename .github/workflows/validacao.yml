@@ -45,7 +45,17 @@ jobs:
         run: npm run lint
 
       - name: Executar todos os testes
+        id: global
+        env:
+          VALIDACAO_CI_OBSERVACIONAL: '1'
         run: npm test
+
+      - name: Confrontar plano observacional e execução global
+        if: always()
+        env:
+          VALIDACAO_CI_OBSERVACIONAL: '1'
+          GLOBAL_OUTCOME: ${{ steps.global.outcome }}
+        run: node scripts/validacao/ci-observacional.cjs concluir
 
       - name: Guardar resultados estruturados
         if: always()
