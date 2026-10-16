@@ -28,6 +28,34 @@ function comparePlan(plan, run) {
   )
     reasons.push('Input identity digest inconsistent with source identity alias');
   const policies = [plan.identityPolicy, ...identities.map((identity) => identity?.policy)];
+  let targetProvenanceCompatible = null;
+  if (policies.some((p) => p?.version === '1.1.0')) {
+    const planned = plan.comparison?.worktree?.source;
+    const sources = [planned, run.source, run.sourceAtEnd];
+    // Diagnostic outputs may appear during a global and change porcelain/dirty.
+    // They never substitute for the exact input fingerprint comparison below.
+    const fields = ['commit', 'tree'];
+    targetProvenanceCompatible =
+      sources.every(
+        (s) =>
+          s?.available === true &&
+          /^[a-f0-9]{40}$/.test(s.commit || '') &&
+          /^[a-f0-9]{40}$/.test(s.tree || '') &&
+          /^[a-f0-9]{64}$/.test(s.statusFingerprint || '') &&
+          typeof s.dirty === 'boolean' &&
+          s.contentIdentity ===
+            (s.dirty ? 'working-tree-not-identical-to-commit' : 'clean-tracked-tree') &&
+          fields.every((f) => s[f] === planned[f])
+      ) &&
+      identityUsable(planned.identity) &&
+      planned.sourceFingerprint === planned.identity.inputFingerprint &&
+      planned.sourceFingerprint === plan.comparison?.target?.sourceFingerprint &&
+      (plan.comparison?.target?.kind === 'working-tree' ||
+        (plan.comparison?.target?.kind === 'git-ref' &&
+          plan.comparison.target.commit === planned?.commit));
+    if (!targetProvenanceCompatible)
+      reasons.push('Target snapshot provenance missing or differs between plan and global report');
+  }
   if (
     policies.some(
       (p) =>
@@ -205,6 +233,7 @@ function comparePlan(plan, run) {
     planResult: plan.result,
     runStatus: run.status,
     identity: {
+      targetProvenanceCompatible,
       sourcesCompatible:
         !!plan.comparison?.target?.sourceFingerprint &&
         plan.comparison.target.sourceFingerprint === run.source?.sourceFingerprint,

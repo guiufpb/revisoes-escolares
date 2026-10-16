@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const acorn = require('acorn');
+const { projectHintCorpus, CONTRACT } = require('./identidade-texto.cjs');
 const { execFileSync } = require('node:child_process');
 
 const FORMAT = 2;
@@ -139,11 +140,24 @@ function captureIdentity({ paths, readBytes, policy: suppliedPolicy, gitScope = 
     policy = null;
   }
   const validPolicy =
-    policy?.schemaVersion === 1 && policy.identityFormat === FORMAT && policy.version === '1.0.0';
+    policy?.schemaVersion === 1 &&
+    policy.identityFormat === FORMAT &&
+    ['1.0.0', '1.1.0'].includes(policy.version);
   const descriptor = {
     schemaVersion: 1,
     version: policy?.version || null,
     fingerprint: policy ? jsonHash(policy) : null,
+    ...(policy?.version === '1.1.0'
+      ? {
+          attestationContract: policy.diagnosticAudit?.representation || null,
+          diagnosticCount: policy.diagnosticProducers?.reduce((n, p) => n + p.paths.length, 0),
+          diagnosticProof: {
+            corpusSha256: policy.diagnosticAudit?.corpusSha256,
+            httpDeny: policy.diagnosticAudit?.httpDeny,
+            producers: policy.diagnosticProducers,
+          },
+        }
+      : {}),
   };
   if (!validPolicy)
     return {
@@ -190,7 +204,20 @@ function captureIdentity({ paths, readBytes, policy: suppliedPolicy, gitScope = 
       (corpusExtension.test(file) ||
         (policy.rootInputs.includes(file) && !/\.(?:md|txt)$/.test(file)))
   );
-  const corpus = surfaces.map((file) => [file, read(file) ? hash(read(file)) : 'missing']);
+  const textual =
+    policy.version === '1.1.0' && policy.diagnosticAudit.representation === CONTRACT
+      ? projectHintCorpus({ surfaces, read })
+      : null;
+  const corpus = surfaces.map((file) => [
+    file,
+    read(file)
+      ? hash(
+          textual?.valid && textual.representations.has(file)
+            ? textual.representations.get(file)
+            : read(file)
+        )
+      : 'missing',
+  ]);
   for (const file of surfaces) {
     if (!read(file)) continue;
     for (const ref of literalConsumers(file, read(file).toString('utf8'))) {
@@ -206,7 +233,10 @@ function captureIdentity({ paths, readBytes, policy: suppliedPolicy, gitScope = 
     const bytes = read(proof.source);
     return !!bytes && hash(bytes) === proof.sha256 && bytes.toString('utf8').includes(proof.anchor);
   };
-  const auditValid = corpusFingerprint === pin.corpusSha256 && verifyPin(pin.httpDeny);
+  const auditValid =
+    corpusFingerprint === pin.corpusSha256 &&
+    verifyPin(pin.httpDeny) &&
+    (policy.version === '1.0.0' || (pin.representation === CONTRACT && textual?.valid === true));
   const producerValid = new Map(
     policy.diagnosticProducers.map((p) => [p.id, auditValid && verifyPin(p)])
   );
@@ -282,6 +312,16 @@ function captureIdentity({ paths, readBytes, policy: suppliedPolicy, gitScope = 
         corpusMatchesReview: auditValid,
         producerProofs: Object.fromEntries(producerValid),
         scope: pin.scope,
+        ...(textual
+          ? {
+              textual: {
+                contract: textual.contract,
+                valid: textual.valid,
+                bindings: textual.bindings,
+                ...(textual.reason ? { reason: textual.reason } : {}),
+              },
+            }
+          : {}),
       },
     ],
     unknown,
@@ -343,10 +383,93 @@ function identityUsable(identity) {
     identity.unknown.length ||
     identity.inputCount !== identity.inputs.length ||
     identity.policy?.schemaVersion !== 1 ||
-    identity.policy.version !== '1.0.0' ||
+    !['1.0.0', '1.1.0'].includes(identity.policy.version) ||
     !/^[a-f0-9]{64}$/.test(identity.policy.fingerprint || '')
   )
     return false;
+  if (identity.policy.version === '1.1.0') {
+    const count = identity.policy.diagnosticCount;
+    if (!Number.isInteger(count) || count < 0 || identity.artifacts?.entries?.length !== count)
+      return false;
+    if (count) {
+      const audit = identity.diagnostics?.[0],
+        proof = audit?.textual,
+        expected = identity.policy.diagnosticProof;
+      if (
+        !Array.isArray(expected?.producers) ||
+        !expected.producers.length ||
+        !canonical(expected.httpDeny?.source) ||
+        !/^[a-f0-9]{64}$/.test(expected.httpDeny?.sha256 || '') ||
+        expected.producers.some(
+          (p) =>
+            !p ||
+            typeof p.id !== 'string' ||
+            !p.id ||
+            !canonical(p.source) ||
+            !/^[a-f0-9]{64}$/.test(p.sha256 || '') ||
+            !Array.isArray(p.paths) ||
+            !p.paths.length ||
+            p.paths.some((file) => !canonical(file))
+        )
+      )
+        return false;
+      const ids = expected.producers.map((p) => p.id).sort();
+      const paths = expected.producers.flatMap((p) => p.paths.map((file) => [file, p.id]));
+      if (
+        new Set(ids).size !== ids.length ||
+        new Set(paths.map(([file]) => file)).size !== count ||
+        JSON.stringify(Object.keys(audit?.producerProofs || {}).sort()) !== JSON.stringify(ids) ||
+        identity.corpusFingerprint !== expected.corpusSha256 ||
+        identity.artifacts.fingerprint !== jsonHash(identity.artifacts.entries)
+      )
+        return false;
+      const entries = new Map(identity.artifacts.entries.map((e) => [e.path, e]));
+      if (
+        entries.size !== count ||
+        paths.some(([file, producer]) => {
+          const e = entries.get(file);
+          return (
+            !e ||
+            e.role !== 'diagnostic' ||
+            e.producer !== producer ||
+            !(
+              (e.state === 'present' &&
+                /^[a-f0-9]{64}$/.test(e.sha256 || '') &&
+                Number.isInteger(e.bytes) &&
+                e.bytes >= 0) ||
+              (e.state === 'missing-or-link' && e.sha256 === null && e.bytes === null)
+            )
+          );
+        })
+      )
+        return false;
+      if (
+        identity.policy.attestationContract !== CONTRACT ||
+        audit?.corpusMatchesReview !== true ||
+        !Object.values(audit.producerProofs || {}).length ||
+        !Object.values(audit.producerProofs).every((v) => v === true) ||
+        proof?.contract !== CONTRACT ||
+        proof.valid !== true ||
+        !proof.bindings?.length
+      )
+        return false;
+      const inputs = new Map(identity.inputs.map((e) => [e.path, e.sha256]));
+      if (
+        inputs.get(expected.httpDeny?.source) !== expected.httpDeny?.sha256 ||
+        expected.producers.some((p) => inputs.get(p.source) !== p.sha256)
+      )
+        return false;
+      if (
+        proof.bindings.some(
+          (b) =>
+            b.sourceSha256 !== inputs.get(b.source) ||
+            b.bundleSha256 !== inputs.get('ambiente_interativo/js/app.bundle.js') ||
+            !b.questions?.length
+        )
+      )
+        return false;
+    }
+  }
   if (
     new Set(identity.inputs.map((entry) => entry.path)).size !== identity.inputs.length ||
     identity.inputs.some(

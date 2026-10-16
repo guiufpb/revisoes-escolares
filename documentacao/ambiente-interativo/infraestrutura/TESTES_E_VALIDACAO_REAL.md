@@ -26,6 +26,11 @@ limpeza seletiva, 390 × 844, desktop e axe-core.
 
 ## Gatilhos da suíte global
 
+A Etapa 4.1C de identidade é R4 e executa global integral após testes Node e revisão do snapshot
+estável. A política 1.1.0 pode conservar a atestação de dicas comprovadamente textuais, mas não
+altera os gatilhos de execução nem permite usar global de outro fingerprint. O contrato de
+fonte/bundle, procedência e recusas está em [IDENTIDADE.md](../../../validacao/IDENTIDADE.md).
+
 Execute `npm test`:
 
 1. a cada três revisões ou conjuntos independentes novos sobre infraestrutura estabilizada;
