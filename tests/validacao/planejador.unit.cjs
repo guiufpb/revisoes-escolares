@@ -191,11 +191,13 @@ function reportFor(plan) {
     errors: [],
     sourcesChangedDuringRun: false,
     source: {
+      ...plan.comparison.worktree.source,
       available: true,
       sourceFingerprint: plan.comparison.target.sourceFingerprint,
       identity: structuredClone(plan.comparison.target.identity),
     },
     sourceAtEnd: {
+      ...plan.comparison.worktree.source,
       available: true,
       sourceFingerprint: plan.comparison.target.sourceFingerprint,
       identity: structuredClone(plan.comparison.target.identity),

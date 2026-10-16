@@ -1,5 +1,87 @@
 # Identidade de entradas e artefatos — Etapa 2.1
 
+## Etapa 4.1C — política 1.1.0 e atestação textual A1
+
+A política vigente é **1.1.0**, mantendo identityFormat 2 e SHA-256 dos bytes exatos de todas
+as entradas. Os registros abaixo da Etapa 2.1 descrevem a política histórica 1.0.0; seus pins,
+planos e relatórios não são reinterpretados. Descritores de versões/pins diferentes continuam
+incompatíveis. A cópia anterior permanece no histórico Git e na evidência local da migração.
+
+Somente o corpus usado para atestar diagnósticos usa `questionarios-dica-literal-v1`, implementado
+em `scripts/validacao/identidade-texto.cjs` e integrado ao capturador existente. A captura conserva
+separadamente o fingerprint bruto das entradas, o corpus de atestação e os artefatos. Uma dica
+diferente sempre muda `inputFingerprint`; nunca permite confrontar com a global da dica anterior.
+
+O contrato exige payload **inteiramente estático** de um registrador público Questionários
+reconhecido, associado inequivocamente ao manifesto por ID, perfil, chave e fonte. Propriedades
+duplicadas, calculadas, getters, funções, spreads, métodos, shorthand e `__proto__` não são dados
+admitidos. Cada questão tem ID textual único. Só o intervalo do valor literal simples de uma
+`dica` existente em `questoes` recebe um marcador por revisão/questão/propriedade. Todo o restante
+do arquivo conserva seus bytes, incluindo comentários, respostas, opções, referências e código.
+Strings vazias, com barras, controles ou aparência de esquema permanecem protegidas sem máscara.
+Novas questões/propriedades e remoções alteram o corpus e revogam a atestação.
+
+Na base inicial, sete configurações e 190 dicas satisfazem a prova. Isso é uma consequência da
+estrutura dos dados, sem allowlist de nomes, perfis ou matérias. Os demais payloads permanecem
+protegidos integralmente. Ambiguidade nunca amplia a máscara.
+
+### Prova fonte/bundle e consumidores
+
+O build oficial Vite parte de `app.entry.js`, importa o motor antes dos conteúdos e produz o IIFE
+local sem minificação. A prova encontra a chamada ao **registrador público**, compara a AST de
+todo o objeto fonte/bundle (excluindo somente posições e grafia de literais), exige unicidade e
+então projeta os mesmos intervalos de dicas. Não procura nome de variável local nem substitui
+ocorrências textuais soltas. Todos os demais bytes do bundle continuam no pin revisado, gerado
+pelo build oficial. Bundle ausente, antigo, divergente, com código adicional ou transformação
+incompatível não sustenta atestação. Os hashes brutos de fonte/bundle ficam nas associações da
+prova e são conferidos contra as entradas por `identityUsable`.
+
+Revisão de consumidores na base `ecaaf74`: o motor guarda a referência da configuração e lê dica
+em `anunciar` e `mensagemDeRevisao`; o destino é `textContent`, na região status/aria-live. O texto
+visível e a fala do leitor de tela podem mudar, preservando o mecanismo de foco/retorno e pontos.
+As APIs públicas retornam a configuração inteira. `app.js` usa matéria/contagem/identidade; specs
+serializam os objetos e verificam presença, tamanho e não exposição do gabarito. Interações,
+ditado, armazenamento e correção não usam dica como resposta, chave, URL ou nome de arquivo.
+
+O consumidor indireto relevante é `scripts/validacao/fontes.cjs`: percorre `Object.entries` e
+`Object.values`, reconhecendo strings de assets pelos prefixos `../assets/` e `leituras/`. A
+restrição textual impede essa interpretação nas folhas projetadas. Não foi encontrada dependência
+dinâmica relevante não resolvida nas sete configurações. Isso é uma revisão delimitada do corpus,
+não uma alegação de análise estática universal: novo consumidor literal/dinâmico, novo arquivo,
+mudança no motor, nos testes, no build ou na infraestrutura muda os bytes protegidos e recusa a
+atestação. O scanner positivo anterior continua promovendo entradas antes de diagnósticos.
+
+Os dois produtores e as âncoras dos 29 caminhos permanecem iguais, assim como o bloqueio HTTP
+inclusive `/@fs/`. O percurso das três capturas de História abre Q30 e o painel responsável sem
+conferência, deixando vazio o retorno que exibiria dica. As outras 26 capturas são de Inglês.
+Não se exige que capturas sejam sempre iguais: elas continuam artefatos separados, sujeitos aos
+produtores e à prova de ausência de leitores. Não existe exclusão geral de screenshots.
+
+### Procedência, migração e validação
+
+Na política 1.1.0, o comparador exige também procedência disponível e coerente: commit e árvore
+iguais no alvo planejado e no início/fim da execução, com rótulos Git válidos e fingerprint bruto
+do alvo igual ao da worktree planejada. SHA isolado nunca identifica uma worktree modificada.
+O estado Git bruto é preservado; criação de diagnósticos pode mudar porcelain/dirty sem mudar
+entradas. Igualdade dos fingerprints brutos, política/manifesto e inventário global completo
+continua obrigatória. Metadados antigos, apenas `complete=true` ou relatório parcial não bastam.
+
+O novo pin só é registrado após revisão deliberada dos consumidores acima, correspondência do
+build inicial, delta da infraestrutura, produtores e bloqueio. Não existe comando de renovação
+automática. A migração é R4 e exige testes Node direcionados, manifesto, build, format:check,
+lint, diff e uma global final estável. A prova experimental posterior usa outra cópia isolada e
+compara seu delta com o snapshot da implementação, sem commit intermediário ou política no delta.
+Sem global desse snapshot experimental, não há projeção de economia. A classificação R1/R3/R4
+e a execução global obrigatória continuam intactas; R2 e CI seletiva não foram ampliados.
+
+Os testes acrescentados cobrem aceitação textual e recusas de bundle, AST, referências,
+consumidores, produtores, renderer, HTTP, política e procedência. Os três casos reais de
+materialização LF→CRLF permanecem nos testes anteriores, com seus hashes originais. A evidência
+local Windows não substitui a futura execução Ubuntu. Dependências instaladas são metadados,
+não uma assinatura de toda a cadeia de ferramentas. Resultados e digests finais são registrados
+na evidência local após congelar os arquivos da implementação, sem atribuir prosa posterior à
+identidade testada.
+
 A execução obrigatória continua global. Reporter, planejador e comparador compartilham
 `scripts/validacao/identidade.cjs` e a política versionada
 [identidade-politica.json](identidade-politica.json). Não há seleção executável. A integração

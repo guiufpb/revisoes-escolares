@@ -6,6 +6,20 @@ O **Revisões Escolares** evoluiu para uma aplicação educacional local com per
 
 Este inventário registra o estado de trabalho em **14/10/2026**.
 
+## Etapa 4.1C — Atestação textual restrita (15/10/2026)
+
+Política de identidade 1.1.0, formato 2, integrada ao capturador/planejador/reporter existentes.
+Somente literais `questoes[*].dica` de payloads Questionários inteiramente estáticos podem
+conservar a atestação dos 29 diagnósticos. A prova exige registro/ID/perfil/chave, AST completa
+fonte/bundle igual, ausência de ambiguidade e corpus restante em bytes exatos. A base reconhece
+sete configurações/190 dicas; isso não é uma exceção por nome ou perfil. Fingerprints brutos
+sempre mudam com o texto. Novos consumidores, build divergente e mudanças protegidas revogam
+a atestação. Comparação exige procedência e global completa do mesmo conteúdo. Contrato e
+migração em [validacao/IDENTIDADE.md](../../validacao/IDENTIDADE.md).
+
+Implementação R4: validações e digests finais são registrados na evidência local do snapshot
+congelado. A execução continua global; nenhum suporte R2 ou CI seletiva foi acrescentado.
+
 ## Etapa 3 — Integração observacional à CI (15/10/2026)
 
 O workflow mantém `npm test` integral e acrescenta planejamento após build/preparo sintético,

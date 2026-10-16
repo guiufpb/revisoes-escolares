@@ -1,5 +1,12 @@
 # Planejador observacional — Etapa 2
 
+A Etapa 4.1C usa a política 1.1.0 descrita em [IDENTIDADE.md](IDENTIDADE.md): equivalência
+restrita de dicas serve somente à atestação dos diagnósticos. O plano continua observacional,
+com fingerprints brutos e procedência do alvo conferidos contra a global completa. A migração
+da infraestrutura continua R4/global. Metadados antigos ou um relatório de outro snapshot não
+autorizam projeção. O experimento com duas worktrees modificadas registra expressamente a base
+como snapshot local da implementação, sem apresentá-la como um commit Git inexistente.
+
 O planejador calcula uma hipótese de testes por risco/impacto e explica cada inclusão, omissão e
 fallback. **Nunca executa um recorte. `npm test`, a global em toda PR e o check Formatação, lint e
 testes continuam integrais.** A Etapa 3 acrescenta a integração observacional abaixo; a execução

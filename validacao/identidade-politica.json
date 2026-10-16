@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "identityFormat": 2,
   "normalization": "none; SHA-256 of exact bytes, including binary data",
   "inputRoots": [
@@ -171,13 +171,14 @@
     }
   ],
   "diagnosticAudit": {
-    "corpusSha256": "c74ec14472974ca446788687ed1ec603a6ee76fdffb3675a8081dc9cd48dd253",
-    "scope": "All indexed executable/configuration/reference surfaces (including SVG and forced bundles), excluding this policy and prose; exact bytes. Any change invalidates exclusion pending explicit review.",
+    "corpusSha256": "cbdd769d3defd657dd8c2ba578cd84c8d46de294232282034028af75303be5be",
+    "scope": "Reviewed full executable/configuration/reference corpus; exact bytes except proven existing Questionarios hint literal ranges in static payloads and corresponding bundle. All other changes refuse attestation.",
     "httpDeny": {
       "source": "scripts/identidade-ambiente-local.cjs",
       "sha256": "e471c327c9f6086eb1998d2c4ef41940f55f0f24440af039d1132c0b5113e604",
       "anchor": "/i.test(relative)"
-    }
+    },
+    "representation": "questionarios-dica-literal-v1"
   },
-  "review": "29 screenshots verified as outputs; no application/test reader; producer sources pinned, HTTP output denied, full consumer corpus pinned. Explicit input reference always wins."
+  "review": "Etapa 4.1C: reviewed hint consumers, recursive assets walker, renderer/status region, imports/registrars, static source/bundle object AST correspondence, exact protected corpus, 29 unchanged producers and HTTP deny. No automatic pin renewal or selective execution."
 }
