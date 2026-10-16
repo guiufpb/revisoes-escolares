@@ -6,6 +6,30 @@ O **Revisões Escolares** evoluiu para uma aplicação educacional local com per
 
 Este inventário registra o estado de trabalho em **14/10/2026**.
 
+## Etapa 4.3A.3 — Composição auditável de adição e atestação (16/10/2026)
+
+Extensão [adicao-atestacao-composta-v1](../../validacao/COMPOSICAO_ATESTACAO.md), com verificação
+separada da estrutura, manutenção deliberada do único campo de corpus e identidade/procedência
+do mesmo snapshot. Registro explícito local e complementar; não há renovação automática de pin
+nem autorização de seleção. Base Git deve conter a infraestrutura; dez `REVIEWED` continuam
+fixos. Guards preservam recusa antes de VM/discovery. Testes são sintéticos, sem revisão real.
+Política 1.1.0, reporter/comparador e CI obrigatória preservados. A manutenção deliberada dos
+29 diagnósticos foi autorizada separadamente, após revisão dos oito deltas acumulados do corpus.
+Procedimento em `validacao/IDENTIDADE.md`; identidade e resultado da global final ficam na
+evidência local `tmp/validacao/etapa43a3-final/`. Consolidação Git e 4.3A.4 não integram esta etapa.
+
+## Etapa 4.3A.2 — Prova observacional de adição integrada (16/10/2026)
+
+Infraestrutura complementar `questionarios-adicao-integrada-v1`, descrita em
+[Adição integrada](../../validacao/ADICAO_INTEGRADA.md): um lote estático Questionários para
+Alice ou Mariana, com opções/campos e integrações restritas por AST/HTML. Candidato inválido é
+recusado antes de VM/discovery. CLI e adaptador observacional emitem `adicao-integrada.json`,
+separando estrutura, identidade e evidência de execução. Cobertura declarada não comprova função
+ou pedagogia. Testes Node usam fixtures sintéticas, inclusive Git/CLI isolados; nenhuma revisão
+real foi criada como experimento. R1/R2, riscos, identidade, reporter, comparador, workflow e
+suíte global obrigatória permanecem preservados. Resultados do snapshot final ficam nas evidências
+locais do lote; esta entrada não declara uso infantil nem economia de tempo comprovada.
+
 ## Etapa 4.1C — Atestação textual restrita (15/10/2026)
 
 Política de identidade 1.1.0, formato 2, integrada ao capturador/planejador/reporter existentes.

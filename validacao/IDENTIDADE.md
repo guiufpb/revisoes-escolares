@@ -1,5 +1,19 @@
 # Identidade de entradas e artefatos — Etapa 2.1
 
+## Manutenção deliberada da infraestrutura 4.3A.2/3 — 16/10/2026
+
+Revisão acumulada contra o corpus válido `cbdd769d3defd657dd8c2ba578cd84c8d46de294232282034028af75303be5be`:
+oito superfícies de validação/testes foram examinadas, sem novo consumo das 29 capturas como
+entradas. Produtores, âncoras, bloqueio HTTP, manifesto, aplicação, bundles e dez `REVIEWED`
+preservados. Corpus reconstruídos, deltas/hashes, cópias das capturas e análise individual dos
+leitores estão na evidência local `tmp/validacao/etapa43a3-final/REVISAO_CORPUS.md` e seus JSONs.
+Somente `diagnosticAudit.corpusSha256` passa para
+`71992435d3eb680f496bc95a572b17c583d90bb108e230ab6a062d2c95922c79`;
+política 1.1.0/formato 2 preservados. Identidade final e resultado da única global autorizada
+são registrados separadamente nessa evidência, sem atribuir resultados antecipados.
+Trata-se de manutenção R4/global de uma worktree modificada ancorada em `202c304`, não uma
+adição integrada ou um commit contendo a implementação. A 4.3A.4 permanece fora desta etapa.
+
 ## Etapa 4.1C — política 1.1.0 e atestação textual A1
 
 A política vigente é **1.1.0**, mantendo identityFormat 2 e SHA-256 dos bytes exatos de todas

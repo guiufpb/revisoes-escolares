@@ -26,6 +26,21 @@ limpeza seletiva, 390 × 844, desktop e axe-core.
 
 ## Gatilhos da suíte global
 
+A Etapa 4.3A.3 acrescenta a [composição com manutenção deliberada](../../../validacao/COMPOSICAO_ATESTACAO.md).
+Node direcionado valida evidências sintéticas e bloqueio anterior a VM/discovery; não reatesta
+diagnósticos reais. A manutenção do pin e uma global do snapshot final foram autorizadas
+separadamente; revisão, identidade e resultado ficam em `tmp/validacao/etapa43a3-final/`.
+Não se declara aprovação antecipada. Build, formatação,
+lint, Node e manifesto são conferidos antes; resultados históricos da 4.3A.2 não certificam
+o snapshot alterado. A composição não reduz gatilhos ou suítes.
+
+A Etapa 4.3A.2 acrescenta uma [prova complementar de adição integrada](../../../validacao/ADICAO_INTEGRADA.md)
+com testes Node sintéticos de AST/HTML, preservação, manifesto, identidade e recusa antes de
+observação executável. O complemento é observacional: a global e os gatilhos abaixo permanecem
+integrais. Cobertura declarada não comprova função nem pedagogia; nenhuma revisão real ou seleção
+substitutiva integra a validação deste contrato. A implementação da infraestrutura exige a global
+final do snapshot estável, com Node/manifesto/build já abrangidos pelo pretest oficial.
+
 A Etapa 4.1C de identidade é R4 e executa global integral após testes Node e revisão do snapshot
 estável. A política 1.1.0 pode conservar a atestação de dicas comprovadamente textuais, mas não
 altera os gatilhos de execução nem permite usar global de outro fingerprint. O contrato de
