@@ -1832,3 +1832,10 @@ legadas.
 - `cb79555` — renovação completa de Centenas em ação.
 
 O histórico detalhado permanece em `ambiente_interativo/RELATORIO_TESTE_INTERATIVO.txt`; este arquivo é a referência organizada e atual.
+
+
+## Nova revisão: mariana-gramatica-singular-plural-cotidiano-outubro-2026
+
+Singular e plural no cotidiano
+
+Conteúdo: ambiente_interativo/revisoes/mariana/gramatica-singular-plural-cotidiano-outubro-2026.js

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "1.1.0",
+  "version": "1.2.0",
   "basis": {
     "commit": "14584b2fee618fc900bb3d5657b9cfa16482bf33",
     "tree": "0546fb7d4ce6f1ec44ce0d0a084a9331fdb7d0e3"
@@ -3664,6 +3664,47 @@
         "historicalCollection": "not-configured",
         "futureCandidate": false
       }
+    },
+    {
+      "id": "mariana-gramatica-singular-plural-cotidiano-outubro-2026",
+      "profile": "mariana",
+      "subject": "gramatica",
+      "declaredEngine": "gramatica-questionarios",
+      "engine": "questionarios",
+      "primaryKey": "revisoesEscolares.mariana.gramatica.singularPluralCotidianoOutubro2026.v1",
+      "configFiles": [
+        "ambiente_interativo/revisoes/mariana/gramatica-singular-plural-cotidiano-outubro-2026.js"
+      ],
+      "contentSources": [
+        "ambiente_interativo/revisoes/mariana/gramatica-singular-plural-cotidiano-outubro-2026.js"
+      ],
+      "capabilities": ["estado-estrito"],
+      "sessions": [],
+      "contentDependencies": [],
+      "historicalKeys": [],
+      "assets": [],
+      "tests": [
+        "tests/mariana-gramatica-singular-plural-cotidiano-outubro-2026.spec.js",
+        "tests/ambiente-interativo.spec.js"
+      ],
+      "evidence": [
+        {
+          "path": "ambiente_interativo/js/registro-revisoes.js",
+          "anchor": "mariana-gramatica-singular-plural-cotidiano-outubro-2026"
+        }
+      ],
+      "evidenceAvailable": [],
+      "gaps": [
+        "series-individuais",
+        "associacoes-por-arquivo",
+        "assets-calculados",
+        "validacao-humana-versionada"
+      ],
+      "maturity": {
+        "assessment": "not-evaluated",
+        "historicalCollection": "not-configured",
+        "futureCandidate": false
+      }
     }
   ],
   "engines": [
@@ -3696,7 +3737,8 @@
         "alice-gramatica-contos-digrafos-vocabulario",
         "alice-gramatica-pontuacao-lh-xch-outubro-2026",
         "alice-gramatica-h-til-vocabulario",
-        "mariana-gramatica-h-til-vocabulario"
+        "mariana-gramatica-h-til-vocabulario",
+        "mariana-gramatica-singular-plural-cotidiano-outubro-2026"
       ],
       "dependencies": [
         {
@@ -4272,7 +4314,8 @@
         "mariana-ciencias-plantas-sol-setembro-2026",
         "mariana-gramatica-pontuacao-ortografia-vocabulario-setembro-2026",
         "mariana-gramatica-portugues-prova-outubro-2026",
-        "alice-gramatica-pontuacao-lh-xch-outubro-2026"
+        "alice-gramatica-pontuacao-lh-xch-outubro-2026",
+        "mariana-gramatica-singular-plural-cotidiano-outubro-2026"
       ],
       "dependencies": [],
       "contracts": [],
@@ -4959,7 +5002,8 @@
         "alice-leitura-a-joaninha-que-perdeu-as-pintinhas",
         "mariana-leitura-a-joaninha-que-perdeu-as-pintinhas",
         "alice-leitura-uma-formiga-especial",
-        "mariana-leitura-uma-formiga-especial"
+        "mariana-leitura-uma-formiga-especial",
+        "mariana-gramatica-singular-plural-cotidiano-outubro-2026"
       ],
       "engines": [
         "cena-matematica",
@@ -8433,6 +8477,38 @@
       "cases": [],
       "gaps": ["series-individuais", "associacoes-por-arquivo"],
       "expectedCases": 7
+    },
+    {
+      "file": "tests/mariana-gramatica-singular-plural-cotidiano-outubro-2026.spec.js",
+      "revisions": ["mariana-gramatica-singular-plural-cotidiano-outubro-2026"],
+      "engines": ["questionarios"],
+      "capabilities": ["estado-estrito"],
+      "contracts": [],
+      "platforms": ["windows", "linux"],
+      "fixtures": ["tests/confirmar-servidor-local.cjs"],
+      "defaults": {
+        "coverage": ["behavioral-contract"],
+        "oracle": "mixed",
+        "journeyScope": "contract",
+        "limitations": [
+          "Associações por arquivo são um superset conservador; não provam cada capacidade em cada caso."
+        ]
+      },
+      "cases": [
+        {
+          "id": "independent",
+          "pattern": "^\\[adicao:gabarito\\] oito respostas independentes e oito pontos sem duplicação$",
+          "expectedMatches": 1,
+          "metadata": {
+            "coverage": ["complete-journey"],
+            "oracle": "independent",
+            "journeyScope": "questions",
+            "limitations": ["Não comprova uso infantil ou validação global."]
+          }
+        }
+      ],
+      "gaps": ["series-individuais", "associacoes-por-arquivo"],
+      "expectedCases": 7
     }
   ],
   "keyExceptions": [],
@@ -8478,8 +8554,5 @@
       "blocksCompleteness": true
     }
   ],
-  "discovery": {
-    "fileCount": 42,
-    "caseCount": 571
-  }
+  "discovery": { "fileCount": 43, "caseCount": 578 }
 }
