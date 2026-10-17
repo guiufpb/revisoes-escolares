@@ -1,5 +1,26 @@
 # Planejador observacional — Etapa 2
 
+## Etapa 4.3A.3 — composição com manutenção deliberada
+
+O complemento [adicao-atestacao-composta-v1](COMPOSICAO_ATESTACAO.md) mantém separados estrutura,
+manutenção administrativa, procedência, identidade efetiva e global necessária. A CLI admite
+registro local explícito por `--attestation-review`, sem atualizar pins. Só permite o delta
+`diagnosticAudit.corpusSha256` com evidência integral, base Git contendo a infraestrutura e alvo
+exato. Recusa bloqueia VM/discovery; guard verifica estabilidade do registro nas fronteiras.
+`composicao-atestacao.json` e cópia da revisão acompanham o plano sem mudar seus formatos,
+reporter/comparador, riscos ou CI. Os dez `REVIEWED` permanecem fixos e exigem manutenção
+deliberada entre bases sucessivas. A implementação local ainda não representa uma base Git
+consolidada; reatestação real e global final permanecem pendentes de autorização específica.
+
+## Etapa 4.3A.2 — complemento de adição integrada
+
+O contrato [questionarios-adicao-integrada-v3](ADICAO_INTEGRADA.md) reconhece documentalmente um
+lote fechado de adição Questionários por AST/HTML e emite `adicao-integrada.json`. A coleta recusa
+candidato inválido antes de VM/discovery. O complemento não altera R1/R2, riscos, resultado do
+plano, identidade, reporter, comparador ou execução global. Prova estrutural, identidade e
+cobertura funcional/pedagógica são estados distintos. Adições reais e seus experimentos não
+foram autorizados por esta implementação.
+
 A Etapa 4.1C usa a política 1.1.0 descrita em [IDENTIDADE.md](IDENTIDADE.md): equivalência
 restrita de dicas serve somente à atestação dos diagnósticos. O plano continua observacional,
 com fingerprints brutos e procedência do alvo conferidos contra a global completa. A migração

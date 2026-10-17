@@ -21,6 +21,7 @@ const { provenance } = require('../../scripts/validacao/reporter.cjs');
 const { ROOT } = require('../../scripts/validacao/manifesto.cjs');
 const { logicalId } = require('../../scripts/validacao/catalogo.cjs');
 const { captureIdentity, identityUsable } = require('../../scripts/validacao/identidade.cjs');
+const { historicalCliFixture } = require('./helpers/cli-historico-fixture.cjs');
 const {
   DIRECTORY,
   eventReferences,
@@ -1060,13 +1061,16 @@ test('identidade divergente, relatório incompleto/direcionado, ausências/skips
   const visual = planWith(asset);
   assert.equal(comparePlan(visual, reportFor(visual)).result, 'observed-without-omitted-failure');
 });
-test('CLI real é somente leitura: diff completo da worktree exige global e preserva fontes/Git', () => {
-  const beforeIdentity = provenance(ROOT);
+test('CLI real é somente leitura: diff histórico isolado exige global e preserva fontes/Git', (t) => {
+  const historical = historicalCliFixture(ROOT);
+  t.after(() => historical.dispose());
+  const root = historical.root;
+  const beforeIdentity = provenance(root);
   const beforeStatus = execFileSync('git', ['status', '--porcelain=v1', '--untracked-files=all'], {
-    cwd: ROOT,
+    cwd: root,
     encoding: 'utf8',
   });
-  const parent = path.join(ROOT, 'tmp/validacao/planejador');
+  const parent = path.join(root, 'tmp/validacao/planejador');
   const previous = new Set(fs.existsSync(parent) ? fs.readdirSync(parent) : []);
   const result = spawnSync(
     process.execPath,
@@ -1076,21 +1080,31 @@ test('CLI real é somente leitura: diff completo da worktree exige global e pres
       '--mode',
       'worktree',
       '--base',
-      '14584b2fee618fc900bb3d5657b9cfa16482bf33',
+      historical.base,
     ],
-    { cwd: ROOT, encoding: 'utf8', windowsHide: true }
+    { cwd: root, encoding: 'utf8', windowsHide: true }
   );
   assert.equal(result.status, 0, result.stderr || result.stdout);
   const folder = fs.readdirSync(parent).find((f) => !previous.has(f));
   const plan = JSON.parse(fs.readFileSync(path.join(parent, folder, 'plano.json')));
   assert.equal(plan.result, 'global');
   assert.equal(plan.proposed.caseCount, plan.available.caseCount);
+  assert.equal(plan.valid, true);
+  const addition = JSON.parse(fs.readFileSync(path.join(parent, folder, 'adicao-integrada.json')));
+  const composition = JSON.parse(
+    fs.readFileSync(path.join(parent, folder, 'composicao-atestacao.json'))
+  );
+  assert.equal(addition.structuralStatus, 'unsupported');
+  assert.equal(composition.maintenance.status, 'not-applicable');
+  assert.equal(composition.effectiveIdentity, 'blocked');
+  assert.equal(composition.executionPolicy, 'global');
+  assert.equal(composition.compatibility.status, 'not-established');
   assert.ok(plan.changes.some((c) => c.currentPath === 'package.json'));
   assert.ok(plan.changes.some((c) => c.currentPath === 'scripts/validacao/manifesto.cjs'));
-  assert.equal(provenance(ROOT).sourceFingerprint, beforeIdentity.sourceFingerprint);
+  assert.equal(provenance(root).sourceFingerprint, beforeIdentity.sourceFingerprint);
   assert.equal(
     execFileSync('git', ['status', '--porcelain=v1', '--untracked-files=all'], {
-      cwd: ROOT,
+      cwd: root,
       encoding: 'utf8',
     }),
     beforeStatus

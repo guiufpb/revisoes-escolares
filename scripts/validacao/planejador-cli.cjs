@@ -15,6 +15,7 @@ const { provenance } = require('./identidade.cjs');
 const { collectComparison, gitRepository } = require('./planejador-git.cjs');
 const { makePlan } = require('./planejador.cjs');
 const { comparePlan } = require('./planejador-comparacao.cjs');
+const { composeAddition, loadReview, reviewStable } = require('./planejador-composicao.cjs');
 
 function options(args, names) {
   const result = {};
@@ -75,20 +76,52 @@ function summarizePlan(plan) {
     ...(plan.warnings || []).map((warning) => '- ' + warning),
   ].join('\n');
 }
-function planRepository(root, input) {
+function planRepository(root, input, onAdditionEvidence = () => {}, compositionOptions = {}) {
   const repository = gitRepository(root);
   const collected = collectComparison(root, input, repository);
+  // Reject candidate sources AND test declarations before VM observation/discovery.
+  // This guard is not a sandbox and never changes the existing risk rules.
+  const baseInfo = {
+    kind: 'git-commit',
+    commit: collected.comparison.base.commit,
+    tree: repository.git('rev-parse', collected.comparison.base.commit + '^{tree}').trim(),
+  };
+  const composed = composeAddition(collected, compositionOptions.review || null, baseInfo);
+  const { addition, composition } = composed;
+  const blockedAddition = composed.blockObservation;
   let manifest, validation;
+  const beforeExecutableRead = () => {
+    if (compositionOptions.review && !reviewStable(root, compositionOptions.review))
+      throw new Error('Attestation review changed before executable observation');
+  };
   const before = provenance(root, repository.git);
   try {
     manifest = readJson(root, MANIFEST);
-    validation = validateRepository(root);
+    validation = blockedAddition
+      ? {
+          errors: [
+            'Integrated addition rejected before executable observation: ' +
+              addition.reasons.join('; '),
+            ...composition.maintenance.reasons.map(
+              (reason) => 'Attestation composition rejected: ' + reason
+            ),
+          ],
+        }
+      : validateRepository(root, { beforeExecutableRead });
   } catch (error) {
     validation = { errors: ['Manifest validation failed: ' + error.message] };
   }
   // validateRepository performs discovery only (--list), never executes test bodies.
   // Reuse a second list for logical identities; any drift is rejected below.
-  const cases = validation.errors.length ? [] : discover(root);
+  let cases = [];
+  if (!validation.errors.length) {
+    try {
+      beforeExecutableRead();
+      cases = discover(root);
+    } catch (error) {
+      validation.errors.push('Discovery refused: ' + error.message);
+    }
+  }
   let previousManifest = null;
   try {
     const candidate = JSON.parse(collected.read('before', MANIFEST));
@@ -109,14 +142,55 @@ function planRepository(root, input) {
     digest(JSON.stringify(readJson(root, MANIFEST))) !== digest(JSON.stringify(manifest))
   )
     validation.errors.push('Manifest changed while planning');
-  return makePlan({ manifest, previousManifest, validation, cases, ...collected });
+  if (addition.structuralStatus === 'proven' && validation.errors.length) {
+    addition.structuralStatus = 'rejected';
+    addition.reasons.push('Existing manifest/discovery/stability validation failed');
+  }
+  if (compositionOptions.review && !reviewStable(root, compositionOptions.review)) {
+    validation.errors.push('Attestation review changed during planning');
+  }
+  if (composition.status === 'compatible' && validation.errors.length) {
+    composition.status = 'rejected';
+    composition.compatibility.status = 'not-established';
+    composition.compatibility.reasons.push('Existing validation/stability gate failed');
+    composition.effectiveIdentity = 'blocked';
+  }
+  const plan = makePlan({ manifest, previousManifest, validation, cases, ...collected });
+  onAdditionEvidence(addition);
+  compositionOptions.onCompositionEvidence?.(composition);
+  return plan;
 }
 function main(args = process.argv.slice(2), root = ROOT) {
   const command = args.shift();
   if (command === 'plano') {
-    const input = options(args, ['mode', 'base', 'target']);
-    const plan = planRepository(root, input);
-    writeResult(root, 'plano', plan, summarizePlan(plan));
+    const input = options(args, ['mode', 'base', 'target', 'attestation-review']);
+    const review = input['attestation-review']
+      ? loadReview(root, input['attestation-review'])
+      : null;
+    let addition, composition;
+    const plan = planRepository(
+      root,
+      input,
+      (evidence) => {
+        addition = evidence;
+      },
+      {
+        review,
+        onCompositionEvidence: (evidence) => {
+          composition = evidence;
+        },
+      }
+    );
+    const directory = writeResult(root, 'plano', plan, summarizePlan(plan));
+    fs.writeFileSync(
+      path.join(directory, 'adicao-integrada.json'),
+      JSON.stringify(addition, null, 2) + '\n'
+    );
+    fs.writeFileSync(
+      path.join(directory, 'composicao-atestacao.json'),
+      JSON.stringify(composition, null, 2) + '\n'
+    );
+    if (review) fs.writeFileSync(path.join(directory, 'revisao-atestacao.json'), review.bytes);
     return plan.valid ? 0 : 1;
   }
   if (command === 'comparar') {

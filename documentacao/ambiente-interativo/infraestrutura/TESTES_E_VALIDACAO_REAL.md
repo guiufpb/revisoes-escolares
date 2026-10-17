@@ -26,6 +26,49 @@ limpeza seletiva, 390 × 844, desktop e axe-core.
 
 ## Gatilhos da suíte global
 
+A manutenção corretiva 4.3A.4-M acrescenta controles Node de formulário em Chromium com as fontes
+e o HTML reais, independentes do bundle/pretest: `node --test tests/validacao/campos-adicao.unit.cjs`.
+Na correção final v3, os mesmos controles exigem a etiqueta `bloco`, título, instrução e pergunta
+em opções/campos e recusam `undefined`; negativos estruturais cobrem ausência, tipos inválidos,
+texto vazio, propriedades adicionais e código executável. O motor permanece intacto.
+Registros sintéticos existem somente no navegador descartável. A CLI histórica usa snapshot Git
+isolado, preservando o fallback global sem nova revisão e a recusa antes de VM/discovery quando
+há adição sobre base sem manifesto. R1/R2, composição, consumidores e REVIEWED conservam seus
+negativos. A global integral e a reatestação desta manutenção ficam expressamente pendentes,
+conforme o escopo autorizado; validação direcionada não certifica o experimento interrompido.
+
+A manutenção preparatória [4.3A.4-P](../../../validacao/MANUTENCAO_PREPARATORIA.md) retira o teto
+literal do teste central: os totais de registro/IDs/chaves coincidem com o manifesto validado,
+as identidades atuais coincidem integralmente e as 66 identidades/chaves históricas continuam
+protegidas pela referência independente com digest congelado. Asserções específicas de metadados
+e existência dos elementos continuam presentes. Adição coerente não exige mudar a expectativa
+histórica; exclusão/substituição, duplicação ou chave antiga alterada continuam falhando.
+Os 31 controles preparatórios são Node/sintéticos, sem aumentar a descoberta Playwright de 571 casos.
+A fixture de adição usa um snapshot JSON versionado de onze entradas, com hashes individuais
+e selo fixo do conjunto; não depende de objeto Git local, clone compartilhado ou histórico completo.
+As dez expectativas REVIEWED e suas recusas reais permanecem. Os controles de portabilidade
+usam processos novos com subprocessos proibidos, Git ausente/mínimo, snapshot ausente/adulterado
+e coletor real sobre base sintética incompatível, recusada antes de VM/discovery.
+Reatestação e global integral foram adiadas na preparação e posteriormente autorizadas para
+uma única execução do snapshot congelado. Revisão deliberada em [IDENTIDADE.md](../../../validacao/IDENTIDADE.md)
+e resultados/identidades em `tmp/validacao/etapa43a4p-final-tHzG96/`, sem aprovação antecipada.
+Permanecem obrigatórias antes da consolidação, sem reaproveitar identidade/global de outro snapshot.
+
+A Etapa 4.3A.3 acrescenta a [composição com manutenção deliberada](../../../validacao/COMPOSICAO_ATESTACAO.md).
+Node direcionado valida evidências sintéticas e bloqueio anterior a VM/discovery; não reatesta
+diagnósticos reais. A manutenção do pin e uma global do snapshot final foram autorizadas
+separadamente; revisão, identidade e resultado ficam em `tmp/validacao/etapa43a3-final/`.
+Não se declara aprovação antecipada. Build, formatação,
+lint, Node e manifesto são conferidos antes; resultados históricos da 4.3A.2 não certificam
+o snapshot alterado. A composição não reduz gatilhos ou suítes.
+
+A Etapa 4.3A.2 acrescenta uma [prova complementar de adição integrada](../../../validacao/ADICAO_INTEGRADA.md)
+com testes Node sintéticos de AST/HTML, preservação, manifesto, identidade e recusa antes de
+observação executável. O complemento é observacional: a global e os gatilhos abaixo permanecem
+integrais. Cobertura declarada não comprova função nem pedagogia; nenhuma revisão real ou seleção
+substitutiva integra a validação deste contrato. A implementação da infraestrutura exige a global
+final do snapshot estável, com Node/manifesto/build já abrangidos pelo pretest oficial.
+
 A Etapa 4.1C de identidade é R4 e executa global integral após testes Node e revisão do snapshot
 estável. A política 1.1.0 pode conservar a atestação de dicas comprovadamente textuais, mas não
 altera os gatilhos de execução nem permite usar global de outro fingerprint. O contrato de
@@ -136,6 +179,34 @@ lote, uma execução concorrente sem essa separação removeu um trace; após is
 o caso afetado passou novamente. Isso não autoriza reduzir asserções ou desativar traces.
 
 ## Configuração Vite externa e watcher da raiz servida
+
+### Correção controlada de `/@fs/` após a global 4.3A.4-P
+
+A rodada posterior autorizou manutenção deliberada dos dois pins e uma única global do novo
+snapshot. A revisão e os valores ficam em [IDENTIDADE.md](../../../validacao/IDENTIDADE.md);
+gate, congelamento e resultado efetivo em `tmp/validacao/etapa43a4p-pins-final-Sek0ch/`.
+Esta autorização não reduz casos nem permite repetir automaticamente uma global reprovada.
+
+O middleware remove o prefixo pelo comprimento de `'/@fs/'`, preservando a unidade de caminhos
+Windows e a barra inicial POSIX. O índice anterior `6` removia um caractere extra. Quando o
+Vite emite `/@fs/home/...`, a barra POSIX é recomposta antes do cálculo relativo; a forma
+`/@fs//home/...` também funciona. A simples troca do índice não cobria a primeira forma.
+Quando o Vite resolve `env.mjs` fora da raiz servida (por exemplo, dependências via junction), ele emite
+`/@fs/` em vez de `/node_modules/`; o cálculo incorreto podia confundir ancestrais `.codex/tmp`
+da instalação com diretórios privados dentro da raiz. URLs absolutas explícitas também podiam
+ser afetadas sem junction. A troca não altera allow/deny do Vite, a regex de privados ou o host.
+
+`tests/validacao/http-local.unit.cjs` cobre o middleware real com `path.win32` e `path.posix`,
+incluindo privados e codificações. Duas instâncias HTTP reais usam o runtime Vite local mínimo,
+com e sem junction/symlink, para conferir `env.mjs`, URL absoluta explícita, diretórios privados,
+traversal simples/codificado e arquivo externo indevido. A fixture mantém `fs.allow` limitado à
+raiz; nenhum allow externo genérico é necessário. Os 24 cenários de abertura existentes
+continuam aplicáveis. Testes POSIX de caminho não substituem a futura CI Linux real.
+
+A alteração invalida o pin HTTP e o corpus da atestação: ambos exigem manutenção deliberada
+posterior, sem modificar política para obter aprovação nos testes. Nesta rodada são autorizados
+somente Node/HTTP e um pequeno recorte Playwright representativo. Usar `--output` próprio para
+preservar os traces da global reprovada. A próxima global integral requer autorização específica.
 
 `tests/infra-vite-externo.spec.js` acrescenta três contratos ao Playwright. Serve raízes diferentes
 da localização da configuração, inclusive duas simultâneas, com espaços, acentos e ancestrais

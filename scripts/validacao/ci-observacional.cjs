@@ -87,7 +87,9 @@ function prepareObservation(root, env, event, services = {}) {
   try {
     state.references = (services.references || eventReferences)(root, env, event);
     (services.fixtures || prepareFixtures)(root);
-    const plan = (services.plan || planRepository)(root, state.references);
+    const plan = (services.plan || planRepository)(root, state.references, (evidence) => {
+      write(root, 'adicao-integrada.json', evidence);
+    });
     write(root, 'plano.json', plan);
     write(root, 'plano.md', summarizePlan(plan) + '\n');
     state.plan = DIRECTORY + '/plano.json';

@@ -330,7 +330,7 @@ function validate(manifest, { root, baseline, schema, observed, cases, specFiles
   return { errors, gaps: manifest.gaps };
 }
 
-function validateRepository(root = ROOT) {
+function validateRepository(root = ROOT, { beforeExecutableRead = () => {} } = {}) {
   const manifest = readJson(root, MANIFEST);
   const baseline = readJson(root, BASELINE);
   const schema = readJson(root, SCHEMA);
@@ -342,13 +342,17 @@ function validateRepository(root = ROOT) {
     .readdirSync(path.join(root, 'tests'), { recursive: true })
     .filter((f) => f.endsWith('.spec.js'))
     .map((f) => 'tests/' + slash(f));
+  beforeExecutableRead();
+  const observed = observarFontes(root);
+  beforeExecutableRead();
+  const cases = discover(root);
   const result = validate(manifest, {
     root,
     baseline,
     schema,
     specFiles,
-    observed: observarFontes(root),
-    cases: discover(root),
+    observed,
+    cases,
   });
   return { ...result, manifest, baseline };
 }
