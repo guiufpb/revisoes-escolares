@@ -389,6 +389,8 @@
   }
 
   function escolherAluno(aluno) {
+    document.getElementById('abrir-mariana-gramatica-singular-plural-cotidiano').hidden =
+      aluno !== 'mariana';
     alunoAtual = aluno;
     document.getElementById('saudacao-aluno').textContent =
       aluno === 'alice' ? 'Olá, Alice!' : 'Olá, Mariana!';
@@ -523,6 +525,15 @@
   }
 
   function registrarEventos() {
+    document
+      .getElementById('abrir-mariana-gramatica-singular-plural-cotidiano')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'mariana') return;
+        window.QuestionariosRevisoes.abrir(
+          'mariana-gramatica-singular-plural-cotidiano-outubro-2026'
+        );
+        atualizarResumo();
+      });
     document.querySelectorAll('[data-aluno]').forEach(function (botao) {
       botao.addEventListener('click', function () {
         escolherAluno(botao.dataset.aluno);

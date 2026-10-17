@@ -3,6 +3,17 @@
 
   var revisoes = [
     {
+      id: 'mariana-gramatica-singular-plural-cotidiano-outubro-2026',
+      aluno: 'mariana',
+      titulo: 'Singular e plural no cotidiano',
+      cartaoId: 'abrir-mariana-gramatica-singular-plural-cotidiano',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento:
+        'revisoesEscolares.mariana.gramatica.singularPluralCotidianoOutubro2026.v1',
+      totalEtapas: 8,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
       id: 'mariana-ingles-means-of-transportation-outubro-2026',
       aluno: 'mariana',
       titulo: 'Moving Around · Transport & Safety',

@@ -6,6 +6,78 @@ O **Revisões Escolares** evoluiu para uma aplicação educacional local com per
 
 Este inventário registra o estado de trabalho em **14/10/2026**.
 
+## Etapa 4.3A.4-M — Manutenção corretiva (17/10/2026)
+
+Contrato de adição integrada v3 exige `pergunta` nos campos e `bloco` em cada questão, conforme
+o motor existente, e recusa `antes`/`depois` não renderizados. Controles Node estruturais e Chromium verificam contexto,
+nome acessível e recuperação, sem adicionar revisão escolar ou alterar o motor. Base sem manifesto
+recebe recusa explícita; a fixture CLI histórica é isolada de adições pendentes na worktree,
+conservando fallback global e controles negativos. Detalhes em
+[ADICAO_INTEGRADA.md](../../validacao/ADICAO_INTEGRADA.md). Corpus alterado; pins/REVIEWED intactos,
+reatestação, global integral e consolidação pendentes de autorização. Experimento de Mariana
+preservado e sem retomada. A correção final autorizada exige etiqueta `bloco` literal não vazia,
+sem preenchimento automático, e testa sua renderização junto de título, instrução e pergunta.
+Evidências v1/v2 permanecem históricas; os testes direcionados não certificam o piloto ou a global.
+
+## Etapa 4.3A.4-P — Manutenção preparatória (16/10/2026)
+
+Rodada final posterior: sete deltas e consumidores revistos, dois pins HTTP/corpus mantidos
+deliberadamente conforme [IDENTIDADE.md](../../validacao/IDENTIDADE.md). Uma única global do
+novo snapshot foi autorizada, após gate e congelamento. Evidências, resultado efetivo e
+estabilidade ficam em `tmp/validacao/etapa43a4p-pins-final-Sek0ch/`; não há aprovação antecipada,
+consolidação Git ou experimento escolar nesta anotação.
+
+A global posterior à reatestação executou os 571 casos: 220 aprovados e 351 falhas, sem retries,
+skips ou interrupções, com identidade estável e 29 diagnósticos presentes. O bloqueador comum
+demonstrado foi o HTTP 403 do runtime Vite. A correção controlada posterior usa o comprimento
+de `'/@fs/'` e recompõe a barra POSIX quando necessário; acrescenta seis controles Node de
+caminhos/HTTP real, preservando as regras de acesso. O pin HTTP e o corpus permanecem obsoletos,
+sem reatestação ou nova global nesta rodada. Contrato e pendências em
+[TESTES_E_VALIDACAO_REAL.md](infraestrutura/TESTES_E_VALIDACAO_REAL.md) e
+[IDENTIDADE.md](../../validacao/IDENTIDADE.md); evidência local em
+`tmp/validacao/etapa43a4p-http403-7zSKJN/`. Consolidação e experimento seguem pendentes.
+
+Dois bloqueadores corrigidos exclusivamente na infraestrutura de testes: contrato central de
+registro baseado em manifesto validado/referência histórica imutável e fixture de adição baseada
+em snapshot JSON versionado, independente das integrações da checkout e da presença de histórico Git.
+As onze entradas preservam os bytes da referência original `4d769c2`, com hashes individuais e
+selo fixo de integridade. Trinta e um controles Node sintéticos cobrem preservação das 66 revisões,
+adição coerente, substituição/remoção, duplicatas, portabilidade sem objetos emprestados,
+adulteração do snapshot, coletor real incompatível e recusas nas dez superfícies REVIEWED.
+Na preparação, nenhum conteúdo escolar, manifesto, política 1.1.0, pin ou hash REVIEWED foi alterado.
+R1/R2, composição, reporter, comparador, workflow e execução global permanecem vigentes.
+Os quatro deltas de código e o novo snapshot JSON alteram o corpus. A reatestação deliberada
+posteriormente autorizada revisou os cinco leitores/entradas, reproduziu o corpus anterior e
+manteve exclusivamente seu campo de pin, conforme [IDENTIDADE.md](../../validacao/IDENTIDADE.md).
+Resultado da única global autorizada e identidade do snapshot congelado são registrados em
+`tmp/validacao/etapa43a4p-final-tHzG96/`, sem aprovação antecipada. Relatório e procedimento em
+[MANUTENCAO_PREPARATORIA.md](../../validacao/MANUTENCAO_PREPARATORIA.md).
+Sem experimento 4.3A.4, revisão real, seleção executável ou consolidação Git nesta etapa.
+
+## Etapa 4.3A.3 — Composição auditável de adição e atestação (16/10/2026)
+
+Extensão [adicao-atestacao-composta-v1](../../validacao/COMPOSICAO_ATESTACAO.md), com verificação
+separada da estrutura, manutenção deliberada do único campo de corpus e identidade/procedência
+do mesmo snapshot. Registro explícito local e complementar; não há renovação automática de pin
+nem autorização de seleção. Base Git deve conter a infraestrutura; dez `REVIEWED` continuam
+fixos. Guards preservam recusa antes de VM/discovery. Testes são sintéticos, sem revisão real.
+Política 1.1.0, reporter/comparador e CI obrigatória preservados. A manutenção deliberada dos
+29 diagnósticos foi autorizada separadamente, após revisão dos oito deltas acumulados do corpus.
+Procedimento em `validacao/IDENTIDADE.md`; identidade e resultado da global final ficam na
+evidência local `tmp/validacao/etapa43a3-final/`. Consolidação Git e 4.3A.4 não integram esta etapa.
+
+## Etapa 4.3A.2 — Prova observacional de adição integrada (16/10/2026)
+
+Infraestrutura complementar `questionarios-adicao-integrada-v1`, descrita em
+[Adição integrada](../../validacao/ADICAO_INTEGRADA.md): um lote estático Questionários para
+Alice ou Mariana, com opções/campos e integrações restritas por AST/HTML. Candidato inválido é
+recusado antes de VM/discovery. CLI e adaptador observacional emitem `adicao-integrada.json`,
+separando estrutura, identidade e evidência de execução. Cobertura declarada não comprova função
+ou pedagogia. Testes Node usam fixtures sintéticas, inclusive Git/CLI isolados; nenhuma revisão
+real foi criada como experimento. R1/R2, riscos, identidade, reporter, comparador, workflow e
+suíte global obrigatória permanecem preservados. Resultados do snapshot final ficam nas evidências
+locais do lote; esta entrada não declara uso infantil nem economia de tempo comprovada.
+
 ## Etapa 4.1C — Atestação textual restrita (15/10/2026)
 
 Política de identidade 1.1.0, formato 2, integrada ao capturador/planejador/reporter existentes.
@@ -1760,3 +1832,10 @@ legadas.
 - `cb79555` — renovação completa de Centenas em ação.
 
 O histórico detalhado permanece em `ambiente_interativo/RELATORIO_TESTE_INTERATIVO.txt`; este arquivo é a referência organizada e atual.
+
+
+## Nova revisão: mariana-gramatica-singular-plural-cotidiano-outubro-2026
+
+Singular e plural no cotidiano
+
+Conteúdo: ambiente_interativo/revisoes/mariana/gramatica-singular-plural-cotidiano-outubro-2026.js

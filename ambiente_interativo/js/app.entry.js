@@ -81,4 +81,5 @@ import '../revisoes/mariana/ingles-at-school-atividade-3.js';
 import '../revisoes/mariana/ingles-means-of-transportation-outubro-2026.js';
 import './leitura.js';
 import './ingles.js';
+import '../revisoes/mariana/gramatica-singular-plural-cotidiano-outubro-2026.js';
 import './app.js';

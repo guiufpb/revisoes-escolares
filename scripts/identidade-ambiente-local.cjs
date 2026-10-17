@@ -36,10 +36,15 @@ function localIdentityPlugin() {
           response.statusCode = 400;
           return response.end('Pedido invalido.');
         }
-        // Resolve /@fs/ lexically so a worktree under .codex or tmp remains usable.
-        const relative = pathname.startsWith('/@fs/')
-          ? path.relative(server.config.root, pathname.slice(6)).replaceAll('\\', '/')
-          : pathname;
+        // Vite may join /@fs/ and a POSIX path without retaining the second slash.
+        // Resolve lexically so protected ancestors of the served root stay usable.
+        const fsPath = pathname.startsWith('/@fs/') ? pathname.slice('/@fs/'.length) : null;
+        const relative =
+          fsPath === null
+            ? pathname
+            : path
+                .relative(server.config.root, path.isAbsolute(fsPath) ? fsPath : '/' + fsPath)
+                .replaceAll('\\', '/');
         if (
           /(^|\/)MINHAS_REVISOES_LOCAIS(\/|$)/i.test(pathname) ||
           /(^|\/)(tmp|output|\.codex|\.git)(\/|$)/i.test(relative)
