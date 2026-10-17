@@ -2,6 +2,8 @@ const path = require('node:path');
 const { pathToFileURL, URL } = require('node:url');
 const { test, expect } = require('@playwright/test');
 const { fixtures, signature, generatePdf, sha256 } = require('./fixtures/pdfs.cjs');
+const { validateRepository } = require('../scripts/validacao/manifesto.cjs');
+const { assertRegistry } = require('./validacao/helpers/registro-contrato.cjs');
 
 const CAMINHO = '/ambiente_interativo/index.html';
 const CHAVE_ALICE = 'revisoesEscolares.alice.ciencias.origemMateriais';
@@ -186,8 +188,9 @@ test('carrega a tela inicial e registra todas as revisões sem chaves duplicadas
 
   const registro = await page.evaluate(() =>
     window.RegistroRevisoes.listar().map(
-      ({ id, cartaoId, painelId, chaveArmazenamento, totalEtapas }) => ({
+      ({ id, aluno, cartaoId, painelId, chaveArmazenamento, totalEtapas }) => ({
         id,
+        aluno,
         cartaoId,
         painelId,
         chaveArmazenamento,
@@ -198,11 +201,12 @@ test('carrega a tela inicial e registra todas as revisões sem chaves duplicadas
       })
     )
   );
-  expect(registro).toHaveLength(66);
-  expect(new Set(registro.map((item) => item.id)).size).toBe(66);
-  expect(new Set(registro.map((item) => item.chaveArmazenamento)).size).toBe(66);
+  const validacao = validateRepository();
+  expect(validacao.errors).toEqual([]);
+  assertRegistry(registro, validacao);
   expect(registro).toContainEqual({
     id: 'mariana-ingles-means-of-transportation-outubro-2026',
+    aluno: 'mariana',
     cartaoId: 'abrir-ingles-transportes-outubro',
     painelId: 'tela-ingles',
     chaveArmazenamento: 'revisoesEscolares.mariana.ingles.meansOfTransportationOutubro2026.v1',

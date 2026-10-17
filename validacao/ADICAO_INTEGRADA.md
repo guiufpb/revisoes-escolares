@@ -103,6 +103,37 @@ global para uma revisão nova nem reinterpreta relatórios anteriores.
 
 ## Validação e próximos gates
 
+### Manutenção preparatória 4.3A.4-P
+
+A fixture `tests/validacao/helpers/adicao-fixture.cjs` lê as dez superfícies `REVIEWED` e o
+manifesto do único snapshot versionado `tests/validacao/fixtures/adicao-base.json`.
+Os textos UTF-8 reproduzem exatamente os bytes conferidos da referência original
+`4d769c2f3867315e2c163405a22dd0789cc278e1`; `sourceCommit` é metadado descritivo.
+O objeto Git não é necessário em execução. A tentativa anterior de leitura por `git show`
+foi substituída: `fetch-depth: 0` não garante preservar o commit após squash ou em instalação
+sem esse histórico. O workflow permanece inalterado.
+
+O loader confere SHA-256 de cada entrada, caminhos únicos, as dez expectativas REVIEWED da
+prova e o selo fixo de `JSON.stringify(snapshot)`, incluindo o manifesto. Não renova hashes.
+Formato do invólucro JSON não transforma os textos escapados; os bytes de cada conteúdo são
+conferidos sem normalização. Cada ensaio recebe mapas independentes, sem cache de arquivo que
+possa ocultar adulteração posterior. Snapshot ausente ou adulterado falha sem fallback para
+Git/checkout. Este é um cenário sintético, nunca evidência da integridade de uma base Git real.
+
+Os dez hashes da prova real permanecem intactos. Os controles negativos alteram a base fornecida
+à prova e continuam recusados; a referência estável da fixture não torna compatível uma base real
+com integrações posteriores. Após a primeira adição, a segunda continua exigindo a manutenção
+deliberada de superfícies/consumidores descrita em [COMPOSICAO_ATESTACAO.md](COMPOSICAO_ATESTACAO.md).
+Não há atualização automática de hashes nem autorização para fazê-la nesta tarefa.
+
+O teste central usa o manifesto validado e a referência histórica imutável, compartilhando seu
+contrato de identidades com controles sintéticos. Os testes incluem execução em processo novo
+sem chamadas a subprocessos, com Git ausente/mínimo, sem clone compartilhado ou objetos emprestados.
+Um coletor Git real ainda recusa consumidor incompatível antes de VM/discovery, sem receber o
+snapshot como base. Detalhes, deltas de corpus e gates pendentes
+estão em [MANUTENCAO_PREPARATORIA.md](MANUTENCAO_PREPARATORIA.md). A 4.3A.4 experimental permanece
+fora do escopo; nenhuma revisão real foi adicionada.
+
 Os testes Node em `tests/validacao/adicao-integrada.unit.cjs` usam adições sintéticas em memória,
 sem executar seus conteúdos/specs. A fixture Git/CLI isolada usa sentinelas para conferir recusa
 antes de VM/discovery e emissão separada, sem criar uma atividade real na aplicação.

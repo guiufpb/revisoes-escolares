@@ -1,5 +1,86 @@
 # Identidade de entradas e artefatos — Etapa 2.1
 
+## Manutenção final dos pins HTTP e corpus — 16/10/2026
+
+Após autorização específica, os sete deltas acumulados foram revistos sobre os bytes finais:
+teste central, contrato de registro, fixture sintética, controles preparatórios, JSON portátil,
+módulo HTTP e testes HTTP. Foram conferidos leitores diretos/indiretos, produtores e âncoras,
+29 capturas, sete vínculos fonte/bundle, dez REVIEWED e as onze entradas do snapshot contra
+os bytes originais. Nenhum novo leitor usa diagnósticos como entradas. O cálculo HTTP é lexical;
+não muda a autorização de acesso. A execução dirigida do gate confirma Windows, duas formas
+POSIX, runtime com/sem junction, privados, traversal codificado e recusa de arquivo externo.
+
+Somente dois campos da política são mantidos manualmente:
+
+- `diagnosticAudit.httpDeny.sha256`: de
+  `e471c327c9f6086eb1998d2c4ef41940f55f0f24440af039d1132c0b5113e604` para
+  `454efa43370e11360f5aa8b0f128faefa2c5b2aa1ab21605675e35255b2c6b44`, após revisão do cálculo
+  corrigido e bloqueios efetivos. A âncora `/i.test(relative)` permanece.
+- `diagnosticAudit.corpusSha256`: de
+  `8483576ab4f3eb231186844de613d288d03f6f70a464b28a2fa4fd041f7e9aaf` para
+  `e2d981a2cfc104f91065ede92e817955a77a9dcf4417193e81d08cd768bfd04c`, após revisão individual
+  dos sete deltas e de seus consumidores. A própria política e prosa ficam fora desse corpus.
+
+Os valores foram recalculados nesta rodada; não foram copiados como prova da rodada anterior.
+Versão 1.1.0, formato 2, produtores, representação, classificações e REVIEWED permanecem intactos.
+Evidência local: `tmp/validacao/etapa43a4p-pins-final-Sek0ch/REVISAO_PINS.md`, JSONs de bytes,
+preservação e gate. A global só começa após identidade utilizável, 29 diagnósticos reconhecidos,
+zero desconhecidos e congelamento do snapshot. Resultado e estabilidade serão registrados
+exclusivamente na evidência local após a coleta, sem edição concorrente nem aprovação antecipada.
+Esta manutenção de infraestrutura R4/global não constitui prova positiva de adição integrada.
+Consolidação Git e experimento escolar continuam sujeitos a autorização própria.
+
+## Correção HTTP posterior à global 4.3A.4-P — manutenção pendente
+
+A global do snapshot reatestado abaixo executou 571 casos e reprovou 351. A investigação
+direcionada confirmou um erro anterior no cálculo de `/@fs/`: `slice(6)` removia a unidade
+Windows ou a barra POSIX. O módulo HTTP passa a usar o comprimento do prefixo literal e
+recompõe a barra POSIX quando o Vite emite `/@fs/home/...`, mantendo também a forma com barra dupla.
+O Vite instalado emite rota relativa quando seu runtime está na raiz e `/@fs/` quando está fora,
+como na junction desta worktree; os dois arranjos foram reproduzidos em fixtures isoladas.
+
+Essa correção altera `scripts/identidade-ambiente-local.cjs` e acrescenta
+`tests/validacao/http-local.unit.cjs`, totalizando sete deltas acumulados de corpus desde a base.
+O hash em `diagnosticAudit.httpDeny.sha256` e `diagnosticAudit.corpusSha256` ficam obsoletos.
+Não foram atualizados nesta correção; política 1.1.0/formato 2, produtores e dez REVIEWED
+permanecem intactos. Uma identidade bloqueada após a correção é o comportamento conservador
+esperado, não motivo para reduzir asserções ou renovar pins automaticamente.
+
+Antes de autorizar outra global, revisar deliberadamente o módulo, consumidores Vite/launcher,
+requisições negativas, testes novos, produtores e seus vínculos. Conferir o bloqueio HTTP real
+e as 29 capturas preservadas; manter manualmente somente os pins explicitamente autorizados
+em tarefa própria. Confirmar identidade utilizável, 29 diagnósticos e zero desconhecidos,
+congelar o novo snapshot e executar uma única global integral pelo pretest oficial.
+Não usar o compositor de adição para absorver essa alteração de infraestrutura/HTTP.
+Resultados direcionados e evidências em `tmp/validacao/etapa43a4p-http403-7zSKJN/`.
+
+## Manutenção deliberada da infraestrutura 4.3A.4-P — 16/10/2026
+
+Os cinco deltas executáveis/de dados foram revisados contra a base local
+`4d769c2f3867315e2c163405a22dd0789cc278e1`: teste central, contrato de registro, helper de adição,
+controles preparatórios e snapshot JSON das onze entradas. A reconstrução do corpus anterior
+reproduziu exatamente o pin vigente. A revisão dos imports, chamadas de leitura e caminhos
+dinâmicos confirma que esses deltas não consomem as 29 capturas como entradas. O JSON conserva
+os bytes originais, seus hashes e o selo fixo; é dado sintético de teste, sem substituir a base
+real do coletor. As dez superfícies reais REVIEWED continuam iguais às expectativas fixas.
+
+Os hashes/âncoras dos produtores e do bloqueio HTTP permanecem intactos, incluindo `/@fs/`.
+As sete associações de fonte/bundle continuam válidas. A evidência individual, os corpus
+reconstruídos, deltas/hashes e leitores estão em
+`tmp/validacao/etapa43a4p-final-tHzG96/REVISAO_CORPUS.md` e seus JSONs locais.
+Somente `diagnosticAudit.corpusSha256` muda de
+`71992435d3eb680f496bc95a572b17c583d90bb108e230ab6a062d2c95922c79` para
+`8483576ab4f3eb231186844de613d288d03f6f70a464b28a2fa4fd041f7e9aaf`.
+Política 1.1.0, formato 2, produtores, classificações e demais pins não mudaram.
+
+As 29 capturas estavam ausentes nesta worktree antes da global; não foram copiadas de outra
+cópia nem atribuídas a esta execução. A política admite esse estado explícito dos artefatos,
+sem dispensar seu reconhecimento como diagnósticos ou os gates de identidade. A global deve
+produzir suas próprias capturas e conferir a identidade no início/fim. O resultado da única
+execução autorizada, seus estados e hashes finais ficam na evidência local, sem aprovação
+antecipada nesta anotação. A manutenção é de infraestrutura R4/global, não uma prova positiva
+de adição integrada. Consolidação Git e experimento escolar continuam sujeitos a autorização.
+
 ## Manutenção deliberada da infraestrutura 4.3A.2/3 — 16/10/2026
 
 Revisão acumulada contra o corpus válido `cbdd769d3defd657dd8c2ba578cd84c8d46de294232282034028af75303be5be`:

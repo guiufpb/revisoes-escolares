@@ -171,11 +171,11 @@
     }
   ],
   "diagnosticAudit": {
-    "corpusSha256": "71992435d3eb680f496bc95a572b17c583d90bb108e230ab6a062d2c95922c79",
+    "corpusSha256": "e2d981a2cfc104f91065ede92e817955a77a9dcf4417193e81d08cd768bfd04c",
     "scope": "Reviewed full executable/configuration/reference corpus; exact bytes except proven existing Questionarios hint literal ranges in static payloads and corresponding bundle. All other changes refuse attestation.",
     "httpDeny": {
       "source": "scripts/identidade-ambiente-local.cjs",
-      "sha256": "e471c327c9f6086eb1998d2c4ef41940f55f0f24440af039d1132c0b5113e604",
+      "sha256": "454efa43370e11360f5aa8b0f128faefa2c5b2aa1ab21605675e35255b2c6b44",
       "anchor": "/i.test(relative)"
     },
     "representation": "questionarios-dica-literal-v1"

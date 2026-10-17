@@ -6,6 +6,41 @@ O **Revisões Escolares** evoluiu para uma aplicação educacional local com per
 
 Este inventário registra o estado de trabalho em **14/10/2026**.
 
+## Etapa 4.3A.4-P — Manutenção preparatória (16/10/2026)
+
+Rodada final posterior: sete deltas e consumidores revistos, dois pins HTTP/corpus mantidos
+deliberadamente conforme [IDENTIDADE.md](../../validacao/IDENTIDADE.md). Uma única global do
+novo snapshot foi autorizada, após gate e congelamento. Evidências, resultado efetivo e
+estabilidade ficam em `tmp/validacao/etapa43a4p-pins-final-Sek0ch/`; não há aprovação antecipada,
+consolidação Git ou experimento escolar nesta anotação.
+
+A global posterior à reatestação executou os 571 casos: 220 aprovados e 351 falhas, sem retries,
+skips ou interrupções, com identidade estável e 29 diagnósticos presentes. O bloqueador comum
+demonstrado foi o HTTP 403 do runtime Vite. A correção controlada posterior usa o comprimento
+de `'/@fs/'` e recompõe a barra POSIX quando necessário; acrescenta seis controles Node de
+caminhos/HTTP real, preservando as regras de acesso. O pin HTTP e o corpus permanecem obsoletos,
+sem reatestação ou nova global nesta rodada. Contrato e pendências em
+[TESTES_E_VALIDACAO_REAL.md](infraestrutura/TESTES_E_VALIDACAO_REAL.md) e
+[IDENTIDADE.md](../../validacao/IDENTIDADE.md); evidência local em
+`tmp/validacao/etapa43a4p-http403-7zSKJN/`. Consolidação e experimento seguem pendentes.
+
+Dois bloqueadores corrigidos exclusivamente na infraestrutura de testes: contrato central de
+registro baseado em manifesto validado/referência histórica imutável e fixture de adição baseada
+em snapshot JSON versionado, independente das integrações da checkout e da presença de histórico Git.
+As onze entradas preservam os bytes da referência original `4d769c2`, com hashes individuais e
+selo fixo de integridade. Trinta e um controles Node sintéticos cobrem preservação das 66 revisões,
+adição coerente, substituição/remoção, duplicatas, portabilidade sem objetos emprestados,
+adulteração do snapshot, coletor real incompatível e recusas nas dez superfícies REVIEWED.
+Na preparação, nenhum conteúdo escolar, manifesto, política 1.1.0, pin ou hash REVIEWED foi alterado.
+R1/R2, composição, reporter, comparador, workflow e execução global permanecem vigentes.
+Os quatro deltas de código e o novo snapshot JSON alteram o corpus. A reatestação deliberada
+posteriormente autorizada revisou os cinco leitores/entradas, reproduziu o corpus anterior e
+manteve exclusivamente seu campo de pin, conforme [IDENTIDADE.md](../../validacao/IDENTIDADE.md).
+Resultado da única global autorizada e identidade do snapshot congelado são registrados em
+`tmp/validacao/etapa43a4p-final-tHzG96/`, sem aprovação antecipada. Relatório e procedimento em
+[MANUTENCAO_PREPARATORIA.md](../../validacao/MANUTENCAO_PREPARATORIA.md).
+Sem experimento 4.3A.4, revisão real, seleção executável ou consolidação Git nesta etapa.
+
 ## Etapa 4.3A.3 — Composição auditável de adição e atestação (16/10/2026)
 
 Extensão [adicao-atestacao-composta-v1](../../validacao/COMPOSICAO_ATESTACAO.md), com verificação
