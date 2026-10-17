@@ -14,7 +14,7 @@ consolidada; reatestação real e global final permanecem pendentes de autoriza�
 
 ## Etapa 4.3A.2 — complemento de adição integrada
 
-O contrato [questionarios-adicao-integrada-v1](ADICAO_INTEGRADA.md) reconhece documentalmente um
+O contrato [questionarios-adicao-integrada-v3](ADICAO_INTEGRADA.md) reconhece documentalmente um
 lote fechado de adição Questionários por AST/HTML e emite `adicao-integrada.json`. A coleta recusa
 candidato inválido antes de VM/discovery. O complemento não altera R1/R2, riscos, resultado do
 plano, identidade, reporter, comparador ou execução global. Prova estrutural, identidade e

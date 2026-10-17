@@ -20,6 +20,15 @@ recarregar e salto administrativo não incrementam a contagem.
 
 ## Campos e ditados
 
+Campos simples usam `pergunta` para o texto do rótulo e do contexto da resposta. O motor não
+renderiza `antes`/`depois`. O contrato de [adição integrada v3](../../../validacao/ADICAO_INTEGRADA.md)
+exige `id`, `pergunta` e `respostas`, recusando rótulo ausente, vazio ou `undefined`/`null`.
+A prova estática não certifica suficiência pedagógica do enunciado: confira o contexto visível
+e o nome acessível no formulário real. Essa correção não modifica o motor ou revisões existentes.
+Em `questoes[*]`, `bloco` também é obrigatório no contrato v3: texto literal não vazio para a
+etiqueta acima do título, sem valor automático. Ausência, tipos não textuais e os textos
+`undefined`/`null` são recusados. Título, instrução e pergunta mantêm suas funções próprias.
+
 Declare `maiusculasObrigatorias`, `acentuacaoObrigatoria` e `fraseCompleta` somente quando forem
 objetivos pedagógicos. `inserirTravessao: true` oferece um botão que insere o sinal no cursor e
 permite apagá-lo normalmente. Enter confere sem interceptar composição de caracteres.

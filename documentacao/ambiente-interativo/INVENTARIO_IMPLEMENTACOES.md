@@ -6,6 +6,19 @@ O **Revisões Escolares** evoluiu para uma aplicação educacional local com per
 
 Este inventário registra o estado de trabalho em **14/10/2026**.
 
+## Etapa 4.3A.4-M — Manutenção corretiva (17/10/2026)
+
+Contrato de adição integrada v3 exige `pergunta` nos campos e `bloco` em cada questão, conforme
+o motor existente, e recusa `antes`/`depois` não renderizados. Controles Node estruturais e Chromium verificam contexto,
+nome acessível e recuperação, sem adicionar revisão escolar ou alterar o motor. Base sem manifesto
+recebe recusa explícita; a fixture CLI histórica é isolada de adições pendentes na worktree,
+conservando fallback global e controles negativos. Detalhes em
+[ADICAO_INTEGRADA.md](../../validacao/ADICAO_INTEGRADA.md). Corpus alterado; pins/REVIEWED intactos,
+reatestação, global integral e consolidação pendentes de autorização. Experimento de Mariana
+preservado e sem retomada. A correção final autorizada exige etiqueta `bloco` literal não vazia,
+sem preenchimento automático, e testa sua renderização junto de título, instrução e pergunta.
+Evidências v1/v2 permanecem históricas; os testes direcionados não certificam o piloto ou a global.
+
 ## Etapa 4.3A.4-P — Manutenção preparatória (16/10/2026)
 
 Rodada final posterior: sete deltas e consumidores revistos, dois pins HTTP/corpus mantidos

@@ -26,6 +26,17 @@ limpeza seletiva, 390 × 844, desktop e axe-core.
 
 ## Gatilhos da suíte global
 
+A manutenção corretiva 4.3A.4-M acrescenta controles Node de formulário em Chromium com as fontes
+e o HTML reais, independentes do bundle/pretest: `node --test tests/validacao/campos-adicao.unit.cjs`.
+Na correção final v3, os mesmos controles exigem a etiqueta `bloco`, título, instrução e pergunta
+em opções/campos e recusam `undefined`; negativos estruturais cobrem ausência, tipos inválidos,
+texto vazio, propriedades adicionais e código executável. O motor permanece intacto.
+Registros sintéticos existem somente no navegador descartável. A CLI histórica usa snapshot Git
+isolado, preservando o fallback global sem nova revisão e a recusa antes de VM/discovery quando
+há adição sobre base sem manifesto. R1/R2, composição, consumidores e REVIEWED conservam seus
+negativos. A global integral e a reatestação desta manutenção ficam expressamente pendentes,
+conforme o escopo autorizado; validação direcionada não certifica o experimento interrompido.
+
 A manutenção preparatória [4.3A.4-P](../../../validacao/MANUTENCAO_PREPARATORIA.md) retira o teto
 literal do teste central: os totais de registro/IDs/chaves coincidem com o manifesto validado,
 as identidades atuais coincidem integralmente e as 66 identidades/chaves históricas continuam

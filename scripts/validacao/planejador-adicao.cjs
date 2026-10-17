@@ -6,7 +6,7 @@ const html = require('prettier/plugins/html').parsers.html;
 const path = require('node:path');
 const { hash, identityUsable } = require('./identidade.cjs');
 const { CONTRACT_POLICY } = require('./planejador.cjs');
-const CONTRACT = 'questionarios-adicao-integrada-v1';
+const CONTRACT = 'questionarios-adicao-integrada-v3';
 const ENTRY = 'ambiente_interativo/js/app.entry.js';
 const REGISTRY = 'ambiente_interativo/js/registro-revisoes.js';
 const APP = 'ambiente_interativo/js/app.js';
@@ -169,6 +169,7 @@ function content(source) {
   for (const q of config.questoes) {
     keys(q, [
       'id',
+      'bloco',
       'titulo',
       'instrucao',
       'tipo',
@@ -179,7 +180,8 @@ function content(source) {
       'leituraTitulo',
       'fonteEstudo',
     ]);
-    for (const k of ['id', 'titulo', 'instrucao', 'dica', 'sucesso']) text(q[k]);
+    for (const k of ['id', 'bloco', 'titulo', 'instrucao', 'dica', 'sucesso']) text(q[k]);
+    fail(!/^(?:undefined|null)$/i.test(q.bloco.trim()), 'Missing rendered block label');
     for (const k of ['leitura', 'leituraTitulo', 'fonteEstudo']) if (q[k] !== undefined) text(q[k]);
     fail(
       ['opcoes', 'campos'].includes(q.tipo) && Array.isArray(q.itens) && q.itens.length > 0,
@@ -191,7 +193,7 @@ function content(source) {
         item,
         q.tipo === 'opcoes'
           ? ['id', 'pergunta', 'opcoes', 'respostas']
-          : ['id', 'antes', 'depois', 'respostas']
+          : ['id', 'pergunta', 'respostas']
       );
       text(item.id);
       ids.push(item.id);
@@ -209,11 +211,11 @@ function content(source) {
         item.opcoes.forEach(text);
         unique(item.opcoes, 'Duplicate option');
       } else {
+        text(item.pergunta);
         fail(
-          typeof item.antes === 'string' && typeof item.depois === 'string',
-          'Missing field context'
+          !/^(?:undefined|null)$/i.test(item.pergunta.trim()),
+          'Missing rendered field label/context'
         );
-        text(item.antes + item.depois);
       }
     }
   }
@@ -476,6 +478,7 @@ function proveAddition({ changes, read, comparison }) {
       new RegExp('^ambiente_interativo/revisoes/' + config.aluno + '/[a-z0-9-]+\\.js$').test(file),
       'Noncanonical content path/profile'
     );
+    fail(read('before', MANIFEST) !== null, 'Addition requires a manifest in the comparison base');
     const before = json(read('before', MANIFEST)),
       manifest = json(read('after', MANIFEST));
     result.manifestDescriptor = {

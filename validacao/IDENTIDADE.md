@@ -1,5 +1,29 @@
 # Identidade de entradas e artefatos — Etapa 2.1
 
+## Manutenção corretiva 4.3A.4-M — reatestação pendente (17/10/2026)
+
+A correção da prova de campos e etiqueta `bloco` para v3 altera `scripts/validacao/planejador-adicao.cjs` e seus
+controles em `tests/validacao/adicao-integrada.unit.cjs`, `helpers/adicao-fixture.cjs`,
+`planejador.unit.cjs`, mais os novos `helpers/cli-historico-fixture.cjs` e
+`campos-adicao.unit.cjs` (caminhos sob `tests/validacao/`). São seis deltas do corpus, além
+da prosa normativa, que também integra a identidade de entradas. O build oficial conserva
+o bundle porque nenhuma fonte da aplicação foi alterada.
+
+`diagnosticAudit.corpusSha256` fica obsoleto. O valor vigente
+`e2d981a2cfc104f91065ede92e817955a77a9dcf4417193e81d08cd768bfd04c` não foi renovado.
+Os dois produtores de capturas, o bloqueio HTTP, a política 1.1.0, os dez REVIEWED e a fixture
+portátil de onze entradas permanecem intactos. A auditoria de consumidores exigida para
+reatestação não é presumida por estes testes e não foi emitido registro de aprovação.
+
+Após autorização específica, revisar o corpus completo e os seis deltas/consumidores, o ensaio
+de navegador e os objetos Git isolados, fontes/bundle, produtores/âncoras, HTTP e 29 diagnósticos.
+Somente então manter manualmente o pin autorizado, confirmar identidade utilizável e congelar
+o snapshot para uma única global integral autorizada. A composição de adição não absorve esta
+migração da infraestrutura. Não atribuir identidade/global do experimento à manutenção, nem
+promover novos hashes a REVIEWED automaticamente. Retomada do experimento exige base consolidada
+e autorização próprias. O conteúdo futuro deve fornecer `bloco` explicitamente em cada questão
+e `pergunta` nos campos; evidências v1/v2 não são reinterpretadas como v3.
+
 ## Manutenção final dos pins HTTP e corpus — 16/10/2026
 
 Após autorização específica, os sete deltas acumulados foram revistos sobre os bytes finais:

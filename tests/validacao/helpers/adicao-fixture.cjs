@@ -64,6 +64,7 @@ function fixture(profile = 'alice', snapshotFile = SNAPSHOT_FILE) {
     questoes: [
       {
         id: 'q1',
+        bloco: 'Reconhecer lembranças',
         titulo: 'Uma lembrança',
         instrucao: 'Escolha uma opção.',
         tipo: 'opcoes',
@@ -80,12 +81,19 @@ function fixture(profile = 'alice', snapshotFile = SNAPSHOT_FILE) {
       },
       {
         id: 'q2',
+        bloco: 'Escrever uma palavra',
         titulo: 'Uma palavra',
         instrucao: 'Complete o texto.',
         tipo: 'campos',
         dica: 'Pense no texto.',
         sucesso: 'Vamos continuar.',
-        itens: [{ id: 'q2-a', antes: 'Uma', depois: 'guarda lembranças.', respostas: ['foto'] }],
+        itens: [
+          {
+            id: 'q2-a',
+            pergunta: 'Uma ____ guarda lembranças. Escreva foto.',
+            respostas: ['foto'],
+          },
+        ],
       },
     ],
   };

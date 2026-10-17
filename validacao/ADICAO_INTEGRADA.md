@@ -4,7 +4,7 @@ A Etapa 4.3A.3 acrescenta a [composição auditável com manutenção deliberada
 O contrato estrutural abaixo permanece fechado: a política continua fora de seu lote. Somente
 o compositor pode separar esse delta após verificá-lo, mantendo o diff inteiro e todos os gates.
 
-O contrato `questionarios-adicao-integrada-v1` é um diagnóstico complementar. Não seleciona testes,
+O contrato `questionarios-adicao-integrada-v3` é um diagnóstico complementar. Não seleciona testes,
 não altera R0–R4/R1/R2 e não substitui `npm test` ou a global de toda PR. O plano oficial conserva
 seus campos, regras, formatos e códigos de saída. Reporter, comparador e identidade permanecem
 inalterados. A Etapa 4.2 não certifica adições novas nem comprova economia real.
@@ -23,6 +23,52 @@ inalterados. A Etapa 4.2 não certifica adições novas nem comprova economia re
 
 Esta restrição é menor que a capacidade do motor. Outra inclusão permanece não suportada ou
 recusada pela prova, sem flexibilizar o comportamento conservador do planejador.
+
+### Correção dos campos — Etapa 4.3A.4-M (17/10/2026)
+
+Itens `campos` admitem exclusivamente `id`, `pergunta` e `respostas`. `pergunta` é obrigatória,
+texto literal não vazio e renderizável; `undefined`/`null` literais também são recusados. O motor
+existente usa esse texto no `label` do campo. Todo contexto necessário à resolução deve estar
+na pergunta ou no apoio efetivamente visível, conferido editorialmente e no navegador.
+`antes`/`depois` são recusados, inclusive junto de `pergunta`: o motor não os renderiza.
+
+A v1 admitia `antes`/`depois` e rejeitava `pergunta`, produzindo prova positiva para campos
+sem rótulo válido. A v2 corrige essa incompatibilidade sem alterar o motor, registros ou progresso.
+Não houve adição real aprovada pela v1 que exija compatibilidade desse formato incorreto.
+Relatórios v1/v2 permanecem históricos, sem reinterpretação ou aceitação automática como v3.
+Schema do complemento e contrato composto conservam suas versões; o identificador da prova
+estrutural distingue a mudança de semântica. Os dez REVIEWED e o snapshot portátil não mudam.
+
+Os controles Node incluem positivos/negativos estruturais e renderização Chromium das fontes/HTML
+reais, com registro sintético somente no navegador: contexto, nome acessível, erro/correção,
+recarga, navegação, normalização e pontuação, além de axe e larguras 1366/390.
+Não cadastram revisão escolar nem acrescentam casos ao catálogo Playwright de 571.
+
+### Correção final da etiqueta — contrato v3 (17/10/2026)
+
+Cada questão `opcoes` ou `campos` também exige `bloco`: texto literal não vazio, sem HTML,
+controles ou referências externas, conforme a validação textual existente. Ausência, null,
+número, booleano, array, objeto, espaços isolados e os textos literais `undefined`/`null`
+(ignorando caixa e espaços externos) são recusados. Não há valor padrão nem preenchimento
+automático. O renderer real apresenta essa propriedade na etiqueta acima do título.
+
+A v2 corrigia os campos, mas ainda recusava `bloco`, embora o motor o renderize incondicionalmente.
+A v3 corrige esse desacordo sem mudar o motor. Os controles de navegador agora exigem etiqueta,
+título, instrução e pergunta corretos em ambos os formatos, inclusive após navegar e recarregar;
+não toleram `undefined` no conteúdo renderizado. Propriedades adicionais e expressões executáveis
+continuam recusadas. A auditoria pontual das leituras comuns, alternativas, campos e finalização
+não encontrou outra propriedade obrigatória ausente nesse recorte. Capacidades condicionais
+excluídas não foram habilitadas. Isso não prova adequação pedagógica de futuras perguntas.
+
+A base de uma adição deve conter manifesto. Sua ausência agora tem recusa explícita, antes
+de VM/discovery, em vez de TypeError. A CLI histórica sem nova revisão continua no fallback
+global existente; adicionar revisão nessa comparação continua inválido. O teste histórico usa
+repositório sintético isolado criado de um snapshot Git coerente, com ausência deliberada de
+manifesto/política na base e asserções de leitura somente. Não depende de pendências da worktree
+nem da disponibilidade do commit histórico após squash; não altera regras do planejador.
+
+Esta é manutenção da infraestrutura, fora do lote de adição. Corpus e identidade ficam pendentes
+de revisão deliberada; não há reatestação, avanço de pins ou global integral nesta fase.
 
 ## Prova e consumidores
 

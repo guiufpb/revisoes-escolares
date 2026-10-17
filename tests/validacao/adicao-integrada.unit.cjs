@@ -17,6 +17,7 @@ const MANIFEST = 'validacao/manifesto.json';
 
 // In-memory synthetic additions only. No module, spec, VM or browser is executed.
 const { fixture } = require('./helpers/adicao-fixture.cjs');
+const { historicalCliFixture } = require('./helpers/cli-historico-fixture.cjs');
 function check(f) {
   return proveAddition(f.input);
 }
@@ -30,6 +31,104 @@ function rejected(f, pattern) {
   if (pattern) assert.match(result.reasons.join(' '), pattern);
   return result;
 }
+
+for (const [index, type] of ['opcoes', 'campos'].entries()) {
+  test('adição v3: ' + type + ' exige bloco válido com pergunta preservada', () => {
+    const f = fixture();
+    assert.equal(f.config.questoes[index].tipo, type);
+    assert.ok(f.config.questoes[index].bloco.trim());
+    assert.ok(f.config.questoes[index].itens[0].pergunta.trim());
+    const result = check(f);
+    assert.equal(result.contract, 'questionarios-adicao-integrada-v3');
+    assert.equal(result.structuralStatus, 'proven');
+  });
+  for (const [name, value] of [
+    ['ausente', undefined],
+    ['vazio', ''],
+    ['espaços', '   '],
+    ['null', null],
+    ['número', 7],
+    ['booleano', true],
+    ['array', []],
+    ['objeto', {}],
+    ['undefined literal', 'undefined'],
+    ['null literal', 'null'],
+    ['HTML', '<b>Bloco</b>'],
+  ])
+    test('adição v3: ' + type + ' recusa bloco ' + name, () => {
+      const f = fixture();
+      if (value === undefined) delete f.config.questoes[index].bloco;
+      else f.config.questoes[index].bloco = value;
+      f.files.set(
+        f.file,
+        "(function(){'use strict';window.QuestionariosRevisoes.registrar(" +
+          JSON.stringify(f.config) +
+          ');})();'
+      );
+      rejected(f);
+    });
+  test('adição v3: ' + type + ' mantém recusa de propriedade extra', () => {
+    const f = fixture();
+    f.config.questoes[index].blocoAlternativo = 'Não admitido';
+    f.files.set(
+      f.file,
+      "(function(){'use strict';window.QuestionariosRevisoes.registrar(" +
+        JSON.stringify(f.config) +
+        ');})();'
+    );
+    rejected(f, /Unsupported field/);
+  });
+  test('adição v3: ' + type + ' recusa bloco executável sem executá-lo', () => {
+    const f = fixture();
+    const literal = JSON.stringify(f.config.questoes[index].bloco);
+    mutate(
+      f,
+      f.file,
+      '"bloco":' + literal,
+      '"bloco":(()=>{throw new Error("UNSAFE_BLOCK_SENTINEL");})()'
+    );
+    const result = rejected(f, /Non-static data/);
+    assert.ok(result.reasons.every((reason) => !reason.includes('UNSAFE_BLOCK_SENTINEL')));
+  });
+}
+
+test('adição: base sem manifesto é recusada explicitamente, sem TypeError', () => {
+  const f = fixture();
+  f.before.delete(MANIFEST);
+  rejected(f, /Addition requires a manifest in the comparison base/);
+});
+
+test('adição: CLI histórica com módulo novo continua recusada antes de VM/discovery', (t) => {
+  const historical = historicalCliFixture(ROOT);
+  t.after(() => historical.dispose());
+  const f = fixture();
+  for (const [file, bytes] of [
+    [f.file, f.files.get(f.file)],
+    [f.spec, "throw new Error('UNSAFE_HISTORICAL_DISCOVERY_SENTINEL');"],
+  ]) {
+    const target = path.join(historical.root, file);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, bytes);
+  }
+  let addition;
+  const plan = planRepository(
+    historical.root,
+    { mode: 'worktree', base: historical.base },
+    (result) => {
+      addition = result;
+    }
+  );
+  assert.equal(plan.valid, false);
+  assert.equal(plan.result, 'invalid');
+  assert.equal(plan.proposed, null);
+  assert.equal(addition.structuralStatus, 'rejected');
+  assert.match(addition.reasons.join(' '), /Addition requires a manifest in the comparison base/);
+  assert.ok(plan.errors.every((error) => !error.includes('SENTINEL')));
+  assert.equal(
+    main(['plano', '--mode', 'worktree', '--base', historical.base], historical.root),
+    1
+  );
+});
 
 for (const profile of ['alice', 'mariana'])
   test(
@@ -47,6 +146,47 @@ for (const profile of ['alice', 'mariana'])
       assert.deepEqual(result.coverage.declared, COVERAGE);
     }
   );
+
+test('adição: campo exige pergunta renderizável com contexto e resposta estática', () => {
+  const f = fixture();
+  f.config.questoes[1].itens = [
+    {
+      id: 'q2-a',
+      pergunta: 'Uma foto guarda lembranças. Escreva o plural de foto.',
+      respostas: ['fotos'],
+    },
+  ];
+  f.files.set(
+    f.file,
+    "(function(){'use strict';window.QuestionariosRevisoes.registrar(" +
+      JSON.stringify(f.config) +
+      ');})();'
+  );
+  assert.equal(check(f).structuralStatus, 'proven');
+});
+
+for (const item of [
+  { antes: 'Uma', depois: 'guarda lembranças.' },
+  {},
+  { pergunta: '' },
+  { pergunta: '   ' },
+  { pergunta: null },
+  { pergunta: 42 },
+  { pergunta: 'undefined' },
+  { pergunta: 'null' },
+  { pergunta: 'Uma foto.', antes: 'Uma', depois: 'foto.' },
+])
+  test('adição: recusa campo sem rótulo consumido pelo motor: ' + JSON.stringify(item), () => {
+    const f = fixture();
+    f.config.questoes[1].itens = [{ id: 'q2-a', respostas: ['foto'], ...item }];
+    f.files.set(
+      f.file,
+      "(function(){'use strict';window.QuestionariosRevisoes.registrar(" +
+        JSON.stringify(f.config) +
+        ');})();'
+    );
+    rejected(f);
+  });
 
 for (const kind of ['primary', 'auxiliary', 'historical'])
   test('adição: recusa colisão de chave ' + kind, () => {

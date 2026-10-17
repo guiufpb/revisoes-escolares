@@ -1,10 +1,17 @@
 # Composição de adição e atestação — Etapa 4.3A.3
 
 `adicao-atestacao-composta-v1` compõe duas evidências independentes: a prova estrutural
-`questionarios-adicao-integrada-v1` e um registro explícito de manutenção deliberada
+`questionarios-adicao-integrada-v3` e um registro explícito de manutenção deliberada
 `manutencao-deliberada-atestacao-v1`. Não renova pin, não prova equivalência de arquivos novos,
 não executa corpos de testes e não autoriza seleção. R0–R4, R1/R2, política 1.1.0/formato 2,
 manifesto, reporter, comparador, workflow e global obrigatória conservam seus contratos.
+
+A correção 4.3A.4-M versiona somente a prova estrutural interna para v3 (campos com `pergunta`
+e questões com `bloco` realmente renderizados). O contrato composto permanece v1: vínculo de bytes,
+base representada, manutenção e gates não mudam. Resultados anteriores das provas v1/v2 não se
+tornam evidência v3.
+A manutenção corretiva altera a própria infraestrutura e precisa ser consolidada como base
+real, após reatestação/global especificamente autorizadas, antes de retomar uma adição.
 
 ## Delta admitido
 
