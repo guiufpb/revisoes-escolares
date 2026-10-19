@@ -1839,3 +1839,53 @@ O histórico detalhado permanece em `ambiente_interativo/RELATORIO_TESTE_INTERAT
 Singular e plural no cotidiano
 
 Conteúdo: ambiente_interativo/revisoes/mariana/gramatica-singular-plural-cotidiano-outubro-2026.js
+
+- Integrada à `main` pela PR #48.
+- Validação humana em **17/10/2026**: **aprovada, conforme relato do responsável**.
+  Evidência relatada: oito questões concluídas e tela final exibida. Não foram incorporados
+  prints privados nem realizada avaliação pedagógica formal externa.
+- Validação automatizada histórica da PR #48: **277 testes Node e 578 Playwright aprovados**,
+  conforme confirmação do responsável. Esse resultado é distinto da validação humana relatada
+  e das verificações posteriores da conciliação isolada.
+- Conteúdo, gabarito, pontuação, chave de armazenamento e comportamento da revisão preservados.
+
+## Correção local dos decodificadores PDF.js — 18/10/2026
+
+- Mantida a biblioteca 6.3.289 e a arquitetura dos dois leitores. A fachada compartilhada
+  configura `wasmUrl`; build publica os 13 recursos WASM/fallbacks/licenças locais em
+  `js/pdfjs-wasm/`, sem dependência de `node_modules` no pacote distribuído.
+- Doze testes adicionais verificam decodificação efetiva JPEG 2000/CCITT, fallback JS,
+  distribuição estática/offline, MIME, API, cancelamento, leitores integrado/dedicado,
+  Alice/Mariana e contrato `file://`. Descoberta atual: 44 arquivos, 590 casos Playwright;
+  os 578 casos históricos da PR #48 continuam distinguidos desta validação.
+- Amostragem autorizada: 21 páginas dos dez PDFs privados, somente leitura, sem cópia
+  ou capturas; recuperação dos 118/118 objetos da página afetada. Não certifica páginas
+  não verificadas. Documentação temática: infraestrutura/LEITURA_E_PDF.md.
+- Implementação e validação iniciais em clone Git independente; a integração operacional
+  posterior foi concluída na Fase 3C, conforme registro abaixo.
+- Resultado atual, após consolidação: build, format:check, lint e manifesto aprovados;
+  277 testes Node aprovados; uma global `npm test` aprovada com 590 testes Playwright
+  (41,7 minutos, sem falhas/skips). Inclui os 12 novos casos. Código testado reconferido
+  por SHA-256; sem renovação automática de pins, fingerprints ou atestações.
+- A Fase 3C foi concluída operacionalmente, conforme confirmação do responsável: abertura
+  por duplo clique no novo atalho, Firefox habitual em `http://127.0.0.1:5173`, progressos
+  de Alice e Mariana preservados, "Singular e plural no cotidiano" concluída e PDF de
+  leitura funcionando, sem erros relevantes relatados. O auxiliar existente usa
+  `-SemPronuncia`; Azure não foi ativado nesse teste. O ambiente anterior foi preservado.
+- Publicação da correção no GitHub ainda pendente; adoção local não significa publicação.
+
+## Preparação publicável e avisos QuickJS — Fase 4B
+
+- Preparação em outro clone Git independente, preservando o ambiente escolar ativo.
+- Mantidos os 13 recursos oficiais do PDF.js 6.3.289 e seus hashes. O aviso complementar
+  `ambiente_interativo/js/QUICKJS_LICENSE.txt` reproduz integralmente os dois textos MIT
+  oficiais adicionados pelo upstream na PR #22185, com procedência fixa e atribuições.
+  O aviso integra o pacote estático, além das seis licenças originais do diretório WASM.
+- O contrato estático existente foi ampliado para conferir presença HTTP, MIME e hashes
+  dos textos legais, sem novos casos ou redução de asserções: 67 revisões e 590 casos
+  Playwright permanecem no manifesto. A global anterior de 277 Node/590 Playwright
+  continua histórica; a preparação alterada exige sua própria validação final.
+- Documentação temática em `infraestrutura/LEITURA_E_PDF.md`. Registro humano de Mariana
+  preservado integralmente, sem alteração de respostas, chaves, pontuação ou conclusão.
+- Nenhum staging, commit, push, PR ou merge integra esta etapa. Pins e atestações não
+  foram renovados. Materiais privados, output e relatórios locais ficam fora da publicação.

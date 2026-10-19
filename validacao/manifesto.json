@@ -2642,6 +2642,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -2696,6 +2697,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -2747,6 +2749,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -2798,6 +2801,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -2850,6 +2854,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -2902,6 +2907,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -2953,6 +2959,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -3004,6 +3011,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -3059,6 +3067,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -3116,6 +3125,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -3168,6 +3178,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -3222,6 +3233,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -3274,6 +3286,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -3326,6 +3339,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -3378,6 +3392,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -3430,6 +3445,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -3484,6 +3500,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -3538,6 +3555,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -3590,6 +3608,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -3642,6 +3661,7 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
+        "tests/pdfjs-offline.spec.js",
         "tests/pdfs-sinteticos.spec.js"
       ],
       "evidence": [
@@ -8509,6 +8529,47 @@
       ],
       "gaps": ["series-individuais", "associacoes-por-arquivo"],
       "expectedCases": 7
+    },
+    {
+      "file": "tests/pdfjs-offline.spec.js",
+      "revisions": [
+        "alice-leitura-primeiras-licoes-dinheiro",
+        "mariana-leitura-primeiras-licoes-dinheiro",
+        "alice-leitura-quem-e-o-rei-dos-animais",
+        "mariana-leitura-quem-e-o-rei-dos-animais",
+        "alice-leitura-a-galinha-dos-ovos-de-ouro",
+        "mariana-leitura-a-galinha-dos-ovos-de-ouro",
+        "alice-leitura-a-raposa-e-as-uvas",
+        "mariana-leitura-a-raposa-e-as-uvas",
+        "alice-leitura-o-dia-que-o-sol-tirou-ferias",
+        "mariana-leitura-o-dia-que-o-sol-tirou-ferias",
+        "alice-leitura-a-formiga-que-queria-cantar",
+        "mariana-leitura-a-formiga-que-queria-cantar",
+        "alice-leitura-um-castelo-bem-assombrado",
+        "mariana-leitura-um-castelo-bem-assombrado",
+        "alice-leitura-a-bela-desadormecida",
+        "mariana-leitura-a-bela-desadormecida",
+        "alice-leitura-a-joaninha-que-perdeu-as-pintinhas",
+        "mariana-leitura-a-joaninha-que-perdeu-as-pintinhas",
+        "alice-leitura-uma-formiga-especial",
+        "mariana-leitura-uma-formiga-especial"
+      ],
+      "engines": ["leitura"],
+      "capabilities": ["pdf-local"],
+      "contracts": ["pdf-integridade", "pdf-privacidade", "file-bundle"],
+      "platforms": ["windows", "linux"],
+      "fixtures": ["tests/fixtures/imagens-pdf.cjs", "tests/fixtures/pdfs.cjs"],
+      "defaults": {
+        "coverage": ["behavioral-contract"],
+        "oracle": "mixed",
+        "journeyScope": "contract",
+        "limitations": [
+          "Fixtures originais JPEG 2000/CCITT; amostras não certificam todas as páginas privadas ou variantes dos codecs. Associações por arquivo são conservadoras."
+        ]
+      },
+      "cases": [],
+      "gaps": ["associacoes-por-arquivo"],
+      "expectedCases": 12
     }
   ],
   "keyExceptions": [],
@@ -8554,5 +8615,8 @@
       "blocksCompleteness": true
     }
   ],
-  "discovery": { "fileCount": 43, "caseCount": 578 }
+  "discovery": {
+    "fileCount": 44,
+    "caseCount": 590
+  }
 }

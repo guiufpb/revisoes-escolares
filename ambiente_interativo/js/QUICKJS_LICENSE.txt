@@ -1,0 +1,69 @@
+AVISOS DE LICENÇA QUICKJS — PDF.js 6.3.289
+
+Aplica-se a js/pdfjs-wasm/quickjs-eval.js e js/pdfjs-wasm/quickjs-eval.wasm.
+Os dois recursos originais permanecem inalterados.
+
+O README oficial da versão 6.3.289 declara QuickJS e pdf.js.quickjs sob MIT:
+https://github.com/mozilla/pdf.js/blob/v6.3.289/external/quickjs/README.md
+
+A omissão dos avisos no pacote foi tratada no issue #22143 e na PR #22185:
+https://github.com/mozilla/pdf.js/issues/22143
+https://github.com/mozilla/pdf.js/pull/22185
+Commit de origem dos avisos: a3beacc1a35f2d285f0505c5489d8cb4a9ebcc89
+Os bytes dos dois recursos coincidem com os da versão 6.3.289 e desse commit.
+
+Os textos abaixo são cópias integrais dos avisos oficiais, sem alterar
+titulares, datas ou condições. Fontes e SHA-256 dos textos reproduzidos:
+https://raw.githubusercontent.com/mozilla/pdf.js/a3beacc1a35f2d285f0505c5489d8cb4a9ebcc89/external/quickjs/LICENSE_PDFJS_QUICKJS
+SHA-256: 7fdaed3d938f3dfce7189db07e74773c23789143a55db81a95d09dcbfda267b0
+https://raw.githubusercontent.com/mozilla/pdf.js/a3beacc1a35f2d285f0505c5489d8cb4a9ebcc89/external/quickjs/LICENSE_QUICKJS
+SHA-256: 598fd7fc928e4350abce36e337ba5a1346923c5c692f5be92c3d8e29ddd7c18d
+
+--- BEGIN LICENSE_PDFJS_QUICKJS ---
+MIT License
+
+Copyright (c) 2026 Mozilla Foundation
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+--- END LICENSE_PDFJS_QUICKJS ---
+
+--- BEGIN LICENSE_QUICKJS ---
+QuickJS Javascript Engine
+
+Copyright (c) 2017-2021 Fabrice Bellard
+Copyright (c) 2017-2021 Charlie Gordon
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+--- END LICENSE_QUICKJS ---

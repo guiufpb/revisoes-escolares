@@ -3,6 +3,7 @@ module.exports = [
     ignores: [
       'node_modules/**',
       'ambiente_interativo/js/app.bundle.js',
+      'ambiente_interativo/js/pdfjs-wasm/**',
       'ambiente_interativo/screenshots/**',
       'ambiente_interativo/screenshots_mariana_matematica/**',
       'test-results/**',

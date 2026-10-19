@@ -2231,3 +2231,15 @@ VALIDAÇÃO HUMANA — 02/10/2026
   publicação. A validação automatizada de áudio utilizou voz local simulada.
 - A observação sobre evitar itens que entreguem a resposta foi registrada em
   pedagogia/QUALIDADE_DAS_QUESTOES.md para revisões futuras, sem alterar as questões atuais.
+
+VALIDAÇÃO HUMANA — MARIANA — SINGULAR E PLURAL NO COTIDIANO — 17/10/2026
+=====================================================================
+
+- ID: mariana-gramatica-singular-plural-cotidiano-outubro-2026.
+- Resultado: aprovado, conforme relato do responsável.
+- Evidência relatada: oito questões concluídas e tela final exibida.
+- Validação automatizada histórica da PR #48: 277 testes Node e 578 Playwright aprovados,
+  conforme confirmação do responsável; não corresponde a uma nova execução nesta anotação.
+- A validação humana relatada não equivale aos testes automatizados nem a uma avaliação
+  pedagógica formal externa. Nenhum print privado foi incorporado ao repositório.
+- Este registro não altera respostas, gabarito, pontuação, progresso, chave ou comportamento.
