@@ -127,6 +127,18 @@ function gitRepository(root) {
       return null;
     }
   };
+  const readRefBytes = (ref, file) => {
+    try {
+      return execFileSync('git', ['-C', root, 'show', ref + ':' + file], {
+        maxBuffer: 64 * 1024 * 1024,
+        windowsHide: true,
+        stdio: ['ignore', 'pipe', 'ignore'],
+        env: { ...process.env, GIT_OPTIONAL_LOCKS: '0' },
+      });
+    } catch {
+      return null;
+    }
+  };
   const readWorktree = (file) => {
     const target = path.resolve(root, file);
     if (!target.startsWith(path.resolve(root) + path.sep)) throw new Error('Path outside checkout');
@@ -178,7 +190,15 @@ function gitRepository(root) {
       .filter((e) => !paths.includes(e.path) && !derived.has(e.path))
       .map((e) => e.path);
     const materializedInputs = [],
-      materializationErrors = [];
+      materializationErrors = [],
+      compatibilityIssues = [];
+    if (!identity.complete) compatibilityIssues.push('git-input-identity-incomplete');
+    if (!workingScope.complete) compatibilityIssues.push('worktree-input-identity-incomplete');
+    if (extraInputs.length) compatibilityIssues.push('extra-worktree-inputs');
+    if (identity.policy.fingerprint !== workingScope.policy.fingerprint)
+      compatibilityIssues.push('identity-policy-mismatch');
+    if (identity.inputs.length !== workingScope.inputs.length)
+      compatibilityIssues.push('input-scope-mismatch');
     const workingInputs = new Map(workingScope.inputs.map((entry) => [entry.path, entry]));
     let compatible =
       identity.complete &&
@@ -191,6 +211,7 @@ function gitRepository(root) {
         const current = workingInputs.get(entry.path);
         if (!current) {
           compatible = false;
+          compatibilityIssues.push('input-scope-mismatch');
           materializationErrors.push({ path: entry.path, reason: 'Input scope differs' });
         } else if (entry.sha256 !== current.sha256 || entry.bytes !== current.bytes) {
           try {
@@ -205,9 +226,22 @@ function gitRepository(root) {
                 readBytes
               )
             );
-          } catch (error) {
+          } catch {
             compatible = false;
-            materializationErrors.push({ path: entry.path, reason: error.message });
+            const blob = readBytes(entry.path),
+              working = workingBytes.get(entry.path);
+            // Diagnose only. Exact conversion/attribute acceptance above is unchanged.
+            const crlfCandidate =
+              entry.path.endsWith('.bat') &&
+              blob &&
+              working &&
+              !blob.includes(0) &&
+              !blob.includes(13) &&
+              blob.includes(10) &&
+              Buffer.from(blob.toString('latin1').replace(/\n/g, '\r\n'), 'latin1').equals(working);
+            const code = crlfCandidate ? 'materialization-incompatible' : 'input-content-differs';
+            compatibilityIssues.push(code);
+            materializationErrors.push({ path: entry.path, reason: code });
           }
         }
       }
@@ -219,11 +253,12 @@ function gitRepository(root) {
       extraInputs,
       materializedInputs,
       materializationErrors,
+      compatibilityIssues: [...new Set(compatibilityIssues)],
       compatibleWithWorktree: compatible,
     };
   };
   const refFingerprint = (ref) => refIdentity(ref).inputFingerprint;
-  return { git, resolve, readRef, readWorktree, refFingerprint, refIdentity };
+  return { git, resolve, readRef, readRefBytes, readWorktree, refFingerprint, refIdentity };
 }
 function collectComparison(root, { mode, base, target }, repository = gitRepository(root)) {
   if (
@@ -269,10 +304,18 @@ function collectComparison(root, { mode, base, target }, repository = gitReposit
     (referenceIdentity
       ? !referenceIdentity.compatibleWithWorktree
       : targetFingerprint !== source.sourceFingerprint)
-  )
-    identityErrors.push(
-      'Target Git content differs from validated checkout; use a matching checkout without transplanting files'
-    );
+  ) {
+    const issues = referenceIdentity?.compatibilityIssues;
+    if (issues?.length) {
+      for (const issue of issues) identityErrors.push('Target Git compatibility refused: ' + issue);
+    } else {
+      identityErrors.push(
+        referenceIdentity
+          ? 'Target Git compatibility unavailable; no demonstrated byte/materialization equivalence'
+          : 'Target Git input fingerprint differs from validated checkout'
+      );
+    }
+  }
   const read = (side, file) => {
     if (!file) return null;
     return side === 'before'
@@ -310,6 +353,13 @@ function collectComparison(root, { mode, base, target }, repository = gitReposit
       (a.currentPath || a.previousPath).localeCompare(b.currentPath || b.previousPath)
     ),
     read,
+    // Binary evidence is separate from the existing UTF-8 source reader.
+    readBytes: (side, file) =>
+      side === 'before'
+        ? (repository.readRefBytes?.(baseCommit, file) ?? null)
+        : targetCommit
+          ? (repository.readRefBytes?.(targetCommit, file) ?? null)
+          : safeRead(root, file),
   };
 }
 module.exports = { collectComparison, gitRepository, parseChanges, reporterPath };

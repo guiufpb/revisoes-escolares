@@ -1,5 +1,56 @@
 # Planejador observacional — Etapa 2
 
+## Fase 5B.5 — capacidade de manutenção global
+
+O compositor reconhece `infraestrutura-global-v1`, conforme
+[COMPOSICAO_ATESTACAO.md](COMPOSICAO_ATESTACAO.md), com escopo fechado, dez recursos PDF.js,
+registro explícito e delta integral vinculado. Reutiliza R4/global sem alterar seleção ou adição v3.
+A CLI separa adição não aplicável de recusa efetiva e mostra omissões indisponíveis em plano inválido.
+Os critérios do comparador continuam intactos. Evidências intermediárias ficam em
+`tmp/validacao/fase5b5/`; pin, revisão final, global e comparação real permanecem pendentes.
+O adaptador CI não fornece revisão independente e continua inconclusivo para este lote sem ela.
+
+## Fase 5B.3 — limite da composição no lote de infraestrutura (19/10/2026)
+
+A manutenção do corpus não remove os guards de `composeAddition`/`policyDelta`.
+Contra a base pós-PR #49, este lote contém novos `rootInputs` além do pin e infraestrutura
+modificada, enquanto o contrato administrativo aceita somente o delta isolado do corpus
+e base compatível. O modo worktree pode, portanto, produzir plano inválido antes de discovery,
+mesmo com identidade utilizável e global completa. A execução local e a razão efetiva ficam
+em `tmp/validacao/fase5b3/`, sem fabricar inventário/proposta nem alterar o guard.
+Essa restrição pode permanecer na futura PR com a mesma base/delta; sua resolução exige
+decisão explícita, sem tratar uma global verde como comparação conclusiva.
+
+## Fases 5B.1/5B.2 — diagnósticos sem alteração de seleção (19/10/2026)
+
+A compatibilidade Git conserva as condições anteriores e expõe `compatibilityIssues`:
+identidade Git/worktree incompleta, entradas extras, política/escopo incompatível,
+conteúdo divergente ou materialização incompatível. Uma identidade incompleta não demonstra
+diferença de bytes; a verificação de materialização continua condicionada ao escopo completo.
+Somente a conversão LF→CRLF de `.bat` com os atributos exigidos pode ser aceita.
+
+O comparador conserva `targetProvenanceCompatible` e acrescenta
+`targetGitProvenanceStatus`: `matched`, `incompatible`, `unavailable` ou `not-required`.
+Git coincidente não torna utilizável uma identidade incompleta. Descritores disponíveis do
+manifesto conservam schema/versão/fingerprint também no retorno antecipado de plano inválido;
+manifesto ausente permanece `null`.
+
+Quando o plano é inválido ou não fornece os dois inventários, `counts.available`, `proposed`
+e `omitted`, além de `missingProposed` e `omittedFailures`, ficam `null`. A contagem real do
+relatório permanece disponível. A observação/resumo apresenta omissões e falhas não contempladas
+como indisponíveis; não acusa relatório parcial apenas porque o planejamento faltou.
+Um inventário válido realmente vazio continua distinto da ausência de inventário. Relatórios
+parciais, identidades inválidas e contadores incoerentes continuam impedindo a comparação.
+
+O adaptador registra a etapa da preparação e, em falha, `failure.stage`, um código fixo e
+`systemCode` restrito a erros conhecidos. Não serializa mensagens/stacks de exceções, caminhos
+de erros do sistema ou conteúdo que possa vir de arquivos privados. O resultado obrigatório
+da global continua separado. Os testes sintéticos não certificam uma global real.
+
+Pins não foram renovados. Revisão deliberada do corpus e global final permanecem pendentes
+para a Fase 5B.3; superfícies em [IDENTIDADE.md](IDENTIDADE.md#fases-5b15b2--identidade-pdfjs-e-corpus-pendente-19102026).
+R1–R4, fallback, representantes e execução global obrigatória permanecem vigentes.
+
 ## Etapa 4.3A.3 — composição com manutenção deliberada
 
 O complemento [adicao-atestacao-composta-v1](COMPOSICAO_ATESTACAO.md) mantém separados estrutura,

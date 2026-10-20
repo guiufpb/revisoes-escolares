@@ -1,5 +1,75 @@
 # Identidade de entradas e artefatos — Etapa 2.1
 
+## Fase 5B.5 — corpus novamente pendente
+
+A capacidade restrita `infraestrutura-global-v1` modifica compositor, CLI, coleta binária e
+testes. O pin mantido na 5B.3 não é renovado nesta implementação intermediária. Será necessária
+revisão deliberada do delta final e dos consumidores antes de nova manutenção do corpus/global.
+Identidade obsoleta continua sendo recusa, mesmo com contrato e registro formalmente preenchidos.
+Pins de produtores, HTTP e REVIEWED permanecem intactos; dez recursos e 29 capturas são preservados.
+
+## Fase 5B.3 — manutenção deliberada do corpus (19/10/2026)
+
+Após revisão das seis superfícies de validação/testes das Fases 5B.1/5B.2, dos dez recursos
+PDF.js e dos deltas acumulados da PR #49, o pin foi autorizado para manutenção deliberada:
+de `3ed1ae7c15d67fce6f06dfcf7cf8da746ab8b1e87fd0aa155a213ace6f566ab7`
+para `92cf0532b905f0ae8bfd270b1b5ee8e9e0d036564302024b75cfbb3f2b3f7037`.
+Produtores/âncoras/HTTP/REVIEWED e `questionarios-dica-literal-v1` permanecem intactos.
+
+Foram examinados leitores diretos/dinâmicos da instrumentação, reporter, walker de assets,
+leitores PDF e seus decodificadores, teste/pacote estático PDF.js, produtores e servidores.
+Os novos leitores alcançam JSONs próprios, recursos públicos PDF.js, SVGs originais ou dados
+sintéticos; não há novo consumidor funcional das 29 capturas. O hash separado dos artefatos
+continua distinto da identidade de entradas. Os 13 recursos coincidem com o upstream instalado;
+a prova fonte/bundle conserva oito vínculos estáticos. Evidência e razões por superfície em
+`tmp/validacao/fase5b3/REVISAO_CORPUS.md` e `auditoria-corpus.json`, locais e ignorados.
+
+A prévia com o novo pin reconheceu 29 diagnósticos, zero desconhecidos e identidade utilizável.
+A validação posterior e a global do snapshot estabilizado são registradas somente nas evidências
+locais; esta anotação anterior à execução não presume seus resultados. Prosa anterior conserva
+o estado histórico de suas etapas.
+
+## Fases 5B.1/5B.2 — identidade PDF.js e corpus pendente (19/10/2026)
+
+Sobre a base histórica pós-PR #49 `9bd74342d14ae4430b24530c25a46eda01427b31`,
+a política declara dez caminhos exatos em `rootInputs`, sob `ambiente_interativo/js/pdfjs-wasm/`:
+
+- `jbig2.wasm`, `openjpeg.wasm`, `qcms_bg.wasm`, `quickjs-eval.wasm`;
+- `LICENSE_JBIG2`, `LICENSE_OPENJPEG`, `LICENSE_PDFJS_JBIG2`,
+  `LICENSE_PDFJS_OPENJPEG`, `LICENSE_PDFJS_QCMS`, `LICENSE_QCMS`.
+
+São entradas do pacote offline e da sua validação, embora sejam produzidas pelo build.
+Seus bytes exatos e ausências são capturados pelo mecanismo existente; recursos não declarados
+não recebem autorização genérica por extensão. A precedência de entrada e a proteção de
+documentos privados permanecem. A inclusão explícita também incorpora os dez caminhos ao corpus.
+
+Nenhum pin foi renovado. `diagnosticAudit.corpusSha256` continua
+`3ed1ae7c15d67fce6f06dfcf7cf8da746ab8b1e87fd0aa155a213ace6f566ab7`,
+já divergente do snapshot auditado na Fase 5A. As 29 saídas permanecem desconhecidas enquanto
+a atestação não for mantida deliberadamente. A política continua 1.1.0/formato 2; produtores,
+âncoras, HTTP, representação e hashes REVIEWED não foram alterados. Anotações históricas abaixo
+conservam os valores de suas respectivas etapas, sem reinterpretá-los como o pin atual.
+
+Superfícies de código alteradas nesta rodada que exigem revisão do corpus:
+
+1. `scripts/validacao/planejador-git.cjs`;
+2. `scripts/validacao/planejador.cjs`;
+3. `scripts/validacao/planejador-comparacao.cjs`;
+4. `scripts/validacao/ci-observacional.cjs`;
+5. `tests/validacao/identidade.unit.cjs`;
+6. `tests/validacao/planejador.unit.cjs`.
+
+Além dessas seis superfícies, revisar a ampliação do corpus pelos dez recursos acima e os
+consumidores que justificam o tratamento. `validacao/identidade-politica.json` mudou somente
+pela inclusão dos dez caminhos; a própria política fica fora do corpus para evitar circularidade,
+mas altera a identidade das entradas. As notas em `IDENTIDADE.md`, `PLANEJADOR.md`, inventário
+e política temática de testes também alteram a identidade, embora a prosa fique fora do corpus.
+
+Na Fase 5B.3, revisar o snapshot final acumulado, incluindo os deltas da PR #49 identificados
+na Fase 5A, antes de manter o pin. Confirmar 29 diagnósticos reconhecidos, zero desconhecidos,
+identidade utilizável e estabilidade; só depois executar a global final autorizada. Testes
+direcionados, build, formatação e lint desta rodada não aprovam antecipadamente esse snapshot.
+
 ## Manutenção corretiva 4.3A.4-M — reatestação pendente (17/10/2026)
 
 A correção da prova de campos e etiqueta `bloco` para v3 altera `scripts/validacao/planejador-adicao.cjs` e seus

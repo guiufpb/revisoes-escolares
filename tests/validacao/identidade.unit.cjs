@@ -13,6 +13,62 @@ const { comparePlan } = require('../../scripts/validacao/planejador-comparacao.c
 const { logicalId } = require('../../scripts/validacao/catalogo.cjs');
 const { ROOT } = require('../../scripts/validacao/manifesto.cjs');
 
+test('PDF.js: dez entradas exatas preservam bytes, detectam alteração/remoção e recusam novos recursos', () => {
+  const names = [
+    'jbig2.wasm',
+    'openjpeg.wasm',
+    'qcms_bg.wasm',
+    'quickjs-eval.wasm',
+    'LICENSE_JBIG2',
+    'LICENSE_OPENJPEG',
+    'LICENSE_PDFJS_JBIG2',
+    'LICENSE_PDFJS_OPENJPEG',
+    'LICENSE_PDFJS_QCMS',
+    'LICENSE_QCMS',
+  ];
+  const paths = names.map((name) => 'ambiente_interativo/js/pdfjs-wasm/' + name);
+  const policy = JSON.parse(fs.readFileSync(path.join(ROOT, 'validacao/identidade-politica.json')));
+  const files = new Map(paths.map((file) => [file, fs.readFileSync(path.join(ROOT, file))]));
+  const snapshot = (scope = paths) =>
+    captureIdentity({
+      paths: scope,
+      policy,
+      gitScope: true,
+      readBytes: (file) => files.get(file) || null,
+    });
+  assert.equal(policy.inputExtensions.includes('.wasm'), false);
+  assert.equal(policy.inputExtensions.includes(''), false);
+  const start = snapshot();
+  assert.equal(start.complete, true);
+  assert.equal(start.inputCount, 10);
+  for (const file of paths) {
+    const bytes = files.get(file);
+    assert.equal(start.inputs.find((e) => e.path === file).sha256, hash(bytes));
+    assert.equal(treatmentResolved(start, file), true);
+    files.set(file, Buffer.concat([bytes, Buffer.from([0xff, 0x00])]));
+    const altered = snapshot();
+    assert.notEqual(altered.inputFingerprint, start.inputFingerprint, file);
+    assert.notEqual(altered.corpusFingerprint, start.corpusFingerprint, file);
+    assert.notEqual(altered.inputs.find((e) => e.path === file).sha256, hash(bytes), file);
+    files.delete(file);
+    const missing = snapshot();
+    assert.equal(missing.complete, false, file);
+    assert.ok(
+      missing.unknown.some((e) => e.path === file),
+      file
+    );
+    files.set(file, bytes);
+  }
+  for (const name of ['unknown.wasm', 'LICENSE_UNKNOWN']) {
+    const file = 'ambiente_interativo/js/pdfjs-wasm/' + name;
+    files.set(file, Buffer.from('unreviewed public resource'));
+    const unknown = snapshot([...paths, file]);
+    assert.equal(unknown.complete, false);
+    assert.equal(treatmentResolved(unknown, file), false);
+    assert.ok(unknown.unknown.some((e) => e.path === file));
+  }
+});
+
 function fixture({ diagnostic = true } = {}) {
   const files = new Map([
     ['tests/producer.js', Buffer.from('page.screenshot({path:"output/known.png"});')],

@@ -6,6 +6,39 @@ O **Revisões Escolares** evoluiu para uma aplicação educacional local com per
 
 Este inventário registra o estado de trabalho em **14/10/2026**.
 
+## Fase 5B.3 — revisão e validação final controlada (19/10/2026)
+
+Revisão deliberada dos consumidores e deltas PDF.js/validação concluída; manutenção autorizada
+somente do pin de corpus, conforme [IDENTIDADE.md](../../validacao/IDENTIDADE.md).
+Pins dos produtores/HTTP/REVIEWED, riscos e execução obrigatória global preservados.
+Resultados do gate posterior, snapshot estabilizado, global e confronto local serão registrados
+em `tmp/validacao/fase5b3/`, sem atribuir aprovação antecipada a esta nota pré-execução.
+O guard de composição continua exigindo delta de política restrito ao pin; o lote de novos
+rootInputs pode impedir plano comparável contra a base, conforme [PLANEJADOR.md](../../validacao/PLANEJADOR.md).
+
+## Fases 5B.1/5B.2 — identidade e diagnósticos observacionais (19/10/2026)
+
+Dez recursos PDF.js (quatro WASM/seis licenças) recebem tratamento explícito de entrada,
+sem extensão genérica. Compatibilidade Git distingue incompletude, divergência de bytes e
+materialização incompatível. O comparador separa procedência Git de identidade utilizável;
+retornos antecipados preservam descritores disponíveis do manifesto. Inventário indisponível
+produz contagens/omissões `null`, sem falsa economia ou acusação de global parcial. O adaptador
+registra etapas e códigos seguros, sem mensagens/stacks de exceções.
+
+Regressões direcionadas cobrem os dez recursos, alteração/remoção, recursos desconhecidos,
+recusas Git, manifesto, inventário, procedência e privacidade dos erros. Riscos R1–R4, fallback,
+execução global e isolamento do progresso permanecem vigentes. Nenhum pin foi renovado;
+reatestação deliberada e global do snapshot final ficam pendentes para a Fase 5B.3.
+Contrato/superfícies em [IDENTIDADE.md](../../validacao/IDENTIDADE.md) e
+[PLANEJADOR.md](../../validacao/PLANEJADOR.md). Não há aprovação final ou publicação nesta etapa.
+
+Validação intermediária: **225/225 Node** nos seis arquivos de identidade, planejador,
+atestação textual, composição, adição e coleta; controle final de procedência **1/1** após
+ajuste de descritor indisponível; PDF.js offline **12/12**, em porta de teste isolada.
+Manifesto: **67 revisões / 44 arquivos / 590 casos**. Captura real reconhece os dez recursos
+como entradas presentes e conserva exatamente 29 diagnósticos desconhecidos por corpus obsoleto.
+Pins intactos; nenhuma global foi executada nesta rodada.
+
 ## Etapa 4.3A.4-M — Manutenção corretiva (17/10/2026)
 
 Contrato de adição integrada v3 exige `pergunta` nos campos e `bloco` em cada questão, conforme
@@ -1889,3 +1922,13 @@ Conteúdo: ambiente_interativo/revisoes/mariana/gramatica-singular-plural-cotidi
   preservado integralmente, sem alteração de respostas, chaves, pontuação ou conclusão.
 - Nenhum staging, commit, push, PR ou merge integra esta etapa. Pins e atestações não
   foram renovados. Materiais privados, output e relatórios locais ficam fora da publicação.
+
+## Fase 5B.5 — manutenção global da infraestrutura (intermediária)
+
+O compositor existente ganhou a capacidade fechada `infraestrutura-global-v1`, sem seletor novo:
+revisão explícita vinculada ao snapshot, dez rootInputs PDF.js exatos, bytes Git/binários e delta
+integral. Reutiliza R4/global e preserva adição v3/REVIEWED. A CLI distingue capacidade não
+aplicável de recusa e não imprime omissões zero em plano inválido. Contrato e formato do registro:
+`validacao/COMPOSICAO_ATESTACAO.md`. Resultados direcionados: `tmp/validacao/fase5b5/`.
+O pin real continua o da 5B.3; reatestação/global final pendentes. A CI não recebe aprovação
+produzida pela PR e permanece inconclusiva sem mecanismo independente explicitamente autorizado.

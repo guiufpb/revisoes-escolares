@@ -7,6 +7,36 @@ const { hash, identityUsable, POLICY_FILE, safeRead } = require('./identidade.cj
 const { proveAddition, reviewedSurfaces, staticJson } = require('./planejador-adicao.cjs');
 const CONTRACT = 'adicao-atestacao-composta-v1';
 const REVIEW_CONTRACT = 'manutencao-deliberada-atestacao-v1';
+const INFRA_CONTRACT = 'infraestrutura-global-v1';
+const PDF_INPUTS = [
+  'jbig2.wasm',
+  'openjpeg.wasm',
+  'qcms_bg.wasm',
+  'quickjs-eval.wasm',
+  'LICENSE_JBIG2',
+  'LICENSE_OPENJPEG',
+  'LICENSE_PDFJS_JBIG2',
+  'LICENSE_PDFJS_OPENJPEG',
+  'LICENSE_PDFJS_QCMS',
+  'LICENSE_QCMS',
+].map((name) => 'ambiente_interativo/js/pdfjs-wasm/' + name);
+// Closed maintenance scope; not a namespace permission or an addition exception.
+const MAINTENANCE_FILES = [
+  'scripts/validacao/planejador-composicao.cjs',
+  'scripts/validacao/planejador-cli.cjs',
+  'scripts/validacao/ci-observacional.cjs',
+  'scripts/validacao/planejador.cjs',
+  'scripts/validacao/planejador-git.cjs',
+  'scripts/validacao/planejador-comparacao.cjs',
+  'tests/validacao/identidade.unit.cjs',
+  'tests/validacao/planejador.unit.cjs',
+  'tests/validacao/composicao-atestacao.unit.cjs',
+  'validacao/IDENTIDADE.md',
+  'validacao/PLANEJADOR.md',
+  'validacao/COMPOSICAO_ATESTACAO.md',
+  'documentacao/ambiente-interativo/INVENTARIO_IMPLEMENTACOES.md',
+  'documentacao/ambiente-interativo/infraestrutura/TESTES_E_VALIDACAO_REAL.md',
+];
 const BUNDLE = 'ambiente_interativo/js/app.bundle.js';
 const MANIFEST = 'validacao/manifesto.json';
 const INFRASTRUCTURE = [
@@ -30,7 +60,11 @@ const INFRASTRUCTURE = [
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 const sha = (s) => typeof s === 'string' && /^[a-f0-9]{64}$/.test(s);
 const check = (condition, reason) => {
-  if (!condition) throw Error(reason);
+  if (!condition) {
+    const error = Error(reason);
+    error.safeReason = reason;
+    throw error;
+  }
 };
 const prose = (s) => typeof s === 'string' && s.trim().length >= 30;
 const sorted = (a) => [...a].sort();
@@ -143,7 +177,7 @@ function scanNewTest(source) {
   }
   visit(tree, null);
 }
-function policyDelta(collected) {
+function policyDelta(collected, infrastructure = false) {
   const changes = collected.changes.filter(
     (c) => c.currentPath === POLICY_FILE || c.previousPath === POLICY_FILE
   );
@@ -172,6 +206,24 @@ function policyDelta(collected) {
   );
   const stripped = structuredClone(after);
   stripped.diagnosticAudit.corpusSha256 = before.diagnosticAudit.corpusSha256;
+  if (infrastructure) {
+    check(
+      Array.isArray(before.rootInputs) &&
+        Array.isArray(after.rootInputs) &&
+        new Set(after.rootInputs).size === after.rootInputs.length &&
+        PDF_INPUTS.every((p) => !before.rootInputs.includes(p)) &&
+        same(
+          sorted(after.rootInputs.filter((p) => !before.rootInputs.includes(p))),
+          sorted(PDF_INPUTS)
+        ) &&
+        same(
+          after.rootInputs.filter((p) => !PDF_INPUTS.includes(p)),
+          before.rootInputs
+        ),
+      'Maintenance requires exactly the ten PDF.js inputs; no removals or other input changes'
+    );
+    stripped.rootInputs = before.rootInputs;
+  }
   check(
     same(stripped, before),
     'Arbitrary policy change; only corpusSha256 maintenance is permitted'
@@ -183,10 +235,40 @@ function policyDelta(collected) {
   );
   return { before, after };
 }
+function maintenanceRows(collected) {
+  const identity =
+    collected.comparison.target.identity || collected.comparison.worktree?.source?.identity;
+  return collected.changes
+    .map((c) => {
+      const row = { path: c.currentPath, type: c.type };
+      if ([POLICY_FILE, ...MAINTENANCE_FILES].includes(c.currentPath)) {
+        const before = collected.read('before', c.currentPath),
+          after = collected.read('after', c.currentPath);
+        return {
+          ...row,
+          beforeSha256: before === null ? null : hash(before),
+          afterSha256: after === null ? null : hash(after),
+        };
+      }
+      const artifact = identity?.artifacts?.entries?.find((a) => a.path === c.currentPath);
+      if (artifact?.role === 'diagnostic')
+        return { ...row, beforeSha256: null, afterSha256: artifact.sha256, role: 'diagnostic' };
+      return { ...row, beforeSha256: null, afterSha256: null, unread: true };
+    })
+    .sort((a, b) => String(a.path).localeCompare(String(b.path)));
+}
 function composeAddition(collected, review = null, baseInfo = null) {
   const policyChanged = collected.changes.some(
     (c) => c.currentPath === POLICY_FILE || c.previousPath === POLICY_FILE
   );
+  const hasAddition = collected.changes.some(
+    (c) => c.type === 'A' && /^ambiente_interativo\/revisoes\//.test(c.currentPath)
+  );
+  const infrastructure =
+    review?.data?.capability === INFRA_CONTRACT ||
+    (!hasAddition &&
+      policyChanged &&
+      collected.changes.some((c) => MAINTENANCE_FILES.includes(c.currentPath)));
   const result = {
     schemaVersion: 1,
     contract: CONTRACT,
@@ -205,8 +287,9 @@ function composeAddition(collected, review = null, baseInfo = null) {
           authority: 'explicit-review-record; not a signature or user authorization',
         }
       : null,
-    fullChanges: sourceRows(collected),
+    fullChanges: infrastructure ? maintenanceRows(collected) : sourceRows(collected),
   };
+  let stage = 'scope';
   let addition;
   const policyRows = collected.changes.filter(
     (c) => c.currentPath === POLICY_FILE || c.previousPath === POLICY_FILE
@@ -239,18 +322,51 @@ function composeAddition(collected, review = null, baseInfo = null) {
       blockObservation: addition.structuralStatus === 'rejected',
     };
   }
+  if (infrastructure) {
+    result.contract = INFRA_CONTRACT;
+    result.capability = INFRA_CONTRACT;
+    // Do not claim a structural school proof for a maintenance request.
+    addition = proveAddition({ ...collected, changes: [] });
+    addition.applicability = 'not-applicable';
+  }
   // Policy syntax is verified BEFORE isolating its delta; the full diff remains recorded.
   try {
-    const { before, after } = policyDelta(collected);
-    addition = proveAddition({
-      ...collected,
-      changes: collected.changes.filter((c) => c.currentPath !== POLICY_FILE),
-    });
+    if (infrastructure) {
+      check(
+        !hasAddition &&
+          new Set(collected.changes.map((c) => c.currentPath)).size === collected.changes.length &&
+          result.fullChanges.every((r) => !r.unread),
+        'Maintenance scope excludes school changes and unknown paths'
+      );
+      check(
+        collected.changes.every((c) => {
+          const row = result.fullChanges.find((r) => r.path === c.currentPath);
+          return row.role === 'diagnostic'
+            ? c.type === 'A' &&
+                !c.previousPath &&
+                collected.readBytes?.('before', c.currentPath) === null
+            : c.type === 'M' &&
+                (!c.previousPath || c.previousPath === c.currentPath) &&
+                sha(row.beforeSha256) &&
+                sha(row.afterSha256);
+        }),
+        'Maintenance requires existing files; diagnostic outputs must be untracked additions'
+      );
+    }
+    stage = 'policy';
+    const { before, after } = policyDelta(collected, infrastructure);
+    if (!infrastructure)
+      addition = proveAddition({
+        ...collected,
+        changes: collected.changes.filter((c) => c.currentPath !== POLICY_FILE),
+      });
     check(
-      addition.structuralStatus === 'proven' ||
+      infrastructure ||
+        addition.structuralStatus === 'proven' ||
         (addition.structuralStatus === 'unsupported' && collected.changes.length === 1),
       'Addition incomplete/rejected or unrelated batch'
     );
+    stage = 'review';
     check(
       review &&
         /^tmp\/validacao\/atestacoes\/[a-zA-Z0-9-]+\.json$/.test(review.path) &&
@@ -263,7 +379,8 @@ function composeAddition(collected, review = null, baseInfo = null) {
     // The loader validates exact bytes; the semantic record is bound independently here.
     const r = review.data;
     check(
-      r.schemaVersion === 1 &&
+      (!infrastructure || r.capability === INFRA_CONTRACT) &&
+        r.schemaVersion === 1 &&
         r.contract === REVIEW_CONTRACT &&
         r.decision === 'reviewed-no-new-diagnostic-consumers' &&
         prose(r.reviewer) &&
@@ -271,8 +388,21 @@ function composeAddition(collected, review = null, baseInfo = null) {
         Number.isFinite(Date.parse(r.reviewedAt)),
       'Missing explicit deliberate review'
     );
+    stage = 'base';
+    if (infrastructure) {
+      const entries = result.base.entries.map((e) => ({
+        ...e,
+        targetSha256: hash(collected.read('after', e.path) || ''),
+      }));
+      check(
+        entries.every((e) => sha(e.sha256) && collected.read('after', e.path) !== null) &&
+          same(r.infrastructure, entries),
+        'Maintenance infrastructure bytes not reviewed'
+      );
+      result.maintenance.infrastructure = entries;
+    }
     check(
-      result.base.status === 'represented',
+      infrastructure || result.base.status === 'represented',
       'Git base does not contain the implemented unchanged infrastructure'
     );
     check(
@@ -288,6 +418,7 @@ function composeAddition(collected, review = null, baseInfo = null) {
         }),
       'Base/reference provenance differs'
     );
+    stage = 'identity';
     const identity =
       collected.comparison.target.identity || collected.comparison.worktree?.source?.identity;
     const source = collected.comparison.worktree?.source;
@@ -336,6 +467,36 @@ function composeAddition(collected, review = null, baseInfo = null) {
       ) && r.changes.every((e) => prose(e.rationale)),
       'Every changed path needs hash-bound consumer rationale'
     );
+    if (infrastructure) {
+      stage = 'resources';
+      const resources = PDF_INPUTS.map((path) => {
+        const beforeBytes = collected.readBytes?.('before', path),
+          afterBytes = collected.readBytes?.('after', path);
+        check(
+          Buffer.isBuffer(beforeBytes) &&
+            Buffer.isBuffer(afterBytes) &&
+            beforeBytes.equals(afterBytes) &&
+            identity.inputs.some(
+              (e) => e.path === path && e.state === 'present' && e.sha256 === hash(afterBytes)
+            ),
+          'PDF.js bytes missing, changed or not bound to identity'
+        );
+        return { path, sha256: hash(afterBytes) };
+      });
+      check(same(r.pdfInputs, resources), 'PDF.js resource review differs');
+      check(
+        identity.artifacts.entries.every((e) => e.state === 'present'),
+        'Maintenance requires all diagnostic captures present'
+      );
+      for (const entry of result.fullChanges.filter((e) => e.role === 'diagnostic')) {
+        const bytes = collected.readBytes?.('after', entry.path);
+        check(
+          Buffer.isBuffer(bytes) && hash(bytes) === entry.afterSha256,
+          'Diagnostic bytes changed since identity capture'
+        );
+      }
+    }
+    stage = 'protected-evidence';
     for (const p of after.diagnosticProducers) {
       const bytes = collected.read('after', p.source);
       check(
@@ -371,7 +532,10 @@ function composeAddition(collected, review = null, baseInfo = null) {
       same(
         r.reviewedSurfaces,
         result.reviewedSurfaces.map(({ maintenance: _maintenance, ...entry }) => entry)
-      ) && result.reviewedSurfaces.every((e) => e.baseSha256 === e.expectedSha256),
+      ) &&
+        result.reviewedSurfaces.every((e) =>
+          infrastructure ? e.baseSha256 === e.targetSha256 : e.baseSha256 === e.expectedSha256
+        ),
       'REVIEWED baseline obsolete or not reviewed'
     );
     check(
@@ -383,6 +547,7 @@ function composeAddition(collected, review = null, baseInfo = null) {
       'Consumer/bundle review incomplete'
     );
     for (const entry of result.fullChanges) {
+      if (infrastructure && entry.role === 'diagnostic') continue;
       const current = collected.read('after', entry.path);
       check(
         identity.inputs.some((e) => e.path === entry.path && e.sha256 === entry.afterSha256),
@@ -405,7 +570,16 @@ function composeAddition(collected, review = null, baseInfo = null) {
     addition ||= proveAddition(collected);
     result.status = 'rejected';
     result.maintenance.status = 'rejected';
-    result.maintenance.reasons.push(error.message);
+    result.maintenance.reasons.push(
+      infrastructure
+        ? error.safeReason || 'Malformed maintenance evidence; details omitted'
+        : error.message
+    );
+    if (infrastructure)
+      result.maintenance.failure = {
+        stage,
+        code: error.safeReason ? 'maintenance-requirement' : 'maintenance-malformed',
+      };
     result.compatibility.reasons.push('No partial acceptance; observation blocked');
   }
   return { addition, composition: result, blockObservation: result.status === 'rejected' };
@@ -414,6 +588,10 @@ module.exports = {
   CONTRACT,
   REVIEW_CONTRACT,
   INFRASTRUCTURE,
+  INFRA_CONTRACT,
+  PDF_INPUTS,
+  MAINTENANCE_FILES,
+  maintenanceRows,
   sourceRows,
   infrastructureBase,
   composeAddition,

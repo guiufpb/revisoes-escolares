@@ -88,6 +88,14 @@ Toda PR para `main` mantém a suíte global e aguarda “Formatação, lint e te
 
 ### CI observacional — Etapa 3
 
+As Fases 5B.1/5B.2 acrescentam regressões em `tests/validacao/identidade.unit.cjs` e
+`tests/validacao/planejador.unit.cjs`: entradas PDF.js exatas, recusas por incompletude/conteúdo/
+materialização, manifesto no retorno inválido, inventário indisponível, procedência e erros
+sem conteúdo privado. Testes direcionados e build/formatação/lint verificam o estágio intermediário.
+Por autorização específica desta rodada, a global final fica para depois da revisão deliberada
+da atestação na Fase 5B.3; nenhum pin é renovado nem há aprovação antecipada. Os gatilhos
+normativos continuam vigentes. Superfícies e pendências em [IDENTIDADE.md](../../../validacao/IDENTIDADE.md).
+
 O [contrato do planejador](../../../validacao/PLANEJADOR.md) define a instrumentação experimental
 do workflow. `npm test` permanece integral: manifesto, testes Node, build e Playwright sem filtros.
 O hook CI prepara as dez fixtures com a função existente e gera plano após o build; a etapa
@@ -521,3 +529,11 @@ Ubuntu, timeout, worker e `npm test` integral. A reatestação restrita do corpu
 documentada em [IDENTIDADE.md](../../../validacao/IDENTIDADE.md). A nova CI deve executar
 a global completa e publicar o relatório estruturado; a falha antiga não comprova regressão
 dos 571 casos não executados.
+
+## Fase 5B.5 — validação intermediária do contrato global
+
+A capacidade `infraestrutura-global-v1` requer testes Node de composição, identidade, Git/CLI,
+comparação e preservação da adição v3, incluindo recusa sem revisão e contagens indisponíveis.
+Positivos sintéticos não atestam a worktree real. Nesta fase intermediária, build, formatação,
+lint, manifesto, diff e regressões direcionadas são exigidos; `npm test` integral fica para o
+snapshot final deliberadamente reatestado e autorizado. A regra geral da global não foi removida.
