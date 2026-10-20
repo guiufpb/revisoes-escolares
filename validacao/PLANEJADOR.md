@@ -1,5 +1,52 @@
 # Planejador observacional — Etapa 2
 
+## Fase 5C.1 — adaptador local mínimo
+
+`scripts/validacao/executor-local.cjs` consome `planRepository`, sem modificar o planejador,
+os riscos, as provas, os contratos, a identidade ou a CI. Uso local explícito:
+
+```text
+npm run test:local -- --dry-run --mode worktree --base REF_BASE --policy targeted
+npm run test:local -- --execute --mode worktree --base REF_BASE --policy targeted
+```
+
+Também aceita `--mode refs --base REF_BASE --target REF_ALVO` e o loader existente
+`--attestation-review tmp/validacao/atestacoes/NOME.json`. Não aceita plano JSON externo nem
+argumentos livres do runner. `--policy targeted` é obrigatório para recorte e declara que o
+responsável conferiu os gatilhos de AGENTS/política temática, inclusive cadência de três conjuntos,
+alcance incerto e consolidação. Não é atestação nem dispensa de global. Quando algum gatilho se
+aplicar, use `--policy global`: saída 2 e fallback explícito `npm test`, sem iniciar ou certificar
+execução seletiva. O adaptador não inicia a global automaticamente. CI é recusada.
+
+Dry-run não executa preparação/build nem corpos de testes: usa os artefatos existentes,
+valida/planeja e faz descoberta filtrada, carregando declarações como o planejador. Execução
+explícita prepara os PDFs sintéticos oficiais sem substituir bytes divergentes e executa
+manifesto, Node integral de validação, build, formato e lint antes do plano. Não há build paralelo.
+Identidade incompleta/instável, composição recusada e evidência insuficiente bloqueiam execução.
+
+A seleção exige candidate R1/R2, arquivos inteiros e todos os representantes. Regex escapadas e
+ancoradas são passadas separadamente ao Node/Playwright, sem shell. A descoberta filtrada precisa
+coincidir nos IDs lógicos, projetos e repetições. repeatEach diferente de 1 é recusado porque o
+catálogo existente não expande essas instâncias. Workers, retries, timeouts, reporter e servidor
+continuam os da configuração. A identidade é conferida antes/depois da descoberta e execução;
+isso não é monitoramento contínuo contra edição concorrente. Declarações precisam ser confiáveis.
+
+Cada invocação grava plano, composição e resumo sanitizado sob
+`tmp/validacao/executor-local/<UUID>/`. O reporter existente produz o único novo `run.json`
+imediatamente sob `tmp/validacao/<runId>/`, associado pela diferença dos relatórios anteriores.
+Ausência/ambiguidade, seleção divergente, identidade instável, erro, skip, tentativa falha e
+interrupção impedem sucesso seletivo. Falha do processo nunca dispara fallback para ocultá-la.
+Preparação, planejamento, descoberta, execução e total têm duração real por relógio monotônico;
+resumos não copiam mensagens/stacks de exceções. `comparePlan` continua exigindo global completa.
+
+Saídas: 0 para prévia pronta ou execução seletiva aprovada; 2 para global exigida; 1 para
+bloqueio/falha. `selectiveSuccess` só é verdadeiro após execução efetiva aprovada.
+
+Esta implementação altera o corpus e não renova pins: a própria worktree pode bloquear identidade.
+Positivos sintéticos não certificam revisão real. R1 de dica literal continua condicionado à prova
+existente; outros deltas R1 podem invalidar atestação. R2 real mantém o bloqueio `assets-calculados`.
+Adição nova e manutenção de atestação não recebem autorização seletiva. Economia real não medida.
+
 ## Fase 5B.5 — capacidade de manutenção global
 
 O compositor reconhece `infraestrutura-global-v1`, conforme

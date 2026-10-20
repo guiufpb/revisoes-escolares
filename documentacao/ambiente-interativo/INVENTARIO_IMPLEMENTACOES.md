@@ -1,5 +1,18 @@
 # Inventário de implementações do projeto
 
+## Fase 5C.1 — executor local mínimo
+
+Adaptador opt-in em `scripts/validacao/executor-local.cjs`, pelo comando `npm run test:local`.
+Reutiliza `planRepository` e exige política local explícita, candidate R1/R2, identidade estável,
+composição não recusada, contratos e igualdade exata dos arquivos/casos descobertos e executados.
+Dry-run sem corpos/build; execução explícita com preparação obrigatória, duração real por etapa,
+um novo relatório do reporter e resumo sanitizado em `tmp/validacao/`. Fallback indica `npm test`
+e retorna saída 2, sem executar global automaticamente nem mascarar falhas seletivas.
+CI, classificações e pins permanecem intactos. Os testes sintéticos não comprovam R1/R2 real;
+identidade da worktree alterada pode ser bloqueada, e R2 conserva `assets-calculados`.
+Contrato, comandos e limites: `validacao/PLANEJADOR.md`. Resultados da validação ficam nas
+evidências locais da fase; não há alegação de execução seletiva real nem economia medida.
+
 ## 1. Visão geral
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.

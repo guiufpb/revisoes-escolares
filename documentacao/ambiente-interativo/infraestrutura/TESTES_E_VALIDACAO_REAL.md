@@ -1,5 +1,21 @@
 # Testes e validação real
 
+## Executor local mínimo — Fase 5C.1
+
+O comando opt-in `npm run test:local` está descrito em
+[PLANEJADOR.md](../../../validacao/PLANEJADOR.md#fase-5c1--adaptador-local-mínimo).
+Reutiliza o planejador e exige política local explícita, candidate R1/R2, identidade utilizável,
+composição não recusada, contratos presentes e correspondência exata da descoberta/execução por
+arquivos inteiros. Global exigida retorna fallback `npm test`, sem iniciá-la automaticamente.
+Dry-run não executa corpos/build; execução prepara as verificações obrigatórias antes do plano.
+Falhas e interrupções não viram sucesso por fallback.
+
+Os testes Node do adaptador cobrem provas sintéticas R1/R2 via `makePlan`, regex no Playwright
+instalado, contratos, projetos/repetições, divergências, bloqueios, relatórios, falhas e sanitização.
+Não certificam R1/R2 real. Esta mudança de infraestrutura exige Node integral, manifesto, build,
+formato, lint, regressões e `npm test` integral. Pins não são mantidos automaticamente. Toda PR
+e os demais gatilhos globais permanecem obrigatórios.
+
 ## Base obrigatória
 
 Toda mudança de código executa, na raiz:
