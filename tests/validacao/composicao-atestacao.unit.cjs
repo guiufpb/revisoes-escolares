@@ -6,6 +6,7 @@ const path = require('node:path');
 const { test } = require('node:test');
 const { execFileSync } = require('node:child_process');
 const { planRepository } = require('../../scripts/validacao/planejador-cli.cjs');
+const { summarizePlan } = require('../../scripts/validacao/planejador-cli.cjs');
 const { validateRepository } = require('../../scripts/validacao/manifesto.cjs');
 const { fixture } = require('./helpers/adicao-fixture.cjs');
 const {
@@ -23,7 +24,14 @@ const {
   REVIEW_CONTRACT,
   loadReview,
   reviewStable,
+  INFRA_CONTRACT,
+  PDF_INPUTS,
+  maintenanceRows,
 } = require('../../scripts/validacao/planejador-composicao.cjs');
+const { makePlan } = require('../../scripts/validacao/planejador.cjs');
+const { comparePlan } = require('../../scripts/validacao/planejador-comparacao.cjs');
+const { logicalId } = require('../../scripts/validacao/catalogo.cjs');
+const { gitRepository } = require('../../scripts/validacao/planejador-git.cjs');
 const ROOT = path.resolve(__dirname, '../..');
 const BUNDLE = 'ambiente_interativo/js/app.bundle.js';
 
@@ -170,6 +178,357 @@ function reject(f, pattern, review = f.seal()) {
   if (pattern) assert.match(r.composition.maintenance.reasons.join('; '), pattern);
   return r;
 }
+
+function infrastructureFixture() {
+  const f = maintained();
+  f.files.clear();
+  for (const [p, bytes] of f.before) f.files.set(p, bytes);
+  f.manifest = JSON.parse(f.files.get('validacao/manifesto.json'));
+  const sources = [
+    ...new Set(
+      f.manifest.revisions
+        .filter((r) => r.engine === 'questionarios')
+        .flatMap((r) => r.contentSources)
+    ),
+  ];
+  const bundle = sources.map((p) => f.files.get(p)).join('\n');
+  for (const map of [f.before, f.files]) map.set(BUNDLE, bundle);
+  PDF_INPUTS.forEach((p, i) => {
+    for (const map of [f.before, f.files]) map.set(p, Buffer.from([0, 255, 254, i]));
+  });
+  const oldPolicy = JSON.parse(f.before.get(POLICY_FILE));
+  oldPolicy.rootInputs = oldPolicy.rootInputs.filter((p) => !PDF_INPUTS.includes(p));
+  f.before.set(POLICY_FILE, JSON.stringify(oldPolicy));
+  const code = 'scripts/validacao/planejador-cli.cjs';
+  f.files.set(code, f.files.get(code) + '\n// Synthetic infrastructure maintenance.\n');
+  f.input.changes = [POLICY_FILE, code].map((currentPath) => ({
+    type: 'M',
+    previousPath: currentPath,
+    currentPath,
+  }));
+  f.input.readBytes = (side, p) => {
+    const bytes = (side === 'before' ? f.before : f.files).get(p);
+    return bytes === undefined ? null : Buffer.from(bytes);
+  };
+  f.input.comparison.mode = 'worktree';
+  f.data.capability = INFRA_CONTRACT;
+  const refresh = f.refresh;
+  f.refresh = () => {
+    refresh();
+    f.data.base.policyFingerprint = hash(JSON.stringify(JSON.parse(f.before.get(POLICY_FILE))));
+    f.data.target.manifestFingerprint = hash(JSON.stringify(f.manifest));
+    f.data.consumerReview.bundleSha256 = f.identity.inputs.find((e) => e.path === BUNDLE).sha256;
+    f.data.reviewedSurfaces = reviewedSurfaces(f.input.read).map(
+      ({ maintenance: _maintenance, ...e }) => e
+    );
+    f.data.infrastructure = infrastructureBase(f.input.read).entries.map((e) => ({
+      ...e,
+      targetSha256: hash(f.input.read('after', e.path)),
+    }));
+    f.data.pdfInputs = PDF_INPUTS.map((path) => ({
+      path,
+      sha256: hash(f.input.readBytes('after', path)),
+    }));
+    f.data.changes = maintenanceRows(f.input).map((e) => ({
+      ...e,
+      rationale: 'Synthetic infrastructure and consumer review bound to each exact changed byte.',
+    }));
+  };
+  f.refresh();
+  return f;
+}
+
+test('manutenção: identidade comprovada admite somente plano global e comparação correspondente', () => {
+  const f = infrastructureFixture(),
+    r = run(f);
+  assert.equal(r.composition.status, 'compatible', JSON.stringify(r));
+  assert.equal(r.composition.capability, INFRA_CONTRACT);
+  assert.equal(r.addition.structuralStatus, 'unsupported');
+  assert.equal(r.blockObservation, false);
+  // Use the real manifest and its full declared inventory, never a smaller expectation.
+  const cases = f.manifest.tests.flatMap((t) =>
+    Array.from({ length: t.expectedCases }, (_, n) => ({
+      file: t.file,
+      titles: ['synthetic-' + n],
+      project: '',
+      repeatEachIndex: 0,
+    }))
+  );
+  cases.forEach((c) => (c.id = logicalId(c.file, c.titles)));
+  const plan = makePlan({ ...f.input, manifest: f.manifest, cases, validation: { errors: [] } });
+  assert.equal(plan.valid, true, JSON.stringify(plan.errors));
+  assert.equal(plan.result, 'global');
+  assert.equal(plan.available.caseCount, f.manifest.discovery.caseCount);
+  assert.equal(plan.proposed.caseCount, plan.available.caseCount);
+  assert.equal(plan.omitted.length, 0);
+  const report = {
+    schemaVersion: 2,
+    complete: true,
+    status: 'passed',
+    source: f.input.comparison.worktree.source,
+    sourceAtEnd: f.input.comparison.worktree.source,
+    manifest: plan.manifest,
+    sourcesChangedDuringRun: false,
+    counts: {
+      discovered: cases.length,
+      expected: cases.length,
+      executed: cases.length,
+      passed: cases.length,
+      failed: 0,
+      flaky: 0,
+      skipped: 0,
+      notExecuted: 0,
+      attempts: cases.length,
+      retries: 0,
+      interruptedAttempts: 0,
+      timedOutAttempts: 0,
+    },
+    cases: cases.map((c) => ({
+      ...c,
+      nativeId: c.id,
+      outcome: 'expected',
+      attempts: [{ status: 'passed', expectedStatus: 'passed', retry: 0, durationMs: 1 }],
+    })),
+  };
+  assert.equal(comparePlan(plan, report).comparable, true);
+  report.sourceAtEnd = { ...report.sourceAtEnd, sourceFingerprint: 'f'.repeat(64) };
+  assert.equal(comparePlan(plan, report).comparable, false);
+});
+
+for (const [label, mutate, pattern] of [
+  [
+    'política arbitrária',
+    (f) => {
+      f.policy.normalization = 'arbitrary policy mutation';
+    },
+    /Arbitrary policy/,
+  ],
+  ['entrada extra', (f) => f.policy.rootInputs.push('unknown.wasm'), /exactly the ten/],
+  ['entrada removida', (f) => f.policy.rootInputs.splice(0, 1), /exactly the ten/],
+  ['entrada duplicada', (f) => f.policy.rootInputs.push(PDF_INPUTS[0]), /exactly the ten/],
+  [
+    'produtor incompatível',
+    (f) => f.files.set(f.policy.diagnosticProducers[0].source, 'changed producer'),
+    /identity\/provenance|Producer/,
+  ],
+])
+  test('manutenção: recusa ' + label + ' mesmo com novo corpus sintético', () => {
+    const f = infrastructureFixture();
+    mutate(f);
+    // Some invalid producer/policy changes intentionally cannot pass identityUsable.
+    if (label === 'produtor incompatível') reject(f, pattern);
+    else {
+      f.refresh();
+      reject(f, pattern);
+    }
+  });
+
+for (const [label, mutate, pattern] of [
+  [
+    'corpus obsoleto',
+    (f) => {
+      f.identity.corpusFingerprint = 'b'.repeat(64);
+    },
+    /identity\/provenance/,
+  ],
+  [
+    'outro snapshot',
+    (f) => {
+      f.data.target.inputFingerprint = 'b'.repeat(64);
+    },
+    /target snapshot/,
+  ],
+  [
+    'outro commit',
+    (f) => {
+      f.data.base.commit = 'b'.repeat(40);
+    },
+    /Base\/reference/,
+  ],
+  [
+    'Git divergente',
+    (f) => {
+      f.input.comparison.identityErrors.push('synthetic mismatch');
+    },
+    /identity\/provenance/,
+  ],
+  [
+    'recurso binário divergente',
+    (f) => {
+      f.before.set(PDF_INPUTS[0], Buffer.from([0, 255, 253, 0]));
+    },
+    /PDF.js bytes/,
+  ],
+  [
+    'recurso ausente',
+    (f) => {
+      f.before.delete(PDF_INPUTS[0]);
+    },
+    /PDF.js bytes/,
+  ],
+  [
+    'lote sem revisão individual',
+    (f) => {
+      f.data.changes.pop();
+    },
+    /Every changed path/,
+  ],
+  [
+    'infraestrutura não revisada',
+    (f) => {
+      f.data.infrastructure.pop();
+    },
+    /infrastructure bytes/,
+  ],
+])
+  test('manutenção: recusa ' + label, () => {
+    const f = infrastructureFixture();
+    mutate(f);
+    reject(f, pattern);
+  });
+
+test('manutenção: revisão ausente e bytes obsoletos não são aceitos', () => {
+  const f = infrastructureFixture();
+  reject(f, /Review bytes/, null);
+  const sealed = f.seal();
+  f.data.reviewer += ' modified';
+  reject(f, /Review bytes/, sealed);
+});
+test('manutenção: adição misturada e desconhecido não são lidos nem aceitos parcialmente', () => {
+  for (const p of ['ambiente_interativo/revisoes/alice/nova.js', 'credentials/private.pdf']) {
+    const f = infrastructureFixture(),
+      read = f.input.read;
+    f.input.changes.push({ type: 'A', currentPath: p, previousPath: null });
+    f.input.read = (side, file) => {
+      assert.notEqual(file, p);
+      return read(side, file);
+    };
+    reject(f, /scope excludes/);
+  }
+});
+test('manutenção: saídas diagnósticas presentes têm vínculo próprio no delta completo', () => {
+  const f = infrastructureFixture(),
+    p = f.policy.diagnosticProducers[0].paths[0];
+  f.before.delete(p);
+  f.input.changes.push({ type: 'A', currentPath: p, previousPath: null });
+  f.refresh();
+  assert.equal(run(f).composition.status, 'compatible');
+  assert.equal(f.data.changes.find((e) => e.path === p).role, 'diagnostic');
+  f.data.diagnostics.artifactsFingerprint = 'b'.repeat(64);
+  reject(f, /Captures\/snapshot/);
+});
+test('manutenção: REVIEWED divergente permanece recusado pela adição v3', () => {
+  const f = maintained();
+  f.before.set(
+    'ambiente_interativo/js/app.js',
+    f.before.get('ambiente_interativo/js/app.js') + '\n'
+  );
+  reject(f, /Addition incomplete/);
+});
+test('manutenção: pins históricos divergentes não são renovados e capturas ausentes são recusadas', () => {
+  const f = infrastructureFixture();
+  for (const p of [
+    'ambiente_interativo/js/app.entry.js',
+    'ambiente_interativo/js/app.js',
+    'ambiente_interativo/js/registro-revisoes.js',
+    'ambiente_interativo/index.html',
+  ]) {
+    // A real maintenance base can already contain earlier school integrations.
+    // Keep those bytes identical across this delta; do not change REVIEWED pins.
+    const bytes = f.before.get(p) + '\n/* Historical integration already in base. */\n';
+    f.before.set(p, bytes);
+    f.files.set(p, bytes);
+  }
+  f.refresh();
+  const r = run(f);
+  assert.equal(
+    r.composition.reviewedSurfaces.filter((e) => e.baseSha256 !== e.expectedSha256).length,
+    4
+  );
+  assert.equal(r.composition.status, 'compatible');
+  assert.equal(r.addition.structuralStatus, 'unsupported');
+  f.files.delete(f.policy.diagnosticProducers[0].paths[0]);
+  f.refresh();
+  reject(f, /all diagnostic captures present/);
+});
+test('manutenção: caminhos unread do contrato de adição recebem hashes sem virar desconhecidos', () => {
+  const f = infrastructureFixture(),
+    p = 'tests/validacao/identidade.unit.cjs';
+  f.before.set(p, '// Before');
+  f.files.set(p, '// After');
+  f.input.changes.push({ type: 'M', previousPath: p, currentPath: p });
+  f.refresh();
+  assert.equal(sourceRows(f.input).find((e) => e.path === p).unread, true);
+  assert.equal(f.identity.unknown.length, 0);
+  assert.equal(run(f).composition.status, 'compatible');
+});
+test('manutenção: parser malformado não serializa mensagem, stack ou conteúdo privado', () => {
+  const f = infrastructureFixture();
+  f.files.set(POLICY_FILE, '{SENTINELA_PRIVADA_NAO_SERIALIZAR');
+  const r = reject(f, /Malformed maintenance evidence/);
+  assert.deepEqual(r.composition.maintenance.failure, {
+    stage: 'policy',
+    code: 'maintenance-malformed',
+  });
+  assert.ok(!JSON.stringify(r).includes('SENTINELA_PRIVADA_NAO_SERIALIZAR'));
+  assert.ok(!JSON.stringify(r).includes('SyntaxError'));
+});
+test('manutenção: CLI real sem revisão bloqueia descoberta e informa contagens indisponíveis', () => {
+  const f = infrastructureFixture();
+  const parent = path.join(ROOT, 'tmp/validacao'),
+    root = fs.mkdtempSync(path.join(parent, 'infra-gate-'));
+  const put = (p, bytes) => {
+    const file = path.join(root, p);
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, bytes);
+  };
+  const git = (...args) =>
+    execFileSync('git', ['-C', root, ...args], {
+      encoding: 'utf8',
+      windowsHide: true,
+      stdio: ['ignore', 'pipe', 'pipe'],
+    }).trim();
+  try {
+    for (const [p, bytes] of f.before) put(p, bytes);
+    git('init', '-q');
+    git('add', '--', ...f.before.keys());
+    const tree = git('write-tree'),
+      commit = git(
+        '-c',
+        'user.name=Synthetic fixture',
+        '-c',
+        'user.email=fixture@example.invalid',
+        'commit-tree',
+        tree,
+        '-m',
+        'Synthetic infrastructure base'
+      );
+    git('update-ref', 'HEAD', commit);
+    assert.deepEqual(
+      gitRepository(root).readRefBytes(commit, PDF_INPUTS[0]),
+      f.before.get(PDF_INPUTS[0])
+    );
+    for (const [p, bytes] of f.files) put(p, bytes);
+    let evidence;
+    const plan = planRepository(root, { mode: 'worktree', base: commit }, () => {}, {
+      onCompositionEvidence: (e) => {
+        evidence = e;
+      },
+    });
+    assert.equal(plan.valid, false);
+    assert.equal(plan.available, null);
+    assert.equal(plan.proposed, null);
+    assert.ok(
+      plan.errors.some((e) => e.startsWith('Infrastructure maintenance rejected: Review bytes'))
+    );
+    assert.ok(plan.errors.every((e) => !e.includes('Integrated addition rejected')));
+    assert.equal(evidence.capability, INFRA_CONTRACT);
+    assert.match(summarizePlan(plan), /omitidos: indisponível/);
+  } finally {
+    assert.equal(path.dirname(root), parent);
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
 
 for (const profile of ['alice', 'mariana'])
   test(

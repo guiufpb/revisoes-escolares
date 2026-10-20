@@ -28,14 +28,18 @@ function comparePlan(plan, run) {
   )
     reasons.push('Input identity digest inconsistent with source identity alias');
   const policies = [plan.identityPolicy, ...identities.map((identity) => identity?.policy)];
-  let targetProvenanceCompatible = null;
+  let targetProvenanceCompatible = null,
+    targetGitProvenanceStatus = 'not-required';
   if (policies.some((p) => p?.version === '1.1.0')) {
     const planned = plan.comparison?.worktree?.source;
     const sources = [planned, run.source, run.sourceAtEnd];
     // Diagnostic outputs may appear during a global and change porcelain/dirty.
     // They never substitute for the exact input fingerprint comparison below.
     const fields = ['commit', 'tree'];
-    targetProvenanceCompatible =
+    const target = plan.comparison?.target;
+    const metadataAvailable =
+      (target?.kind === 'working-tree' ||
+        (target?.kind === 'git-ref' && /^[a-f0-9]{40}$/.test(target.commit || ''))) &&
       sources.every(
         (s) =>
           s?.available === true &&
@@ -44,17 +48,35 @@ function comparePlan(plan, run) {
           /^[a-f0-9]{64}$/.test(s.statusFingerprint || '') &&
           typeof s.dirty === 'boolean' &&
           s.contentIdentity ===
-            (s.dirty ? 'working-tree-not-identical-to-commit' : 'clean-tracked-tree') &&
-          fields.every((f) => s[f] === planned[f])
-      ) &&
-      identityUsable(planned.identity) &&
-      planned.sourceFingerprint === planned.identity.inputFingerprint &&
-      planned.sourceFingerprint === plan.comparison?.target?.sourceFingerprint &&
+            (s.dirty ? 'working-tree-not-identical-to-commit' : 'clean-tracked-tree')
+      );
+    const gitMatches =
+      metadataAvailable &&
+      sources.every((s) => fields.every((f) => s[f] === planned[f])) &&
       (plan.comparison?.target?.kind === 'working-tree' ||
         (plan.comparison?.target?.kind === 'git-ref' &&
           plan.comparison.target.commit === planned?.commit));
-    if (!targetProvenanceCompatible)
-      reasons.push('Target snapshot provenance missing or differs between plan and global report');
+    targetGitProvenanceStatus = !metadataAvailable
+      ? 'unavailable'
+      : gitMatches
+        ? 'matched'
+        : 'incompatible';
+    targetProvenanceCompatible =
+      gitMatches &&
+      identityUsable(planned.identity) &&
+      planned.sourceFingerprint === planned.identity.inputFingerprint &&
+      planned.sourceFingerprint === plan.comparison?.target?.sourceFingerprint;
+    if (!targetProvenanceCompatible) {
+      reasons.push(
+        !metadataAvailable
+          ? 'Target snapshot provenance unavailable or malformed'
+          : !gitMatches
+            ? 'Target snapshot commits/trees differ between plan and global report'
+            : !identityUsable(planned.identity)
+              ? 'Target snapshot identity unusable; Git provenance matches but compatibility is not established'
+              : 'Target snapshot input identity aliases differ'
+      );
+    }
   }
   if (
     policies.some(
@@ -117,19 +139,29 @@ function comparePlan(plan, run) {
     if (records.has(key)) reasons.push('Duplicate report instance');
     records.set(key, item);
   }
-  const available = plan.available?.cases || [],
-    proposed = plan.proposed?.cases || [];
+  const inventoryAvailable =
+    plan.valid === true &&
+    Array.isArray(plan.available?.cases) &&
+    Array.isArray(plan.proposed?.cases);
+  if (!inventoryAvailable)
+    reasons.push(
+      'Plan inventory unavailable; global completeness and omissions cannot be assessed'
+    );
+  const available = inventoryAvailable ? plan.available.cases : [],
+    proposed = inventoryAvailable ? plan.proposed.cases : [];
   const availableKeys = new Set(available.map(instanceKey));
   if (
-    proposed.some((c) => !availableKeys.has(instanceKey(c))) ||
-    new Set(proposed.map(instanceKey)).size !== proposed.length
+    inventoryAvailable &&
+    (proposed.some((c) => !availableKeys.has(instanceKey(c))) ||
+      new Set(proposed.map(instanceKey)).size !== proposed.length)
   )
     reasons.push('Proposed inventory is not a unique subset of available cases');
   if (
-    available.length !== cases.length ||
-    available.some((c) => !records.has(instanceKey(c))) ||
-    run.counts?.discovered !== available.length ||
-    run.counts?.expected !== available.length
+    inventoryAvailable &&
+    (available.length !== cases.length ||
+      available.some((c) => !records.has(instanceKey(c))) ||
+      run.counts?.discovered !== available.length ||
+      run.counts?.expected !== available.length)
   )
     reasons.push(
       'Report is not the complete current inventory; directed runs cannot validate this comparison'
@@ -137,7 +169,7 @@ function comparePlan(plan, run) {
   const missingProposed = proposed.filter((c) => !records.has(instanceKey(c))).map(instanceKey);
   if (missingProposed.length) reasons.push('Proposed cases missing from execution');
   const proposedKeys = new Set(proposed.map(instanceKey));
-  const omitted = cases.filter((c) => !proposedKeys.has(instanceKey(c)));
+  const omitted = inventoryAvailable ? cases.filter((c) => !proposedKeys.has(instanceKey(c))) : [];
   const omittedFailures = omitted
     .filter(
       (c) =>
@@ -166,7 +198,7 @@ function comparePlan(plan, run) {
     .map((c) => ({
       id: c.id,
       file: c.file,
-      proposed: proposedKeys.has(instanceKey(c)),
+      proposed: inventoryAvailable ? proposedKeys.has(instanceKey(c)) : null,
       outcome: c.outcome,
     }));
   if (
@@ -234,6 +266,7 @@ function comparePlan(plan, run) {
     runStatus: run.status,
     identity: {
       targetProvenanceCompatible,
+      targetGitProvenanceStatus,
       sourcesCompatible:
         !!plan.comparison?.target?.sourceFingerprint &&
         plan.comparison.target.sourceFingerprint === run.source?.sourceFingerprint,
@@ -241,14 +274,14 @@ function comparePlan(plan, run) {
       stableDuringRun: run.sourcesChangedDuringRun === false,
       uncoveredChangedPaths: plan.identityUncoveredPaths || [],
     },
-    missingProposed,
-    omittedFailures,
+    missingProposed: inventoryAvailable ? missingProposed : null,
+    omittedFailures: inventoryAvailable ? omittedFailures : null,
     incompleteCases,
     counts: {
-      available: available.length,
-      proposed: proposed.length,
+      available: inventoryAvailable ? available.length : null,
+      proposed: inventoryAvailable ? proposed.length : null,
       globalReported: cases.length,
-      omitted: omitted.length,
+      omitted: inventoryAvailable ? omitted.length : null,
     },
     costProjection: comparable
       ? {

@@ -1,5 +1,79 @@
 # Composição de adição e atestação — Etapa 4.3A.3
 
+## Fase 5B.5 — manutenção restrita da infraestrutura
+
+`infraestrutura-global-v1` é uma capacidade separada dentro do compositor existente, destinada
+ao lote pós-PR #49. Reutiliza o plano/fallback R4 e exige `result: global`, inventário integral e
+zero omissões. Não executa testes reduzidos, não prova adição escolar nem renova qualquer pin.
+Os contratos de adição descritos nas seções históricas abaixo conservam seus critérios.
+
+O escopo é a lista exata `MAINTENANCE_FILES` em `planejador-composicao.cjs`: os seis módulos
+de compositor/CLI/CI/planejamento/Git/comparação, os três testes Node de composição/planejador/
+identidade e os cinco documentos de composição/identidade/planejador/inventário/política de
+testes. Somente modificações de arquivos existentes são admitidas. A política é uma modificação
+adicional obrigatória. Revisões, integrações escolares, manifesto, pacotes, motores, produtores,
+HTTP, recursos e arquivos fora da lista não podem ser modificados por esta capacidade.
+
+A política deve preservar todos os campos, exceto o pin deliberado de corpus e a inclusão
+exata dos dez `PDF_INPUTS` em `rootInputs`. Não admite remoção, duplicação, reordenação dos
+elementos anteriores, nova extensão ou expansão de namespace. Os dez arquivos já precisam
+existir na base Git, conservar seus bytes binários no alvo e coincidir com a identidade capturada.
+As 29 capturas precisam estar presentes e reconhecidas como diagnósticos, com produtores,
+âncoras, bloqueio HTTP e prova textual válidos. As capturas não rastreadas que integram o diff
+worktree recebem linhas próprias no delta, com `role: diagnostic`, hash atual e ausência na base.
+Não são omitidas do lote nem promovidas a entradas.
+
+### Registro explícito local
+
+Reutiliza-se o loader `--attestation-review tmp/validacao/atestacoes/NOME.json`, suas verificações
+de bytes/UTF-8/caminho e estabilidade antes de VM/discovery. O registro continua com
+`contract: manutencao-deliberada-atestacao-v1`, `schemaVersion: 1` e os campos da revisão
+deliberada descritos abaixo. Para esta capacidade exige também:
+
+- `capability: infraestrutura-global-v1`;
+- `infrastructure`: as 16 superfícies em ordem, cada uma com `path`, `sha256` da base e
+  `targetSha256` do alvo, todas presentes e explicitamente revisadas;
+- `pdfInputs`: os dez recursos em ordem, com `path` e `sha256` bruto;
+- `changes`: o delta completo, sem duplicações, com hashes anteriores/atuais e justificativas
+  individuais; os diagnósticos não rastreados incluem `role: diagnostic`.
+
+Base/árvore/política anteriores, commit/árvore de ancoragem do alvo, fingerprints brutos do
+snapshot/corpus/política/manifesto, produtores/HTTP, capturas, bundle e consumidores mantêm os
+vínculos existentes. Os cinco caminhos antes `unread` na prova de adição têm hashes nesta lista
+fechada de manutenção; isso não muda a classificação da identidade nem amplia a prova escolar.
+
+O registro é declaração de revisão, não assinatura nem autorização independente. Não há comando
+que gere aprovação a partir de um plano. Ele deve ser preenchido após revisão efetiva e antes
+do planejamento. Fica em `tmp`, fora das entradas/corpus; não contém fingerprint de seu próprio
+arquivo ou do resultado que pretende validar. A política é excluída do cálculo do corpus pelo
+mecanismo existente, mas continua entrada com bytes/fingerprint brutos. Não há ciclo de hashes.
+
+A infraestrutura alterada é registrada por evidências de manutenção; a exigência de igualdade
+das 16 superfícies continua obrigatória para a composição de adição escolar. Os dez descritores
+`REVIEWED` também são registrados, mas nesta capacidade os consumidores devem permanecer iguais
+entre base/alvo. Pins históricos divergentes não são atualizados nem declarados válidos. A
+adição v3 continua recusando esses pins nos contextos em que são exigidos.
+
+### Roteamento, falhas e CI
+
+Uma revisão com a capacidade explícita solicita este contrato. Um lote sem adição, com política
+e arquivos da lista, é diagnosticado como tentativa de manutenção; isso não o aprova sem registro.
+Adição não aplicável permanece `structuralStatus: unsupported`; o complemento de manutenção
+marca `applicability: not-applicable`. A CLI só atribui recusa à adição quando a prova estrutural
+realmente retorna `rejected`. Falhas de manutenção apresentam motivo fixo seguro e etapa/código;
+exceções inesperadas de parsing não serializam mensagens, stacks ou conteúdo do arquivo.
+Plano inválido conserva inventário/proposta indisponíveis e o resumo não imprime omissões zero.
+
+O adaptador GitHub Actions não recebe registro de manutenção: não foi demonstrado um canal
+independente de procedência/autorização. A PR não pode fabricar sua própria aprovação. Sem essa
+evidência a CI permanece inconclusiva, preservando `npm test` integral e seu resultado obrigatório.
+Um registro local `worktree` não autoriza nem representa automaticamente o SHA integrado da CI.
+
+Esta implementação altera corpus e entradas. O pin da 5B.3 permanece intacto nesta fase:
+identidade real obsoleta, ausência de revisão final ou qualquer prova incompatível continuam
+bloqueando. Os positivos são fixtures isoladas, sem atestar este snapshot. Reatestação,
+global final e publicação dependem de autorização posterior e evidência do novo snapshot.
+
 `adicao-atestacao-composta-v1` compõe duas evidências independentes: a prova estrutural
 `questionarios-adicao-integrada-v3` e um registro explícito de manutenção deliberada
 `manutencao-deliberada-atestacao-v1`. Não renova pin, não prova equivalência de arquivos novos,

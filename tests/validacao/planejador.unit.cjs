@@ -228,7 +228,10 @@ function reportFor(plan) {
 }
 
 // All Git objects/index/checkout below belong exclusively to a temporary test repository.
-function materializationFixture(attributes = '*.bat text eol=crlf\n*.png binary\n') {
+function materializationFixture(
+  attributes = '*.bat text eol=crlf\n*.png binary\n',
+  extraFiles = []
+) {
   const root = fs.mkdtempSync(path.join(ROOT, 'tmp/git-materializacao-'));
   const input = fixture();
   const scripts = [
@@ -244,6 +247,7 @@ function materializationFixture(attributes = '*.bat text eol=crlf\n*.png binary\
     ['assets/bytes.png', Buffer.from([0x89, 0x50, 0, 0x0a, 0xff])],
     ['assets/plain.txt', Buffer.from('plain\ntext\n')],
     ['validacao/manifesto.json', Buffer.from(JSON.stringify(input.manifest))],
+    ...extraFiles,
   ]);
   if (attributes !== null) files.set('.gitattributes', Buffer.from(attributes));
   const identityPolicy = {
@@ -332,6 +336,42 @@ test('materialização: Git real aceita LF→CRLF declarado sem alterar identida
     );
   }
   assert.equal(provenance(f.root).sourceFingerprint, source.sourceFingerprint);
+});
+
+test('Git: identidade incompleta é recusada sem acusar divergência de bytes', () => {
+  const f = materializationFixture(undefined, [['assets/unreviewed.wasm', Buffer.from([0, 255])]]);
+  const collected = collectComparison(f.root, { mode: 'refs', base: f.base, target: f.integrated });
+  assert.equal(collected.comparison.target.gitInputIdentity.compatibleWithWorktree, false);
+  assert.ok(
+    collected.comparison.identityErrors.some((s) => s.includes('git-input-identity-incomplete'))
+  );
+  assert.ok(!collected.comparison.identityErrors.some((s) => s.includes('content-differs')));
+  assert.equal(makePlan({ ...f.input, ...collected }).valid, false);
+});
+
+test('Git: conteúdo divergente e materialização sem atributos têm causas distintas', () => {
+  const changed = materializationFixture();
+  fs.writeFileSync(path.join(changed.root, 'assets/plain.txt'), 'different bytes');
+  const divergent = collectComparison(changed.root, {
+    mode: 'refs',
+    base: changed.base,
+    target: changed.integrated,
+  });
+  assert.ok(divergent.comparison.identityErrors.some((s) => s.includes('input-content-differs')));
+  assert.equal(makePlan({ ...changed.input, ...divergent }).valid, false);
+  const unsupported = materializationFixture(null);
+  for (const file of unsupported.scripts)
+    fs.writeFileSync(path.join(unsupported.root, file), '@echo off\r\necho fixture\r\n');
+  const refused = collectComparison(unsupported.root, {
+    mode: 'refs',
+    base: unsupported.base,
+    target: unsupported.integrated,
+  });
+  assert.ok(
+    refused.comparison.identityErrors.some((s) => s.includes('materialization-incompatible'))
+  );
+  assert.ok(!refused.comparison.identityErrors.some((s) => s.includes('input-content-differs')));
+  assert.equal(makePlan({ ...unsupported.input, ...refused }).valid, false);
 });
 
 for (const eventName of ['pull_request', 'push']) {
@@ -558,7 +598,8 @@ test('CI: preparação antecede plano; falha experimental conserva diagnóstico 
       },
     }
   );
-  assert.match(unavailable.diagnostics.join(), /Commit indisponível/);
+  assert.match(unavailable.diagnostics.join(), /Referências inconclusivas/);
+  assert.equal(unavailable.failure.stage, 'references');
   assert.doesNotThrow(() =>
     ciMain('planejar', root, {
       VALIDACAO_CI_OBSERVACIONAL: '1',
@@ -673,6 +714,135 @@ test('CI: hook local sem opt-in é inerte e Markdown de caminhos externos é esc
   );
   assert.doesNotMatch(summary(result), /<script>/);
   assert.match(summary(result), /&lt;script&gt;/);
+});
+
+test('inventário indisponível mantém manifesto e não inventa testes ou falhas omitidas', () => {
+  const input = fixture(),
+    valid = makePlan(input),
+    report = reportFor(valid);
+  input.validation.errors.push('Synthetic validation refusal');
+  const invalid = makePlan(input);
+  assert.equal(invalid.valid, false);
+  assert.deepEqual(invalid.manifest, valid.manifest);
+  const result = comparePlan(invalid, report);
+  assert.equal(result.identity.manifestCompatible, true);
+  assert.equal(result.comparable, false);
+  assert.equal(result.costProjection.available, false);
+  assert.deepEqual(result.counts, {
+    available: null,
+    proposed: null,
+    globalReported: 7,
+    omitted: null,
+  });
+  assert.equal(result.omittedFailures, null);
+  assert.equal(result.missingProposed, null);
+  assert.ok(result.reasons.some((s) => s.includes('Plan inventory unavailable')));
+  assert.ok(
+    !result.reasons.some((s) => s.includes('Report is not the complete current inventory'))
+  );
+  const observed = evaluateObservation({ diagnostics: [] }, invalid, report, 'success');
+  assert.deepEqual(observed.counts, {
+    available: null,
+    proposed: null,
+    potentiallyOmitted: null,
+    actuallyExecuted: 7,
+  });
+  assert.match(summary(observed), /potencialmente omitidos: indisponível/);
+  assert.match(summary(observed), /Falhas não contempladas: indisponível/);
+  assert.equal(observed.global.outcome, 'success');
+  const absent = fixture();
+  absent.manifest = null;
+  assert.equal(makePlan(absent).manifest, null);
+  for (const key of ['available', 'proposed']) {
+    const malformed = structuredClone(valid);
+    malformed[key].cases = null;
+    assert.equal(comparePlan(malformed, report).counts[key], null);
+    assert.equal(comparePlan(malformed, report).comparable, false);
+  }
+});
+
+test('procedência separa Git coincidente, identidade inutilizável e commits/árvores incompatíveis', () => {
+  const f = materializationFixture();
+  const collected = collectComparison(f.root, { mode: 'refs', base: f.base, target: f.integrated });
+  const plan = makePlan({ ...f.input, ...collected }),
+    report = reportFor(plan);
+  assert.equal(comparePlan(plan, report).comparable, true);
+  const incomplete = structuredClone(plan);
+  incomplete.comparison.worktree.source.identity.complete = false;
+  const blocked = comparePlan(incomplete, report);
+  assert.equal(blocked.identity.targetGitProvenanceStatus, 'matched');
+  assert.equal(blocked.identity.targetProvenanceCompatible, false);
+  assert.equal(blocked.comparable, false);
+  assert.ok(blocked.reasons.some((s) => s.includes('identity unusable; Git provenance matches')));
+  assert.ok(!blocked.reasons.some((s) => s.includes('commits/trees differ')));
+  for (const field of ['commit', 'tree']) {
+    const different = structuredClone(report);
+    different.sourceAtEnd[field] = 'b'.repeat(40);
+    const mismatch = comparePlan(plan, different);
+    assert.equal(mismatch.identity.targetGitProvenanceStatus, 'incompatible');
+    assert.equal(mismatch.comparable, false);
+    assert.ok(mismatch.reasons.some((s) => s.includes('commits/trees differ')));
+  }
+  const unavailable = structuredClone(report);
+  delete unavailable.source.commit;
+  assert.equal(comparePlan(plan, unavailable).identity.targetGitProvenanceStatus, 'unavailable');
+  for (const target of [{ kind: 'unknown' }, { kind: 'git-ref', commit: null }]) {
+    const malformed = structuredClone(plan);
+    malformed.comparison.target = { ...malformed.comparison.target, ...target };
+    const result = comparePlan(malformed, report);
+    assert.equal(result.identity.targetGitProvenanceStatus, 'unavailable');
+    assert.equal(result.comparable, false);
+    assert.ok(!result.reasons.some((s) => s.includes('commits/trees differ')));
+  }
+});
+
+test('CI: falhas registram etapa/código sem expor mensagem, stack ou bytes privados', () => {
+  const root = fs.mkdtempSync(path.join(ROOT, 'tmp/ci-safe-stage-'));
+  for (const failedStage of ['references', 'fixtures', 'planning']) {
+    const secret = 'PRIVATE_SYNTHETIC_SENTINEL';
+    const fail = () => {
+      throw Object.assign(Error(secret), { code: secret });
+    };
+    const state = prepareObservation(
+      root,
+      {},
+      {},
+      {
+        references: failedStage === 'references' ? fail : () => ({}),
+        fixtures: failedStage === 'fixtures' ? fail : () => {},
+        plan: fail,
+      }
+    );
+    assert.equal(state.failure.stage, failedStage);
+    assert.equal(state.failure.code, 'observation-stage-failed');
+    assert.equal(state.failure.systemCode, null);
+    assert.ok(!JSON.stringify(state).includes(secret));
+    assert.equal(state.plan, null);
+  }
+  const missing = path.join(root, 'event-does-not-exist.json');
+  ciMain('planejar', root, { VALIDACAO_CI_OBSERVACIONAL: '1', GITHUB_EVENT_PATH: missing });
+  const error = JSON.parse(fs.readFileSync(path.join(root, DIRECTORY, 'erro.json')));
+  assert.equal(error.failure.stage, 'event-read');
+  assert.equal(error.failure.systemCode, 'ENOENT');
+  assert.ok(!JSON.stringify(error).includes(missing));
+  assert.equal(error.result, 'inconclusive');
+  assert.equal(error.costProjection.available, false);
+  const invalidReference = prepareObservation(
+    root,
+    {},
+    {},
+    {
+      references: () =>
+        eventReferences(
+          root,
+          { GITHUB_EVENT_NAME: 'pull_request' },
+          { pull_request: { base: { ref: 'main', sha: 'invalid' } } },
+          { git: () => 'false' }
+        ),
+    }
+  );
+  assert.equal(invalidReference.failure.code, 'REFERENCE_SHA_INVALID');
+  assert.equal(invalidReference.failure.stage, 'references');
 });
 
 test('R1: AST, integração efetiva, dependência Alice → Mariana e recorte menor', () => {

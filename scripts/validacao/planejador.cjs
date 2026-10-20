@@ -147,7 +147,11 @@ function makePlan({
       errors,
       fallbackReasons: ['Manifest/identity invalid; no valid candidate plan emitted'],
       manifest: manifest
-        ? { version: manifest.version, fingerprint: digest(JSON.stringify(manifest)) }
+        ? {
+            version: manifest.version,
+            schemaVersion: manifest.schemaVersion,
+            fingerprint: digest(JSON.stringify(manifest)),
+          }
         : null,
       available: null,
       proposed: null,

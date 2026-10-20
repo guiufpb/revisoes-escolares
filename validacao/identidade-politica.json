@@ -51,6 +51,16 @@
     "vite.config.js",
     "vite.pdfjs.config.js",
     "vite.test.config.cjs",
+    "ambiente_interativo/js/pdfjs-wasm/jbig2.wasm",
+    "ambiente_interativo/js/pdfjs-wasm/openjpeg.wasm",
+    "ambiente_interativo/js/pdfjs-wasm/qcms_bg.wasm",
+    "ambiente_interativo/js/pdfjs-wasm/quickjs-eval.wasm",
+    "ambiente_interativo/js/pdfjs-wasm/LICENSE_JBIG2",
+    "ambiente_interativo/js/pdfjs-wasm/LICENSE_OPENJPEG",
+    "ambiente_interativo/js/pdfjs-wasm/LICENSE_PDFJS_JBIG2",
+    "ambiente_interativo/js/pdfjs-wasm/LICENSE_PDFJS_OPENJPEG",
+    "ambiente_interativo/js/pdfjs-wasm/LICENSE_PDFJS_QCMS",
+    "ambiente_interativo/js/pdfjs-wasm/LICENSE_QCMS",
     "abrir_ambiente_interativo.bat",
     "abrir_chromium_ambiente_interativo.bat",
     "abrir_chromium_revisoes.bat",
@@ -171,7 +181,7 @@
     }
   ],
   "diagnosticAudit": {
-    "corpusSha256": "3ed1ae7c15d67fce6f06dfcf7cf8da746ab8b1e87fd0aa155a213ace6f566ab7",
+    "corpusSha256": "716bbc46330d7e108e56ab19a86444741ca33cad6aefd78c73576c13826cc61e",
     "scope": "Reviewed full executable/configuration/reference corpus; exact bytes except proven existing Questionarios hint literal ranges in static payloads and corresponding bundle. All other changes refuse attestation.",
     "httpDeny": {
       "source": "scripts/identidade-ambiente-local.cjs",

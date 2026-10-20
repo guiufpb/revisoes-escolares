@@ -15,7 +15,12 @@ const { provenance } = require('./identidade.cjs');
 const { collectComparison, gitRepository } = require('./planejador-git.cjs');
 const { makePlan } = require('./planejador.cjs');
 const { comparePlan } = require('./planejador-comparacao.cjs');
-const { composeAddition, loadReview, reviewStable } = require('./planejador-composicao.cjs');
+const {
+  composeAddition,
+  loadReview,
+  reviewStable,
+  INFRA_CONTRACT,
+} = require('./planejador-composicao.cjs');
 
 function options(args, names) {
   const result = {};
@@ -52,7 +57,7 @@ function summarizePlan(plan) {
       '; propostos: ' +
       (plan.proposed?.caseCount ?? 'inválido') +
       '; omitidos: ' +
-      plan.omitted.length +
+      (plan.valid && plan.available && plan.proposed ? plan.omitted.length : 'indisponível') +
       '.',
     '',
     ...plan.changes.map(
@@ -100,10 +105,17 @@ function planRepository(root, input, onAdditionEvidence = () => {}, compositionO
     validation = blockedAddition
       ? {
           errors: [
-            'Integrated addition rejected before executable observation: ' +
-              addition.reasons.join('; '),
+            ...(addition.structuralStatus === 'rejected'
+              ? [
+                  'Integrated addition rejected before executable observation: ' +
+                    addition.reasons.join('; '),
+                ]
+              : []),
             ...composition.maintenance.reasons.map(
-              (reason) => 'Attestation composition rejected: ' + reason
+              (reason) =>
+                (composition.capability === INFRA_CONTRACT
+                  ? 'Infrastructure maintenance rejected: '
+                  : 'Attestation composition rejected: ') + reason
             ),
           ],
         }
@@ -155,7 +167,21 @@ function planRepository(root, input, onAdditionEvidence = () => {}, compositionO
     composition.compatibility.reasons.push('Existing validation/stability gate failed');
     composition.effectiveIdentity = 'blocked';
   }
-  const plan = makePlan({ manifest, previousManifest, validation, cases, ...collected });
+  let plan = makePlan({ manifest, previousManifest, validation, cases, ...collected });
+  if (
+    composition.capability === INFRA_CONTRACT &&
+    plan.valid &&
+    (plan.result !== 'global' ||
+      plan.proposed.caseCount !== plan.available.caseCount ||
+      plan.omitted.length)
+  ) {
+    validation.errors.push('Infrastructure maintenance requires complete global plan');
+    plan = makePlan({ manifest, previousManifest, validation, cases, ...collected });
+    composition.status = 'rejected';
+    composition.effectiveIdentity = 'blocked';
+    composition.compatibility.status = 'not-established';
+    composition.compatibility.reasons.push('Complete global plan required');
+  }
   onAdditionEvidence(addition);
   compositionOptions.onCompositionEvidence?.(composition);
   return plan;

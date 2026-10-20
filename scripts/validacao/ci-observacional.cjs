@@ -12,6 +12,27 @@ const { prepareFixtures } = require('../../tests/fixtures/pdfs.cjs');
 
 const DIRECTORY = 'tmp/validacao/ci-observacional';
 const read = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
+const referenceCodes = [
+  'REFERENCE_SHA_INVALID',
+  'REFERENCE_COMMIT_UNAVAILABLE',
+  'REFERENCE_SHALLOW',
+  'REFERENCE_BASE_UNSUPPORTED',
+  'REFERENCE_ANCESTRY_MISMATCH',
+  'REFERENCE_PUSH_SHA_MISMATCH',
+  'REFERENCE_EVENT_UNSUPPORTED',
+  'REFERENCE_CHECKOUT_MISMATCH',
+];
+const referenceFailure = (code, message) => Object.assign(new Error(message), { code });
+// Never serialize exception messages/stacks: filesystem/JSON errors may contain private bytes.
+function stageFailure(stage, error) {
+  return {
+    stage,
+    code: referenceCodes.includes(error?.code) ? error.code : 'observation-stage-failed',
+    systemCode: ['ENOENT', 'ENOTDIR', 'EACCES', 'EPERM', 'EIO'].includes(error?.code)
+      ? error.code
+      : null,
+  };
+}
 function write(root, name, value) {
   const file = path.join(root, DIRECTORY, name);
   fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -21,18 +42,28 @@ function write(root, name, value) {
 function eventReferences(root, env, event, repository = gitRepository(root)) {
   const sha = (value) => {
     if (!/^[a-f0-9]{40}$/.test(value || '') || /^0+$/.test(value))
-      throw new Error('SHA ausente ou inválido no evento; nenhuma base substituta foi escolhida.');
+      throw referenceFailure(
+        'REFERENCE_SHA_INVALID',
+        'SHA ausente ou inválido no evento; nenhuma base substituta foi escolhida.'
+      );
     try {
       return repository.resolve(value);
     } catch {
-      throw new Error('Commit do evento indisponível no histórico local.');
+      throw referenceFailure(
+        'REFERENCE_COMMIT_UNAVAILABLE',
+        'Commit do evento indisponível no histórico local.'
+      );
     }
   };
   if (repository.git('rev-parse', '--is-shallow-repository').trim() !== 'false')
-    throw new Error('Histórico raso: referências não atestadas; fetch-depth: 0 é obrigatório.');
+    throw referenceFailure(
+      'REFERENCE_SHALLOW',
+      'Histórico raso: referências não atestadas; fetch-depth: 0 é obrigatório.'
+    );
   let base, target;
   if (env.GITHUB_EVENT_NAME === 'pull_request') {
-    if (event.pull_request?.base?.ref !== 'main') throw new Error('PR fora da base main.');
+    if (event.pull_request?.base?.ref !== 'main')
+      throw referenceFailure('REFERENCE_BASE_UNSUPPORTED', 'PR fora da base main.');
     base = sha(event.pull_request.base.sha);
     // GITHUB_SHA is the integrated commit actually checked out, not the source branch HEAD.
     target = sha(env.GITHUB_SHA);
@@ -41,17 +72,27 @@ function eventReferences(root, env, event, repository = gitRepository(root)) {
       repository.git('merge-base', '--is-ancestor', base, target);
       repository.git('merge-base', '--is-ancestor', head, target);
     } catch {
-      throw new Error('Base/HEAD da PR não pertencem à versão integrada validada.');
+      throw referenceFailure(
+        'REFERENCE_ANCESTRY_MISMATCH',
+        'Base/HEAD da PR não pertencem à versão integrada validada.'
+      );
     }
   } else if (env.GITHUB_EVENT_NAME === 'push' && event.ref === 'refs/heads/main') {
     base = sha(event.before);
     target = sha(event.after);
-    if (target !== sha(env.GITHUB_SHA)) throw new Error('Push e GITHUB_SHA divergentes.');
+    if (target !== sha(env.GITHUB_SHA))
+      throw referenceFailure('REFERENCE_PUSH_SHA_MISMATCH', 'Push e GITHUB_SHA divergentes.');
   } else {
-    throw new Error('Evento não suportado para comparação; execução obrigatória permanece global.');
+    throw referenceFailure(
+      'REFERENCE_EVENT_UNSUPPORTED',
+      'Evento não suportado para comparação; execução obrigatória permanece global.'
+    );
   }
   if (target !== repository.resolve('HEAD'))
-    throw new Error('Destino do evento difere da checkout validada.');
+    throw referenceFailure(
+      'REFERENCE_CHECKOUT_MISMATCH',
+      'Destino do evento difere da checkout validada.'
+    );
   return { mode: 'refs', base, target };
 }
 
@@ -81,18 +122,23 @@ function prepareObservation(root, env, event, services = {}) {
     previousRuns: runFiles(root),
     plan: null,
     diagnostics: [],
+    stage: 'references',
   };
   // Persist before experimental work, including invalid references/preparation failure.
   write(root, 'estado.json', state);
   try {
     state.references = (services.references || eventReferences)(root, env, event);
+    state.stage = 'fixtures';
     (services.fixtures || prepareFixtures)(root);
+    state.stage = 'planning';
     const plan = (services.plan || planRepository)(root, state.references, (evidence) => {
       write(root, 'adicao-integrada.json', evidence);
     });
+    state.stage = 'plan-serialization';
     write(root, 'plano.json', plan);
     write(root, 'plano.md', summarizePlan(plan) + '\n');
     state.plan = DIRECTORY + '/plano.json';
+    state.stage = 'identity';
     const identity = plan.comparison?.target?.identity;
     if (!identityUsable(identity)) {
       state.diagnostics.push('Identidade do plano incompleta; valid=true isolado não resolve A3.');
@@ -102,11 +148,16 @@ function prepareObservation(root, env, event, services = {}) {
         if (entry.state !== 'present')
           state.diagnostics.push('Entrada obrigatória ' + entry.path + ': ' + entry.state);
     }
+    state.stage = 'prepared';
   } catch (error) {
+    state.failure = stageFailure(state.stage, error);
     state.diagnostics.push(
-      state.references
-        ? 'Preparação/planejamento falhou; consultar logs locais e entradas obrigatórias.'
-        : 'Referências inconclusivas: ' + error.message
+      '[' +
+        state.stage +
+        '] ' +
+        (state.references
+          ? 'Preparação/planejamento falhou; causa segura registrada em failure.'
+          : 'Referências inconclusivas; causa segura registrada em failure.')
     );
   }
   write(root, 'estado.json', state);
@@ -129,6 +180,10 @@ function evaluateObservation(state, plan, run, globalOutcome) {
       identityUsable
     );
   const comparable = !!comparison?.comparable && diagnostics.length === 0;
+  const inventoryAvailable =
+    plan?.valid === true &&
+    Array.isArray(plan.available?.cases) &&
+    Array.isArray(plan.proposed?.cases);
   // Preserve both results: even an analyzable failed global never becomes a successful check.
   return {
     schemaVersion: 1,
@@ -148,15 +203,16 @@ function evaluateObservation(state, plan, run, globalOutcome) {
     comparisonResult: comparable ? comparison.result : 'inconclusive',
     comparable,
     diagnostics: [...diagnostics, ...(comparison?.reasons || [])],
+    preparation: { stage: state?.stage || null, failure: state?.failure || null },
     changes: plan?.changes || [],
     counts: {
-      available: plan?.available?.caseCount ?? null,
-      proposed: plan?.proposed?.caseCount ?? null,
-      potentiallyOmitted: plan?.omitted?.length ?? null,
+      available: inventoryAvailable ? plan.available.cases.length : null,
+      proposed: inventoryAvailable ? plan.proposed.cases.length : null,
+      potentiallyOmitted: inventoryAvailable ? (plan.omitted?.length ?? null) : null,
       actuallyExecuted: run?.counts?.executed ?? null,
     },
     fallbackReasons: plan?.fallbackReasons || [],
-    omittedFailures: comparison?.omittedFailures || [],
+    omittedFailures: comparison?.omittedFailures ?? null,
     costProjection: comparable ? comparison.costProjection : { available: false },
     comparison,
     limitations: [
@@ -243,10 +299,8 @@ function summary(result) {
     '## Fallback e diagnósticos',
     '',
     ...[...result.fallbackReasons, ...result.diagnostics].map((reason) => '- ' + text(reason)),
-    'Falhas não contempladas: ' +
-      (result.comparison ? result.omittedFailures.length : 'indisponível') +
-      '.',
-    ...result.omittedFailures.map(
+    'Falhas não contempladas: ' + (result.omittedFailures?.length ?? 'indisponível') + '.',
+    ...(result.omittedFailures || []).map(
       (failure) =>
         '- ' + text(failure.file) + ': ' + text(failure.id) + ' / ' + text(failure.outcome)
     ),
@@ -309,23 +363,28 @@ function finishObservation(root, env) {
 
 function main(command, root = ROOT, env = process.env) {
   if (env.VALIDACAO_CI_OBSERVACIONAL !== '1') return;
+  let stage = 'dispatch';
   try {
     if (command === 'planejar') {
+      stage = 'event-read';
       const event = read(env.GITHUB_EVENT_PATH);
+      stage = 'prepare';
       prepareObservation(root, env, event);
     } else if (command === 'concluir') {
+      stage = 'finish';
       finishObservation(root, env);
     } else throw new Error('Comando observacional desconhecido.');
-  } catch {
+  } catch (error) {
     // Experimental failures are visible, never replace npm test's exit status.
     const diagnostic =
       'Instrumentação observacional falhou; comparação inconclusiva e projeção indisponível. Global preservada.';
-    console.log('::warning::' + diagnostic);
+    console.log('::warning::[' + stage + '] ' + diagnostic);
     try {
       write(root, 'erro.json', {
         result: 'inconclusive',
         costProjection: { available: false },
         diagnostic,
+        failure: stageFailure(stage, error),
       });
       if (env.GITHUB_STEP_SUMMARY)
         fs.appendFileSync(env.GITHUB_STEP_SUMMARY, '\n' + diagnostic + '\n');
