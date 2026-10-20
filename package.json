@@ -24,7 +24,8 @@
     "test:validacao": "node --test tests/validacao/*.unit.cjs",
     "planejar:testes": "node scripts/validacao/planejador-cli.cjs plano",
     "test:planejador": "node --test tests/validacao/planejador.unit.cjs",
-    "comparar:plano": "node scripts/validacao/planejador-cli.cjs comparar"
+    "comparar:plano": "node scripts/validacao/planejador-cli.cjs comparar",
+    "test:local": "node scripts/validacao/executor-local.cjs"
   },
   "dependencies": {
     "@iconify-json/fluent-emoji-flat": "^1.2.6",
