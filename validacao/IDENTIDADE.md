@@ -1,5 +1,26 @@
 # Identidade de entradas e artefatos — Etapa 2.1
 
+## Fase 5C.2A — manutenção local do corpus do executor
+
+Após revisão deliberada autorizada dos deltas da 5C.1 consolidada em
+`1efb22b047cc8af741d13cb0975958fca94ec0c7`, o corpus anterior foi reproduzido e apenas
+`diagnosticAudit.corpusSha256` é mantido: de
+`716bbc46330d7e108e56ab19a86444741ca33cad6aefd78c73576c13826cc61e` para
+`823ff468060140bd1a13538a7d8c72be0dc903782b7883930c2f2944863846a6`.
+
+Foram revisados executor, teste Node, comando opt-in e consumidores diretos/indiretos.
+O gate do executor consome metadados de integridade das capturas; não usa pixels como
+conteúdo/oráculo nem promove diagnósticos a entradas. Produtores/âncoras, HTTP, REVIEWED,
+classificações, manifesto, fontes/bundle e 29 capturas permanecem intactos.
+Esta é manutenção manual do protocolo de identidade; não usa nem amplia o contrato fechado
+`infraestrutura-global-v1`, que não admite o lote da 5C.1.
+
+Revisão anterior à escrita, reconstrução da base, hashes, consumidores, prévia e preservação
+ficam em `tmp/validacao/fase5c2a/`. A prévia em memória apresentou 29 diagnósticos, zero
+desconhecidos e identidade utilizável. A validação final e estabilidade serão registradas
+nessa evidência depois do congelamento; esta anotação não presume seus resultados.
+Não houve alteração pedagógica, piloto seletivo, mudança de CI ou autorização de publicação.
+
 ## Fase 5B.5 — corpus novamente pendente
 
 A capacidade restrita `infraestrutura-global-v1` modifica compositor, CLI, coleta binária e

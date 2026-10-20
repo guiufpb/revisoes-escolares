@@ -1,5 +1,13 @@
 # Inventário de implementações do projeto
 
+## Fase 5C.2A — consolidação e identidade local
+
+Executor da 5C.1 consolidado localmente em `1efb22b047cc8af741d13cb0975958fca94ec0c7`.
+Revisão deliberada do novo corpus e manutenção restrita do pin descritas em
+`validacao/IDENTIDADE.md`, sem ampliar o compositor ou alterar revisões escolares.
+Hashes, preservação dos 29 diagnósticos e resultados finais do snapshot congelado ficam
+em `tmp/validacao/fase5c2a/`; a prévia não substitui a global final. Piloto R1 não iniciado.
+
 ## Fase 5C.1 — executor local mínimo
 
 Adaptador opt-in em `scripts/validacao/executor-local.cjs`, pelo comando `npm run test:local`.
