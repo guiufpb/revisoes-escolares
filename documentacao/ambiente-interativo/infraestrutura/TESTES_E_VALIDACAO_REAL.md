@@ -1,5 +1,32 @@
 # Testes e validação real
 
+## Adição integrada local — Fase 5C.3C
+
+A exceção aos gatilhos de integração abaixo exige uma única revisão nova, num único perfil,
+no motor Questionários existente e dentro de `questionarios-adicao-integrada-v3`. Somente
+o lote indivisível, com dados declarativos, inserções aditivas nas quatro integrações,
+manifesto/spec aditivos e bundle oficialmente derivado, pode ser candidato local R1.
+Composição, revisão deliberada dos consumidores/corpus, identidade utilizável, manifesto,
+descoberta estável, contratos e representantes precisam passar antes da seleção.
+
+A manutenção exclusivamente de `diagnosticAudit.corpusSha256`, decorrente desse mesmo lote
+comprovado e vinculada pelo registro existente, não exige global local por si só.
+Não há dispensa de revisão nem atualização automática do pin. Qualquer outra mudança de
+política, produtor, HTTP, build, motor, armazenamento ou infraestrutura exige global/recusa.
+Capturas só são separadas da prova escolar quando reconhecidas pela identidade; permanecem
+no delta com seus hashes. Não há exclusão genérica de output/tmp.
+
+Continuam obrigatórios build, formato, lint, Node integral de validação e arquivos inteiros:
+spec nova, associações e representantes de cadastro, recuperação, limpeza/sessões,
+acessibilidade, file-bundle e identidade. A opção explícita `--policy targeted` do executor
+inalterado declara a conferência dos demais gatilhos: terceiro conjunto, falha, interferência
+e alcance incerto antecipam global. CI recusa execução seletiva e toda PR executa a global
+integral, inclusive para consolidar o alvo integrado. Prova estrutural não aprova pedagogia.
+
+A própria implementação 5C.3C modifica infraestrutura: sua revisão deliberada, manutenção
+autorizada de corpus, congelamento e global final continuam pendentes. Testes sintéticos
+não atestam esta worktree nem autorizam o primeiro piloto real.
+
 ## Executor local mínimo — Fase 5C.1
 
 O comando opt-in `npm run test:local` está descrito em

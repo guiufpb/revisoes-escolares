@@ -120,6 +120,8 @@ function makePlan({
   changes,
   comparison,
   read,
+  readBytes,
+  additionEvidence = null,
 }) {
   const inputIdentity = comparison.target.identity || comparison.worktree?.source?.identity;
   const errors = [
@@ -134,6 +136,19 @@ function makePlan({
     files.set(file, sorted([...(files.get(file) || []), reason]));
   };
   const available = [];
+  // Lazy require avoids the structural proof's existing CONTRACT_POLICY dependency.
+  const bound =
+    additionEvidence &&
+    require('./planejador-composicao.cjs').resolveAdditionPlan(additionEvidence, {
+      comparison,
+      changes,
+      read,
+      readBytes,
+      manifest,
+    });
+  const batch = bound?.addition;
+  if (additionEvidence && !batch)
+    fallback.push('Integrated addition evidence does not match the complete snapshot');
   const instances = new Set();
   if (!manifest || errors.length)
     return {
@@ -178,7 +193,14 @@ function makePlan({
   }
   for (const change of changes) {
     const paths = sorted([change.previousPath, change.currentPath].filter(Boolean));
-    const affected = impact([manifest, previousManifest], paths);
+    const affected = batch
+      ? {
+          revisions: [batch.revisionId],
+          engines: ['questionarios'],
+          capabilities: [],
+          dependencies: [],
+        }
+      : impact([manifest, previousManifest], paths);
     const revisions = manifest.revisions.filter((r) => affected.revisions.includes(r.id));
     const directConfigs = manifest.revisions.filter((r) =>
       r.configFiles.includes(change.currentPath)
@@ -195,11 +217,23 @@ function makePlan({
       fallbackReasons: [],
     };
     const file = change.currentPath || change.previousPath;
+    if (batch) row.batchEvidence = structuredClone(bound.rows.find((e) => e.path === file));
     row.identityTreatments = paths.map(
       (p) =>
         inputIdentity?.treatments?.find((entry) => entry.path === p) || { path: p, role: 'unknown' }
     );
-    if (row.identityTreatments.every((entry) => entry.role === 'diagnostic')) {
+    if (batch && !bound.rows.some((e) => e.path === file && e.role === 'diagnostic')) {
+      row.risk = 'R1';
+      row.rule = 'questionarios-adicao-integrada-v3';
+      row.basis =
+        'Indivisible additive batch: structural proof, deliberate base/consumer/corpus review and complete byte-bound identity; local candidate only.';
+      row.contracts.push(...batch.requiredContracts);
+      for (const id of batch.requiredContracts) required.set(id, ['questionarios']);
+      for (const testFile of batch.requiredTestFiles) {
+        addFile(testFile, 'integrated addition and mandatory representatives: ' + batch.revisionId);
+        row.tests.push(testFile);
+      }
+    } else if (row.identityTreatments.every((entry) => entry.role === 'diagnostic')) {
       row.risk = 'R0';
       row.rule = 'verified-diagnostic-output';
       row.basis =

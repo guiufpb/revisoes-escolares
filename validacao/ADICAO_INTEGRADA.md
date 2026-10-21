@@ -1,5 +1,19 @@
 # Adição integrada observacional — Etapa 4.3A.2
 
+## Extensão local 5C.3C
+
+A prova v3 isolada continua estrutural e conservadora. Sua composição completa agora pode
+sustentar a regra local específica descrita em [PLANEJADOR.md](PLANEJADOR.md), depois dos gates
+de identidade, revisão e descoberta. As afirmações históricas abaixo de ausência de seleção
+referem-se às etapas anteriores; não concedem exceção genérica a R1.
+
+Os dez hashes REVIEWED e o snapshot portátil histórico permanecem intactos. O registro
+existente pode declarar `questionarios-base-revisada-v1` somente para as quatro superfícies
+de integração, com revisão explícita da base e consumidores, conforme
+[COMPOSICAO_ATESTACAO.md](COMPOSICAO_ATESTACAO.md). Sem essa declaração, a prova original
+continua recusando bases posteriores incompatíveis. As seis dependências restantes mantêm
+seus pins históricos mesmo quando há base revisada. Nenhum resultado promove hashes do alvo.
+
 A Etapa 4.3A.3 acrescenta a [composição auditável com manutenção deliberada](COMPOSICAO_ATESTACAO.md).
 O contrato estrutural abaixo permanece fechado: a política continua fora de seu lote. Somente
 o compositor pode separar esse delta após verificá-lo, mantendo o diff inteiro e todos os gates.

@@ -1,5 +1,48 @@
 # Composição de adição e atestação — Etapa 4.3A.3
 
+## Fase 5C.3C — revisão de base e manutenção escolar local
+
+O registro explícito existente, seu loader, selagem de bytes e guard de estabilidade permanecem.
+Opcionalmente, para uma base Git posterior, ele acrescenta:
+
+- `integrationBaseContract: questionarios-base-revisada-v1`;
+- `integrationBaseReview`: exatamente quatro objetos, na ordem app.entry.js, app.js,
+  registro-revisoes.js e index.html, com caminho completo, `sha256` bruto da base e
+  `rationale` descritiva com pelo menos 30 caracteres;
+- `consumerReview.integrationBaseConsumersReviewed: true`, além da análise descritiva e
+  de todos os campos já obrigatórios de revisão de consumidores, spec, corpus e bundle.
+
+Base/árvore reais, dez descritores de superfícies e alvo exato continuam vinculados pelo
+registro. A declaração admite apenas esses quatro hashes da base explicitamente revista,
+sem alterar REVIEWED; as seis outras superfícies continuam fixas. Não é override livre,
+assinatura ou autorização humana automática. Campo incompleto, hash obsoleto, outra base,
+consumidores não revistos ou ausência de composição completa impede seleção.
+Em duas adições sucessivas, a segunda base precisa de nova revisão explícita com seus próprios
+hashes/base/árvore/alvo; o registro anterior é recusado. Não é necessária uma alteração de pins
+da infraestrutura a cada adição.
+
+Somente capturas dos 29 caminhos exatos reconhecidos pela identidade, com precedência de entrada
+preservada, podem ser separadas da prova escolar. Cada adição diagnóstica deve ser não rastreada,
+ausente da base, presente no alvo e coincidir em bytes com a captura de identidade. Conserva
+linha própria `role: diagnostic` e hash em `fullChanges` e no plano. Captura desconhecida,
+modificada desde a coleta, alteração rastreada ou promoção a entrada é recusada. Não se
+ignoram namespaces. Produtores, âncoras, HTTP, corpus e identidade continuam sendo conferidos.
+
+Quando o único delta de política é o pin de corpus deliberadamente mantido, e o restante é
+exclusivamente a adição escolar v3 comprovada, a manutenção é parte do mesmo lote local,
+conforme a política temática. Não é infraestrutura arbitrária e não aciona global local
+por si só. A composição exige ainda as 16 superfícies da infraestrutura inalteradas na base/alvo,
+identidade utilizável e fonte/bundle associados, sem reatestação automática.
+`infraestrutura-global-v1` continua global e nunca emite capacidade de seleção escolar.
+Manutenção isolada sem adição também não recebe essa exceção.
+
+Somente a composição compatível emite evidência interna para o planejador, vinculada ao
+delta inteiro e snapshot. Validação/descoberta/estabilidade posteriores podem revogá-la.
+Os campos conservadores `executionPolicy: global` dos complementos isolados são preservados.
+As limitações históricas abaixo sobre quatro REVIEWED e seleção são superadas apenas por
+esta capacidade delimitada. A implementação atual ainda requer revisão deliberada, pin
+autorizado, congelamento e global final; não atesta uma revisão real.
+
 ## Fase 5B.5 — manutenção restrita da infraestrutura
 
 `infraestrutura-global-v1` é uma capacidade separada dentro do compositor existente, destinada

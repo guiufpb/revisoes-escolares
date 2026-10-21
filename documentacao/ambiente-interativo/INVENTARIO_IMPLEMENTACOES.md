@@ -1,5 +1,39 @@
 # Inventário de implementações do projeto
 
+## Fase 5C.3D — reatestação da infraestrutura (21/10/2026)
+
+Revisão deliberada dos seis deltas de corpus da 5C.3C, com pin anterior reproduzido sobre
+`814557e`, registrada em [IDENTIDADE.md](../../validacao/IDENTIDADE.md). Manutenção manual
+exclusivamente de `diagnosticAudit.corpusSha256`, sem alterar REVIEWED, produtores, HTTP,
+executor, reporter, motores, manifesto ou políticas adicionais. Os oito vínculos fonte/bundle
+permanecem e os 29 diagnósticos estão ausentes antes da global, sem cópia entre worktrees.
+Congelamento, identidade e resultados da única validação global ficam nas evidências locais
+`tmp/validacao/fase5c3d/`, sem antecipar resultado nesta nota anterior à execução.
+Adições sucessivas continuam exigindo base consolidada e revisões próprias; piloto real,
+commit e publicação não estão autorizados nesta fase.
+
+## Fase 5C.3C — seleção local de adição integrada (21/10/2026)
+
+O planejador pode propor candidato R1 exclusivamente pelo lote integral
+`questionarios-adicao-integrada-v3`, com composição, revisão deliberada, identidade utilizável
+e validação/descoberta estáveis. Seleciona arquivos completos da spec nova, associações e
+representantes obrigatórios; preserva classificações e fallback anteriores.
+O registro existente admite a base revisada das quatro integrações por
+`questionarios-base-revisada-v1`, sem renovar REVIEWED e mantendo seis consumidores fixos.
+Capturas reconhecidas conservam linhas/hashes no delta; somente adições diagnósticas comprovadas
+são separadas da prova escolar. Corpus escolar exclusivamente decorrente do lote tem a
+exceção local descrita na política temática, com revisão e pin manual ainda obrigatórios.
+
+Executor, reporter, workflow, configuração Playwright, revisões e progresso permanecem intactos.
+Fixtures verificam duas adições sucessivas com revisão distinta de base, além de recusas
+de evidência/base/alvo/hash/manifesto divergentes, diagnósticos e alterações estruturais.
+Nenhuma revisão real foi criada. Revisão deliberada da infraestrutura, manutenção autorizada
+de corpus, congelamento e global final permanecem pendentes; não há aprovação do piloto.
+Validação desta implementação: 337/337 Node, incluindo 17 regressões novas; build, formato,
+lint, manifesto (67 revisões/44 arquivos/590 casos) e diff aprovados. Auditoria read-only sem
+achados acionáveis. Evidências locais em `tmp/validacao/fase5c3c/`; identidade real bloqueada
+pelo corpus alterado, sem manutenção de pin ou global final.
+
 ## PR #52 — correção do harness Node em CI
 
 Executor aceita ambiente na injeção interna de serviços; somente o harness o fornece para

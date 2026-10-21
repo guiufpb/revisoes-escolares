@@ -7,7 +7,7 @@ const { test } = require('node:test');
 const { execFileSync } = require('node:child_process');
 const { planRepository } = require('../../scripts/validacao/planejador-cli.cjs');
 const { summarizePlan } = require('../../scripts/validacao/planejador-cli.cjs');
-const { validateRepository } = require('../../scripts/validacao/manifesto.cjs');
+const { validateRepository, discover } = require('../../scripts/validacao/manifesto.cjs');
 const { fixture } = require('./helpers/adicao-fixture.cjs');
 const {
   captureIdentity,
@@ -15,7 +15,8 @@ const {
   hash,
   POLICY_FILE,
 } = require('../../scripts/validacao/identidade.cjs');
-const { reviewedSurfaces } = require('../../scripts/validacao/planejador-adicao.cjs');
+const { reviewedSurfaces, COVERAGE } = require('../../scripts/validacao/planejador-adicao.cjs');
+const { selection, exactCases, stable } = require('../../scripts/validacao/executor-local.cjs');
 const {
   composeAddition,
   sourceRows,
@@ -37,8 +38,8 @@ const BUNDLE = 'ambiente_interativo/js/app.bundle.js';
 
 // All pin changes below are IN MEMORY, for isolated synthetic identities. The
 // repository policy and its 29 real diagnostic files are never changed/read.
-function maintained(profile = 'alice') {
-  const f = fixture(profile);
+function maintained(profile = 'alice', baseFiles = null) {
+  const f = fixture(profile, undefined, baseFiles);
   const putBoth = (p, text) => {
     f.before.set(p, text);
     f.files.set(p, text);
@@ -56,7 +57,7 @@ function maintained(profile = 'alice') {
     ),
   ];
   for (const p of sources)
-    if (p !== f.file) putBoth(p, fs.readFileSync(path.join(ROOT, p), 'utf8'));
+    if (p !== f.file && !f.files.has(p)) putBoth(p, fs.readFileSync(path.join(ROOT, p), 'utf8'));
   for (const p of [
     ...new Set(policy.diagnosticProducers.map((p) => p.source)),
     policy.diagnosticAudit.httpDeny.source,
@@ -178,6 +179,299 @@ function reject(f, pattern, review = f.seal()) {
   if (pattern) assert.match(r.composition.maintenance.reasons.join('; '), pattern);
   return r;
 }
+
+let realDeclarations;
+function additionCases(f) {
+  realDeclarations ||= discover(ROOT);
+  return f.manifest.tests.flatMap((t) => {
+    const existing = realDeclarations.filter((c) => c.file === t.file);
+    const required = f.manifest.contracts
+      .flatMap((c) => c.representatives)
+      .filter((r) => r.file === t.file)
+      .flatMap((r) =>
+        existing.filter((c) => new RegExp(r.pattern, 'u').test(c.titles.join(' › ')))
+      );
+    const titles = [...new Set(required.map((c) => JSON.stringify(c.titles)))].map(JSON.parse);
+    if (!existing.length) titles.push(...COVERAGE.map((tag) => ['[adicao:' + tag + '] synthetic']));
+    while (titles.length < t.expectedCases) titles.push(['synthetic-' + titles.length]);
+    assert.ok(titles.length <= t.expectedCases);
+    return titles.map((titles) => ({
+      file: t.file,
+      titles,
+      fullTitle: titles.join(' › '),
+      project: '',
+      repeatEachIndex: 0,
+      id: logicalId(t.file, titles),
+    }));
+  });
+}
+function additionPlan(f, evidence = run(f).selectionEvidence, cases = additionCases(f)) {
+  return makePlan({
+    ...f.input,
+    manifest: f.manifest,
+    previousManifest: JSON.parse(f.before.get('validacao/manifesto.json')),
+    validation: { errors: [] },
+    cases,
+    additionEvidence: evidence,
+  });
+}
+function explicitIntegrationBase(f) {
+  f.data.reviewedSurfaces = reviewedSurfaces(f.input.read).map(
+    ({ maintenance: _maintenance, ...e }) => e
+  );
+  f.data.integrationBaseContract = 'questionarios-base-revisada-v1';
+  f.data.integrationBaseReview = reviewedSurfaces(f.input.read)
+    .slice(0, 4)
+    .map((e) => ({
+      path: e.path,
+      sha256: e.baseSha256,
+      rationale:
+        'Synthetic deliberate base and indirect consumers reviewed for this exact Git base.',
+    }));
+  f.data.consumerReview.integrationBaseConsumersReviewed = true;
+}
+function diagnosticAddition(f) {
+  const path = f.policy.diagnosticProducers[0].paths[0];
+  f.before.delete(path);
+  f.input.changes.push({ type: 'A', previousPath: null, currentPath: path });
+  f.input.readBytes = (side, p) => {
+    const bytes = (side === 'before' ? f.before : f.files).get(p);
+    return bytes === undefined ? null : Buffer.from(bytes);
+  };
+  f.refresh();
+  return path;
+}
+
+test('5C.3C: composição integral seleciona R1 por lote e executor mantém arquivos completos', () => {
+  const f = maintained(),
+    r = run(f);
+  const plan = additionPlan(f, r.selectionEvidence);
+  assert.equal(plan.result, 'candidate', JSON.stringify(plan));
+  assert.ok(plan.changes.every((c) => c.risk === 'R1' && c.rule === r.addition.contract));
+  assert.deepEqual(plan.proposed.files, r.addition.requiredTestFiles);
+  assert.deepEqual(
+    plan.contracts.represented.map((c) => c.id).sort(),
+    [...r.addition.requiredContracts].sort()
+  );
+  for (const c of plan.changes) {
+    const row = r.composition.fullChanges.find((e) => e.path === c.currentPath);
+    assert.deepEqual(c.batchEvidence, row);
+  }
+  selection(plan, r.composition, 'targeted');
+  assert.throws(() => selection(plan, r.composition, 'global'), /global-required/);
+  exactCases(
+    plan.proposed.cases,
+    plan.available.cases.filter((c) => plan.proposed.files.includes(c.file))
+  );
+  assert.throws(
+    () => exactCases(plan.proposed.cases, plan.proposed.cases.slice(1)),
+    /selection-mismatch/
+  );
+  assert.throws(
+    () =>
+      stable(plan, { ...f.input.comparison.worktree.source, sourceFingerprint: 'e'.repeat(64) }),
+    /unstable/
+  );
+  const missing = additionCases(f).filter(
+    (c) =>
+      !new RegExp(
+        f.manifest.contracts.find((c) => c.id === 'identidade').representatives[0].pattern,
+        'u'
+      ).test(c.fullTitle)
+  );
+  assert.notEqual(additionPlan(f, r.selectionEvidence, missing).result, 'candidate');
+  assert.notEqual(additionPlan(f, {}).result, 'candidate');
+  assert.notEqual(
+    additionPlan(f, JSON.parse(JSON.stringify(r.selectionEvidence))).result,
+    'candidate'
+  );
+});
+
+for (const [label, mutate] of [
+  [
+    'base',
+    (f) => {
+      f.input.comparison.base.commit = 'd'.repeat(40);
+    },
+  ],
+  [
+    'alvo',
+    (f) => {
+      f.input.comparison.target.sourceFingerprint = 'd'.repeat(64);
+    },
+  ],
+  [
+    'hash',
+    (f) => {
+      f.files.set(f.file, f.files.get(f.file) + '\n');
+    },
+  ],
+  [
+    'bundle',
+    (f) => {
+      f.files.set(BUNDLE, f.files.get(BUNDLE) + '\n');
+    },
+  ],
+  [
+    'consumidor',
+    (f) => {
+      const path = 'ambiente_interativo/js/armazenamento.js';
+      f.files.set(path, f.files.get(path) + '\n');
+    },
+  ],
+  [
+    'manifesto',
+    (f) => {
+      f.manifest.version = '999.0.0';
+    },
+  ],
+  [
+    'caminhos',
+    (f) => {
+      f.input.changes.push({ type: 'M', currentPath: 'vite.config.js' });
+    },
+  ],
+])
+  test('5C.3C: evidência interna recusa divergência de ' + label, () => {
+    const f = maintained(),
+      r = run(f);
+    mutate(f);
+    assert.notEqual(additionPlan(f, r.selectionEvidence).result, 'candidate');
+  });
+
+test('5C.3C: duas adições sucessivas exigem revisão explícita de cada base, sem renovar REVIEWED', () => {
+  const first = maintained();
+  // A later Git base already has integrations; no automatic promotion of their hashes.
+  const entry = 'ambiente_interativo/js/app.entry.js';
+  for (const map of [first.before, first.files])
+    map.set(entry, map.get(entry) + '\n// Reviewed synthetic base.\n');
+  const initialPolicy = JSON.parse(first.before.get(POLICY_FILE));
+  const initialManifest = JSON.parse(first.before.get('validacao/manifesto.json'));
+  first.before.set(
+    BUNDLE,
+    [
+      ...new Set(
+        initialManifest.revisions
+          .filter((r) => r.engine === 'questionarios')
+          .flatMap((r) => r.contentSources)
+      ),
+    ]
+      .map((p) => first.before.get(p))
+      .join('\n')
+  );
+  const initialSnapshot = () =>
+    captureIdentity({
+      paths: [...first.before.keys()],
+      policy: initialPolicy,
+      readBytes: (p) => (first.before.has(p) ? Buffer.from(first.before.get(p)) : null),
+    });
+  initialPolicy.diagnosticAudit.corpusSha256 = initialSnapshot().corpusFingerprint;
+  first.before.set(POLICY_FILE, JSON.stringify(initialPolicy));
+  assert.equal(identityUsable(initialSnapshot()), true);
+  first.data.base.policyFingerprint = hash(JSON.stringify(initialPolicy));
+  first.refresh();
+  reject(first, /Addition incomplete/);
+  explicitIntegrationBase(first);
+  assert.equal(additionPlan(first).result, 'candidate');
+  const next = maintained('mariana', first.files);
+  // Explicitly materialize the synthetic base's own valid identity/corpus, too.
+  const basePolicy = JSON.parse(first.files.get(POLICY_FILE));
+  next.before.set(POLICY_FILE, first.files.get(POLICY_FILE));
+  const baseIdentity = captureIdentity({
+    paths: [...first.files.keys()],
+    policy: basePolicy,
+    readBytes: (p) => (first.files.has(p) ? Buffer.from(first.files.get(p)) : null),
+  });
+  assert.equal(identityUsable(baseIdentity), true);
+  next.data.base.policyFingerprint = hash(JSON.stringify(basePolicy));
+  next.input.comparison.base.commit = 'd'.repeat(40);
+  next.baseInfo.commit = 'd'.repeat(40);
+  next.baseInfo.tree = 'e'.repeat(40);
+  next.data.base.commit = next.baseInfo.commit;
+  next.data.base.tree = next.baseInfo.tree;
+  next.refresh();
+  reject(next, /Addition incomplete/);
+  next.data.integrationBaseContract = first.data.integrationBaseContract;
+  next.data.integrationBaseReview = structuredClone(first.data.integrationBaseReview);
+  next.data.consumerReview.integrationBaseConsumersReviewed = true;
+  reject(next, /integration base/);
+  explicitIntegrationBase(next);
+  const r = run(next);
+  assert.equal(r.composition.status, 'compatible', JSON.stringify(r));
+  assert.equal(additionPlan(next, r.selectionEvidence).result, 'candidate');
+  assert.deepEqual(
+    reviewedSurfaces(next.input.read).map((e) => e.expectedSha256),
+    reviewedSurfaces(first.input.read).map((e) => e.expectedSha256)
+  );
+  next.data.integrationBaseReview.push({
+    path: 'ambiente_interativo/js/armazenamento.js',
+    sha256: 'f'.repeat(64),
+    rationale: 'No generic override is authorized in this record.',
+  });
+  reject(next, /integration base/);
+});
+
+test('5C.3C: base revisada não dispensa os seis consumidores fixos nem inserções completas', () => {
+  const f = maintained();
+  const path = 'ambiente_interativo/js/armazenamento.js';
+  for (const map of [f.before, f.files])
+    map.set(path, map.get(path) + '\n// Changed shared base.\n');
+  f.refresh();
+  explicitIntegrationBase(f);
+  reject(f, /Addition incomplete/);
+  const partial = maintained();
+  partial.input.changes = partial.input.changes.filter(
+    (c) => c.currentPath !== 'ambiente_interativo/js/app.js'
+  );
+  reject(partial, /Addition incomplete/);
+});
+
+test('5C.3C: diagnóstico exato permanece no delta, com hash, fora somente da prova escolar', () => {
+  const f = maintained(),
+    path = diagnosticAddition(f),
+    r = run(f);
+  assert.equal(r.composition.status, 'compatible', JSON.stringify(r));
+  assert.ok(!r.addition.claimedChanges.some((c) => c.path === path));
+  const plan = additionPlan(f, r.selectionEvidence);
+  assert.equal(plan.result, 'candidate', JSON.stringify(plan));
+  const row = plan.changes.find((c) => c.currentPath === path);
+  assert.equal(row.risk, 'R0');
+  assert.equal(row.batchEvidence.afterSha256, hash(f.files.get(path)));
+  f.files.set(path, 'changed after identity');
+  reject(f, /Diagnostic/);
+});
+
+test('5C.3C: captura modificada, desconhecida ou promovida a entrada nunca recebe dispensa', () => {
+  const f = maintained(),
+    path = diagnosticAddition(f);
+  f.before.set(path, 'previous capture');
+  f.input.changes.find((c) => c.currentPath === path).type = 'M';
+  f.refresh();
+  reject(f, /Diagnostic/);
+  const unknown = maintained();
+  unknown.files.set('output/unknown.png', 'unknown');
+  unknown.input.changes.push({ type: 'A', currentPath: 'output/unknown.png' });
+  reject(unknown, /Addition incomplete/);
+  const input = maintained(),
+    promoted = diagnosticAddition(input);
+  input.identity.treatments.find((e) => e.path === promoted).role = 'input';
+  assert.equal(run(input).selectionEvidence, null);
+});
+
+for (const file of [
+  'ambiente_interativo/js/gramatica-questionarios.js',
+  'ambiente_interativo/js/armazenamento.js',
+  'vite.config.js',
+  'scripts/gerar_previews.js',
+  'scripts/identidade-ambiente-local.cjs',
+])
+  test('5C.3C: lote não absorve alteração em ' + file, () => {
+    const f = maintained();
+    f.files.set(file, (f.files.get(file) || '') + '\n// Extra structural change.\n');
+    f.input.changes.push({ type: 'M', currentPath: file });
+    assert.equal(run(f).selectionEvidence, null);
+    assert.notEqual(additionPlan(f).result, 'candidate');
+  });
 
 function infrastructureFixture() {
   const f = maintained();

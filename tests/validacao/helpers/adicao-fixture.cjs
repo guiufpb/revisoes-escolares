@@ -43,8 +43,8 @@ function loadSnapshot(snapshotFile = SNAPSHOT_FILE) {
   assert.equal(hash(JSON.stringify(snapshot)), SNAPSHOT_SHA256, 'Snapshot integrity mismatch');
   return files;
 }
-function fixture(profile = 'alice', snapshotFile = SNAPSHOT_FILE) {
-  const files = loadSnapshot(snapshotFile);
+function fixture(profile = 'alice', snapshotFile = SNAPSHOT_FILE, baseFiles = null) {
+  const files = baseFiles ? new Map(baseFiles) : loadSnapshot(snapshotFile);
   const before = new Map(files),
     id = profile + '-historia-synthetic',
     key = 'revisoesEscolares.' + profile + '.historia.synthetic.v1';
@@ -166,7 +166,8 @@ function fixture(profile = 'alice', snapshotFile = SNAPSHOT_FILE) {
       '\n'
   );
   const manifest = JSON.parse(files.get(MANIFEST));
-  manifest.version = '1.2.0';
+  const [major, minor] = manifest.version.split('.').map(Number);
+  manifest.version = major + '.' + (minor + 1) + '.0';
   const revision = structuredClone(
     manifest.revisions.find((r) => r.id === 'alice-historia-objetos-memorias-outubro-2026')
   );

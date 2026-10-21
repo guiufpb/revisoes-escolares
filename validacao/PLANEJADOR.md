@@ -1,5 +1,34 @@
 # Planejador observacional — Etapa 2
 
+## Fase 5C.3C — candidato local por lote comprovado
+
+O executor local permanece intacto. Após composição v3 completa e validação existente,
+`planRepository` transmite a `makePlan` uma capacidade interna em memória, impossível de
+reconstituir de um plano JSON. A capacidade fica vinculada à base, alvo/procedência,
+identidade inteira, manifesto, delta completo e hashes anteriores/atuais de todos os caminhos.
+Uma divergência invalida a exceção; as regras genéricas R1/R2 e seus negativos permanecem.
+
+Somente o lote aditivo comprovado recebe R1 pela regra
+`questionarios-adicao-integrada-v3`; cada linha conserva `batchEvidence` com seus hashes.
+Capturas reconhecidas continuam R0, visíveis no mesmo delta. Não há aprovação por arquivo
+compartilhado isolado. Selecionam-se spec nova, associações da revisão e todos os representantes
+de `requiredContracts`, incluindo acessibilidade, file-bundle e identidade, por arquivos inteiros.
+Referência sem resolução, descoberta divergente ou instabilidade conserva global/invalidade.
+
+A prova estrutural e a composição continuam com `executionPolicy: global` como contrato
+conservador isolado. Somente sua composição completa pode emitir a evidência interna local.
+Sem registro deliberado válido ou corpus válido não há candidato de adição. As recusas
+permanecem nos complementos; razões de classificação e fallback ficam no plano.
+Em CI (`CI`, `GITHUB_ACTIONS` ou `VALIDACAO_CI_OBSERVACIONAL`) a CLI não transmite a
+capacidade local. A global integral de todas as PRs e o comparador não mudam.
+
+Base revisada, capturas e corpus seguem [COMPOSICAO_ATESTACAO.md](COMPOSICAO_ATESTACAO.md).
+A exceção normativa é a de
+[Testes e validação real](../documentacao/ambiente-interativo/infraestrutura/TESTES_E_VALIDACAO_REAL.md).
+Cadência de três conjuntos, falhas/interferência/alcance incerto continuam globais.
+Esta extensão de infraestrutura ainda precisa de revisão deliberada e global final;
+nenhum pin é renovado e nenhum piloto real é certificado nesta fase.
+
 ## Fase 5C.1 — adaptador local mínimo
 
 `scripts/validacao/executor-local.cjs` consome `planRepository`, sem modificar o planejador,

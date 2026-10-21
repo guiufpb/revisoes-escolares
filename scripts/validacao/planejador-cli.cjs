@@ -167,7 +167,21 @@ function planRepository(root, input, onAdditionEvidence = () => {}, compositionO
     composition.compatibility.reasons.push('Existing validation/stability gate failed');
     composition.effectiveIdentity = 'blocked';
   }
-  let plan = makePlan({ manifest, previousManifest, validation, cases, ...collected });
+  const additionEvidence =
+    !process.env.CI &&
+    !process.env.GITHUB_ACTIONS &&
+    !process.env.VALIDACAO_CI_OBSERVACIONAL &&
+    !validation.errors.length
+      ? composed.selectionEvidence
+      : null;
+  let plan = makePlan({
+    manifest,
+    previousManifest,
+    validation,
+    cases,
+    ...collected,
+    additionEvidence,
+  });
   if (
     composition.capability === INFRA_CONTRACT &&
     plan.valid &&

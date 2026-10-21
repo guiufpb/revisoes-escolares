@@ -1,5 +1,42 @@
 # Identidade de entradas e artefatos — Etapa 2.1
 
+## Fase 5C.3D — manutenção deliberada da seleção local (21/10/2026)
+
+Revisão autorizada sobre a base `814557ec0762bb4732083edb2586e991be3c588e` reproduziu
+o corpus anterior e examinou os seis deltas executáveis/de testes da 5C.3C, seus consumidores
+diretos/indiretos, provas de lote/base revisada, bindings e leituras de diagnósticos.
+Somente `diagnosticAudit.corpusSha256` é mantido manualmente:
+de `0e66647c2bf8a21460d37fb17a797cf456f83f5eb08913f50708b559df3ef48c`
+para `e10d6a4aef1754bd4fdb34620ea8e29fc4dad8a073ed78a3592f8e3ee0e9388c`.
+
+As leituras novas de capturas servem exclusivamente a hash/procedência, sem conteúdo ou
+oráculo escolar. Produtores/âncoras, HTTP, entradas privadas, classificações, dez REVIEWED e
+oito vínculos fonte/bundle permanecem. Os 29 caminhos diagnósticos estão ausentes nesta
+worktree antes da global; não foram copiados de outras cópias. A ausência continua explícita.
+
+Reconstrução, hashes individuais, consumidores, justificativas, limitações e preservação das
+evidências anteriores ficam em `tmp/validacao/fase5c3d/REVISAO_CORPUS.md` e JSONs associados.
+Identidade, congelamento e resultado da única global final são registrados nessa pasta
+após cada gate, sem aprovação antecipada nesta anotação. A manutenção da infraestrutura
+não usa `infraestrutura-global-v1` nem autoriza piloto escolar, CI seletiva ou publicação.
+
+## Fase 5C.3C — identidade preservada para seleção escolar local
+
+Não há mudança da política 1.1.0/formato 2 nem de seus pins. A identidade utilizável,
+os 29 diagnósticos exatos, precedência de entrada, produtores/âncoras, HTTP e vínculos
+fonte/bundle continuam obrigatórios. O compositor reaproveita os papéis comprovados para
+separar somente adições diagnósticas da prova escolar, mantendo delta e hashes integrais.
+
+A manutenção exclusiva do corpus decorrente da adição v3 completa pode integrar o lote local
+conforme [COMPOSICAO_ATESTACAO.md](COMPOSICAO_ATESTACAO.md) e a política temática. Continua
+exigindo revisão deliberada do corpus/spec/consumidores e registro vinculado ao alvo;
+nenhum cálculo ou teste verde escreve o pin. Outras mudanças de infraestrutura permanecem globais.
+O contrato de base revisada das quatro integrações não substitui atestação de identidade.
+
+Esta implementação altera o corpus da infraestrutura. A identidade real poderá ficar
+obsoleta até revisão deliberada e autorização específica de manutenção. Nenhum pin foi
+atualizado; global final fica para o snapshot congelado com identidade utilizável.
+
 ## PR #52 — manutenção após correção dos testes em CI
 
 Revisão deliberada autorizada sobre `870352cb833d8abb0389f3bd4d8f0ca281f36477`

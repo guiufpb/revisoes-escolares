@@ -1,6 +1,6 @@
 'use strict';
 
-// A companion diagnostic, never a selector, risk override or identity exception.
+// Structural proof only; local selection additionally requires the complete composition.
 const acorn = require('acorn');
 const html = require('prettier/plugins/html').parsers.html;
 const path = require('node:path');
@@ -442,7 +442,56 @@ function validateManifestDelta(before, after, id, testFile) {
   );
   return added[0];
 }
-function proveAddition({ changes, read, comparison }) {
+const INTEGRATION = [ENTRY, APP, REGISTRY, HTML];
+const reviewedBases = new WeakMap();
+// Only the existing explicit, byte-bound review may describe a newer integration base.
+// Six shared consumers retain their historical pins without any override.
+function reviewIntegrationBase(collected, review, baseInfo) {
+  const r = review?.data;
+  if (
+    !Buffer.isBuffer(review?.bytes) ||
+    hash(review.bytes) !== review.fingerprint ||
+    !equal(json(review.bytes.toString('utf8')), r) ||
+    !/^tmp\/validacao\/atestacoes\/[a-zA-Z0-9-]+\.json$/.test(review.path) ||
+    r?.contract !== 'manutencao-deliberada-atestacao-v1' ||
+    r.schemaVersion !== 1 ||
+    r.decision !== 'reviewed-no-new-diagnostic-consumers' ||
+    r.integrationBaseContract !== 'questionarios-base-revisada-v1' ||
+    typeof r.reviewer !== 'string' ||
+    r.reviewer.trim().length < 30 ||
+    !Number.isFinite(Date.parse(r.reviewedAt)) ||
+    baseInfo?.kind !== 'git-commit' ||
+    !/^[a-f0-9]{40}$/.test(baseInfo.commit || '') ||
+    !/^[a-f0-9]{40}$/.test(baseInfo.tree || '') ||
+    r.base?.commit !== baseInfo.commit ||
+    r.base?.tree !== baseInfo.tree ||
+    collected.comparison.base.commit !== baseInfo.commit ||
+    r.consumerReview?.integrationBaseConsumersReviewed !== true ||
+    typeof r.consumerReview.analysis !== 'string' ||
+    r.consumerReview.analysis.trim().length < 30
+  )
+    return null;
+  const entries = r.integrationBaseReview;
+  if (
+    !Array.isArray(entries) ||
+    entries.length !== INTEGRATION.length ||
+    !entries.every(
+      (e, i) =>
+        equal(Object.keys(e).sort(), ['path', 'rationale', 'sha256']) &&
+        e.path === INTEGRATION[i] &&
+        typeof e.rationale === 'string' &&
+        e.rationale.trim().length >= 30 &&
+        /^[a-f0-9]{64}$/.test(e.sha256 || '') &&
+        collected.read('before', e.path) !== null &&
+        e.sha256 === hash(collected.read('before', e.path))
+    )
+  )
+    return null;
+  const token = Object.freeze({});
+  reviewedBases.set(token, { entries: structuredClone(entries), base: baseInfo.commit });
+  return token;
+}
+function proveAddition({ changes, read, comparison }, reviewedBase = null) {
   const result = {
     schemaVersion: 1,
     contract: CONTRACT,
@@ -573,7 +622,12 @@ function proveAddition({ changes, read, comparison }) {
     );
     if (changes.some((c) => c.currentPath === INVENTORY)) allowed.set(INVENTORY, 'M');
     for (const [p, digest] of Object.entries(REVIEWED)) {
-      fail(hash(read('before', p) || '') === digest, 'Unreviewed consumer/anchor: ' + p);
+      const revised = reviewedBases.get(reviewedBase);
+      const expected =
+        revised?.base === comparison?.base?.commit
+          ? revised.entries.find((e) => e.path === p)?.sha256 || digest
+          : digest;
+      fail(hash(read('before', p) || '') === expected, 'Unreviewed consumer/anchor: ' + p);
       if (!allowed.has(p))
         fail(read('after', p) === read('before', p), 'Shared dependency changed: ' + p);
     }
@@ -784,4 +838,11 @@ function reviewedSurfaces(read) {
     maintenance: 'deliberate-review-required; never automatically advanced',
   }));
 }
-module.exports = { CONTRACT, COVERAGE, proveAddition, reviewedSurfaces, staticJson: json };
+module.exports = {
+  CONTRACT,
+  COVERAGE,
+  proveAddition,
+  reviewIntegrationBase,
+  reviewedSurfaces,
+  staticJson: json,
+};
