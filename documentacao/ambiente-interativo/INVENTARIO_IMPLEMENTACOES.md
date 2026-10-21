@@ -1,5 +1,13 @@
 # Inventário de implementações do projeto
 
+## PR #52 — correção do harness Node em CI
+
+Executor aceita ambiente na injeção interna de serviços; somente o harness o fornece para
+simular execução local. A CLI real conserva o bloqueio CI, coberto também por subprocessos.
+Manutenção deliberada exclusiva do pin de corpus registrada em `validacao/IDENTIDADE.md`.
+Evidências, congelamento e resultado da global final em `tmp/validacao/fase5c1-ci-fix/`,
+sem antecipar aprovação, publicação ou ampliação para novas revisões.
+
 ## Fase 5C.2A — consolidação e identidade local
 
 Executor da 5C.1 consolidado localmente em `1efb22b047cc8af741d13cb0975958fca94ec0c7`.

@@ -242,7 +242,8 @@ async function execute(root, input, services = {}) {
     plan,
     composition;
   try {
-    if (process.env.CI || process.env.VALIDACAO_CI_OBSERVACIONAL === '1') fail('local-only');
+    const env = services.env ?? process.env;
+    if (env.CI || env.VALIDACAO_CI_OBSERVACIONAL === '1') fail('local-only');
     if (input.execute && input.policy === 'targeted')
       await timed(stage, () => (services.prepare || prepare)(root));
     const review = input['attestation-review']

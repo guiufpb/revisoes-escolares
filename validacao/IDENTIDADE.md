@@ -1,5 +1,22 @@
 # Identidade de entradas e artefatos — Etapa 2.1
 
+## PR #52 — manutenção após correção dos testes em CI
+
+Revisão deliberada autorizada sobre `870352cb833d8abb0389f3bd4d8f0ca281f36477`
+reproduziu o corpus anterior e identificou somente os deltas do executor e de seu teste Node.
+Mantém manualmente apenas `diagnosticAudit.corpusSha256`, de
+`823ff468060140bd1a13538a7d8c72be0dc903782b7883930c2f2944863846a6` para
+`0e66647c2bf8a21460d37fb17a797cf456f83f5eb08913f50708b559df3ef48c`.
+
+O harness injeta ambiente local; a CLI real usa `process.env` e conserva o bloqueio CI.
+As novas leituras conferem metadados do resumo gerado em tmp, sem consumir capturas.
+Produtores, âncoras, proteção HTTP, demais pins, REVIEWED, contratos e fonte/bundle não mudam.
+Os 29 diagnósticos conservam os hashes da base validada. A revisão não usa
+`infraestrutura-global-v1` nem autoriza nova revisão escolar ou seleção na CI.
+Reconstrução, hashes, justificativas e prévia utilizável estão em
+`tmp/validacao/fase5c1-ci-fix/auditoria-final.json`. Congelamento e resultado da única global
+final serão registrados nessa pasta; esta nota anterior à execução não presume aprovação.
+
 ## Fase 5C.2A — manutenção local do corpus do executor
 
 Após revisão deliberada autorizada dos deltas da 5C.1 consolidada em

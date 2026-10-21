@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const { test } = require('node:test');
-const { execFileSync } = require('node:child_process');
+const { execFileSync, spawnSync } = require('node:child_process');
 const { makePlan } = require('../../scripts/validacao/planejador.cjs');
 const { logicalId } = require('../../scripts/validacao/catalogo.cjs');
 const { captureIdentity } = require('../../scripts/validacao/identidade.cjs');
@@ -256,6 +256,7 @@ async function harness(input = {}, mutate = () => {}) {
     preparations = 0,
     lists = 0;
   const services = {
+    env: {}, // Synthetic services model a local process, even when Node tests run in CI.
     prepare: async () => {
       preparations++;
     },
@@ -293,6 +294,68 @@ async function harness(input = {}, mutate = () => {}) {
   );
   return { ...result, root, executions, preparations, lists };
 }
+
+test('ambiente injetado: cada sinal de CI bloqueia antes de preparar, planejar ou executar', async () => {
+  for (const env of [{ CI: 'true' }, { CI: 'false' }, { VALIDACAO_CI_OBSERVACIONAL: '1' }]) {
+    let planned = false;
+    const result = await harness({}, (_f, services) => {
+      services.env = env;
+      services.plan = () => {
+        planned = true;
+        assert.fail('CI must not plan');
+      };
+    });
+    assert.equal(result.code, 1);
+    assert.equal(result.summary.status, 'blocked');
+    assert.deepEqual(result.summary.failure, { stage: 'preparation', code: 'local-only' });
+    assert.equal(result.summary.selectiveSuccess, false);
+    assert.equal(result.summary.fallback, null);
+    assert.equal(result.preparations, 0);
+    assert.equal(planned, false);
+    assert.equal(result.lists, 0);
+    assert.equal(result.executions, 0);
+  }
+});
+
+test('CLI real sem injeção recusa ambos os sinais de CI em dry-run e execução', () => {
+  const inherited = { ...process.env };
+  const childEnv = { ...inherited };
+  delete childEnv.CI;
+  delete childEnv.VALIDACAO_CI_OBSERVACIONAL;
+  for (const env of [{ CI: 'true' }, { VALIDACAO_CI_OBSERVACIONAL: '1' }]) {
+    for (const mode of ['--dry-run', '--execute']) {
+      const result = spawnSync(
+        process.execPath,
+        [
+          path.join(ROOT, 'scripts/validacao/executor-local.cjs'),
+          mode,
+          '--mode',
+          'worktree',
+          '--base',
+          'HEAD',
+          '--policy',
+          'targeted',
+        ],
+        { cwd: ROOT, encoding: 'utf8', env: { ...childEnv, ...env } }
+      );
+      assert.ifError(result.error);
+      assert.equal(result.status, 1);
+      assert.equal(result.signal, null);
+      const match = result.stdout.match(/Executor local: blocked; resumo: (.+)/);
+      assert.ok(match, result.stdout);
+      const summaryFile = path.resolve(ROOT, match[1].trim(), 'resumo.json');
+      const summary = JSON.parse(fs.readFileSync(summaryFile, 'utf8'));
+      assert.deepEqual(summary.failure, { stage: 'preparation', code: 'local-only' });
+      assert.equal(summary.selectiveSuccess, false);
+      assert.equal(summary.run, null);
+      assert.equal(summary.fallback, null);
+      for (const stage of ['preparation', 'planning', 'discovery', 'execution'])
+        assert.equal(summary.durationsMs[stage], 0);
+      assert.equal(fs.existsSync(path.join(path.dirname(summaryFile), 'plano.json')), false);
+    }
+  }
+  assert.deepEqual({ ...process.env }, inherited);
+});
 
 test('dry-run não prepara nem executa corpos; execução mede etapas e associa um único run novo', async () => {
   const dry = await harness({ execute: false });
