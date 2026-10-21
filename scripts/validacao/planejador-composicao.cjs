@@ -4,7 +4,12 @@
 // or a cryptographic signature of human review. This module NEVER writes a pin.
 const acorn = require('acorn');
 const { hash, identityUsable, POLICY_FILE, safeRead } = require('./identidade.cjs');
-const { proveAddition, reviewedSurfaces, staticJson } = require('./planejador-adicao.cjs');
+const {
+  proveAddition,
+  reviewIntegrationBase,
+  reviewedSurfaces,
+  staticJson,
+} = require('./planejador-adicao.cjs');
 const CONTRACT = 'adicao-atestacao-composta-v1';
 const REVIEW_CONTRACT = 'manutencao-deliberada-atestacao-v1';
 const INFRA_CONTRACT = 'infraestrutura-global-v1';
@@ -68,6 +73,60 @@ const check = (condition, reason) => {
 };
 const prose = (s) => typeof s === 'string' && s.trim().length >= 30;
 const sorted = (a) => [...a].sort();
+// Minted only after composeAddition has checked the entire batch. No exported
+// issuer accepts a caller-supplied "proven" flag or JSON report.
+const additionPlans = new WeakMap();
+function batchStamp({ comparison, changes, read, readBytes }, rows) {
+  const paths = new Map(rows.map((e) => [e.path, e]));
+  for (const path of [...reviewedSurfaces(read).map((e) => e.path), ...INFRASTRUCTURE, BUNDLE])
+    if (!paths.has(path)) paths.set(path, { path });
+  return hash(
+    JSON.stringify({
+      comparison,
+      changes,
+      bytes: [...paths.values()].map((e) => [
+        e.path,
+        ...['before', 'after'].map((side) => {
+          const bytes = e.role === 'diagnostic' ? readBytes?.(side, e.path) : read(side, e.path);
+          return bytes == null ? null : hash(bytes);
+        }),
+      ]),
+      manifest: read('after', MANIFEST),
+    })
+  );
+}
+function bindAdditionPlan(collected, addition, composition) {
+  if (
+    addition.contract !== 'questionarios-adicao-integrada-v3' ||
+    addition.structuralStatus !== 'proven' ||
+    addition.identityStatus !== 'usable' ||
+    composition.contract !== CONTRACT ||
+    composition.status !== 'compatible' ||
+    composition.maintenance.status !== 'verified-evidence' ||
+    composition.compatibility.status !== 'same-target' ||
+    composition.effectiveIdentity !== 'usable' ||
+    composition.localSelection?.rule !== addition.contract
+  )
+    return null;
+  const token = Object.freeze({});
+  const rows = structuredClone(composition.fullChanges);
+  additionPlans.set(token, {
+    addition: structuredClone(addition),
+    rows,
+    stamp: batchStamp(collected, rows),
+  });
+  return token;
+}
+function resolveAdditionPlan(token, input) {
+  const bound = additionPlans.get(token);
+  const identity = input.comparison.target.identity || input.comparison.worktree?.source?.identity;
+  return bound &&
+    identityUsable(identity) &&
+    bound.stamp === batchStamp(input, bound.rows) &&
+    bound.addition.manifestDescriptor.fingerprint === hash(JSON.stringify(input.manifest))
+    ? structuredClone(bound)
+    : null;
+}
 function sourceRows(collected) {
   return collected.changes
     .map((c) => {
@@ -87,6 +146,21 @@ function sourceRows(collected) {
         /^tests\/[a-z0-9-]+\.spec\.js$/.test(p);
       const before = publicText ? collected.read('before', p) : null;
       const after = publicText ? collected.read('after', p) : null;
+      const identity =
+        collected.comparison.target.identity || collected.comparison.worktree?.source?.identity;
+      const artifact = identity?.artifacts?.entries?.find((e) => e.path === p);
+      if (
+        !publicText &&
+        artifact?.role === 'diagnostic' &&
+        identity.treatments?.some((e) => e.path === p && e.role === 'diagnostic')
+      )
+        return {
+          path: p,
+          type: c.type,
+          beforeSha256: null,
+          afterSha256: artifact.sha256,
+          role: 'diagnostic',
+        };
       return {
         path: p,
         type: c.type,
@@ -291,6 +365,7 @@ function composeAddition(collected, review = null, baseInfo = null) {
   };
   let stage = 'scope';
   let addition;
+  let reviewedBase = null;
   const policyRows = collected.changes.filter(
     (c) => c.currentPath === POLICY_FILE || c.previousPath === POLICY_FILE
   );
@@ -355,11 +430,41 @@ function composeAddition(collected, review = null, baseInfo = null) {
     }
     stage = 'policy';
     const { before, after } = policyDelta(collected, infrastructure);
-    if (!infrastructure)
-      addition = proveAddition({
-        ...collected,
-        changes: collected.changes.filter((c) => c.currentPath !== POLICY_FILE),
-      });
+    if (!infrastructure) {
+      reviewedBase = reviewIntegrationBase(collected, review, baseInfo);
+      check(
+        (!review?.data?.integrationBaseReview && !review?.data?.integrationBaseContract) ||
+          reviewedBase,
+        'Reviewed integration base missing, obsolete or not explicitly reviewed'
+      );
+      const identity =
+        collected.comparison.target.identity || collected.comparison.worktree?.source?.identity;
+      const diagnostics = result.fullChanges.filter((e) => e.role === 'diagnostic');
+      for (const entry of diagnostics) {
+        const change = collected.changes.find((c) => c.currentPath === entry.path);
+        const bytes = collected.readBytes?.('after', entry.path);
+        check(
+          identityUsable(identity) &&
+            after.diagnosticProducers.flatMap((p) => p.paths).includes(entry.path) &&
+            change.type === 'A' &&
+            !change.previousPath &&
+            collected.readBytes?.('before', entry.path) === null &&
+            Buffer.isBuffer(bytes) &&
+            hash(bytes) === entry.afterSha256,
+          'Diagnostic must be an exact identity-bound untracked output; changed captures refused'
+        );
+      }
+      addition = proveAddition(
+        {
+          ...collected,
+          changes: collected.changes.filter(
+            (c) =>
+              c.currentPath !== POLICY_FILE && !diagnostics.some((e) => e.path === c.currentPath)
+          ),
+        },
+        reviewedBase
+      );
+    }
     check(
       infrastructure ||
         addition.structuralStatus === 'proven' ||
@@ -534,7 +639,11 @@ function composeAddition(collected, review = null, baseInfo = null) {
         result.reviewedSurfaces.map(({ maintenance: _maintenance, ...entry }) => entry)
       ) &&
         result.reviewedSurfaces.every((e) =>
-          infrastructure ? e.baseSha256 === e.targetSha256 : e.baseSha256 === e.expectedSha256
+          infrastructure
+            ? e.baseSha256 === e.targetSha256
+            : e.baseSha256 === e.expectedSha256 ||
+              (reviewedBase &&
+                r.integrationBaseReview.some((b) => b.path === e.path && b.sha256 === e.baseSha256))
         ),
       'REVIEWED baseline obsolete or not reviewed'
     );
@@ -547,7 +656,7 @@ function composeAddition(collected, review = null, baseInfo = null) {
       'Consumer/bundle review incomplete'
     );
     for (const entry of result.fullChanges) {
-      if (infrastructure && entry.role === 'diagnostic') continue;
+      if (entry.role === 'diagnostic') continue;
       const current = collected.read('after', entry.path);
       check(
         identity.inputs.some((e) => e.path === entry.path && e.sha256 === entry.afterSha256),
@@ -566,6 +675,13 @@ function composeAddition(collected, review = null, baseInfo = null) {
       before: before.diagnosticAudit.corpusSha256,
       after: after.diagnosticAudit.corpusSha256,
     };
+    if (!infrastructure && addition.structuralStatus === 'proven') {
+      result.localSelection = {
+        rule: 'questionarios-adicao-integrada-v3',
+        scope: 'indivisible-reviewed-addition; local-only',
+        reviewedIntegrationBase: !!reviewedBase,
+      };
+    }
   } catch (error) {
     addition ||= proveAddition(collected);
     result.status = 'rejected';
@@ -582,7 +698,12 @@ function composeAddition(collected, review = null, baseInfo = null) {
       };
     result.compatibility.reasons.push('No partial acceptance; observation blocked');
   }
-  return { addition, composition: result, blockObservation: result.status === 'rejected' };
+  return {
+    addition,
+    composition: result,
+    blockObservation: result.status === 'rejected',
+    selectionEvidence: bindAdditionPlan(collected, addition, result),
+  };
 }
 module.exports = {
   CONTRACT,
@@ -597,4 +718,5 @@ module.exports = {
   composeAddition,
   loadReview,
   reviewStable,
+  resolveAdditionPlan,
 };

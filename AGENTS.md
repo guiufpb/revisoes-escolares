@@ -49,6 +49,14 @@ estrutural, build, bundle, PDF.js, pontuação, conclusão, limpeza ou restaura�
 Inclusões somente declarativas podem usar testes direcionados, salvo os demais gatilhos descritos
 na política temática. Não reduza testes para fazê-los passar.
 
+Exclusivamente na validação local, o lote integral comprovado por
+`questionarios-adicao-integrada-v3`, com composição, revisão deliberada e identidade utilizáveis,
+pode usar a seleção por arquivos completos definida na política temática. A exceção abrange
+somente suas inserções aditivas, manifesto/spec e manutenção exclusiva do corpus comprovados,
+com bundle do build oficial e todos os contratos/representantes resolvidos. Preserva cadência,
+falhas, interferência, alcance incerto e global integral obrigatória em toda PR. Não autoriza
+isoladamente arquivos compartilhados, mudança de controlador ou infraestrutura arbitrária.
+
 ## Mapa de regras especializadas
 
 | Tema | Fonte normativa |
