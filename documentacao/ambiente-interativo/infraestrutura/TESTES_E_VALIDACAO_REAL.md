@@ -10,6 +10,12 @@ arquivos inteiros. Global exigida retorna fallback `npm test`, sem iniciá-la au
 Dry-run não executa corpos/build; execução prepara as verificações obrigatórias antes do plano.
 Falhas e interrupções não viram sucesso por fallback.
 
+Na correção da PR #52, o harness Node injeta ambiente local pelos serviços existentes.
+A CLI permanece sem injeção e usa o ambiente real; regressões verificam ambos os sinais de CI
+em dry-run e execução, sem mutação global de `process.env`. Revisão deliberada do corpus em
+`validacao/IDENTIDADE.md`; evidências e global final em `tmp/validacao/fase5c1-ci-fix/`.
+Os gatilhos e a suíte global obrigatória permanecem integrais.
+
 Os testes Node do adaptador cobrem provas sintéticas R1/R2 via `makePlan`, regex no Playwright
 instalado, contratos, projetos/repetições, divergências, bloqueios, relatórios, falhas e sanitização.
 Não certificam R1/R2 real. Esta mudança de infraestrutura exige Node integral, manifesto, build,
