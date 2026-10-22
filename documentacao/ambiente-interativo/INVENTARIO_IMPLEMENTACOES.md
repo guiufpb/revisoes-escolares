@@ -1995,3 +1995,10 @@ aplicável de recusa e não imprime omissões zero em plano inválido. Contrato 
 `validacao/COMPOSICAO_ATESTACAO.md`. Resultados direcionados: `tmp/validacao/fase5b5/`.
 O pin real continua o da 5B.3; reatestação/global final pendentes. A CI não recebe aprovação
 produzida pela PR e permanece inconclusiva sem mecanismo independente explicitamente autorizado.
+
+
+## Nova revisão: alice-historia-caixa-lembrancas-outubro-2026
+
+A caixa de lembranças
+
+Conteúdo: ambiente_interativo/revisoes/alice/historia-caixa-lembrancas-outubro-2026.js

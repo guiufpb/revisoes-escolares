@@ -82,4 +82,5 @@ import '../revisoes/mariana/ingles-means-of-transportation-outubro-2026.js';
 import './leitura.js';
 import './ingles.js';
 import '../revisoes/mariana/gramatica-singular-plural-cotidiano-outubro-2026.js';
+import '../revisoes/alice/historia-caixa-lembrancas-outubro-2026.js';
 import './app.js';

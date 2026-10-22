@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "1.2.0",
+  "version": "1.3.0",
   "basis": {
     "commit": "14584b2fee618fc900bb3d5657b9cfa16482bf33",
     "tree": "0546fb7d4ce6f1ec44ce0d0a084a9331fdb7d0e3"
@@ -3725,6 +3725,47 @@
         "historicalCollection": "not-configured",
         "futureCandidate": false
       }
+    },
+    {
+      "id": "alice-historia-caixa-lembrancas-outubro-2026",
+      "profile": "alice",
+      "subject": "historia",
+      "declaredEngine": "gramatica-questionarios",
+      "engine": "questionarios",
+      "primaryKey": "revisoesEscolares.alice.historia.caixaLembrancasOutubro2026.v1",
+      "configFiles": [
+        "ambiente_interativo/revisoes/alice/historia-caixa-lembrancas-outubro-2026.js"
+      ],
+      "contentSources": [
+        "ambiente_interativo/revisoes/alice/historia-caixa-lembrancas-outubro-2026.js"
+      ],
+      "capabilities": ["estado-estrito"],
+      "sessions": [],
+      "contentDependencies": [],
+      "historicalKeys": [],
+      "assets": [],
+      "tests": [
+        "tests/historia-alice-caixa-lembrancas-outubro-2026.spec.js",
+        "tests/ambiente-interativo.spec.js"
+      ],
+      "evidence": [
+        {
+          "path": "ambiente_interativo/js/registro-revisoes.js",
+          "anchor": "alice-historia-caixa-lembrancas-outubro-2026"
+        }
+      ],
+      "evidenceAvailable": [],
+      "gaps": [
+        "series-individuais",
+        "associacoes-por-arquivo",
+        "assets-calculados",
+        "validacao-humana-versionada"
+      ],
+      "maturity": {
+        "assessment": "not-evaluated",
+        "historicalCollection": "not-configured",
+        "futureCandidate": false
+      }
     }
   ],
   "engines": [
@@ -3758,7 +3799,8 @@
         "alice-gramatica-pontuacao-lh-xch-outubro-2026",
         "alice-gramatica-h-til-vocabulario",
         "mariana-gramatica-h-til-vocabulario",
-        "mariana-gramatica-singular-plural-cotidiano-outubro-2026"
+        "mariana-gramatica-singular-plural-cotidiano-outubro-2026",
+        "alice-historia-caixa-lembrancas-outubro-2026"
       ],
       "dependencies": [
         {
@@ -4335,7 +4377,8 @@
         "mariana-gramatica-pontuacao-ortografia-vocabulario-setembro-2026",
         "mariana-gramatica-portugues-prova-outubro-2026",
         "alice-gramatica-pontuacao-lh-xch-outubro-2026",
-        "mariana-gramatica-singular-plural-cotidiano-outubro-2026"
+        "mariana-gramatica-singular-plural-cotidiano-outubro-2026",
+        "alice-historia-caixa-lembrancas-outubro-2026"
       ],
       "dependencies": [],
       "contracts": [],
@@ -5023,7 +5066,8 @@
         "mariana-leitura-a-joaninha-que-perdeu-as-pintinhas",
         "alice-leitura-uma-formiga-especial",
         "mariana-leitura-uma-formiga-especial",
-        "mariana-gramatica-singular-plural-cotidiano-outubro-2026"
+        "mariana-gramatica-singular-plural-cotidiano-outubro-2026",
+        "alice-historia-caixa-lembrancas-outubro-2026"
       ],
       "engines": [
         "cena-matematica",
@@ -8570,6 +8614,40 @@
       "cases": [],
       "gaps": ["associacoes-por-arquivo"],
       "expectedCases": 12
+    },
+    {
+      "file": "tests/historia-alice-caixa-lembrancas-outubro-2026.spec.js",
+      "revisions": ["alice-historia-caixa-lembrancas-outubro-2026"],
+      "engines": ["questionarios"],
+      "capabilities": ["estado-estrito"],
+      "contracts": [],
+      "platforms": ["windows", "linux"],
+      "fixtures": ["tests/confirmar-servidor-local.cjs"],
+      "defaults": {
+        "coverage": ["behavioral-contract"],
+        "oracle": "mixed",
+        "journeyScope": "contract",
+        "limitations": [
+          "Associações por arquivo são um superset conservador; não provam cada capacidade em cada caso."
+        ]
+      },
+      "cases": [
+        {
+          "id": "gabarito-caixa-lembrancas",
+          "pattern": "^\\[adicao:gabarito\\] percurso editorial independente de seis pontos$",
+          "expectedMatches": 1,
+          "metadata": {
+            "coverage": ["complete-journey"],
+            "oracle": "independent",
+            "journeyScope": "questions",
+            "limitations": [
+              "Piloto automatizado; uso infantil e economia dependem de observação própria."
+            ]
+          }
+        }
+      ],
+      "gaps": ["series-individuais", "associacoes-por-arquivo"],
+      "expectedCases": 7
     }
   ],
   "keyExceptions": [],
@@ -8616,7 +8694,7 @@
     }
   ],
   "discovery": {
-    "fileCount": 44,
-    "caseCount": 590
+    "fileCount": 45,
+    "caseCount": 597
   }
 }
