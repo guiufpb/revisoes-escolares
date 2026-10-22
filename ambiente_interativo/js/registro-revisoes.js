@@ -3,6 +3,16 @@
 
   var revisoes = [
     {
+      id: 'alice-historia-caixa-lembrancas-outubro-2026',
+      aluno: 'alice',
+      titulo: 'A caixa de lembranças',
+      cartaoId: 'abrir-historia-caixa-lembrancas-outubro-2026',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento: 'revisoesEscolares.alice.historia.caixaLembrancasOutubro2026.v1',
+      totalEtapas: 6,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
       id: 'mariana-gramatica-singular-plural-cotidiano-outubro-2026',
       aluno: 'mariana',
       titulo: 'Singular e plural no cotidiano',
