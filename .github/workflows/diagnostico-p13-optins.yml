@@ -1,0 +1,279 @@
+name: Diagnostico P13 opt-ins Linux
+
+on:
+  push:
+    branches: [codex/fase5c3g-b3p2-p13-linux]
+
+permissions:
+  contents: read
+
+jobs:
+  p13-comparativo:
+    name: Controle e candidata P13 (diagnostico)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CONTROL_SHA: 4241a5231309ab9a520bb4b99243f91782895c8a
+      SPEC: tests/questionarios-optins-contrato.spec.js
+      WORKFLOW: .github/workflows/diagnostico-p13-optins.yml
+      CONTROL_SPEC_SHA256: d21b6c6d0a83ee4b5932eadc6619d7243ba132a58bc862ed497bde1a4184242b
+      CANDIDATE_SPEC_SHA256: c008602dc22c1cad7c2ac099c6aa621841076a789defcf297e386f98252a694e
+
+    steps:
+      - name: Checkout do commit diagnostico (orquestracao fora dos projetos)
+        uses: actions/checkout@v6
+        with:
+          path: orchestration
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Preparar Node da CI investigada
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.21.0'
+
+      - name: Materializar os dois projetos e conferir o delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence/control evidence/candidate
+          git clone --no-hardlinks --no-checkout orchestration control
+          git -C control checkout --detach "$CONTROL_SHA"
+          git clone --no-hardlinks --no-checkout orchestration candidate
+          git -C candidate checkout --detach "$CONTROL_SHA"
+          # Source B is the diagnostic checkout. Only its approved spec enters runtime B.
+          # Runtime Git provenance is honestly base + dirty spec, as in Windows B3.1.
+          cp "orchestration/$SPEC" "candidate/$SPEC"
+          node <<'NODE'
+          const fs = require('node:fs');
+          const assert = require('node:assert/strict');
+          const crypto = require('node:crypto');
+          const { execFileSync } = require('node:child_process');
+          const git = (root, ...args) => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8' }).trim();
+          const spec = process.env.SPEC;
+          const hash = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
+          assert.deepEqual(git('orchestration', 'diff', '--name-only', process.env.CONTROL_SHA, process.env.GITHUB_SHA).split('\n').sort(), [process.env.WORKFLOW, spec].sort());
+          const a = fs.readFileSync('control/' + spec);
+          const b = fs.readFileSync('candidate/' + spec);
+          const line = "    await page.emulateMedia({ reducedMotion: 'reduce' });\n";
+          assert.equal(hash(a), process.env.CONTROL_SPEC_SHA256);
+          assert.equal(hash(b), process.env.CANDIDATE_SPEC_SHA256);
+          assert.equal(b.toString().split(line).length, 2);
+          assert.equal(b.toString().replace(line, ''), a.toString());
+          assert.equal(git('control', 'status', '--porcelain'), '');
+          assert.equal(git('candidate', 'diff', '--name-only'), spec);
+          assert.equal(fs.existsSync('control/' + process.env.WORKFLOW), false);
+          assert.equal(fs.existsSync('candidate/' + process.env.WORKFLOW), false);
+          fs.writeFileSync('evidence/comparison-source.json', JSON.stringify({
+            controlCommit: process.env.CONTROL_SHA,
+            controlTree: git('control', 'rev-parse', 'HEAD^{tree}'),
+            diagnosticCommit: process.env.GITHUB_SHA,
+            diagnosticTree: git('orchestration', 'rev-parse', 'HEAD^{tree}'),
+            candidateSourceCheckout: 'orchestration',
+            runtimeProjects: ['control', 'candidate'],
+            candidateRuntimeGitHead: git('candidate', 'rev-parse', 'HEAD'),
+            candidateRuntimeChanges: [spec],
+            excludedOrchestrationFile: process.env.WORKFLOW,
+            exclusionMethod: 'Runtime projects start at original Git commit; candidate spec copied byte-for-byte from diagnostic source checkout. No identity policy or collector changed.',
+            controlSpecSha256: hash(a),
+            candidateSpecSha256: hash(b),
+            exactSingleLineDelta: true
+          }, null, 2));
+          NODE
+
+      - name: Instalar dependencias dos projetos e Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          for variant in control candidate; do
+            (cd "$variant" && npm ci) > "evidence/$variant/npm-ci.log" 2>&1
+          done
+          (cd control && npx playwright install --with-deps chromium) > evidence/browser-install.log 2>&1
+
+      - name: Build oficial e proveniencia dos projetos
+        id: prepare
+        shell: bash
+        run: |
+          set -euo pipefail
+          for variant in control candidate; do
+            (cd "$variant" && npm run build) > "evidence/$variant/build.log" 2>&1
+            (
+              cd "$variant"
+              VARIANT="$variant" node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const os = require('node:os');
+          const assert = require('node:assert/strict');
+          const crypto = require('node:crypto');
+          const { provenance, identityUsable } = require('./scripts/validacao/identidade.cjs');
+          const { chromium } = require('playwright');
+          (async () => {
+            const browser = await chromium.launch();
+            const browserVersion = browser.version();
+            await browser.close();
+            assert.equal(require('playwright/package.json').version, '1.63.0');
+            const source = provenance(process.cwd());
+            const usable = identityUsable(source.identity);
+            const result = {
+              variant: process.env.VARIANT,
+              source,
+              identityUsable: usable,
+              identityStatus: usable ? 'USABLE' : 'BLOCKED',
+              platform: os.platform(), architecture: os.arch(), kernel: os.release(),
+              osRelease: fs.readFileSync('/etc/os-release', 'utf8'),
+              node: process.version,
+              playwright: require('playwright/package.json').version,
+              browserVersion,
+              runnerImage: process.env.ImageVersion || null,
+              bundleSha256: crypto.createHash('sha256').update(fs.readFileSync('ambiente_interativo/js/app.bundle.js')).digest('hex'),
+              corpusPin: JSON.parse(fs.readFileSync('validacao/identidade-politica.json')).diagnosticAudit.corpusSha256,
+              defaultTestTimeoutMs: 30000, workers: 1, retries: 0
+            };
+            fs.writeFileSync(path.join(process.env.GITHUB_WORKSPACE, 'evidence', process.env.VARIANT, 'environment-before.json'), JSON.stringify(result, null, 2));
+            assert.equal(result.corpusPin, '119952e16f05638ff85640c8169578bb007f34e9fb3b7fa881e446d6edbd0ad1');
+            assert.equal(usable, process.env.VARIANT === 'control');
+          })().catch((error) => { console.error(error); process.exitCode = 1; });
+          NODE
+            )
+          done
+
+      - name: Controle - seis P13 originais
+        id: control
+        if: ${{ !cancelled() && steps.prepare.outcome == 'success' }}
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd control
+          set +e
+          PLAYWRIGHT_PORT=5216 node node_modules/playwright/cli.js test "$SPEC" --grep 'P13 conclusão auxiliar' --repeat-each=3 --workers=1 --retries=0 --trace=on --reporter=line,./scripts/validacao/reporter.cjs --output="$GITHUB_WORKSPACE/evidence/control/test-results" 2>&1 | tee "$GITHUB_WORKSPACE/evidence/control/playwright.log"
+          code=${PIPESTATUS[0]}
+          set -e
+          printf '%s\n' "$code" > "$GITHUB_WORKSPACE/evidence/control/exit-code.txt"
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit "$code"
+
+      - name: Candidata - seis P13 com movimento reduzido
+        id: candidate
+        if: ${{ !cancelled() && steps.prepare.outcome == 'success' }}
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs');
+          const net = require('node:net');
+          const { execFileSync } = require('node:child_process');
+          (async () => {
+            const processes = execFileSync('ps', ['-eo', 'pid,ppid,stat,comm'], { encoding: 'utf8' });
+            const browsers = processes.split('\n').filter((row) => /chrome|chromium|headless/i.test(row) && !/^\s*\d+\s+\d+\s+Z/.test(row));
+            const ports = [];
+            for (const port of [5216, 5217]) {
+              const free = await new Promise((resolve) => {
+                const server = net.createServer();
+                server.once('error', () => resolve(false));
+                server.listen(port, '127.0.0.1', () => server.close(() => resolve(true)));
+              });
+              ports.push({ port, free });
+            }
+            fs.writeFileSync('evidence/isolation-between.json', JSON.stringify({ ports, browsers, processes }, null, 2));
+            if (browsers.length || ports.some((item) => !item.free)) throw new Error('Control resources still active; candidate blocked');
+          })().catch((error) => { console.error(error); process.exitCode = 1; });
+          NODE
+          cd candidate
+          set +e
+          PLAYWRIGHT_PORT=5217 node node_modules/playwright/cli.js test "$SPEC" --grep 'P13 conclusão auxiliar' --repeat-each=3 --workers=1 --retries=0 --trace=on --reporter=line,./scripts/validacao/reporter.cjs --output="$GITHUB_WORKSPACE/evidence/candidate/test-results" 2>&1 | tee "$GITHUB_WORKSPACE/evidence/candidate/playwright.log"
+          code=${PIPESTATUS[0]}
+          set -e
+          printf '%s\n' "$code" > "$GITHUB_WORKSPACE/evidence/candidate/exit-code.txt"
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit "$code"
+
+      - name: Recolher somente resultados tecnicos e conferir isolamento
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const crypto = require('node:crypto');
+          const net = require('node:net');
+          const { execFileSync } = require('node:child_process');
+          (async () => {
+            fs.mkdirSync('evidence', { recursive: true });
+            for (const variant of ['control', 'candidate']) {
+              const base = path.join(variant, 'tmp', 'validacao');
+              if (!fs.existsSync(base)) continue;
+              const runs = fs.readdirSync(base).map((name) => path.join(base, name, 'run.json')).filter((file) => fs.existsSync(file));
+              if (runs.length !== 1) throw new Error('Expected one reporter run per variant: ' + variant);
+              fs.copyFileSync(runs[0], path.join('evidence', variant, 'run.json'));
+              fs.copyFileSync(path.join(path.dirname(runs[0]), 'attempts.jsonl'), path.join('evidence', variant, 'attempts.jsonl'));
+              const source = require(path.resolve(variant, 'scripts/validacao/identidade.cjs'));
+              fs.writeFileSync(path.join('evidence', variant, 'source-after.json'), JSON.stringify(source.provenance(path.resolve(variant)), null, 2));
+            }
+            const ports = [];
+            for (const port of [5216, 5217]) {
+              const listening = await new Promise((resolve) => {
+                const socket = net.connect({ host: '127.0.0.1', port });
+                socket.setTimeout(2000);
+                socket.once('connect', () => { socket.destroy(); resolve(true); });
+                socket.once('error', () => { socket.destroy(); resolve(false); });
+                socket.once('timeout', () => { socket.destroy(); resolve(false); });
+              });
+              ports.push({ port, listening });
+            }
+            const isolation = { ports, processes: execFileSync('ps', ['-eo', 'pid,ppid,comm'], { encoding: 'utf8' }) };
+            fs.writeFileSync('evidence/isolation-after.json', JSON.stringify(isolation, null, 2));
+            const allowed = (file) => /^evidence\/(?:[^/]+\.(?:json|log)|(?:control|candidate)\/(?:[^/]+\.(?:json|jsonl|log)|exit-code\.txt))$/.test(file) || /^evidence\/(?:control|candidate)\/test-results\/.+\/(?:trace\.zip|error-context\.md)$/.test(file);
+            const entries = [];
+            const walk = (dir) => {
+              for (const item of fs.readdirSync(dir, { withFileTypes: true })) {
+                const file = path.join(dir, item.name);
+                if (item.isDirectory()) walk(file);
+                else if (allowed(file.replaceAll(path.sep, '/')) && !file.endsWith('/index.json')) entries.push({
+                  path: file.replaceAll(path.sep, '/'),
+                  bytes: fs.statSync(file).size,
+                  sha256: crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex')
+                });
+              }
+            };
+            walk('evidence');
+            fs.writeFileSync('evidence/index.json', JSON.stringify({ diagnosticOnly: true, noGlobalRun: true, entries }, null, 2));
+            if (ports.some((item) => item.listening)) throw new Error('Experimental server still listening');
+          })().catch((error) => { console.error(error); process.exitCode = 1; });
+          NODE
+
+      - name: Guardar evidencias tecnicas auditadas
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: diagnostico-p13-linux-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            evidence/*.json
+            evidence/*.log
+            evidence/control/*.json
+            evidence/control/*.jsonl
+            evidence/control/*.log
+            evidence/control/exit-code.txt
+            evidence/control/test-results/**/trace.zip
+            evidence/control/test-results/**/error-context.md
+            evidence/candidate/*.json
+            evidence/candidate/*.jsonl
+            evidence/candidate/*.log
+            evidence/candidate/exit-code.txt
+            evidence/candidate/test-results/**/trace.zip
+            evidence/candidate/test-results/**/error-context.md
+          if-no-files-found: error
+          retention-days: 3
+
+      - name: Resultado real das duas variantes
+        if: ${{ always() }}
+        env:
+          CONTROL_EXIT: ${{ steps.control.outputs.exit_code }}
+          CANDIDATE_EXIT: ${{ steps.candidate.outputs.exit_code }}
+        shell: bash
+        run: |
+          printf 'Controle: exit=%s; Candidata: exit=%s\n' "$CONTROL_EXIT" "$CANDIDATE_EXIT"
+          echo 'Diagnostic comparison only; a control timeout remains a recorded failure, not a candidate failure.'
+          test "$CONTROL_EXIT" = 0 && test "$CANDIDATE_EXIT" = 0
