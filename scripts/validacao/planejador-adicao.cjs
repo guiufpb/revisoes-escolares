@@ -118,7 +118,7 @@ function text(s) {
 function unique(values, reason) {
   fail(new Set(values).size === values.length, reason);
 }
-function content(source) {
+function content(source, optins = false) {
   const tree = parse(source);
   fail(tree.body.length === 1, 'Additional executable content');
   const call = tree.body[0].expression;
@@ -155,6 +155,7 @@ function content(source) {
     'questoes',
     'resumoFinal',
     'validacaoEstritaEstado',
+    ...(optins ? ['modoResponsavel', 'layout'] : []),
   ]);
   for (const k of ['id', 'aluno', 'nome', 'materia', 'titulo', 'subtitulo', 'chave', 'resumoFinal'])
     text(config[k]);
@@ -179,6 +180,7 @@ function content(source) {
       'leitura',
       'leituraTitulo',
       'fonteEstudo',
+      ...(optins ? ['ditado', 'unidadeDitado', 'cancelarAoTrocarCampo'] : []),
     ]);
     for (const k of ['id', 'bloco', 'titulo', 'instrucao', 'dica', 'sucesso']) text(q[k]);
     fail(!/^(?:undefined|null)$/i.test(q.bloco.trim()), 'Missing rendered block label');
@@ -224,6 +226,7 @@ function content(source) {
     ids.every((id) => /^[a-z][a-z0-9-]*$/.test(id) && !['constructor', 'prototype'].includes(id)),
     'Unsafe question/item ID'
   );
+  if (optins) require('./planejador-adicao-optins.cjs').validateConfig(config);
   return config;
 }
 // Remove only approved AST nodes plus whitespace/separating commas. No old bytes may change.
@@ -491,10 +494,17 @@ function reviewIntegrationBase(collected, review, baseInfo) {
   reviewedBases.set(token, { entries: structuredClone(entries), base: baseInfo.commit });
   return token;
 }
-function proveAddition({ changes, read, comparison }, reviewedBase = null) {
+function proveAddition(input, reviewedBase = null) {
+  return proveBatch(input, reviewedBase, false);
+}
+function proveOptinsAddition(input, reviewedBase = null) {
+  return proveBatch(input, reviewedBase, true);
+}
+function proveBatch({ changes, read, comparison }, reviewedBase, optins) {
+  const extension = optins ? require('./planejador-adicao-optins.cjs') : null;
   const result = {
     schemaVersion: 1,
-    contract: CONTRACT,
+    contract: extension?.CONTRACT || CONTRACT,
     structuralStatus: 'unsupported',
     identityStatus: 'blocked',
     runtimeEvidence: 'not-collected',
@@ -521,7 +531,7 @@ function proveAddition({ changes, read, comparison }, reviewedBase = null) {
     const file = newContent[0].currentPath,
       source = read('after', file);
     fail(source && read('before', file) === null, 'Content is not genuinely new');
-    const config = content(source);
+    const config = content(source, optins);
     result.revisionId = config.id;
     fail(
       new RegExp('^ambiente_interativo/revisoes/' + config.aluno + '/[a-z0-9-]+\\.js$').test(file),
@@ -568,11 +578,11 @@ function proveAddition({ changes, read, comparison }, reviewedBase = null) {
     fail(
       equal(revision.configFiles, [file]) &&
         equal(revision.contentSources, [file]) &&
-        equal(revision.sessions, []) &&
+        (optins || equal(revision.sessions, [])) &&
         equal(revision.contentDependencies, []) &&
         equal(revision.historicalKeys, []) &&
         equal(revision.assets, []) &&
-        equal(revision.capabilities, ['estado-estrito']),
+        (optins || equal(revision.capabilities, ['estado-estrito'])),
       'Unsupported dependencies/assets/capabilities'
     );
     fail(
@@ -591,6 +601,7 @@ function proveAddition({ changes, read, comparison }, reviewedBase = null) {
       'ID collision'
     );
     fail(!keysBefore.includes(config.chave), 'Key collision');
+    if (optins) extension.validateDescriptor(revision, config, keysBefore);
     const allowed = new Map([
       [file, 'A'],
       [testFile, 'A'],
@@ -718,8 +729,12 @@ function proveAddition({ changes, read, comparison }, reviewedBase = null) {
       fail(parentOf(appTree, additions[i]) === fn.body, 'Wrong handler/visibility anchor');
     }
     preserved(read('before', APP), appSource, additions);
-    const titles = testDeclarations(read('after', testFile));
+    const titles = testDeclarations(
+      optins ? extension.prepareSpec(read('after', testFile)) : read('after', testFile)
+    );
+    if (optins) extension.validateTestCoverage(titles);
     const test = manifest.tests.find((t) => t.file === testFile);
+    if (optins && test) extension.validateTestMetadata(test);
     fail(
       test &&
         equal(test.revisions, [config.id]) &&
@@ -767,6 +782,7 @@ function proveAddition({ changes, read, comparison }, reviewedBase = null) {
       'acessibilidade',
       'file-bundle',
       'identidade',
+      ...(optins ? [extension.BEHAVIOR] : []),
     ];
     const representatives = result.requiredContracts.flatMap((id) => {
       const contract = manifest.contracts.find((c) => c.id === id);
@@ -842,6 +858,7 @@ module.exports = {
   CONTRACT,
   COVERAGE,
   proveAddition,
+  proveOptinsAddition,
   reviewIntegrationBase,
   reviewedSurfaces,
   staticJson: json,

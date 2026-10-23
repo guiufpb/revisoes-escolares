@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "1.3.0",
+  "version": "1.4.0",
   "basis": {
     "commit": "14584b2fee618fc900bb3d5657b9cfa16482bf33",
     "tree": "0546fb7d4ce6f1ec44ce0d0a084a9331fdb7d0e3"
@@ -2397,7 +2397,8 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
-        "tests/pdfs-sinteticos.spec.js"
+        "tests/pdfs-sinteticos.spec.js",
+        "tests/questionarios-optins-contrato.spec.js"
       ],
       "evidence": [
         {
@@ -2508,7 +2509,8 @@
         "tests/infra-abertura-local.spec.js",
         "tests/infra-vite-externo.spec.js",
         "tests/infraestrutura-vite.spec.js",
-        "tests/pdfs-sinteticos.spec.js"
+        "tests/pdfs-sinteticos.spec.js",
+        "tests/questionarios-optins-contrato.spec.js"
       ],
       "evidence": [
         {
@@ -4939,6 +4941,66 @@
       ],
       "limits": [
         "Representante existente tem o alcance de seu motor e preparação; não certifica combinações nem uso humano."
+      ]
+    },
+    {
+      "id": "questionarios-optins-cruzados-v1",
+      "representatives": [
+        {
+          "file": "tests/questionarios-optins-contrato.spec.js",
+          "pattern": "^opt-ins (?:Alice|Mariana) P1 callbacks entre sessões$"
+        },
+        {
+          "file": "tests/questionarios-optins-contrato.spec.js",
+          "pattern": "^opt-ins (?:Alice|Mariana) P2 parar campo e salto$"
+        },
+        {
+          "file": "tests/questionarios-optins-contrato.spec.js",
+          "pattern": "^opt-ins (?:Alice|Mariana) P3 recarga de cinco estados$"
+        },
+        {
+          "file": "tests/questionarios-optins-contrato.spec.js",
+          "pattern": "^opt-ins (?:Alice|Mariana) P4 limpeza bidirecional e perfil vizinho$"
+        },
+        {
+          "file": "tests/questionarios-optins-contrato.spec.js",
+          "pattern": "^opt-ins (?:Alice|Mariana) P5 reabertura legado e consumidor Inglês$"
+        },
+        {
+          "file": "tests/questionarios-optins-contrato.spec.js",
+          "pattern": "^opt-ins (?:Alice|Mariana) P6 sigilo e payload de palavra e frase$"
+        },
+        {
+          "file": "tests/questionarios-optins-contrato.spec.js",
+          "pattern": "^opt-ins (?:Alice|Mariana) P7 layout 1366$"
+        },
+        {
+          "file": "tests/questionarios-optins-contrato.spec.js",
+          "pattern": "^opt-ins (?:Alice|Mariana) P8 layout 1920$"
+        },
+        {
+          "file": "tests/questionarios-optins-contrato.spec.js",
+          "pattern": "^opt-ins (?:Alice|Mariana) P9 layout 390 toque e teclado$"
+        },
+        {
+          "file": "tests/questionarios-optins-contrato.spec.js",
+          "pattern": "^opt-ins (?:Alice|Mariana) P10 arquivo offline e três falhas TTS$"
+        },
+        {
+          "file": "tests/questionarios-optins-contrato.spec.js",
+          "pattern": "^opt-ins (?:Alice|Mariana) P11 JSON auxiliar inválido$"
+        },
+        {
+          "file": "tests/questionarios-optins-contrato.spec.js",
+          "pattern": "^opt-ins (?:Alice|Mariana) P12 storage bloqueado e memória isolada$"
+        },
+        {
+          "file": "tests/questionarios-optins-contrato.spec.js",
+          "pattern": "^opt-ins (?:Alice|Mariana) P13 conclusão auxiliar e cartão principal$"
+        }
+      ],
+      "limits": [
+        "Questionários: 13 bounded crossed opt-in scenarios for each existing profile; new revision still requires its own spec."
       ]
     }
   ],
@@ -8648,6 +8710,173 @@
       ],
       "gaps": ["series-individuais", "associacoes-por-arquivo"],
       "expectedCases": 7
+    },
+    {
+      "file": "tests/questionarios-optins-contrato.spec.js",
+      "revisions": [
+        "alice-gramatica-pontuacao-lh-xch-outubro-2026",
+        "mariana-gramatica-portugues-prova-outubro-2026"
+      ],
+      "engines": ["questionarios"],
+      "capabilities": ["desktop-amplo", "ditado", "estado-estrito", "sessoes-auxiliares"],
+      "contracts": ["questionarios-optins-cruzados-v1"],
+      "platforms": ["windows", "linux"],
+      "fixtures": [],
+      "defaults": {
+        "coverage": ["behavioral-contract"],
+        "oracle": "mixed",
+        "journeyScope": "contract",
+        "limitations": [
+          "Associações por arquivo são um superset conservador; não provam cada capacidade em cada caso."
+        ]
+      },
+      "cases": [
+        {
+          "id": "optins-p1",
+          "pattern": "^opt-ins (?:Alice|Mariana) P1 callbacks entre sessões$",
+          "expectedMatches": 2,
+          "metadata": {
+            "coverage": ["behavioral-contract"],
+            "oracle": "independent",
+            "limitations": ["Bounded mocked TTS; no human acoustic validation"],
+            "journeyScope": "contract"
+          }
+        },
+        {
+          "id": "optins-p2",
+          "pattern": "^opt-ins (?:Alice|Mariana) P2 parar campo e salto$",
+          "expectedMatches": 2,
+          "metadata": {
+            "coverage": ["behavioral-contract"],
+            "oracle": "independent",
+            "limitations": ["Bounded mocked TTS; no human acoustic validation"],
+            "journeyScope": "contract"
+          }
+        },
+        {
+          "id": "optins-p3",
+          "pattern": "^opt-ins (?:Alice|Mariana) P3 recarga de cinco estados$",
+          "expectedMatches": 2,
+          "metadata": {
+            "coverage": ["behavioral-contract"],
+            "oracle": "independent",
+            "limitations": ["Bounded mocked TTS; no human acoustic validation"],
+            "journeyScope": "contract"
+          }
+        },
+        {
+          "id": "optins-p4",
+          "pattern": "^opt-ins (?:Alice|Mariana) P4 limpeza bidirecional e perfil vizinho$",
+          "expectedMatches": 2,
+          "metadata": {
+            "coverage": ["behavioral-contract"],
+            "oracle": "independent",
+            "limitations": ["Bounded mocked TTS; no human acoustic validation"],
+            "journeyScope": "contract"
+          }
+        },
+        {
+          "id": "optins-p5",
+          "pattern": "^opt-ins (?:Alice|Mariana) P5 reabertura legado e consumidor Inglês$",
+          "expectedMatches": 2,
+          "metadata": {
+            "coverage": ["behavioral-contract"],
+            "oracle": "independent",
+            "limitations": ["Bounded mocked TTS; no human acoustic validation"],
+            "journeyScope": "contract"
+          }
+        },
+        {
+          "id": "optins-p6",
+          "pattern": "^opt-ins (?:Alice|Mariana) P6 sigilo e payload de palavra e frase$",
+          "expectedMatches": 2,
+          "metadata": {
+            "coverage": ["behavioral-contract"],
+            "oracle": "independent",
+            "limitations": ["Bounded mocked TTS; no human acoustic validation"],
+            "journeyScope": "contract"
+          }
+        },
+        {
+          "id": "optins-p7",
+          "pattern": "^opt-ins (?:Alice|Mariana) P7 layout 1366$",
+          "expectedMatches": 2,
+          "metadata": {
+            "coverage": ["behavioral-contract"],
+            "oracle": "independent",
+            "limitations": ["Bounded mocked TTS; no human acoustic validation"],
+            "journeyScope": "contract"
+          }
+        },
+        {
+          "id": "optins-p8",
+          "pattern": "^opt-ins (?:Alice|Mariana) P8 layout 1920$",
+          "expectedMatches": 2,
+          "metadata": {
+            "coverage": ["behavioral-contract"],
+            "oracle": "independent",
+            "limitations": ["Bounded mocked TTS; no human acoustic validation"],
+            "journeyScope": "contract"
+          }
+        },
+        {
+          "id": "optins-p9",
+          "pattern": "^opt-ins (?:Alice|Mariana) P9 layout 390 toque e teclado$",
+          "expectedMatches": 2,
+          "metadata": {
+            "coverage": ["behavioral-contract"],
+            "oracle": "independent",
+            "limitations": ["Bounded mocked TTS; no human acoustic validation"],
+            "journeyScope": "contract"
+          }
+        },
+        {
+          "id": "optins-p10",
+          "pattern": "^opt-ins (?:Alice|Mariana) P10 arquivo offline e três falhas TTS$",
+          "expectedMatches": 2,
+          "metadata": {
+            "coverage": ["behavioral-contract"],
+            "oracle": "independent",
+            "limitations": ["Bounded mocked TTS; no human acoustic validation"],
+            "journeyScope": "contract"
+          }
+        },
+        {
+          "id": "optins-p11",
+          "pattern": "^opt-ins (?:Alice|Mariana) P11 JSON auxiliar inválido$",
+          "expectedMatches": 2,
+          "metadata": {
+            "coverage": ["behavioral-contract"],
+            "oracle": "independent",
+            "limitations": ["Bounded mocked TTS; no human acoustic validation"],
+            "journeyScope": "contract"
+          }
+        },
+        {
+          "id": "optins-p12",
+          "pattern": "^opt-ins (?:Alice|Mariana) P12 storage bloqueado e memória isolada$",
+          "expectedMatches": 2,
+          "metadata": {
+            "coverage": ["behavioral-contract"],
+            "oracle": "independent",
+            "limitations": ["Bounded mocked TTS; no human acoustic validation"],
+            "journeyScope": "contract"
+          }
+        },
+        {
+          "id": "optins-p13",
+          "pattern": "^opt-ins (?:Alice|Mariana) P13 conclusão auxiliar e cartão principal$",
+          "expectedMatches": 2,
+          "metadata": {
+            "coverage": ["behavioral-contract"],
+            "oracle": "independent",
+            "limitations": ["Bounded mocked TTS; no human acoustic validation"],
+            "journeyScope": "contract"
+          }
+        }
+      ],
+      "gaps": [],
+      "expectedCases": 26
     }
   ],
   "keyExceptions": [],
@@ -8694,7 +8923,7 @@
     }
   ],
   "discovery": {
-    "fileCount": 45,
-    "caseCount": 597
+    "fileCount": 46,
+    "caseCount": 623
   }
 }

@@ -379,3 +379,13 @@ com evidência versionada. Os 29 caminhos comprovados aparecem no plano como R0
 `verified-diagnostic-output`, mantendo visíveis os produtores e o tratamento. Isso não elimina
 o fallback global da infraestrutura das Etapas 1/2/2.1. Entrada prevalece sobre saída; desconhecidos
 bloqueiam comparação e projeção. Legados continuam inconclusivos, sem complemento retrospectivo.
+
+## Rota opt-ins independente — 5C.3G-B2
+
+Planejador 1.2.0 reconhece questionarios-adicao-optins-v1 apenas por capacidade privada da
+composição própria. Ver ADICAO_INTEGRADA.md e COMPOSICAO_ATESTACAO.md. R0–R4, R2/SVG e v3
+preservados. Identidade, manifesto/discovery, consumidores, revisão e contratos íntegros são gates.
+Seleção local: cinco arquivos v3 (89 casos), representante cruzado (26) e spec própria;
+130 é somente orçamento com 15 próprios, não limite/aprovação. Node integral é adicional.
+Executor não muda. CI/GITHUB_ACTIONS/VALIDACAO_CI_OBSERVACIONAL continuam globais; toda PR
+e demais gatilhos exigem global. B2 exige sua própria global após manutenção autorizada.

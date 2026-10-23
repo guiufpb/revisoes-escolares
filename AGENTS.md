@@ -77,3 +77,11 @@ isoladamente arquivos compartilhados, mudança de controlador ou infraestrutura 
 
 Atualize a fonte temática e o inventário quando uma mudança alterar arquitetura, conteúdo,
 armazenamento, comandos, testes ou automações.
+
+## Adição opt-in local — Fase 5C.3G-B2
+
+A rota independente `questionarios-adicao-optins-v1` admite somente Gramática literal com
+as duas sessões, Desktop Amplo e ditados existentes definidos em validacao/ADICAO_INTEGRADA.md.
+Exige composição própria, revisão deliberada, identidade utilizável e contratos completos.
+Não amplia v3, R2 ou permissões de CI. Corpus/validação pendentes não autorizam piloto.
+A própria implementação de infraestrutura exige global integral antes de consolidação.
