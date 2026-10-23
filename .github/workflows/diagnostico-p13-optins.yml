@@ -96,6 +96,7 @@ jobs:
         run: |
           set -euo pipefail
           for variant in control candidate; do
+            (cd "$variant" && npm run preparar:pdfs-teste) > "evidence/$variant/synthetic-pdfs.log" 2>&1
             (cd "$variant" && npm run build) > "evidence/$variant/build.log" 2>&1
             (
               cd "$variant"
