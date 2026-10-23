@@ -604,3 +604,24 @@ sido desbloqueado, nem deriva dos insumos. Não atribui as falhas anteriores a e
 Identidade real, congelamento e resultado da global são registrados separadamente em
 `tmp/validacao/fase5c3g-b2/RELATORIO_VALIDACAO_GLOBAL.md`; esta nota de manutenção não
 antecipa aprovação dos testes. Evidências anteriores conservam seus hashes e proveniência.
+
+### Revalidação do P13 — manutenção autorizada em 23/10/2026
+
+Auditoria sobre `4241a5231309ab9a520bb4b99243f91782895c8a` reproduziu o corpus publicado
+e confirmou como único delta executável a preferência `reducedMotion: 'reduce'` antes de
+`boot` no P13 compartilhado. A remoção dessa linha recupera integralmente a spec publicada;
+questões, gabaritos, cliques, asserções e timeout permanecem. A comparação Linux
+[39894991968](https://github.com/guiufpb/revisoes-escolares/actions/runs/39894991968)
+registrou três timeouts no controle e seis aprovações na candidata, sem esperas de estabilidade.
+O workflow diagnóstico não integra este lote nem seus insumos comparados.
+
+Após revisão deliberada e autorização específica, mantém-se manualmente somente
+`diagnosticAudit.corpusSha256`, de
+`119952e16f05638ff85640c8169578bb007f34e9fb3b7fa881e446d6edbd0ad1` para
+`7ce796f0bc17830af9186396e9da182d77194e8933937c3f19b3d959fbd3b37b`.
+Consumidores, dez REVIEWED, produtores/âncoras, HTTP, política de privados e vínculos
+fonte/bundle permanecem preservados. Os 29 PNGs continuam locais, com cópia de evidência
+da própria worktree antes da regeneração pela global. Auditoria, hashes, identidade real,
+snapshot e resultado da única global ficam em
+`tmp/validacao/fase5c3g-b3/RELATORIO_REVALIDACAO_GLOBAL_P13.md` e evidências associadas.
+Esta nota não antecipa aprovação da global nem autoriza publicação ou seleção na CI.

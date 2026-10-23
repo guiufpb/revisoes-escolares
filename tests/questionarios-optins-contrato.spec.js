@@ -757,6 +757,7 @@ for (const p of profiles) {
     await expect(page.locator('[data-resposta-gramatica]').first()).toHaveValue(p.answers[0]);
   });
   test('opt-ins ' + p.name + ' P13 conclusão auxiliar e cartão principal', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await boot(page, p);
     await jump(page, 1);
     await session(page, 'responsavel');
