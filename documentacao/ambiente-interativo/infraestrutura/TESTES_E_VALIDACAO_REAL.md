@@ -586,3 +586,15 @@ comparação e preservação da adição v3, incluindo recusa sem revisão e con
 Positivos sintéticos não atestam a worktree real. Nesta fase intermediária, build, formatação,
 lint, manifesto, diff e regressões direcionadas são exigidos; `npm test` integral fica para o
 snapshot final deliberadamente reatestado e autorizado. A regra geral da global não foi removida.
+
+## Rota local opt-ins — Fase 5C.3G-B2
+
+A exceção local adicional exige questionarios-adicao-optins-v1 e composição própria, no
+recorte fechado de ADICAO_INTEGRADA.md, com identidade/revisão utilizáveis. Mantém build,
+manifesto, formato, lint, Node integral, seis contratos v3 e arquivos inteiros, acrescentando
+questionarios-optins-cruzados-v1 e spec própria. Treze cenários por perfil cruzam sessões,
+callbacks atrasados, limpeza, restauração, storage, sigilo, layout, offline e consumidor de
+Inglês. Equivalentes não substituem testes e gabarito da revisão nova. Corpus pendente bloqueia.
+CI continua global em toda PR, assim como cadência/falhas/interferência/alcance incerto.
+A implementação compartilhada B2 exige global integral própria; nunca usar sua seleção R1
+para validar a infraestrutura que a emite. Não declarar aprovação pedagógica por automação.

@@ -256,3 +256,23 @@ revisão humana de cobertura/gabarito e global completa do mesmo alvo. Nunca aut
 Qualquer divergência conserva global/bloqueio e interrompe o experimento. Reversão da extensão
 deve ser localizada em seus módulos/guard/CLI, sem apagar evidências ou restaurar indiscriminadamente
 arquivos com alterações anteriores; a política e seus pins não foram modificados nesta etapa.
+
+## Composição independente de opt-ins — 5C.3G-B2
+
+`adicao-optins-atestacao-composta-v1` aceita somente questionarios-adicao-optins-v1.
+Registro exige optinsReview com exatamente contract, compositionContract, schemaVersion (1),
+representatives, consumers e rationale; contratos são os dois discriminantes novos.
+Representatives contém exatamente {path, sha256, contractId} do arquivo permanente
+questionarios-optins-contrato.spec.js, contractId questionarios-optins-cruzados-v1.
+Consumers contém descritores únicos {path, sha256, rationale}, ordenados pelo fechamento da
+prova: integrações, CSS, Questionários/interações/ditado/áudio/storage, ouvintes Inglês/pronúncia,
+fonte/spec novas, representante e prova. Nenhum consumidor pode faltar ou ser desconhecido.
+Justificativas têm pelo menos 30 caracteres. Bloco optinsReview em v3/manutenção é recusado.
+
+Prova e representante precisam existir na base e permanecer iguais no lote escolar. Seus
+hashes e consumidores entram no stamp privado com delta completo, manifesto, política,
+bundle e identidade/proveniência. Deriva posterior revoga token; JSON não pode reconstruí-lo.
+Revisão das quatro integrações segue questionarios-base-revisada-v1; os dez REVIEWED e seis
+pins compartilhados restantes não mudam. Adições sucessivas exigem revisões próprias.
+Diagnósticos, entradas privadas, produtores e HTTP mantêm regras vigentes. Infraestrutura-global-v1
+não autoriza esta extensão ou escola. Manutenção do corpus é manual, autorizada especificamente.

@@ -6,10 +6,12 @@ const acorn = require('acorn');
 const { hash, identityUsable, POLICY_FILE, safeRead } = require('./identidade.cjs');
 const {
   proveAddition,
+  proveOptinsAddition,
   reviewIntegrationBase,
   reviewedSurfaces,
   staticJson,
 } = require('./planejador-adicao.cjs');
+const OPTINS = require('./planejador-adicao-optins.cjs');
 const CONTRACT = 'adicao-atestacao-composta-v1';
 const REVIEW_CONTRACT = 'manutencao-deliberada-atestacao-v1';
 const INFRA_CONTRACT = 'infraestrutura-global-v1';
@@ -78,7 +80,23 @@ const sorted = (a) => [...a].sort();
 const additionPlans = new WeakMap();
 function batchStamp({ comparison, changes, read, readBytes }, rows) {
   const paths = new Map(rows.map((e) => [e.path, e]));
-  for (const path of [...reviewedSurfaces(read).map((e) => e.path), ...INFRASTRUCTURE, BUNDLE])
+  for (const path of [
+    ...reviewedSurfaces(read).map((e) => e.path),
+    ...INFRASTRUCTURE,
+    BUNDLE,
+    ...(rows.some(
+      (e) =>
+        e.path === OPTINS.REPRESENTATIVE ||
+        (/^ambiente_interativo\/revisoes\//.test(e.path) &&
+          OPTINS.claimsOptins(read('after', e.path) || ''))
+    )
+      ? [
+          'scripts/validacao/planejador-adicao-optins.cjs',
+          OPTINS.REPRESENTATIVE,
+          ...OPTINS.CONSUMERS,
+        ]
+      : []),
+  ])
     if (!paths.has(path)) paths.set(path, { path });
   return hash(
     JSON.stringify({
@@ -97,10 +115,11 @@ function batchStamp({ comparison, changes, read, readBytes }, rows) {
 }
 function bindAdditionPlan(collected, addition, composition) {
   if (
-    addition.contract !== 'questionarios-adicao-integrada-v3' ||
+    !['questionarios-adicao-integrada-v3', OPTINS.CONTRACT].includes(addition.contract) ||
     addition.structuralStatus !== 'proven' ||
     addition.identityStatus !== 'usable' ||
-    composition.contract !== CONTRACT ||
+    composition.contract !==
+      (addition.contract === OPTINS.CONTRACT ? OPTINS.COMPOSITION : CONTRACT) ||
     composition.status !== 'compatible' ||
     composition.maintenance.status !== 'verified-evidence' ||
     composition.compatibility.status !== 'same-target' ||
@@ -343,9 +362,18 @@ function composeAddition(collected, review = null, baseInfo = null) {
     (!hasAddition &&
       policyChanged &&
       collected.changes.some((c) => MAINTENANCE_FILES.includes(c.currentPath)));
+  const optins =
+    !infrastructure &&
+    collected.changes.some(
+      (c) =>
+        c.type === 'A' &&
+        /^ambiente_interativo\/revisoes\/.*\.js$/.test(c.currentPath) &&
+        OPTINS.claimsOptins(collected.read('after', c.currentPath) || '')
+    );
+  const prove = optins ? proveOptinsAddition : proveAddition;
   const result = {
     schemaVersion: 1,
-    contract: CONTRACT,
+    contract: optins ? OPTINS.COMPOSITION : CONTRACT,
     status: 'not-requested',
     executionPolicy: 'global',
     runtimeEvidence: 'not-collected',
@@ -381,7 +409,7 @@ function composeAddition(collected, review = null, baseInfo = null) {
       (c) => c.type === 'A' && /^ambiente_interativo\/revisoes\/.*\.js$/.test(c.currentPath)
     );
   if (historicalIntroduction) {
-    addition = proveAddition(collected);
+    addition = prove(collected);
     result.maintenance.status = 'not-applicable';
     result.maintenance.reasons.push(
       'Policy absent from historical base; no maintenance proof, existing R4/global required'
@@ -389,7 +417,7 @@ function composeAddition(collected, review = null, baseInfo = null) {
     return { addition, composition: result, blockObservation: false };
   }
   if (!policyChanged && !review) {
-    addition = proveAddition(collected);
+    addition = prove(collected);
     result.effectiveIdentity = addition.identityStatus;
     return {
       addition,
@@ -401,7 +429,7 @@ function composeAddition(collected, review = null, baseInfo = null) {
     result.contract = INFRA_CONTRACT;
     result.capability = INFRA_CONTRACT;
     // Do not claim a structural school proof for a maintenance request.
-    addition = proveAddition({ ...collected, changes: [] });
+    addition = prove({ ...collected, changes: [] });
     addition.applicability = 'not-applicable';
   }
   // Policy syntax is verified BEFORE isolating its delta; the full diff remains recorded.
@@ -454,7 +482,7 @@ function composeAddition(collected, review = null, baseInfo = null) {
           'Diagnostic must be an exact identity-bound untracked output; changed captures refused'
         );
       }
-      addition = proveAddition(
+      addition = prove(
         {
           ...collected,
           changes: collected.changes.filter(
@@ -483,6 +511,20 @@ function composeAddition(collected, review = null, baseInfo = null) {
     );
     // The loader validates exact bytes; the semantic record is bound independently here.
     const r = review.data;
+    check(
+      optins || !Object.hasOwn(r, 'optinsReview'),
+      'Opt-ins review not permitted for v3/maintenance'
+    );
+    if (optins) {
+      check(addition.structuralStatus === 'proven', 'Opt-ins addition not proven');
+      OPTINS.validateReview(r.optinsReview, collected.read, addition);
+      for (const p of ['scripts/validacao/planejador-adicao-optins.cjs', OPTINS.REPRESENTATIVE])
+        check(
+          collected.read('before', p) !== null &&
+            collected.read('before', p) === collected.read('after', p),
+          'Opt-ins infrastructure must already be consolidated and unchanged'
+        );
+    }
     check(
       (!infrastructure || r.capability === INFRA_CONTRACT) &&
         r.schemaVersion === 1 &&
@@ -662,7 +704,8 @@ function composeAddition(collected, review = null, baseInfo = null) {
         identity.inputs.some((e) => e.path === entry.path && e.sha256 === entry.afterSha256),
         'Changed bytes not bound to identity'
       );
-      if (entry.type === 'A' && /^tests\/.*\.spec\.js$/.test(entry.path)) scanNewTest(current);
+      if (entry.type === 'A' && /^tests\/.*\.spec\.js$/.test(entry.path))
+        scanNewTest(optins ? OPTINS.prepareSpec(current) : current);
     }
     if (addition.structuralStatus === 'proven')
       check(addition.identityStatus === 'usable', 'Addition and maintenance identities differ');
@@ -677,13 +720,13 @@ function composeAddition(collected, review = null, baseInfo = null) {
     };
     if (!infrastructure && addition.structuralStatus === 'proven') {
       result.localSelection = {
-        rule: 'questionarios-adicao-integrada-v3',
+        rule: addition.contract,
         scope: 'indivisible-reviewed-addition; local-only',
         reviewedIntegrationBase: !!reviewedBase,
       };
     }
   } catch (error) {
-    addition ||= proveAddition(collected);
+    addition ||= prove(collected);
     result.status = 'rejected';
     result.maintenance.status = 'rejected';
     result.maintenance.reasons.push(

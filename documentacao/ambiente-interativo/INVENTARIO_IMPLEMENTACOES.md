@@ -2002,3 +2002,13 @@ produzida pela PR e permanece inconclusiva sem mecanismo independente explicitam
 A caixa de lembranças
 
 Conteúdo: ambiente_interativo/revisoes/alice/historia-caixa-lembrancas-outubro-2026.js
+
+## Infraestrutura opt-ins — Fase 5C.3G-B2 (validação por snapshot)
+
+Implementação de questionarios-adicao-optins-v1 e adicao-optins-atestacao-composta-v1 para
+Gramática literal com duas sessões, Desktop Amplo e ditados existentes. Preserva v3, motores,
+executor e CI global. Acrescenta 26 casos permanentes (13 por perfil), sem revisão escolar
+nova. Manifesto descobre 623 casos (597 preservados + 26). Corpus mantido manualmente após
+revisão e autorização específica, conforme IDENTIDADE.md. A global integral do snapshot
+congelado é obrigatória; resultado efetivo em tmp/validacao/fase5c3g-b2/RELATORIO_VALIDACAO_GLOBAL.md.
+Esta entrada não declara consolidação nem aprovação de piloto escolar.

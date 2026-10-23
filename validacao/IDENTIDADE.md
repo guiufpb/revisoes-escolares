@@ -577,3 +577,30 @@ recorte nem prevê tempo seletivo. Política de execução, check obrigatório, 
 timeouts, servidor e testes originais da aplicação permanecem preservados.
 
 Reatestação P1 concluída: o pin passa de `e0e93ccb2d59bb5f56c101e38bf1ccaf9fca48fdfbdabc48c8c98fb47f694d80` para `c74ec14472974ca446788687ed1ec603a6ee76fdffb3675a8081dc9cd48dd253`. Somente as duas superfícies descritas mudaram desde a atestação da Etapa 3; hashes/âncoras dos produtores e do bloqueio HTTP conferem, e os 29 diagnósticos anteriores foram preservados em cópia local ignorada.
+
+## Fase 5C.3G-B2 — registro inicial anterior à autorização do corpus
+
+A rota opt-ins, compositor/planejador, testes Node/Playwright e manifesto alteram o corpus.
+Nenhum pin é renovado nesta implementação. Antes da global final, apresentar deltas/hashes,
+consumidores, produtores/âncoras/HTTP, fonte/bundle e 29 diagnósticos conforme a política;
+solicitar autorização específica para manter manualmente somente diagnosticAudit.corpusSha256.
+REVIEWED, pins de produtores/HTTP/recursos e política de entradas privadas permanecem fixos.
+Identidade inconclusiva bloqueia seleção, mesmo com provas sintéticas positivas. Novos SHAs
+Git não alteram por si os hashes de conteúdo nem autorizam renovar pins. Evidências antigas
+conservam sua proveniência original. Infraestrutura deve ser consolidada antes do piloto.
+
+### Manutenção deliberada autorizada — 22/10/2026
+
+Após reconferência do checkpoint e autorização específica do responsável, foi alterado
+manualmente somente `diagnosticAudit.corpusSha256`, em `validacao/identidade-politica.json`:
+de `01b8d4ae5ea3228544019fc2c0368076a327fed283eb068ee580d4a5b121aa45`
+para `119952e16f05638ff85640c8169578bb007f34e9fb3b7fa881e446d6edbd0ad1`.
+O corpus anterior foi reproduzido com a materialização CRLF dos três BAT exigida pelos
+atributos versionados; os dez deltas de corpus, 14 consumidores e hashes coincidem com
+o checkpoint. Mudam prova opt-ins, adição/compositor/planejador, testes/fixtures e manifesto.
+REVIEWED, produtores/âncoras, HTTP, recursos, demais pins e entradas privadas permanecem fixos.
+A verificação local de disponibilidade não encontrou dependência efetiva do volume que havia
+sido desbloqueado, nem deriva dos insumos. Não atribui as falhas anteriores a esse bloqueio.
+Identidade real, congelamento e resultado da global são registrados separadamente em
+`tmp/validacao/fase5c3g-b2/RELATORIO_VALIDACAO_GLOBAL.md`; esta nota de manutenção não
+antecipa aprovação dos testes. Evidências anteriores conservam seus hashes e proveniência.

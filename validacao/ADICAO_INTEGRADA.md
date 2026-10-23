@@ -209,3 +209,43 @@ real de defeitos ou suíte seletiva. Uma global verde não mede sensibilidade a 
 
 Se houver desvio, permanece a global ou o diagnóstico inválido existente. Reverter a extensão
 significa retirar o complemento/guard específico, sem tocar em progresso, R1/R2 ou evidências.
+
+## Rota independente de opt-ins — 5C.3G-B2
+
+`questionarios-adicao-optins-v1` preserva v3: wrappers fixos compartilham provas de lote e
+âncoras sem parâmetro que amplie proveAddition. Somente Gramática, Alice ou Mariana, literal,
+opcoes/campos, validacaoEstritaEstado true. Sem assets, CSS, helpers/funções de conteúdo.
+
+Campos adicionais fechados: layout com somente desktopAmplo true; modoResponsavel com
+somente habilitado true e sessoes (duas, ordenadas). Cada sessão tem exatamente id, nome,
+principal e chaveArmazenamento. Principal: perfil/nome da criança, true, chave igual à raiz.
+Auxiliar: responsavel/Responsável, false, chave da mesma revisão acrescida de .responsavel
+antes da mesma .vN. Sem colisão com principais, auxiliares ou históricas da base; sem migração.
+
+Ditados somente em campos, com ditado true, unidadeDitado palavra ou frase e
+cancelarAoTrocarCampo true; ao menos uma questão de cada unidade, uma resposta por item.
+Pergunta/bloco válidos e demais regras v3 permanecem. Sem combinações parciais, tentativas,
+textoDitado, estriteza extra de texto, pronúncia ou outras propriedades. Frase curta e não
+exposição do estímulo exigem revisão editorial e testes concretos, além da prova estática.
+Manifesto contém sessões derivadas da fonte e capacidades exatas ordenadas desktop-amplo,
+ditado, estado-estrito, sessoes-auxiliares. Dependências de conteúdo/assets/histórico vazios.
+Lote integral e reciprocidade preservados; quatro inserções canônicas, spec e bundle oficial.
+
+Spec própria exige sete grupos adicao do v3 e oito prefixos optins seguidos de espaço:
+callbacks, sigilo, salto, desktop-1366, desktop-1920, movel-390, conclusao-auxiliar,
+auxiliar-adverso (exemplo: [optins:callbacks] descrição). Tags não provam comportamento;
+revisão dos corpos, gabarito independente e execução dos arquivos completos são obrigatórios.
+
+Scanner específico, sem alterar o v3: imports diretos canônicos AxeBuilder de
+require('@axe-core/playwright').default, path de require('node:path') e {pathToFileURL} de
+require('node:url'). Todos os usos são rastreados por AST, sem alias, shadowing, uso extra
+ou import ocioso. Axe somente em new AxeBuilder({page}).withTags(['wcag2a','wcag2aa',
+'wcag21aa']).analyze(); path/url somente como destino de page.goto na expressão
+pathToFileURL(path.resolve(__dirname, '../ambiente_interativo/index.html')).href.
+Sem exclusões axe, caminhos variáveis ou helpers livres. As demais proibições do scanner
+continuam aplicadas à spec inteira. Estática precede observação/discovery; não é sandbox.
+
+Representante adicional: questionarios-optins-cruzados-v1, arquivo completo
+tests/questionarios-optins-contrato.spec.js, 13 cenários por perfil. Mantêm-se seis contratos
+v3 e cinco arquivos completos mais a spec própria. Equivalentes não substituem provas da
+revisão nova. B2 pendente de corpus/global não é infraestrutura validada nem autoriza piloto.

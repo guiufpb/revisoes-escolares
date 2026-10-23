@@ -78,6 +78,10 @@ function historicalCliFixture(sourceRoot) {
     if (file.startsWith('scripts/validacao/') && file.endsWith('.cjs')) {
       files.set(file, fs.readFileSync(path.join(sourceRoot, file)));
     }
+  // A fixed new public CLI dependency is overlaid even before its first commit.
+  // No arbitrary untracked namespace is copied into the historical fixture.
+  const optinsProof = 'scripts/validacao/planejador-adicao-optins.cjs';
+  files.set(optinsProof, fs.readFileSync(path.join(sourceRoot, optinsProof)));
   const introduced = [
     'validacao/manifesto.json',
     'validacao/identidade-politica.json',

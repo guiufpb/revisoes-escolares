@@ -5,7 +5,7 @@ const { digest } = require('./manifesto.cjs');
 const { proveDeclarative, proveLocalVisual } = require('./planejador-provas.cjs');
 const { treatmentResolved } = require('./identidade.cjs');
 
-const VERSION = '1.1.0';
+const VERSION = '1.2.0';
 // Explicit existing representatives are resolved from manifesto.contracts, with
 // engine-specific state contracts. UI/catalogue contracts do not certify state.
 const CONTRACT_POLICY = {
@@ -224,7 +224,7 @@ function makePlan({
     );
     if (batch && !bound.rows.some((e) => e.path === file && e.role === 'diagnostic')) {
       row.risk = 'R1';
-      row.rule = 'questionarios-adicao-integrada-v3';
+      row.rule = batch.contract;
       row.basis =
         'Indivisible additive batch: structural proof, deliberate base/consumer/corpus review and complete byte-bound identity; local candidate only.';
       row.contracts.push(...batch.requiredContracts);
