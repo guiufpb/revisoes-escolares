@@ -1,5 +1,18 @@
 # Identidade de entradas e artefatos — Etapa 2.1
 
+## Etapa 3I — identidade da manutenção da Formiga (24/10/2026)
+
+Auditoria autorizada sobre `1f3daa3090564f762a6e6255c25ca1eb53d07a5b` reproduziu o corpus
+da base e confirmou somente o delta de sincronização em `tests/ambiente-interativo.spec.js`.
+Mantém-se manualmente apenas `diagnosticAudit.corpusSha256`, de
+`7ce796f0bc17830af9186396e9da182d77194e8933937c3f19b3d959fbd3b37b` para
+`b2f2d8418cae4335d647513c50af567d68a320e4f21325f3641b02dff60b3e51`.
+Consumidores, produtores/âncoras, HTTP, REVIEWED e vínculos fonte/bundle foram revistos;
+os demais pins permanecem. Os 29 caminhos diagnósticos estão ausentes nesta worktree,
+sem prova de validação visual. Evidências: `tmp/validacao/manutencao-formiga-3i/`.
+Esta manutenção independente não usa a atestação do piloto nem os contratos de adição;
+a global integral permanece pendente e não há aprovação antecipada de integração.
+
 ## Fase 5C.3D — manutenção deliberada da seleção local (21/10/2026)
 
 Revisão autorizada sobre a base `814557ec0762bb4732083edb2586e991be3c588e` reproduziu

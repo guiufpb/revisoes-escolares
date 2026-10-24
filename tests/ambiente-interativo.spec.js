@@ -2127,6 +2127,36 @@ test('explica o eclipse e conclui O dia que o Sol tirou férias com 13 perguntas
 test('conclui A formiga que queria cantar com glossário, quatro alternativas e ditados sem corte', async ({
   page,
 }) => {
+  await page.evaluate(() => {
+    window.__falasFormigaNoTeste = [];
+    window.__cliquesFormigaNoTeste = [];
+    window.speechSynthesis.cancel = function () {};
+    window.speechSynthesis.speak = function (fala) {
+      window.__falasFormigaNoTeste.push({
+        texto: fala.text,
+        iniciadoEm: window.performance.now(),
+      });
+      if (typeof fala.onstart === 'function') fala.onstart();
+      if (typeof fala.onend === 'function') fala.onend();
+    };
+    document.addEventListener(
+      'click',
+      (evento) => {
+        if (!evento.target.closest('.botao-ouvir-ditado')) return;
+        window.__cliquesFormigaNoTeste.push({
+          iniciadoEm: window.performance.now(),
+          falasAntes: window.__falasFormigaNoTeste.length,
+          avisos: [],
+        });
+      },
+      true
+    );
+    const anuncio = document.getElementById('anuncio-questionario-leitura');
+    new window.MutationObserver(() => {
+      const clique = window.__cliquesFormigaNoTeste.at(-1);
+      if (clique) clique.avisos.push(anuncio.textContent);
+    }).observe(anuncio, { childList: true, subtree: true, characterData: true });
+  });
   await abrirLivro(page, 'Alice', LIVRO_FORMIGA);
   await page.locator('#ir-pagina-leitura').fill('16');
   await page.getByRole('button', { name: 'Ir', exact: true }).click();
@@ -2158,19 +2188,6 @@ test('conclui A formiga que queria cantar com glossário, quatro alternativas e 
   }
   verificarDistribuicaoEquilibrada(letrasCorretas);
 
-  await page.evaluate(() => {
-    window.__falasFormigaNoTeste = [];
-    window.speechSynthesis.cancel = function () {};
-    window.speechSynthesis.speak = function (fala) {
-      window.__falasFormigaNoTeste.push({
-        texto: fala.text,
-        iniciadoEm: window.performance.now(),
-      });
-      if (typeof fala.onstart === 'function') fala.onstart();
-      if (typeof fala.onend === 'function') fala.onend();
-    };
-  });
-
   const respostasDitado = [
     'Felipa sonhava em cantar para o mundo',
     'Dom convidou Felipa para a orquestra da floresta.',
@@ -2184,25 +2201,36 @@ test('conclui A formiga que queria cantar com glossário, quatro alternativas e 
   for (let indice = 0; indice < respostasDitado.length; indice += 1) {
     await expect(page.getByText(`Pergunta ${indice + 11} de 13`)).toBeVisible();
     await expect(page.getByText(/Você ouvirá “Atenção” e, depois, a frase/)).toBeVisible();
-    const cliqueEm = await page.evaluate(() => window.performance.now());
-    await page.getByRole('button', { name: '🔊 Ouvir ditado' }).click();
-    await expect(page.getByText(/O ditado começará em 1 segundo/)).toBeVisible();
-    await page.waitForTimeout(700);
     expect(await page.evaluate(() => window.__falasFormigaNoTeste.length)).toBe(indice * 2);
+    await page.getByRole('button', { name: '🔊 Ouvir ditado' }).click();
+    await expect(page.locator('#anuncio-questionario-leitura')).toHaveText(
+      'Ditado concluído. Agora digite o que você ouviu.'
+    );
     await expect
       .poll(() => page.evaluate(() => window.__falasFormigaNoTeste.length))
       .toBe(indice * 2 + 2);
-    const tempos = await page.evaluate(
-      ({ posicao, inicio }) => ({
-        preparacao: window.__falasFormigaNoTeste[posicao].iniciadoEm - inicio,
-        frase:
-          window.__falasFormigaNoTeste[posicao + 1].iniciadoEm -
-          window.__falasFormigaNoTeste[posicao].iniciadoEm,
-      }),
-      { posicao: indice * 2, inicio: cliqueEm }
+    // Os eventos no navegador preservam a prova temporal mesmo se o runner consultar tarde.
+    const registro = await page.evaluate((posicao) => {
+      const clique = window.__cliquesFormigaNoTeste[posicao];
+      const falas = window.__falasFormigaNoTeste.slice(posicao * 2, posicao * 2 + 2);
+      return {
+        clique,
+        falas,
+        totalCliques: window.__cliquesFormigaNoTeste.length,
+        totalFalas: window.__falasFormigaNoTeste.length,
+        preparacao: falas[0].iniciadoEm - clique.iniciadoEm,
+        frase: falas[1].iniciadoEm - falas[0].iniciadoEm,
+      };
+    }, indice);
+    expect(registro.totalCliques).toBe(indice + 1);
+    expect(registro.clique.falasAntes).toBe(indice * 2);
+    expect(registro.clique.avisos).toContain(
+      'O ditado começará em 1 segundo. Você ouvirá “Atenção” antes da frase.'
     );
-    expect(tempos.preparacao).toBeGreaterThanOrEqual(900);
-    expect(tempos.frase).toBeGreaterThanOrEqual(550);
+    expect(registro.totalFalas).toBe(indice * 2 + 2);
+    expect(registro.falas.map((fala) => fala.texto)).toEqual(['Atenção.', frasesEsperadas[indice]]);
+    expect(registro.preparacao).toBeGreaterThanOrEqual(900);
+    expect(registro.frase).toBeGreaterThanOrEqual(550);
     await page.getByLabel('Digite o que você ouviu').fill(respostasDitado[indice]);
     await page.getByRole('button', { name: 'Conferir resposta' }).click();
     await page
