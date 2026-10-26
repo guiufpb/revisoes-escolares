@@ -3235,9 +3235,104 @@ test('abre o leitor dedicado, sincroniza a página e retorna ao questionário', 
     '/ambiente_interativo/leitor.html?perfil=alice&livro=primeiras-licoes-dinheiro&pagina=25'
   );
   await expect(leitor.locator('html')).toHaveClass(/leitor-pronto/);
-  await leitor.locator('#terminar-leitura-dedicado').click();
+  expect(new URL(leitor.url()).origin).toBe(new URL(page.url()).origin);
+  const contexto = page.context();
+  const navegador = contexto.browser();
+  expect(leitor.context()).toBe(contexto);
+  await page.evaluate(() => {
+    window.__reciboCliqueLeitorNoTeste = null;
+  });
+  await leitor.locator('#terminar-leitura-dedicado').evaluate((botao) => {
+    botao.addEventListener(
+      'click',
+      (evento) => {
+        if (!window.opener || window.opener.closed) return;
+        const parametros = new window.URLSearchParams(window.location.search);
+        window.opener.__reciboCliqueLeitorNoTeste = {
+          botao: evento.currentTarget.id,
+          tipo: evento.type,
+          confiavel: evento.isTrusted,
+          perfil: parametros.get('perfil'),
+          livro: parametros.get('livro'),
+          pagina: Number(parametros.get('pagina')),
+          origem: window.location.origin,
+          instante: window.performance.now(),
+        };
+      },
+      { capture: true, once: true }
+    );
+  });
+  expect(await page.evaluate(() => window.__reciboCliqueLeitorNoTeste)).toBeNull();
+  // A auxiliar fecha no handler: observe antes e conserve a rejeição sem perder o evento.
+  const fechamentoPendente = leitor.waitForEvent('close').then(
+    () => ({ observado: true }),
+    (erro) => ({ erro })
+  );
+  let erroClique = null;
+  try {
+    await leitor.locator('#terminar-leitura-dedicado').click();
+  } catch (erro) {
+    if (
+      !(erro instanceof Error) ||
+      erro.message.split(/\r?\n/)[0] !==
+        'locator.click: Target page, context or browser has been closed'
+    ) {
+      throw erro;
+    }
+    erroClique = erro;
+  }
+  const fechamento = await fechamentoPendente;
+  if (fechamento.erro) throw fechamento.erro;
+  if (
+    !fechamento.observado ||
+    !leitor.isClosed() ||
+    page.isClosed() ||
+    !navegador ||
+    !navegador.isConnected() ||
+    !contexto.pages().includes(page)
+  ) {
+    throw erroClique || new Error('Fechamento da auxiliar sem preservar a página principal.');
+  }
+  expect(fechamento.observado).toBe(true);
+  expect(page.isClosed()).toBe(false);
+  expect(navegador.isConnected()).toBe(true);
+  expect(contexto.pages()).not.toContain(leitor);
   await expect(page.getByRole('heading', { name: 'Vamos conversar sobre o livro?' })).toBeVisible();
+  await expect(page.getByText('Pergunta 1 de 10', { exact: true })).toBeVisible();
+  await expect(page.locator('#nome-perfil-questionario')).toHaveText('Alice');
   await expect.poll(() => leitor.isClosed()).toBe(true);
+  const registro = await page.evaluate(
+    ({ alice, mariana }) => ({
+      recibo: window.__reciboCliqueLeitorNoTeste,
+      progresso: JSON.parse(localStorage.getItem(alice)),
+      progressoMariana: localStorage.getItem(mariana),
+    }),
+    { alice: CHAVE_LEITURA_ALICE, mariana: CHAVE_LEITURA_MARIANA }
+  );
+  expect(registro.recibo).toMatchObject({
+    botao: 'terminar-leitura-dedicado',
+    tipo: 'click',
+    confiavel: true,
+    perfil: 'alice',
+    livro: LIVRO_DINHEIRO,
+    pagina: 25,
+    origem: new URL(page.url()).origin,
+  });
+  expect(registro.recibo.instante).toBeGreaterThan(0);
+  expect(registro.progresso.livroId).toBe(LIVRO_DINHEIRO);
+  expect(registro.progresso.paginaAtual).toBe(25);
+  expect(registro.progresso.maiorPaginaAlcancada).toBe(25);
+  expect(registro.progresso.paginasVisitadas).toContain(25);
+  expect(registro.progresso.perguntaAtual).toBe(0);
+  expect(registro.progressoMariana).toBeNull();
+  await test.info().attach('recibo-fechamento-leitor', {
+    body: JSON.stringify({
+      ...registro,
+      fechamentoObservado: fechamento.observado,
+      erroClique: erroClique?.message || null,
+    }),
+    contentType: 'application/json',
+  });
 });
 
 test('não produz erros graves no console durante os dois fluxos', async ({ page }) => {
