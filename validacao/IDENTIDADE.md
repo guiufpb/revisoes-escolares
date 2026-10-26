@@ -1,5 +1,24 @@
 # Identidade de entradas e artefatos — Etapa 2.1
 
+## Etapa 3M.4 — identidade da manutenção do leitor dedicado (25/10/2026)
+
+Auditoria autorizada sobre `524c983af2d4ddf2288fb19bc57686fa8122bfe2` reproduziu 707 entradas
+e confirmou somente a correção do caso do leitor em `tests/ambiente-interativo.spec.js`, de
+`7678439be2ca481745d21fb5bfd0bb8def6a984499786274167e0ce65023185f` para
+`a823f28cbe933a1e8c350e4d2003a1c40d433021f5380df04988932325b90785`.
+Mantém-se manualmente apenas `diagnosticAudit.corpusSha256`, de
+`b2f2d8418cae4335d647513c50af567d68a320e4f21325f3641b02dff60b3e51` para
+`4a3e7ed2fbfef6f90bc11b275b62f16228fafcce39b6f642dd2ebba1d62a0e98`.
+O delta preserva as 26 asserções aprovadas, exige clique real e recibo confiável, fechamento
+observado previamente, sobrevivência da principal/navegador e retorno com progresso persistido.
+Não há alteração funcional do aplicativo nem novo consumidor de capturas. Consumidores da spec,
+produtores/âncoras, bloqueio HTTP, dez REVIEWED e nove vínculos fonte/bundle foram revistos;
+os demais pins e regras permanecem. Os 29 caminhos diagnósticos estão ausentes nesta worktree,
+sem evidência de validação visual. Evidências: `tmp/validacao/manutencao-leitor-3m4/`.
+A execução direcionada Windows da 3M.3 passou, mas não exercitou o ramo que trata a rejeição
+do clique por fechamento. A global integral e a CI Linux continuam pendentes. Esta manutenção
+independente não usa a composição seletiva do piloto Alice nem antecipa aprovação de integração.
+
 ## Etapa 3I — identidade da manutenção da Formiga (24/10/2026)
 
 Auditoria autorizada sobre `1f3daa3090564f762a6e6255c25ca1eb53d07a5b` reproduziu o corpus

@@ -181,7 +181,7 @@
     }
   ],
   "diagnosticAudit": {
-    "corpusSha256": "b2f2d8418cae4335d647513c50af567d68a320e4f21325f3641b02dff60b3e51",
+    "corpusSha256": "4a3e7ed2fbfef6f90bc11b275b62f16228fafcce39b6f642dd2ebba1d62a0e98",
     "scope": "Reviewed full executable/configuration/reference corpus; exact bytes except proven existing Questionarios hint literal ranges in static payloads and corresponding bundle. All other changes refuse attestation.",
     "httpDeny": {
       "source": "scripts/identidade-ambiente-local.cjs",
