@@ -389,6 +389,8 @@
   }
 
   function escolherAluno(aluno) {
+    document.getElementById('abrir-alice-gramatica-pontuacao-interpretacao-outubro-2026').hidden =
+      aluno !== 'alice';
     document.getElementById('abrir-historia-caixa-lembrancas-outubro-2026').hidden =
       aluno !== 'alice';
     document.getElementById('abrir-mariana-gramatica-singular-plural-cotidiano').hidden =
@@ -527,6 +529,13 @@
   }
 
   function registrarEventos() {
+    document
+      .getElementById('abrir-alice-gramatica-pontuacao-interpretacao-outubro-2026')
+      .addEventListener('click', function () {
+        if (alunoAtual !== 'alice') return;
+        window.QuestionariosRevisoes.abrir('alice-gramatica-pontuacao-interpretacao-outubro-2026');
+        atualizarResumo();
+      });
     document
       .getElementById('abrir-historia-caixa-lembrancas-outubro-2026')
       .addEventListener('click', function () {

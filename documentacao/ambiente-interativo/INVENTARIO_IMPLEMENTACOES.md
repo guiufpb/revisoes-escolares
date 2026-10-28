@@ -2012,3 +2012,10 @@ nova. Manifesto descobre 623 casos (597 preservados + 26). Corpus mantido manual
 revisão e autorização específica, conforme IDENTIDADE.md. A global integral do snapshot
 congelado é obrigatória; resultado efetivo em tmp/validacao/fase5c3g-b2/RELATORIO_VALIDACAO_GLOBAL.md.
 Esta entrada não declara consolidação nem aprovação de piloto escolar.
+
+
+## Nova revisão: alice-gramatica-pontuacao-interpretacao-outubro-2026
+
+Sinais de pontuação e interpretação de texto
+
+Conteúdo: ambiente_interativo/revisoes/alice/gramatica-pontuacao-interpretacao-outubro-2026.js

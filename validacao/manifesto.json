@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "version": "1.4.0",
+  "version": "1.4.1",
   "basis": {
     "commit": "14584b2fee618fc900bb3d5657b9cfa16482bf33",
     "tree": "0546fb7d4ce6f1ec44ce0d0a084a9331fdb7d0e3"
@@ -3768,6 +3768,58 @@
         "historicalCollection": "not-configured",
         "futureCandidate": false
       }
+    },
+    {
+      "id": "alice-gramatica-pontuacao-interpretacao-outubro-2026",
+      "profile": "alice",
+      "subject": "gramatica",
+      "declaredEngine": "gramatica-questionarios",
+      "engine": "questionarios",
+      "primaryKey": "revisoesEscolares.alice.gramatica.pontuacaoInterpretacaoOutubro2026.v1",
+      "configFiles": [
+        "ambiente_interativo/revisoes/alice/gramatica-pontuacao-interpretacao-outubro-2026.js"
+      ],
+      "contentSources": [
+        "ambiente_interativo/revisoes/alice/gramatica-pontuacao-interpretacao-outubro-2026.js"
+      ],
+      "capabilities": ["desktop-amplo", "ditado", "estado-estrito", "sessoes-auxiliares"],
+      "sessions": [
+        {
+          "id": "alice",
+          "key": "revisoesEscolares.alice.gramatica.pontuacaoInterpretacaoOutubro2026.v1",
+          "principal": true
+        },
+        {
+          "id": "responsavel",
+          "key": "revisoesEscolares.alice.gramatica.pontuacaoInterpretacaoOutubro2026.responsavel.v1",
+          "principal": false
+        }
+      ],
+      "contentDependencies": [],
+      "historicalKeys": [],
+      "assets": [],
+      "tests": [
+        "tests/gramatica-alice-pontuacao-interpretacao-outubro-2026.spec.js",
+        "tests/ambiente-interativo.spec.js"
+      ],
+      "evidence": [
+        {
+          "path": "ambiente_interativo/js/registro-revisoes.js",
+          "anchor": "alice-gramatica-pontuacao-interpretacao-outubro-2026"
+        }
+      ],
+      "evidenceAvailable": [],
+      "gaps": [
+        "series-individuais",
+        "associacoes-por-arquivo",
+        "assets-calculados",
+        "validacao-humana-versionada"
+      ],
+      "maturity": {
+        "assessment": "not-evaluated",
+        "historicalCollection": "not-configured",
+        "futureCandidate": false
+      }
     }
   ],
   "engines": [
@@ -3802,7 +3854,8 @@
         "alice-gramatica-h-til-vocabulario",
         "mariana-gramatica-h-til-vocabulario",
         "mariana-gramatica-singular-plural-cotidiano-outubro-2026",
-        "alice-historia-caixa-lembrancas-outubro-2026"
+        "alice-historia-caixa-lembrancas-outubro-2026",
+        "alice-gramatica-pontuacao-interpretacao-outubro-2026"
       ],
       "dependencies": [
         {
@@ -4265,7 +4318,8 @@
         "mariana-gramatica-pontuacao-ortografia-vocabulario-setembro-2026",
         "mariana-gramatica-portugues-prova-outubro-2026",
         "alice-gramatica-contos-digrafos-vocabulario",
-        "alice-gramatica-pontuacao-lh-xch-outubro-2026"
+        "alice-gramatica-pontuacao-lh-xch-outubro-2026",
+        "alice-gramatica-pontuacao-interpretacao-outubro-2026"
       ],
       "dependencies": [],
       "contracts": [],
@@ -4295,7 +4349,8 @@
         "alice-gramatica-contos-digrafos-vocabulario",
         "alice-gramatica-pontuacao-lh-xch-outubro-2026",
         "alice-gramatica-h-til-vocabulario",
-        "mariana-gramatica-h-til-vocabulario"
+        "mariana-gramatica-h-til-vocabulario",
+        "alice-gramatica-pontuacao-interpretacao-outubro-2026"
       ],
       "dependencies": [],
       "contracts": [],
@@ -4380,7 +4435,8 @@
         "mariana-gramatica-portugues-prova-outubro-2026",
         "alice-gramatica-pontuacao-lh-xch-outubro-2026",
         "mariana-gramatica-singular-plural-cotidiano-outubro-2026",
-        "alice-historia-caixa-lembrancas-outubro-2026"
+        "alice-historia-caixa-lembrancas-outubro-2026",
+        "alice-gramatica-pontuacao-interpretacao-outubro-2026"
       ],
       "dependencies": [],
       "contracts": [],
@@ -4627,7 +4683,8 @@
         "alice-ingles-play-time-unidade-6-outubro-2026",
         "mariana-ingles-at-school-atividade-3",
         "mariana-gramatica-portugues-prova-outubro-2026",
-        "alice-gramatica-pontuacao-lh-xch-outubro-2026"
+        "alice-gramatica-pontuacao-lh-xch-outubro-2026",
+        "alice-gramatica-pontuacao-interpretacao-outubro-2026"
       ],
       "dependencies": [],
       "contracts": [],
@@ -5129,7 +5186,8 @@
         "alice-leitura-uma-formiga-especial",
         "mariana-leitura-uma-formiga-especial",
         "mariana-gramatica-singular-plural-cotidiano-outubro-2026",
-        "alice-historia-caixa-lembrancas-outubro-2026"
+        "alice-historia-caixa-lembrancas-outubro-2026",
+        "alice-gramatica-pontuacao-interpretacao-outubro-2026"
       ],
       "engines": [
         "cena-matematica",
@@ -8877,6 +8935,38 @@
       ],
       "gaps": [],
       "expectedCases": 26
+    },
+    {
+      "file": "tests/gramatica-alice-pontuacao-interpretacao-outubro-2026.spec.js",
+      "revisions": ["alice-gramatica-pontuacao-interpretacao-outubro-2026"],
+      "engines": ["questionarios"],
+      "capabilities": ["desktop-amplo", "ditado", "estado-estrito", "sessoes-auxiliares"],
+      "contracts": [],
+      "platforms": ["windows", "linux"],
+      "fixtures": ["tests/confirmar-servidor-local.cjs"],
+      "defaults": {
+        "coverage": ["behavioral-contract"],
+        "oracle": "mixed",
+        "journeyScope": "contract",
+        "limitations": [
+          "Associações por arquivo são um superset conservador; não provam cada capacidade em cada caso."
+        ]
+      },
+      "cases": [
+        {
+          "id": "gabarito-pontuacao-interpretacao-alice",
+          "pattern": "^\\[adicao:gabarito\\] percurso editorial independente das trinta questões$",
+          "expectedMatches": 1,
+          "metadata": {
+            "coverage": ["complete-journey"],
+            "oracle": "independent",
+            "journeyScope": "questions",
+            "limitations": ["Percurso automatizado; voz simulada e uso infantil não certificados."]
+          }
+        }
+      ],
+      "gaps": ["series-individuais", "associacoes-por-arquivo"],
+      "expectedCases": 15
     }
   ],
   "keyExceptions": [],
@@ -8923,7 +9013,7 @@
     }
   ],
   "discovery": {
-    "fileCount": 46,
-    "caseCount": 623
+    "fileCount": 47,
+    "caseCount": 638
   }
 }
