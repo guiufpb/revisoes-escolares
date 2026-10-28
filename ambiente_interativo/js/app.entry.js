@@ -83,4 +83,5 @@ import './leitura.js';
 import './ingles.js';
 import '../revisoes/mariana/gramatica-singular-plural-cotidiano-outubro-2026.js';
 import '../revisoes/alice/historia-caixa-lembrancas-outubro-2026.js';
+import '../revisoes/alice/gramatica-pontuacao-interpretacao-outubro-2026.js';
 import './app.js';

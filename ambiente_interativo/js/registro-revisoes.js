@@ -3,6 +3,16 @@
 
   var revisoes = [
     {
+      id: 'alice-gramatica-pontuacao-interpretacao-outubro-2026',
+      aluno: 'alice',
+      titulo: 'Sinais de pontuação e interpretação de texto',
+      cartaoId: 'abrir-alice-gramatica-pontuacao-interpretacao-outubro-2026',
+      painelId: 'tela-gramatica-mariana',
+      chaveArmazenamento: 'revisoesEscolares.alice.gramatica.pontuacaoInterpretacaoOutubro2026.v1',
+      totalEtapas: 30,
+      controladorCompartilhado: 'gramatica-questionarios',
+    },
+    {
       id: 'alice-historia-caixa-lembrancas-outubro-2026',
       aluno: 'alice',
       titulo: 'A caixa de lembranças',
