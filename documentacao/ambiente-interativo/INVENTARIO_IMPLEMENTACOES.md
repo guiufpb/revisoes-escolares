@@ -1,5 +1,19 @@
 # Inventário de implementações do projeto
 
+## Etapa 3N.6F — documentação do piloto real R1 (29/10/2026)
+
+Consolidado em [Planejador — piloto real R1](../../validacao/PLANEJADOR.md#etapa-3n6f--piloto-real-r1-consolidado-29102026):
+Alice, Gramática, “Sinais de pontuação e interpretação de texto”, com 30 questões, seis ditados,
+Desktop Amplo e Modo Responsável com progressos independentes. Conclusão das 30 questões por Alice
+confirmada pelo responsável. Etapa 3N.3: 130/638 Playwright selecionados e aprovados, 508 omitidos
+justificadamente (79,62% menos casos), Node 408/408, sem falhas/retries/skips/fallback.
+PR #58 integrada por squash em `ec15ab077968b1c7a57efe603955f8bd2865b1f8`; CI #144/#145 globais
+aprovadas na primeira tentativa. A projeção observacional dos opt-ins na CI permanece inconclusiva
+pelo aviso de consumidor/âncora não revisado em `app.entry.js`. Fingerprint, tempo externo,
+evidências, limites e condições de reutilização constam no registro vinculado. A comparação de
+tempos não foi controlada. Consolidação exclusivamente documental R0, sem ampliar elegibilidade,
+reatestar identidade ou alterar a obrigação de global nas PRs. Pendências anteriores são históricas.
+
 ## Fase 5C.3D — reatestação da infraestrutura (21/10/2026)
 
 Revisão deliberada dos seis deltas de corpus da 5C.3C, com pin anterior reproduzido sobre

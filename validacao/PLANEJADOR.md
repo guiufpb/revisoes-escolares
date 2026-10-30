@@ -389,3 +389,98 @@ Seleção local: cinco arquivos v3 (89 casos), representante cruzado (26) e spec
 130 é somente orçamento com 15 próprios, não limite/aprovação. Node integral é adicional.
 Executor não muda. CI/GITHUB_ACTIONS/VALIDACAO_CI_OBSERVACIONAL continuam globais; toda PR
 e demais gatilhos exigem global. B2 exige sua própria global após manutenção autorizada.
+
+## Etapa 3N.6F — piloto real R1 consolidado (29/10/2026)
+
+Este registro consolida a Etapa 3N.3 e sua publicação, sem alterar regras ou infraestrutura.
+As pendências de preparação nas seções anteriores descrevem aqueles snapshots; o resultado
+abaixo comprova somente o piloto identificado, sem aprovar antecipadamente futuras revisões.
+
+### Arquitetura e alcance da seleção local
+
+R0 cobre documentação na allowlist; R1 exige conteúdo declarativo comprovado; R2 tem prova visual
+restrita; R3 corresponde a comportamento compartilhado; R4 abrange estrutura, armazenamento, build
+e arquitetura. Para o seletor, R2 limita-se à troca hexadecimal de fill/stroke em SVG fechado,
+mesmo que a classificação operacional de trabalho visual seja mais ampla. R3/R4, escopo desconhecido
+ou evidência insuficiente exigem global ou recusa do plano inválido, conforme as regras conservadoras.
+
+A [identidade](IDENTIDADE.md) vincula os bytes das entradas, a política e o manifesto por
+fingerprint; um SHA de commit sozinho não identifica uma worktree modificada. A revisão deliberada
+e a [composição da atestação](COMPOSICAO_ATESTACAO.md) vinculam base, alvo, consumidores, corpus,
+spec e bundle oficial. Atestação válida não é autorização automática nem substitui os testes.
+O planejador cruza o delta com associações, dependentes, contratos e representantes, selecionando
+arquivos completos. Identidade incompatível, contrato não resolvido ou prova insuficiente impedem
+sucesso seletivo: aplica-se fallback global ou recusa, sem relaxar os gates. Toda PR continua exigindo
+suíte global; a exceção é exclusivamente local e preserva os demais gatilhos de
+[Testes e validação real](../documentacao/ambiente-interativo/infraestrutura/TESTES_E_VALIDACAO_REAL.md).
+
+### Fatos comprovados do piloto
+
+A revisão **Alice → Gramática → Sinais de pontuação e interpretação de texto** usa os controladores
+compartilhados, o texto original “A fita da pipa”, 30 questões (15 de alternativas e 15 de
+preenchimento) e seis ditados (três palavras e três frases). Inclui Desktop Amplo e Modo Responsável
+com sessões e progressos independentes. O responsável confirmou que Alice concluiu as 30 questões
+no ambiente real; essa evidência humana é distinta dos resultados automatizados.
+
+Resultados históricos da Etapa 3N.3:
+
+- Playwright: 638 casos disponíveis, 130 selecionados e aprovados, 508 omitidos justificadamente.
+- Redução de casos executados: **79,62%** (508/638), sem falhas, retries, skips ou fallback.
+- Node: **408/408** aprovados.
+- Executor: `status=passed`, `selectiveSuccess=true`, exit code 0.
+- Tempo externo: **11min58,035s**. O resumo interno do executor registra 717274,7815 ms;
+  são medições com limites diferentes, não valores intercambiáveis.
+- Fingerprint aprovado: `a8febc5229d198ee139d875ac2f6eb2446f698e10ca748aba5cf127be1d11478`.
+
+Evidências locais existentes, mantidas privadas e sem republicação de artefatos:
+`tmp/validacao/executor-local/b328078b-348e-4580-aaef-632b21cbf5e1/resumo.json`,
+`tmp/validacao/2026-10-27T20-22-05-876Z-85d2401c-d0f5-4db6-91af-609a38644502/run.json`
+e `tmp/validacao/atestacoes/piloto-alice-3n2.json`. O resumo confirma seleção, sucesso e saída;
+o relatório associa a execução ao fingerprint. Contagens Node, tempo externo e conclusão infantil
+também integram a confirmação do responsável fornecida para esta consolidação.
+
+A [PR #58](https://github.com/guiufpb/revisoes-escolares/pull/58) foi integrada por squash na `main`,
+commit `ec15ab077968b1c7a57efe603955f8bd2865b1f8`.
+A [CI #144, antes do merge](https://github.com/guiufpb/revisoes-escolares/actions/runs/40623592626)
+e a [CI #145, depois do merge](https://github.com/guiufpb/revisoes-escolares/actions/runs/40773385801)
+concluíram com sucesso na tentativa 1, conforme metadados GitHub consultados nesta consolidação.
+Em ambas, a evidência consolidada pelo responsável registra **408/408 Node**, **638/638 Playwright**,
+formatação e lint aprovados. São resultados globais obrigatórios, distintos do recorte local.
+
+### Limitações e condições para reutilização
+
+As duas execuções globais emitiram o aviso observacional
+`Unreviewed consumer/anchor: ambiente_interativo/js/app.entry.js`. A ausência de atestação deliberada
+local no contexto da CI deixou **inconclusiva a projeção observacional dos opt-ins**. O aviso não
+representou falha dos testes obrigatórios nem impediu o merge; a observação da CI não está aprovada.
+
+A global histórica no Windows levava aproximadamente 47 minutos. A diferença para o tempo externo
+do piloto sugere economia relevante, mas snapshots e condições eram diferentes. Não é comparação
+experimental controlada e não sustenta percentual validado de economia de tempo. Os 79,62% referem-se
+exclusivamente à redução de casos Playwright executados.
+
+Antes de propor outra revisão R1, verificar o lote integral e os gates vigentes de
+[Adição integrada](ADICAO_INTEGRADA.md), identidade e composição. Para a rota deste piloto,
+`questionarios-adicao-optins-v1` e `adicao-optins-atestacao-composta-v1`, conferir:
+
+- Uma revisão de Gramática literal, num único perfil, com opções/campos e estado estrito; nenhuma
+  função de conteúdo, asset, CSS ou extensão de controlador fora do contrato fechado.
+- Duas sessões com IDs e chaves derivadas válidas, isolamento sem colisão/migração, Desktop Amplo
+  e ditados de palavra/frase no formato exato admitido. Presença dessas capacidades isoladamente
+  não comprova elegibilidade; combinações parciais não são presumidas válidas.
+- Inserções canônicas, manifesto/spec aditivos, reciprocidade e bundle do build oficial; revisão
+  editorial, gabarito independente e corpos dos testes próprios conferidos.
+- Identidade estável e utilizável, revisão deliberada atual da base/consumidores/corpus, composição
+  válida para o alvo e descoberta/associações sem referências pendentes.
+- Build, manifesto, formatação, lint e Node integral, além dos arquivos completos selecionados:
+  seis contratos v3, representante cruzado de opt-ins e spec própria. Os 130 casos foram o resultado
+  deste snapshot, não orçamento fixo nem aprovação de outra revisão.
+
+Contrato não satisfeito exige reclassificação, global/fallback ou recusa conforme o diagnóstico;
+não se ajustam pins, fingerprints ou atestações automaticamente para obter R1. O fingerprint acima
+é histórico: esta documentação não reatesta o snapshot nem permite reutilizar sua aprovação após
+mudanças. Novos resultados devem estar vinculados à identidade efetivamente validada.
+
+Como melhorias futuras, ficam a eventual resolução da observação dos opt-ins na CI e uma medição
+controlada de tempos. Ambas exigem etapa própria; não foram executadas nem autorizadas por este
+registro documental R0.
