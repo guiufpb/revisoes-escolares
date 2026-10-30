@@ -183,6 +183,26 @@ errada, correção sem pular, desfazer, avançar/voltar, recarga, várias açõe
 isolamento, teclado/ponteiro, celular e acessibilidade quando aplicáveis. Preserve
 as verificações de áudio e file:// exigidas pelas instruções para o fluxo alterado.
 
+Ao criar uma revisão, avalie a elegibilidade da seleção local pela política vigente:
+A. Testes direcionados tradicionais: arquivos específicos executados para validar a
+   revisão ou o controlador afetado, conforme a política do projeto.
+B. Seleção local comprovada: subconjunto de arquivos completos determinado pelo
+   planejador/executor oficial, com todos os requisitos da rota aplicável satisfeitos.
+Executar Playwright direcionado manualmente não comprova B. Consulte, a partir da raiz,
+validacao/PLANEJADOR.md para critérios e comandos vigentes, validacao/ADICAO_INTEGRADA.md
+para contratos, validacao/COMPOSICAO_ATESTACAO.md e validacao/IDENTIDADE.md para composição
+e identidade, e documentacao/ambiente-interativo/infraestrutura/TESTES_E_VALIDACAO_REAL.md
+para a política temática, sempre subordinada ao AGENTS.md.
+
+A seleção não é automática para revisão nova. Desktop Amplo, Modo Responsável e ditados
+não concedem elegibilidade por si: questionarios-adicao-optins-v1 tem requisitos
+independentes e não amplia genericamente questionarios-adicao-integrada-v3. O piloto
+real R1 de Alice demonstra viabilidade naquele snapshot, sem certificar revisões futuras.
+O executor exige invocação explícita e não autoriza omitir testes fora dos contratos.
+Falha ou recusa da seleção exige o tratamento conservador vigente, sem reduzir cobertura;
+não fabrique evidências nem atualize fingerprints automaticamente. Preserve os gatilhos
+abaixo e a suíte global em toda PR.
+
 Execute npm test global nos gatilhos do AGENTS.md:
 - a cada três novas revisões ou conjuntos independentes sobre infraestrutura
   estabilizada; perguntas/etapas da mesma revisão contam como um único conjunto;
@@ -198,7 +218,8 @@ PR para main passa pela suíte global do GitHub Actions e aguarda o check
 “Formatação, lint e testes”. Conteúdo já coberto localmente por testes direcionados
 não exige repetir a global local antes da CI, salvo nos gatilhos acima. Consolide
 commits antes do push quando possível, sempre respeitando a autorização do usuário.
-Documentação pura: confira links/caminhos e execute somente git diff --check.
+Documentação pura elegível pela política vigente: confira links/caminhos e execute
+somente git diff --check; documentos excluídos dessa exceção seguem seus gatilhos globais.
 
 8. CHECKLIST FINAL PARA NOVA REVISAO
 

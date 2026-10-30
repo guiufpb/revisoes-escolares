@@ -158,6 +158,20 @@ Nunca publique PDFs escolares reais, OCR bruto, renderizacoes privadas, prints d
 
 A politica de testes e exclusivamente a de `AGENTS.md`. Para toda mudanca de codigo, normalmente execute build, formatacao, lint e testes Playwright direcionados. Use `npm test` global apenas pelos gatilhos atuais do projeto; mudanca compartilhada, estrutural ou com alcance incerto antecipa a regressao correspondente.
 
+Para testes locais inteligentes, consulte `validacao/PLANEJADOR.md` (criterios e comandos),
+`validacao/ADICAO_INTEGRADA.md` (contratos de adicao), `validacao/COMPOSICAO_ATESTACAO.md`
+(composicao/revisao deliberada), `validacao/IDENTIDADE.md` (identidade comprovada) e
+`documentacao/ambiente-interativo/infraestrutura/TESTES_E_VALIDACAO_REAL.md` (politica tematica),
+sempre subordinados a `AGENTS.md`. A elegibilidade depende da politica vigente, do planejador,
+dos contratos resolvidos e da identidade comprovada; Playwright direcionado manualmente nao
+constitui, por si, selecao local comprovada. R1 de adicao continua restrito as condicoes
+demonstradas dos contratos; R2, ao contrato fechado de alteracoes SVG. R3/R4, alcance incerto,
+contratos nao resolvidos ou identidade incompativel seguem o tratamento conservador da politica.
+
+A selecao exige invocacao explicita do executor oficial, nao autoriza fabricar evidencias nem
+atualizar fingerprints automaticamente e nao substitui a suite global obrigatoria em toda PR.
+Esta skill apenas encaminha as fontes responsaveis; nao estabelece outra politica de testes.
+
 Prefira testes reais e comandos deterministas. Filtre saidas longas e retorne apenas erros relevantes ou contagens PASS/FAIL. Leia `references/testes-git-publicacao.md`.
 
 Para regressao de Leitura em worktrees, diferencie material real da crianca de fixture automatizada.

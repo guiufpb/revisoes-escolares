@@ -343,7 +343,9 @@ confirmação do usuário; não a infira de mocks ou screenshots.
 
 Use `INVENTARIO_IMPLEMENTACOES.md` para estado atual e `RELATORIO_TESTE_INTERATIVO.txt` para fatos
 cronológicos. Relate apenas comandos realmente executados, contagens aprovadas, falhas, limites e
-validação humana pendente. Finalize com `git diff --check`, status, auditoria de privacidade e stash.
+validação humana pendente. Finalize com `git diff --check`, conferência da situação Git e auditoria
+de privacidade; confira e preserve os stashes existentes, sem criar, aplicar, descartar ou alterar
+stashes automaticamente. Usar stash não é requisito.
 
 ## Processamento e observação do servidor de desenvolvimento
 
@@ -532,7 +534,11 @@ Execuções direcionadas do reporter permanecem aceitas. Global e check obrigat�
 A capacidade local está em [validacao/PLANEJADOR.md](../../../validacao/PLANEJADOR.md).
 `planejar:testes` exige comparação explícita entre refs ou base/worktree; `test:planejador` cobre
 provas/impacto/identidades e `comparar:plano` confronta a hipótese com uma global estruturada.
-São hipóteses explicáveis: não há comando de execução seletiva nem observação nova na CI.
+No contexto histórico da Etapa 2, eram hipóteses explicáveis: ainda não havia comando de execução
+seletiva nem observação nova na CI. As capacidades posteriores de execução local explícita e
+integração observacional à CI estão em [validacao/PLANEJADOR.md](../../../validacao/PLANEJADOR.md).
+A projeção observacional dos opt-ins na CI permanece inconclusiva pelo aviso
+`Unreviewed consumer/anchor: ambiente_interativo/js/app.entry.js`.
 `npm test`, o check obrigatório e todos os gatilhos globais permanecem integrais.
 
 R1 exige prova AST e integração efetiva; R2 é restrito a SVG simples com consumidores resolvidos.
