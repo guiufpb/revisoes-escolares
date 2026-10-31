@@ -29,7 +29,7 @@ Não há exceção de colisão ativa cadastrada na base.
 Cada revisão registra evidência disponível, lacunas e maturidade **não avaliada**. Candidatura
 futura não concede elegibilidade. Coleção histórica permanece `not-configured`, separada da
 maturidade. Os relatos humanos do inventário são históricos e não equivalem a certificação
-versionada das 66 revisões.
+versionada das 66 revisões históricas.
 
 ## Referência histórica, catálogo atual e expectativas atuais
 
@@ -41,12 +41,14 @@ São três verificações distintas:
 2. **Catálogo atual:** o manifesto e os registradores observados devem conter exatamente os mesmos
    IDs, sem duplicatas em nenhum lado. As verificações de chaves, fontes, capacidades, sessões,
    classificações e relações recíprocas continuam obrigatórias, também para acréscimos.
+   Na versão 1.4.1 do manifesto, o catálogo atual contém 69 revisões.
 3. **Expectativas atuais:** cada entrada em `tests` exige `expectedCases`, número explícito
    de instâncias esperadas naquele arquivo na descoberta completa. `discovery.fileCount` deve
    corresponder ao número de entradas; `discovery.caseCount` deve corresponder à soma de
    `expectedCases` e à descoberta. Cada arquivo também é conferido individualmente.
-   Hoje são 42 arquivos e 571 casos. Esses valores ficam versionados no manifesto, não são
-   calculados da descoberta para substituírem automaticamente o esperado durante a validação.
+   Na versão 1.4.1 do manifesto, são 47 arquivos e 638 casos. Esses valores ficam versionados
+   no manifesto, não são calculados da descoberta para substituírem automaticamente o esperado
+   durante a validação.
 
 ### Procedimento de acréscimo
 
@@ -77,7 +79,7 @@ sem cumprir os totais da descoberta completa, conferidos pelo validador.
 
 ## Casos e precisão
 
-Os 42 arquivos têm metadados agregados e regras de exceção. Os padrões são ancorados, têm
+Os 47 arquivos atuais têm metadados agregados e regras de exceção. Os padrões são ancorados, têm
 contagem esperada e são conferidos contra a descoberta real; regras sobrepostas, títulos
 completos duplicados, referências sem correspondência e classificações incompatíveis falham.
 
@@ -108,8 +110,8 @@ npm test
 ```
 
 O pretest da global valida o manifesto, executa os testes Node da infraestrutura e faz um único
-build. Os novos testes usam `.unit.cjs`, fora do padrão de descoberta Playwright; não alteram os
-42 arquivos/571 casos existentes. Os comandos de formatação e lint incluem explicitamente os
+build. Os testes Node usam `.unit.cjs`, fora do padrão de descoberta Playwright; não integram os
+47 arquivos/638 casos Playwright atuais. Os comandos de formatação e lint incluem explicitamente os
 novos scripts, testes e configuração; JSON/schema e workflow também entram na formatação.
 
 Execuções direcionadas legítimas continuam aceitas, por exemplo:
@@ -119,7 +121,7 @@ npx playwright test tests/infra-abertura-local.spec.js
 ```
 
 Use a porta exclusiva via `PLAYWRIGHT_PORT`, conforme a política temática. O reporter não
-exige 571 casos nessas invocações. A descoberta de integridade usa `--list --reporter=json`;
+exige 638 casos nessas invocações. A descoberta de integridade usa `--list --reporter=json`;
 não executa testes, build ou servidor.
 
 ## Relatórios e privacidade

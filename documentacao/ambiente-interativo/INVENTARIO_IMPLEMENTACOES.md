@@ -81,7 +81,10 @@ evidências locais da fase; não há alegação de execução seletiva real nem 
 
 O **Revisões Escolares** evoluiu para uma aplicação educacional local com perfis, matérias, revisões versionadas, progresso persistente, áudio, leitura de PDFs, cenas manipulativas e testes automáticos. A estrutura chamada **Ambiente Interativo** está em `ambiente_interativo/` e atende Alice e Mariana sem misturar os dados das duas.
 
-Este inventário registra o estado de trabalho em **14/10/2026**.
+Este inventário preserva o estado de trabalho de **14/10/2026** como registro histórico.
+As seções com datas posteriores registram a evolução subsequente, incluindo a consolidação
+do piloto real R1 em **29/10/2026**. Leia os registros conforme suas datas, sem interpretar
+os estados e as pendências históricos como situação atual.
 
 ## Fase 5B.3 — revisão e validação final controlada (19/10/2026)
 
