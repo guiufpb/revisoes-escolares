@@ -1,5 +1,15 @@
 # Planejador observacional — Etapa 2
 
+## Prioridade operacional dos testes locais inteligentes
+
+A prioridade do projeto é reduzir o tempo de validação local com economia comprovada, preservando estabilidade, identidade, contratos e cobertura obrigatória.
+
+Avisos observacionais não justificam, por si, ampliar a infraestrutura. Uma nova capacidade exige benefício demonstrável, segurança, viabilidade operacional e manutenção proporcional.
+
+Na ausência desses requisitos, prefira documentar a limitação, preservar a recusa conservadora e direcionar esforços às rotas locais seletivas existentes.
+
+A pendência observacional da CI não invalida uma seleção local que satisfaça seus próprios contratos. A suíte global permanece obrigatória em toda PR, sem execução seletiva na CI.
+
 ## Fase 5C.3C — candidato local por lote comprovado
 
 O executor local permanece intacto. Após composição v3 completa e validação existente,
