@@ -1,5 +1,16 @@
 # Inventário de implementações do projeto
 
+## ORG.4B — CLI de inventário somente de leitura
+
+`scripts/validacao/inventario-seguro.cjs` inspeciona raiz e recursos explicitamente indicados,
+sem recursão, conteúdo privado ou persistência. Informa metadados, HEAD/branch e condição no
+índice/ignore, com bloqueio de symlinks/junctions e incertezas explícitas. Não possui operações
+de manutenção. Limites, exemplos e testes sintéticos em
+[Inventário seguro](../../validacao/INVENTARIO_SEGURO.md). Não altera a proposta ORG v0.1.
+Correções ORG.4D preservam nomes NUL, verificam grafias Windows por evidência do filesystem,
+recusam formatos de raiz não suportados e distinguem conclusão, resultado parcial e erro fatal
+pelos códigos 0/2/1. Sem coleta de conteúdo, consumidores ou estado de alterações da working tree.
+
 ## Etapa 3N.6F — documentação do piloto real R1 (29/10/2026)
 
 Consolidado em [Planejador — piloto real R1](../../validacao/PLANEJADOR.md#etapa-3n6f--piloto-real-r1-consolidado-29102026):
