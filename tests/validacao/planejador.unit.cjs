@@ -280,6 +280,19 @@ function materializationFixture(
   git(['config', 'core.autocrlf', 'false']);
   git(['config', 'core.attributesFile', '']);
   git(['symbolic-ref', 'HEAD', 'refs/heads/main']);
+  // Reuse only real Git writes for identical synthetic bytes in this fixture.
+  const writtenBlobs = [];
+  const writeBlob = (bytes) => {
+    if (!Buffer.isBuffer(bytes)) {
+      return git(['hash-object', '-w', '--stdin'], bytes);
+    }
+    const existing = writtenBlobs.find((entry) => entry.bytes.equals(bytes));
+    if (existing) return existing.oid;
+    const snapshot = Buffer.from(bytes);
+    const oid = git(['hash-object', '-w', '--stdin'], bytes);
+    writtenBlobs.push({ bytes: snapshot, oid });
+    return oid;
+  };
   const tree = (entries) => {
     const groups = new Map();
     for (const [file, bytes] of entries) {
@@ -292,7 +305,7 @@ function materializationFixture(
     const rows = [...groups].map(([name, value]) =>
       Array.isArray(value)
         ? '040000 tree ' + tree(value) + '\t' + name
-        : '100644 blob ' + git(['hash-object', '-w', '--stdin'], value) + '\t' + name
+        : '100644 blob ' + writeBlob(value) + '\t' + name
     );
     return git(['mktree'], rows.join('\n') + '\n');
   };

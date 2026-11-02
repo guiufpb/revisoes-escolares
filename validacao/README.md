@@ -189,3 +189,13 @@ e projeções condicionais são separadas da execução obrigatória.
 A [política de identidade](IDENTIDADE.md) substitui a allowlist antiga, inclui bytes de assets
 públicos e separa os 29 diagnósticos comprovados. Formato 2 e política 1.0.0 exigem nova coleta;
 relatórios antigos preservam suas limitações. Caminhos desconhecidos bloqueiam comparação.
+
+## Preparação das fixtures Git — Fase 3O.4C.5
+
+O helper `materializationFixture` de `tests/validacao/planejador.unit.cjs` reutiliza OIDs
+somente para Buffers sintéticos byte a byte idênticos dentro da mesma construção e repositório.
+A primeira escrita continua sendo `git hash-object -w`; o OID só é registrado após sucesso,
+com cópia estável dos bytes. Não há cache global/persistente nem flag de ativação.
+A mudança foi motivada por medição e cinco pares A/B favoráveis, com oráculos Git independentes.
+Não modifica o planejador inteligente, a seleção ou a cobertura e não garante economia temporal
+fixa. O funcionamento dos testes não depende dos coletores temporários do experimento.

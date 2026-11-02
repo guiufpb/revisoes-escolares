@@ -737,7 +737,9 @@ test('V01–V27: todos os arquivos locais, descrições e geometria textual dos 
     );
     for (const img of await imgs.all()) {
       await expect(img).toHaveAttribute('alt', /.{20,}/);
-      expect(await img.evaluate((img) => img.complete && img.naturalWidth > 0)).toBe(true);
+      await expect
+        .poll(() => img.evaluate((img) => img.complete && img.naturalWidth > 0))
+        .toBe(true);
     }
   }
 });

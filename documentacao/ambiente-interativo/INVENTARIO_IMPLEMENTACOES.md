@@ -2036,3 +2036,9 @@ Esta entrada não declara consolidação nem aprovação de piloto escolar.
 Sinais de pontuação e interpretação de texto
 
 Conteúdo: ambiente_interativo/revisoes/alice/gramatica-pontuacao-interpretacao-outubro-2026.js
+
+### Fase 3O.4C.5 — preparação das fixtures Git
+
+O helper sintético de materialização reutiliza OIDs reais para Buffers idênticos na mesma
+fixture, sem flag experimental ou dependência temporária. A otimização é exclusiva dos testes;
+preservam-se planejador, seleção e cobertura. Justificativa e limites em `validacao/README.md`.
