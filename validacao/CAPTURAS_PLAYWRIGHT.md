@@ -4,10 +4,12 @@ Complemento inventarial independente da ORG.9B. Esta entrega observa apenas PNGs
 de `test-results/`, sem conteúdo, pixels, hashes de imagens ou manutenção física.
 Não altera nem amplia os classificadores sintéticos, o reporter ou o armazenamento escolar.
 
-## Escopos para uma publicação futura
+## Escopos de integração
 
-A ORG.9B continua local, baseada em `a0da0ec0240a24facb17abb4be25a65ed5809f09`.
-Não presumir integração à main. Seus cinco arquivos pendentes ficam inalterados:
+A ORG.9B foi integrada à main pela PR #65, por squash no commit
+`4550aba5fd1c27ed8ed67e7da2d28b3124b89283`, sobre a base
+`a0da0ec0240a24facb17abb4be25a65ed5809f09`. Seus cinco arquivos já integrados
+ficam inalterados e não compõem o diff desta segunda entrega:
 
 - `scripts/validacao/avaliar-par-reporter.cjs`;
 - `tests/validacao/avaliar-par-reporter.unit.cjs`;
@@ -21,9 +23,11 @@ O lote novo contém somente este complemento inventarial e três arquivos novos:
 - `scripts/validacao/capturas-playwright-win.py`;
 - `tests/validacao/inventariar-capturas-playwright.unit.cjs`.
 
-Este registro separado preserva a entrada e a publicação futura da ORG.9B sem misturar
-alterações no inventário principal já pendente. Evidências e capturas não integram
-nenhum dos lotes. Commit, push e PR continuam sujeitos a autorização separada.
+Este registro separado preserva o escopo da ORG.9B já integrada, sem misturar alterações
+no inventário principal. A integração do dry-run parte do squash da PR #65 e aplica
+somente seu commit exclusivo; a atualização deste estado documental fica em commit
+separado, sem alteração funcional. Evidências e capturas não integram nenhum dos lotes.
+Publicação não concede autorização de merge ou limpeza.
 
 ## Uso e observação
 
@@ -108,8 +112,9 @@ Validação final em 04/11/2026:
 - 19/19 testes novos aprovados; sintaxe Python aprovada.
 - Build, formatação, lint e diff aprovados.
 - Global na cópia curta: exit code 0, 667/667 Node e 638/638 Playwright (44,8 min),
-  um worker, porta 5189 e identidade confirmada. Essa composição local inclui a ORG.9B
-  não publicada; não representa validação de uma PR independente já integrada.
+  um worker, porta 5189 e identidade confirmada. Na data dessa execução, a composição
+  local incluía a ORG.9B ainda não publicada; esse resultado histórico não representa
+  execução da CI da segunda PR, cuja base agora contém a ORG.9B integrada pela PR #65.
 - A primeira cópia, profundamente aninhada, encerrou em 663/667 Node com quatro falhas
   históricas de Git/CLI e mensagens `Filename too long`. A execução e seus logs foram
   preservados. A repetição mudou somente a localização, sem alterar código ou testes.
