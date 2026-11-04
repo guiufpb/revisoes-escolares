@@ -1,7 +1,16 @@
 # Inventário local somente de leitura — ORG.4B
 
+Integração opcional em memória: [adaptador puro ORG.6A](INTEGRACAO_EVIDENCIAS.md).
+Converte a saída ORG.4D em envelopes v1, preservando fatos, lacunas e recusas.
+Não muda esta CLI, coleta dados adicionais ou decide dispensabilidade.
+
 CLI independente dos coletores de identidade. Não altera a política ORG v0.1, que permanece
 preliminar. Não possui executor, persistência, classificação de descarte ou descoberta global.
+
+Fonte auxiliar opcional: [registro de ciclo de vida ORG.5A](REGISTRO_WORKTREES.md).
+Seu leitor é independente desta CLI; o envelope mínimo de evidências admite observações
+de recursos sem registros históricos. Esta etapa não adiciona coleta/classificação ou
+integração automática ao inventário.
 
 Na raiz da cópia de desenvolvimento:
 

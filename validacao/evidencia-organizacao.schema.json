@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Organization evidence v1 (no cleanup authorization)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["evidenceVersion", "subject", "source", "fact", "knowledge", "value", "observedAt"],
+  "properties": {
+    "evidenceVersion": {
+      "const": 1
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "enum": ["worktree", "resource"]
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]{1,100}$"
+        }
+      }
+    },
+    "source": {
+      "enum": ["lifecycle-record", "resource-observation"]
+    },
+    "fact": {
+      "enum": [
+        "purpose",
+        "task",
+        "phase",
+        "declaredState",
+        "location",
+        "resource-exists",
+        "resource-type",
+        "resource-git"
+      ]
+    },
+    "knowledge": {
+      "enum": ["declared", "observed", "unknown"]
+    },
+    "value": {
+      "enum": [
+        null,
+        true,
+        false,
+        "present",
+        "planning",
+        "implementation",
+        "validation",
+        "delivery",
+        "integration",
+        "closed",
+        "active",
+        "paused",
+        "completed",
+        "file",
+        "directory",
+        "absent",
+        "other",
+        "tracked",
+        "ignored",
+        "untracked",
+        "indeterminate",
+        "directory-contents-unverified"
+      ]
+    },
+    "observedAt": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\dZ$",
+          "maxLength": 20
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  }
+}
