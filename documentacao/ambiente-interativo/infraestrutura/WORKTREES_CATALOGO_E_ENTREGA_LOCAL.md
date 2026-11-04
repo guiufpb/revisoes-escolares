@@ -210,6 +210,18 @@ O catálogo facilita localizar: não é backup, integração ou autorização pa
 
 ## Integração e encerramento
 
+### Registro auxiliar do ciclo de vida — ORG.5A
+
+O [registro privado v1](../../../validacao/REGISTRO_WORKTREES.md) é uma fonte auxiliar
+opcional, com UUID persistente por worktree, declarações e observações reconciliáveis.
+Seus arquivos reais ficam em diretório central privado externo às checkouts e ao catálogo;
+não substituem `copyId` nem `MINHAS_REVISOES_LOCAIS`. O leitor apenas consulta/valida,
+sem criar arquivos ou reconstruir o histórico. Estado declarado, referências históricas
+e observações independentes têm procedências distintas. Nenhum campo autoriza limpeza.
+O envelope mínimo de evidências permite evolução paralela da ORG.6, sem acoplar o futuro
+classificador ao schema completo dos registros. Classificação e manutenção não estão
+implementadas nesta etapa.
+
 A integração à pasta habitual é uma etapa explícita, sujeita às autorizações de Git vigentes.
 Identifique base e destino, preserve mudanças locais, resolva conflitos e execute as verificações
 exigidas pelo alcance. Não copie pastas inteiras nem reúna branches para apenas facilitar acesso.

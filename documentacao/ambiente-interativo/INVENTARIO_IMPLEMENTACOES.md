@@ -1,5 +1,135 @@
 # Inventário de implementações do projeto
 
+## ORG.9A — consolidação técnica e preparação da entrega Git
+
+Revisão delimitada da cadeia ORG.4D–ORG.8C, contratos, isolamento e autorizações,
+reutilizando hashes e resultados ORG.8C: 633/633 Node, 638/638 Playwright e 225/225
+direcionados. Nenhum código/contrato/teste alterado e nenhuma nova global ou operação
+física executada. Lista explícita de 31 arquivos para futuro commit, separando fontes,
+schemas, fixtures/testes e documentação de logs/traces/recursos locais. Os 29 PNGs
+não rastreados em output ficam fora do lote; não há ignore geral dessa pasta.
+Validação humana da CLI ainda pendente; limites de concorrência, plataforma e perda
+da âncora mantidos. Sem staging, commit, PR ou publicação. Revisão, inventário preciso,
+roteiro manual e proposta de estudo somente de leitura de `run.json.tmp` em
+[Consolidação ORG](../../validacao/CONSOLIDACAO_ORG.md).
+
+## ORG.8C — fluxo local mínimo de recuperação assistida
+
+CLI opt-in com terminal interativo: inicia um cenário sintético novo, exige seleção
+explícita do recurso e confirmação específica com desafio da seleção atual. Reutiliza
+`identifyRecovery`, `authorizeRecovery` e `restoreAfterExit`, sem alterar executores
+ou autorizações ORG.8B. Cancelamento não move o arquivo; pipe, respostas ausentes,
+antecipadas/genéricas e replay não aprovam restauração. Resultado distingue restauração
+verificada de posição observada após falha parcial. Âncora perdida bloqueia; sem adoção,
+limpeza real, descoberta ou serviço residente. Contratos ORG.6B/ORG.7 mantêm `none`.
+Uso, testes, limite de confirmação por terminal e próximo marco em
+[Recuperação assistida](../../validacao/RECUPERACAO_ASSISTIDA.md#org8c--fluxo-local-mínimo-de-seleção-e-confirmação).
+Build, formatação, lint, sintaxe Python e diff aprovados; 225/225 direcionados, com
+35 novos. Correção de confirmação antecipada parcial preservou a asserção e os
+executores; ocorrência documentada. Global: 633/633 Node e 638/638 Playwright
+(45,5 min), exit code 0, sem retries/skips; snapshot estável e evidências preservadas.
+Sem comprovação de uso humano real. Ciclo sintético de implementação encerrado;
+próximo marco: consolidação/revisão e primeira classe real restrita somente em
+leitura, sem criar ORG.8D ou autorizar integração Git/publicação.
+
+## ORG.8B — recuperação assistida com âncora viva independente
+
+Fábrica opt-in no harness físico existente: processo âncora cria e retém os handles
+e recibo em memória, independentemente do executor de renomeação. Após morte efetiva
+do executor, revalida o cenário e exige seleção explícita e autorização nova de uso
+único para restaurar no mesmo recipiente, sem sobrescrita. Contratos ORG.5A–ORG.7
+inalterados; `cleanupAuthorization=none` continua sem conceder permissão física.
+Se a âncora também morrer, bloqueia: não importa/adota diretórios por recibo,
+journal, marcador, UUID ou digest. Não recupera após fechamento de todos os processos
+ou reinício da máquina. Somente novos cenários sintéticos Windows 64 bits/NTFS local.
+Condições, testes e limitações em
+[Recuperação assistida](../../validacao/RECUPERACAO_ASSISTIDA.md).
+Build, formatação, lint, sintaxe Python e diff aprovados; 190/190 direcionados,
+incluindo 29 novos. Global integral: 598/598 Node e 638/638 Playwright (45,5 min),
+exit code 0. Snapshot estável durante a execução, artefatos próprios e nenhum
+skip/retry. Hashes dos contratos, backend nativo e trace histórico preservados.
+
+## ORG.8A — primeiro piloto físico reversível, somente fixtures próprias
+
+Harness Node + backend Python/ctypes para Windows 64 bits e NTFS local. Cria perímetro
+novo exclusivo, retém handles e IDs exatos, verifica conteúdo/digest/tamanho e duas
+regenerações físicas. Reutiliza ORG.4D–ORG.7, exige simulação e autorização explícita
+limitada à sessão. Quarentena e restauração por **renomeação dentro do mesmo recipiente**,
+sem sobrescrita; movimento entre diretórios bloqueado para manter as travas. Journal
+de intenções/verificações e reconciliação com sessão viva; sessão perdida não é adotada
+por marcador. Não há exclusão permanente, limpeza genérica ou ação sobre preexistentes.
+Limitação local: criação real de symlink de arquivo recusada pelo SO, explicitamente
+registrada; junction real e guard de reparse testados. Condições, testes e próximo
+incremento em [Harness físico](../../validacao/HARNESS_FISICO.md).
+Validação: build, formato, lint, sintaxe Python e diff aprovados; 161/161 direcionados,
+incluindo 24 casos do piloto. Global 569/569 Node e 638/638 Playwright (46,1 min),
+exit code 0, com artefatos próprios e traces anteriores preservados. A limitação de
+symlink de arquivo não foi convertida em alegação de cobertura física real.
+
+## ORG.7 — primeira simulação exclusivamente sintética
+
+`scripts/validacao/simulador-sintetico.cjs` avalia lotes explícitos em memória usando
+o classificador ORG.6B inalterado. Relata os quatro resultados, provas/razões/lacunas,
+contagens e bytes sintéticos verificados, sem equivalência a espaço recuperável real.
+Colisões de identidade/escopo bloqueiam todos os envolvidos; autorização sempre `none`.
+Sem IO, relógio atual, persistência, comandos ou planos físicos. Testes reutilizam o
+corpus existente, com lotes mistos, duplicações e evidências incompatíveis. Mesma
+worktree e lotes anteriores preservados. Contrato e próximo incremento reversível em
+[Simulação sintética](../../validacao/SIMULACAO_SINTETICA.md).
+Validação final: build, formato, lint e diff aprovados; 137/137 direcionados (47 novos).
+Global final: 545/545 Node e 638/638 Playwright (46,0 min), exit code 0. A primeira
+rodada parou em 544/545 Node por injeção de inode numericamente inalterado no teste
+herdado; manutenção exclusiva da injeção preservou e reforçou as asserções, sem mudar
+o leitor. Ocorrência, resultados e preservação de traces registrados no documento.
+
+## ORG.6B — primeiro reconhecedor conservador (03/11/2026)
+
+Reconhecedor puro de `synthetic-counter-v1`, produzido em memória por harness próprio,
+com contexto independente, identidade/escopo exatos, receita/digest/tamanho coerentes,
+duas regenerações e replay de aquisição/liberação do único consumidor previsto.
+Reutiliza envelopes ORG.5A e saída ORG.6A sem alterar contratos. Distingue `recognized`,
+`not-recognized`, `indeterminate` e `blocked`, com códigos/justificativas estáveis e
+desconhecidos preservados. Não reconhece genericamente arquivos reais ou ignored/tmp,
+não implementa simulação e nunca autoriza limpeza. Corpus exclusivamente sintético
+em memória; continuidade na mesma worktree, sem nova cópia ou publicação.
+Condições, limites e próximo incremento ORG.7 em
+[Classificador sintético](../../validacao/CLASSIFICADOR_SINTETICO.md).
+Validação: build, formato, lint e diff aprovados; direcionados 90/90 (46 da ORG.6B).
+Global final: 498/498 Node e 638/638 Playwright (45,6 min), exit code 0. Primeira
+global teve 637/638 e falha no teste legado de callbacks; reteste isolado 1/1 e nova
+global integral aprovados sem alterar código/testes. Ocorrência e trace preservados
+no relatório vinculado; possível oscilação, sem causa definitivamente comprovada.
+
+## ORG.6A — adaptador puro de evidências do inventário
+
+`scripts/validacao/inventario-evidencias.cjs` conecta o contrato ORG.4D ao envelope
+independente v1 da ORG.5A, sem alterar o schema. Recebe relatório, data e IDs opacos
+explícitos; preserva procedência, metadados, desconhecidos, recusas e diagnósticos de
+inspeções parciais. Não executa IO, Git, relógio atual, persistência ou classificação.
+Testes sintéticos cobrem ligação com o coletor, imutabilidade, determinismo e falhas.
+A ORG.5A local foi incorporada por patch Git verificado, sem presumir publicação.
+Contrato, limitações e próximo passo em
+[Integração de evidências](../../validacao/INTEGRACAO_EVIDENCIAS.md).
+Validação final: build, formato, lint e diff aprovados; direcionados 44/44;
+`npm test` com 452/452 Node e 638/638 Playwright (45,6 min), exit code 0,
+porta 5189, identidade confirmada e PDFs sintéticos oficiais.
+
+## ORG.5A — registro privado do ciclo de vida das worktrees (02/11/2026)
+
+Schemas v1 de registro individual e envelope mínimo de evidências, validador semântico
+e CLI `scripts/validacao/registro-worktrees.cjs`, exclusivamente de leitura. UUID persistido
+no registro; finalidade, tarefa, fase, estado declarado, notas reconciliáveis e referências
+opcionais. Diretório central privado externo, sem índice duplicado, alteração de `copyId`
+ou do catálogo. Limites de leitura, bloqueio de vínculos, diagnósticos sanitizados e
+desconhecidos explícitos; fixtures exclusivamente sintéticas com regressões de integridade
+e ausência de escrita. Sem registros reais criados, reconstrução histórica, classificador
+ou manutenção. Contrato independente permite início da ORG.6A com observações de recursos,
+sem aguardar ORG.5B–5D. Procedimento e limites em
+[Registro de worktrees](../../validacao/REGISTRO_WORKTREES.md).
+Validação final: build, formato, lint e diff aprovados; `npm test` com 438/438 Node
+(17 da ORG.5A) e 638/638 Playwright (46,0 min), porta 5189, identidade confirmada e
+PDFs sintéticos. Resultado e limites registrados no documento vinculado.
+
 ## ORG.4B — CLI de inventário somente de leitura
 
 `scripts/validacao/inventario-seguro.cjs` inspeciona raiz e recursos explicitamente indicados,
