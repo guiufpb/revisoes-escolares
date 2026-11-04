@@ -1,5 +1,18 @@
 # Inventário de implementações do projeto
 
+## ORG.9B — primeira avaliação observacional do par físico do reporter
+
+Avaliador opt-in de três arquivos explicitamente selecionados no perímetro experimental,
+com inventário ORG.4D/adaptador ORG.6A preservados, aquisição limitada, identidade BigInt,
+revalidação, comparação de bytes/JSON e procedências separadas. Não altera o reporter,
+classificador sintético, aplicativo ou contratos anteriores. Consumidores externos e
+dispensabilidade permanecem desconhecidos; espaço recuperável é null e autorização none.
+Par experimental observado: 316 bytes em cada arquivo, conteúdo igual, sem repetir A/B.
+Critérios, limites e testes em [Avaliação do par do reporter](../../validacao/AVALIACAO_PAR_REPORTER.md).
+Validação final: 15/15 testes novos, global 648/648 Node e 638/638 Playwright (45,6 min),
+exit 0; build, formato, lint e diff aprovados. Experimento preservado por identidade,
+metadados e hashes após a global. Nenhuma autorização de limpeza/publicação.
+
 ## ORG.9A — consolidação técnica e preparação da entrega Git
 
 Revisão delimitada da cadeia ORG.4D–ORG.8C, contratos, isolamento e autorizações,
