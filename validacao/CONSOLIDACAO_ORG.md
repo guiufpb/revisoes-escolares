@@ -218,3 +218,12 @@ Se a cópia final não existir, divergir ou o produtor/consumidor estiver indete
 manter a hipótese de evidência histórica única. Ausência/idade/nome/tmp/ignored não
 comprovam encerramento, regenerabilidade ou dispensabilidade. Nenhum exemplar real
 dessa classe foi inspecionado e nenhuma classificação/limpeza real foi iniciada aqui.
+
+## Continuidade ORG.9B
+
+O diagnóstico acima registra o estado histórico da ORG.9A. Após integração pela PR #64,
+a ORG.9B encerrou duas buscas históricas delimitadas sem localizar o intermediário.
+Uma única experiência autorizada com o reporter original produziu um par fictício
+por falha física no rename. O incremento de leitura e seus limites estão em
+[Avaliação do par do reporter](AVALIACAO_PAR_REPORTER.md). A experiência foi preservada,
+sem repetição, e a igualdade observada não concede autorização de limpeza.
