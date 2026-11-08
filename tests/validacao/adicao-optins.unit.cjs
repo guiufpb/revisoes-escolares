@@ -141,12 +141,41 @@ test('scanner v3 permanece byte a byte e REVIEWED conserva dez superfícies', ()
     return s.slice(n.start, n.end);
   };
   assert.equal(extract(current), extract(base));
-  const surface = require('../../scripts/validacao/planejador-adicao.cjs').reviewedSurfaces;
-  const expected = surface((_side, p) =>
-    execFileSync('git', ['show', 'HEAD:' + p], { cwd: root, encoding: 'utf8' })
+  assert.notEqual(
+    extract(
+      current.replace(
+        'function scanNewTest(source) {',
+        'function scanNewTest(source) {\n  // Synthetic byte change.'
+      )
+    ),
+    extract(base)
   );
+  const { loadSnapshot, fixture } = require('./helpers/adicao-fixture.cjs');
+  const historical = loadSnapshot();
+  const surface = require('../../scripts/validacao/planejador-adicao.cjs').reviewedSurfaces;
+  // HEAD may evolve; only the verified frozen fixture is the historical REVIEWED base.
+  const expected = surface((_side, p) => historical.get(p) ?? null);
   assert.equal(expected.length, 10);
-  assert.ok(expected.slice(4).every((e) => e.baseSha256 === e.expectedSha256));
+  for (const entry of expected) assert.equal(entry.baseSha256, entry.expectedSha256, entry.path);
+
+  for (const file of [
+    'ambiente_interativo/css/estilo.css',
+    'ambiente_interativo/js/gramatica-questionarios.js',
+    'ambiente_interativo/js/gramatica-ditado.js',
+  ]) {
+    const f = fixture();
+    assert.equal(proveAddition(f.input).structuralStatus, 'proven');
+    const changed = file.endsWith('/estilo.css')
+      ? historical.get(file) + '\n'
+      : execFileSync('git', ['show', 'HEAD:' + file], { cwd: root, encoding: 'utf8' });
+    // Neither synthetic tampering nor the legitimate LAB changes renew reviewed consumers.
+    assert.notEqual(hash(changed), expected.find((entry) => entry.path === file).expectedSha256);
+    f.before.set(file, changed);
+    const result = proveAddition(f.input);
+    assert.equal(result.structuralStatus, 'rejected');
+    assert.ok(result.reasons.includes('Unreviewed consumer/anchor: ' + file));
+    assert.equal(result.identityStatus, 'blocked');
+  }
 });
 test('opt-ins recusa lote incompleto, compartilhado e conteúdo executável', () => {
   for (const mode of ['incomplete', 'shared', 'function']) {

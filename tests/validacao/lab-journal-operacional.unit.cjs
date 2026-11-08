@@ -248,18 +248,53 @@ async function operar(page, texto) {
   return gravar(page);
 }
 async function aguardarLiberacaoNativa(page) {
+  const { performance } = require('node:perf_hooks');
   // page.close() confirma o fechamento da página; a terminação dos Web Locks
   // ainda percorre sua fila nativa. expect.poll aguarda cada consulta assíncrona;
   // waitForFunction tratava a Promise como truthy e não repetia uma consulta false.
-  await expect
-    .poll(
-      async () => {
-        const locks = await page.evaluate(() => navigator.locks.query());
-        return locks.held.length === 0 && locks.pending.length === 0;
-      },
-      { intervals: [25], timeout: 3000 }
-    )
-    .toBe(true);
+  const inicio = performance.now();
+  const diagnostico = {
+    consultasIniciadas: 0,
+    consultasConcluidas: 0,
+    ultimoEstado: null,
+    ultimaConsultaMs: null,
+    consultasComErro: 0,
+    ultimoErro: null,
+  };
+  try {
+    await expect
+      .poll(
+        async () => {
+          ++diagnostico.consultasIniciadas;
+          const inicioConsulta = performance.now();
+          try {
+            const locks = await page.evaluate(() => navigator.locks.query());
+            diagnostico.ultimoEstado = { held: locks.held.length, pending: locks.pending.length };
+            return locks.held.length === 0 && locks.pending.length === 0;
+          } catch (erro) {
+            ++diagnostico.consultasComErro;
+            diagnostico.ultimoErro = String(erro.name).slice(0, 80);
+            throw erro;
+          } finally {
+            ++diagnostico.consultasConcluidas;
+            diagnostico.ultimaConsultaMs = performance.now() - inicioConsulta;
+          }
+        },
+        { intervals: [25], timeout: 3000 }
+      )
+      .toBe(true);
+  } catch (erro) {
+    // Snapshot síncrono no instante da falha, sem nova consulta ou log por tentativa.
+    console.error(
+      'Diagnóstico Web Locks: ' +
+        JSON.stringify({
+          ...diagnostico,
+          consultaPendente: diagnostico.consultasIniciadas > diagnostico.consultasConcluidas,
+          decorridoMs: performance.now() - inicio,
+        })
+    );
+    throw erro;
+  }
 }
 
 test('operacional: ausente registra intenção real somente após oncomplete, sem dados escolares', async (t) => {
