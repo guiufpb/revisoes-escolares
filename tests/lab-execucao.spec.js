@@ -1319,9 +1319,12 @@ for (const [width, height] of [
     const amplo = await page.locator('#tela-gramatica-mariana').boundingBox();
     if (width >= 1120) expect(amplo.width).toBeGreaterThan(normal.width + 40);
     else expect(amplo.width).toBeCloseTo(normal.width, 0);
-    const alternativas = await page.locator('[data-opcao-gramatica]').all();
-    const a = await alternativas[0].boundingBox(),
-      b = await alternativas[1].boundingBox();
+    const [a, b] = await page.locator('[data-opcao-gramatica]').evaluateAll((elementos) =>
+      elementos.map((elemento) => {
+        const { x, y, width, height } = elemento.getBoundingClientRect();
+        return { x, y, width, height };
+      })
+    );
     expect(a.width).toBeGreaterThan(100);
     expect(a.height).toBeGreaterThanOrEqual(44);
     if (width >= 1120) {
@@ -1333,8 +1336,12 @@ for (const [width, height] of [
     await conferir(page);
     await page.locator('#gramatica-proxima').click();
     const campos = page.locator('[data-resposta-gramatica]');
-    const c = await campos.nth(0).boundingBox(),
-      d = await campos.nth(1).boundingBox();
+    const [c, d] = await campos.evaluateAll((elementos) =>
+      elementos.map((elemento) => {
+        const { x, y, width, height } = elemento.getBoundingClientRect();
+        return { x, y, width, height };
+      })
+    );
     expect(c.width).toBeGreaterThan(100);
     if (width >= 1120) {
       expect(Math.abs(c.y - d.y)).toBeLessThan(2);
