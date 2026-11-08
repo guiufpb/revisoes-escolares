@@ -1,5 +1,707 @@
 # Inventário de implementações do projeto
 
+## LAB.2D.6C.2 — integração operacional local (validada integralmente)
+
+Admissão explícita v1/v2 com pacote original, digest e infraestrutura de aquisição/progresso/
+recuperação autêntica. Interface neutra por identificação derivada do digest; v1 preservado.
+Backup-v1 e journal existentes, sem interface de exportação/restauração/administração.
+Temporário v2 recusado, sem migração, namespace ou alteração do avaliador/áudio.
+Validação C2: 673 testes Node distintos aprovados nas 16 suítes LAB (13 novos); 238/238 Playwright em
+quatro arquivos completos (32 novos). Rodada Node completa 672/672 e arquivo de aplicação
+46/46 após acrescentar a recusa temporária: repetições não somadas ao total distinto.
+Rodada Playwright completa 238/238 e quatro cenários ampliados de conclusão/recarga 4/4.
+Sem falhas/retries/flaky/skips/omissões/timeouts nas rodadas finais. Fontes e artefatos
+estáveis conforme reporters. Build, formato, lint, manifesto e diff aprovados.
+Manifesto: 69 revisões, 50 specs, 850 casos descobertos. Relatório `tmp/lab2d6c2-faseA-20261108-000635/RELATORIO_FASE_A.md`.
+Global integral aprovada conforme encerramento abaixo; liberação operacional local validada
+no escopo da 6C.2, sem iniciar outras capacidades.
+Contratos e limites em infraestrutura/LAB_DITADOS_V2.md. source.identity.complete:false separado.
+
+
+
+### Encerramento global — LAB.2D.6C.2
+
+Fase B aprovada em 08/11/2026: **1340/1340 Node e 850/850 Playwright**, saída 0,
+sem falhas/retries/flaky/skips/omissões/timeouts/interrupções. Duração total 59min07s
+(Playwright 56,5min). Descoberta coincide com manifesto: 69 revisões e 50 specs.
+Integração operacional local v2 validada; v1, sessões, Desktop Amplo, áudio e recuperação
+preservados. Sem interfaces novas de exportação/restauração/administração ou piloto real.
+Fontes/artefatos estáveis durante a suíte. 229 evidências/38.819.575 bytes protegidos em
+cópias SHA-256 válidas reutilizadas da Fase A; dez arquivos regenerados pelo runner mantêm
+suas versões anteriores nas cópias. 18.222 históricos e 29 PNGs íntegros, nove vínculos válidos.
+HEAD/branch mantidos, staging vazio. source.identity.complete:false permanece independente;
+pronúncia real continua dependendo de validação humana. Nenhum pin/política alterado.
+Log `tmp/lab2d6c2-global-20261108-004329/npm-test.log`; relatório `tmp/lab2d6c2-global-20261108-004329/RELATORIO_FASE_B.md`.
+
+## LAB.2D.6C.1 — contratos compartilhados (validada integralmente)
+
+Reconhecimento v1/v2 somente para análise; canônico/digest originais, projeção única para
+motor/configuração/snapshot e avaliador existente. Análise integral de lab-backup-v1 e
+journal v1 prepara ambos os formatos sem emitir capacidade de gravação. Validadores e
+operações públicas continuam exclusivos v1, incluindo restauração, reconciliação e retomada.
+Sem alterações de banco/chaves/locks, áudio ou interfaces. Detalhes e dependências 6C.2 em
+infraestrutura/LAB_DITADOS_V2.md. Fase A aprovada: 660 Node distintos nas 16 suítes LAB,
+20 novos; 206/206 Playwright em quatro specs completas (9min02s), sem falhas/retries/skips.
+Build, formato, lint, manifesto e diff aprovados. Descoberta: 69 revisões, 50 specs, 818 casos.
+229 evidências/38.828.205 bytes e cópias, 13.997 históricos e 29 PNGs íntegros por SHA-256;
+nove vínculos válidos. HEAD/branch preservados, staging vazio. Global aprovada conforme encerramento abaixo.
+Relatório `tmp/lab2d6c1-faseA-20261107-201404/RELATORIO_FASE_A.md`.
+source.identity.complete:false continua separado; nenhuma alteração de pins/políticas.
+
+
+
+
+### Encerramento da Fase B — LAB.2D.6C.1
+
+Global final aprovada em 07/11/2026: **1327/1327 Node e 818/818 Playwright**, saída 0,
+sem falhas/retries/flaky/skips/omissões/timeouts/interrupções na execução final.
+Duração total 57min51s; Playwright 55min15s. Manifesto e descoberta: 69 revisões, 50 specs.
+Fontes e artefatos estáveis durante a execução. Reconhecimento/projeção/snapshots e análise
+de backup/journal aprovados; envelope backup-v1 e contratos oficiais preservados.
+Admissão operacional v2 continua bloqueada em todos os caminhos; 6C.2 não iniciada.
+Primeira tentativa falhou em fixture histórica de coalescência: controle determinístico
+de relógio e retenção apenas da primeira consulta, como nas fixtures vizinhas 6B,
+sem alterar produção ou prazo de 3000 ms; arquivo completo 23/23 aprovado.
+Segunda tentativa interrompida por queda de energia no Playwright, sem resultado terminal;
+log e reporter incompletos preservados. Terceira tentativa integral aprovada.
+Antes da reexecução foram copiados 35.987 arquivos/1.905.042.971 bytes com SHA-256 verificado.
+35.958 arquivos temporários do runner foram regenerados/removidos pelo próprio runner;
+as versões anteriores continuam integralmente nas cópias verificadas. Nenhuma limpeza manual.
+17.552 históricos intactos, 29 PNGs originais idênticos, nove vínculos válidos.
+Referências anteriores da Fase A e baseline-complementar preservados separadamente da
+referência pós-implementação e do reporter da global. source.identity.complete:false
+continua independente; pins/políticas/classificações não mudaram.
+HEAD/branch mantidos; staging vazio; alterações acumuladas preservadas.
+Log `tmp/lab2d6c1-global-20261107-224132-apos-queda/npm-test.log`; relatório `tmp/lab2d6c1-global-20261107-224132-apos-queda/RELATORIO_FASE_B.md`.
+
+## LAB.2D.6B — adaptação interna e áudio (validada integralmente)
+
+Adaptação pura revalidada de v2 para campos/ditado, IDs e ordem preservados, apresentação
+neutra sem metadados recebidos. GramaticaDitado aceita en-US opt-in; pt-BR legado mantido.
+Controles e guards existentes reutilizados, sem admissão pública ou persistência v2.
+Testes instrumentam conexões/canais apenas na fixture; contratos reais v1 permanecem.
+Detalhes e dependências LAB.2D.6C em LAB_DITADOS_V2.md.
+Fase A aprovada: 169 Playwright (92 execução LAB, com 16 novos; 51 importação;
+26 contratos oficiais de áudio/ditado/opt-ins) e 284 Node (validador v1/v2, registro,
+motor, snapshots, backup, journal e restauração). Rodada final dos 16 novos também
+aprovada após reforço de correção parcial/capturas, sem somar repetições aos totais.
+Build, formato, lint, manifesto e diff aprovados. Manifesto: 69 revisões, 50 specs,
+818 casos. Logs e relatório em `tmp/lab2d6b-faseA-20261107-182226/`.
+Áudio compartilhado, validador e persistência protegidos por hash; 29 PNGs intactos,
+nove vínculos válidos. source.identity.complete:false continua separado.
+
+Global final aprovada em 07/11/2026: 1307/1307 Node e 818/818 Playwright,
+saída 0, sem falhas/retries/flaky/skips/omissões/timeouts/interrupções na execução final.
+Duração final 55min35s (Playwright 53,1min). Descoberta coincide com manifesto: 69 revisões,
+50 specs. Duas tentativas anteriores pararam em Node por fixtures históricas que retinham
+consultas coalescidas de identidade e disputavam o prazo de 3 s. Correções somente em
+lab-snapshots.unit.cjs e lab-motor-progresso.unit.cjs: relógio controlado no cenário de
+pendência autorizada e somente primeira consulta retida. Novo teste confirma suspensão
+em 3000 ms, sem reativação/escrita por resposta tardia; prazo/produção não mudaram.
+Ambos os arquivos completos 52/52 aprovados antes da global final; logs reprovados mantidos.
+Fontes e artefatos estáveis durante a execução final. Evidências: 226 arquivos/37.992.985
+bytes preservados em cópias verificadas por SHA-256; 2228 históricos idênticos. Oito capturas
+regeneradas conservam as versões anteriores nas cópias; 29 PNGs originais idênticos,
+nove vínculos válidos. Identidade integral continua pendente, sem pins/políticas alterados.
+Log `tmp/lab2d6b-global-20261107-185322-fixtures-controladas/npm-test.log`; relatório `tmp/lab2d6b-global-20261107-185322-fixtures-controladas/RELATORIO_FASE_B.md`.
+Admissão operacional v2 continua bloqueada; qualidade acústica exige validação humana.
+LAB.2D.6B validada integralmente no escopo técnico. LAB.2D.6C não iniciada.
+
+
+
+
+## LAB.2D.6A — contrato de ditados (validada integralmente)
+
+Validação estrutural pura de lab-questionarios-v2, isolada da admissão operacional v1.
+Palavra padrão/frase explícita, pt-BR/en-US, fonte única texto e limites UTF-16 estritos.
+V1 e componentes de áudio/persistência preservados. Não importa/executa/recupera v2.
+Detalhes em infraestrutura/LAB_DITADOS_V2.md.
+Fase A aprovada: 516 testes Node (validador, identidade/repositório, motor,
+snapshots, backups, restauração, journal, reconciliação, retomada e encerramento) e
+153 Playwright (76 execução LAB, 51 importação e 26 contratos oficiais). Novo teste
+Chromium demonstra análise estrutural válida com recusa de importação/cadastro/snapshot/
+aquisição journal, sem alterar banco ou progresso. Build, formato, lint, manifesto e diff
+aprovados. Manifesto: 69 revisões, 50 arquivos, 802 casos. Logs e relatório em
+`tmp/lab2d6a-faseA-20261107-164600/`.
+Global integral aprovada em 07/11/2026: 1306/1306 Node e 802/802 Playwright,
+saída 0, sem falhas/retries/flaky/skips/omissões/interrupções/timeouts. Duração total
+54min58s (Playwright 52,6min). Descoberta corresponde ao manifesto: 69 revisões e 50 specs.
+Compatibilidade v1 e validação estrutural v2 aprovadas; admissão operacional v2 segue
+bloqueada. Fontes e artefatos estáveis durante a execução conforme reporter.
+Evidências: 226 arquivos/37.952.792 bytes em cópias verificadas por SHA-256; 2116 históricos
+idênticos. Doze capturas regeneradas em test-results mantêm suas versões anteriores nas
+cópias preservadas. Os 29 PNGs de output continuam idênticos e os nove vínculos válidos.
+source.identity.complete:false permanece independente, sem alteração de pins/políticas.
+Log `tmp/lab2d6a-global-20261107-170758/npm-test.log`; relatório `tmp/lab2d6a-global-20261107-170758/RELATORIO_FASE_B.md`.
+LAB.2D.6A validada integralmente no escopo de contrato; LAB.2D.6B não iniciada.
+
+
+
+
+## LAB.2D.5 — Desktop Amplo (validada integralmente)
+
+Escolha visual antes de iniciar/continuar em Estudar atividades; configuração interna
+fechada layout.desktopAmplo no construtor confiável. Reutiliza o CSS e a montagem oficiais.
+Não alterna durante execução nem reconstrói sessão; preserva preferência entre criança
+e responsável na mesma atividade. Retornar à lista ou recarregar restaura escolha padrão.
+JSON v1, digest, snapshots, progresso, avaliador e registros oficiais inalterados.
+Fase A aprovada: 139 Playwright (76 execução, incluindo nove novos casos LAB.2D.5;
+37 listagem; 26 contratos oficiais de opt-ins) e 75 Node de registro/motor/snapshots.
+Build, formato, lint, manifesto e diff aprovados. Manifesto: 69 revisões oficiais,
+50 arquivos e 801 casos. Capturas de 390/1366/1920 inspecionadas; geometria também em 2560.
+Evidências e logs em `tmp/lab2d5-faseA-20261107-021855/`. Tentativas iniciais preservadas:
+atribuição redundante a configuração congelada removida; expectativa nova corrigida para
+respeitar revisão oficial já optante. Rodada final integral dos arquivos direcionados aprovada.
+Os 29 PNGs preexistentes de output permanecem idênticos por SHA-256; nove vínculos válidos.
+Global integral aprovada em 07/11/2026: 1273/1273 Node e 801/801 Playwright,
+saída 0; sem falhas, retries, flaky, skips, omissões, interrupções ou timeouts.
+Duração total 55min26s (Playwright 52,9min). Manifesto corresponde à descoberta real;
+69 revisões oficiais e contratos Desktop Amplo/sessões preservados. Fontes e artefatos
+estáveis durante a execução, conforme reporter. Evidências: 218 arquivos/36.141.877 bytes
+preservados em cópias conferidas por SHA-256; 2020 arquivos históricos idênticos.
+O runner regenerou 12 capturas em test-results, mantendo as versões anteriores
+nas cópias verificadas. Os 29 PNGs de output seguem idênticos e os nove vínculos válidos.
+Identidade integral continua pendente, sem alteração de pins/políticas/classificações.
+Log `tmp/lab2d5-global-20261107-023704/npm-test.log`; relatório `tmp/lab2d5-global-20261107-023704/RELATORIO_FASE_B.md`.
+LAB.2D.5 validada integralmente no escopo técnico. Próxima etapa não iniciada.
+
+
+
+
+## LAB.2D.4 — Modo Responsável (validada integralmente)
+
+Alternância opt-in no controlador LAB existente, confirmação cancelável, sessões isoladas,
+validação estrita do destino e recuperação explícita da origem. Mantém handle/coordenador
+e aquisição na troca; desativar drena progresso e liberar fica na saída definitiva.
+Gate recusa navegação concorrente com orientação para repetir. Listagem conserva presença
+principal; abertura normal/recarga não ativam responsável. Sem mudança dos registros oficiais.
+Fase A aprovada: 209 Playwright (67 execução, incluindo 18 novos; 87 consulta/importação;
+55 contratos oficiais) e 130 Node de motor/coordenador/progresso/snapshots/registro.
+Build, formato, lint, manifesto e diff aprovados. Manifesto: 69 revisões, 50 arquivos, 792 casos.
+Logs novos `tmp/lab2d4-faseA-20261107-*.log`; artefatos exclusivos em
+`tmp/lab2d4-faseA-20261107/`. Tentativas anteriores preservadas: falhas de seletor/fixture
+novos foram corrigidas e todos os arquivos direcionados passaram na rodada final.
+Nove vínculos locais e 29 PNGs mantidos; sem alteração de pins/políticas/classificações.
+Global integral aprovada em 07/11/2026: 1272/1272 Node e 792/792 Playwright,
+código 0; sem falhas, flaky, retries, skips ou casos omitidos. Duração total 57min50s
+(Playwright 55,2min). Fontes e artefatos estáveis durante a execução conforme reporter.
+Evidências preexistentes: 218 arquivos/36.127.357 bytes copiados e reconferidos por SHA-256;
+136 logs históricos idênticos. Dez capturas de test-results regeneradas pelo runner têm
+versões anteriores preservadas nas cópias verificadas. Os 29 PNGs de output permanecem
+idênticos, e os nove vínculos válidos. Sem alteração de pins/políticas/classificações.
+Log `tmp/lab2d4-global-20261107-011310/npm-test.log`; relatório `tmp/lab2d4-global-20261107-011310/RELATORIO_FASE_B.md`.
+LAB.2D.4 validada integralmente no escopo técnico; identidade integral continua pendente.
+
+
+
+## LAB.2D.3 — execução principal e saída segura
+
+Na listagem, expandir **Estudar atividades** e escolher **Iniciar atividade** ou **Continuar
+atividade**. Consulta/importação anteriores continuam opt-in independentes, sem iniciar
+execução ou exigir reescrita dos seus testes. Novo `lab-execucao.js` consulta/revalida pacote,
+identidade/digest/administração e journal; prepara coordenador existente, adquire Web Lock,
+valida snapshot e abre handle autêntico na sessão principal. Configuração/ID/chave são
+derivados internamente. Usa o painel e o avaliador existentes; nenhum catálogo oficial novo.
+
+Handle ganhou observação privada de metadados de durabilidade, sem eventos globais de
+respostas/chaves. Progresso ganhou consulta somente de presença, com o construtor interno
+da chave, sem sessão ou escrita na listagem. Strict snapshot usa o analisador puro existente
+antes de abrir; nenhuma reparação silenciosa. Final LAB informa verificar salvamento e
+retorna ao Laboratório pelo gate, sem alterar a conclusão das revisões oficiais.
+
+Gate opt-in antes de navegação/perfil/abertura oficial, captura de controles relevantes,
+saída com `handle.liberar()` aguardado e coordenador encerrado somente após sucesso.
+Falha mantém handle, memória e reserva; retentativa é explicitamente `persistir()`, sem
+retry automático. Eventos antigos e comandos repetidos são invalidados. `beforeunload`
+oferece aviso nativo para memória não durável, sem prometer salvamento em fechamento forçado.
+
+Nova spec sintética `tests/lab-execucao.spec.js`, 49 casos, com IndexedDB/localStorage/Web
+Locks reais, duas abas, coalescência, falhas, perfis, correção, recarga, teclado/toque e três
+resoluções. Comparação de identidade no motor também impede troca de matéria/ID/versão
+do pacote entre aquisição e conexão. Manifesto aditivo: 50 arquivos/774 casos; catálogo mantém 69 revisões oficiais.
+Direcionados: 49 execução + 87 consulta/importação + 11 regressões escolares/a11y aprovados;
+130 Node de motor/coordenador/progresso/snapshots e 19 do manifesto aprovados.
+Build, formato, lint e diff aprovados. Logs em
+`tmp/lab2d3-direcionados-final.log`, `tmp/lab2d3-direcionados-2.log` e
+`tmp/lab2d3-mensagens-final.log` (quatro falhas/suspensão reconferidas após ajuste de mensagem).
+Global integral aprovada em 07/11/2026: 1272 Node + 774 Playwright, saída 0, sem falhas,
+flaky, skips ou retries; fontes e artefatos estáveis durante a execução. Log:
+`tmp/lab2d3-global-20261106-231431/npm-test.log`. Os 271 arquivos/56.462.314 bytes de
+evidências copiados tiveram todos os hashes reconferidos; nove vínculos e 29 PNGs mantidos.
+Identidade integral continua `source.identity.complete:false`, com 29 PNGs `unknown`, sem
+renovação de pins/políticas ou reclassificação. Só especificação/inventário recebem este
+registro após a global; código, testes e bundle não foram alterados depois dela.
+Execução temporária, sessão responsável,
+limpeza, backup e recuperação visual continuam fora da interface.
+
+## LAB.2D.2 — prévia e importação explícita de JSON
+
+Área recolhível **Importar atividade — Responsável** na tela LAB, sem autenticação simulada.
+Seleção nativa valida bytes originais (até 256 KiB, UTF-8 estrito, sem remover BOM) com
+`LabValidador.validarPacote`. Prévia apresenta somente metadados literais e não cria banco,
+pacote, progresso ou journal. Apenas **Confirmar importação** permite abrir/criar o banco e
+usar `cadastrar(bytes)`; identidade/origem/perfil, pacote/digest, conflitos e journal são
+reconferidos. Sucesso depende do retorno confirmado do repositório; falha na atualização
+da lista é distinguida de cadastro não confirmado. Não há execução de atividades.
+
+Novo `lab-importacao.js`, HTML/CSS e pontos mínimos de entrada/saída existentes. Listagem
+passa a retornar resultado seguro da atualização. Repositório conserva transação e `add`;
+exceções síncronas de quota nos callbacks agora abortam preservando o código específico.
+Cancelamento/troca de arquivo/saída revogam prévias; duplo clique é bloqueado. Sair durante
+confirmação não promete desfazer commit. Bytes e payload não são guardados em globais/DOM.
+
+Nova spec sintética `tests/lab-importacao.spec.js` (50 casos), com identidade HTTP local e
+IndexedDB nativo, falhas injetadas, concorrência de UI, teclado/toque e três resoluções.
+LAB.2D.1 preserva seus 37 casos; duas asserções de ausência de execução agora conferem os
+três botões autorizados e continuam exigindo lista sem ações de execução. Manifesto aditivo:
+49 arquivos/725 casos; sem mudança de pins, políticas ou catálogo oficial.
+Direcionados aprovados: 50 importação + 37 listagem + 11 regressões escolares/a11y;
+97 Node de persistência/journal e 19 do manifesto, build, formato, lint e diff aprovados.
+Log final em `tmp/lab2d2-direcionados-final.log`. Global integral aprovada em 06/11/2026:
+1271 Node + 725 Playwright, saída 0, sem falhas/flaky/skips/retries; fontes e artefatos
+estáveis durante a execução. Log: `tmp/lab2d2-global-20261106-200204/npm-test.log`.
+248 arquivos/48.422.757 bytes de evidências preservados por cópia tiveram seus hashes
+reconferidos após a global; nove vínculos e 29 PNGs mantidos. Bundle inalterado após a suíte.
+A pendência `source.identity.complete:false` e os 29 PNGs `unknown` permanecem sem
+reclassificação. Somente especificação/inventário recebem este registro após a global;
+código, testes e bundle não foram alterados depois dela. [Fluxo e limites](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#prévia-e-importação-explícita--lab2d2).
+
+## LAB.2D.1 — primeira interface, consulta local somente de leitura
+
+Entrada opt-in **Laboratório de Atividades** no painel de matérias, usando Alice/Mariana
+já escolhida. Tela no roteador existente, retorno com painel/rolagem/foco preservados,
+metadados literais sem conteúdo de questões e avisos de indisponibilidade/pendências.
+`lab-listagem.js` abre somente banco existente; journal ganhou
+`inspecionarPendenciasExistentes`, sem schema, migração, sessão ou handle de execução.
+Identidade reconferida ao concluir e geração invalidada ao sair. Nada é cadastrado no
+catálogo oficial; importação, execução e administração permanecem fora da interface.
+
+Fontes: HTML, CSS específico, `app.js`, `app.entry.js`, novo módulo de listagem e extensão
+de leitura no journal. Teste permanente `tests/lab-listagem.spec.js`: IndexedDB Chromium,
+falhas, isolamento, ausência de escrita, teclado/toque, a11y e três tamanhos de tela.
+Validação: 37 LAB + 11 regressões escolares/a11y, 97 persistência/journal e 19 manifesto
+aprovados, além de build/formato/lint/diff. Metadados da spec no manifesto: 48 arquivos,
+675 casos. Global integral aprovada em 06/11/2026: 1271 Node + 675 Playwright, saída 0,
+sem falhas/flaky/skips/retries; fontes e artefatos estáveis durante a execução.
+Log em `tmp/lab2d1-global-20261106-182233/npm-test.log`. As cópias de 229 arquivos de
+evidências tiveram hashes reconferidos; nove vínculos e 29 PNGs preservados.
+Mapa das instruções atualizado no ponto LAB. Identidade integral ainda pendente:
+`source.identity.complete:false`, 29 PNGs `unknown`, sem alterações de pins/política ou
+classificação. Especificação e inventário atualizados documentalmente após a global;
+código, testes e bundle não foram alterados depois dela.
+[Contrato e limites](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#listagem-somente-de-leitura--lab2d1).
+
+## LAB.2C.5C.5 — encerramento explícito da intenção nunca aplicada
+
+`inspecionarReconciliacao` inclui fundamentos seguros de encerramento. Novo fluxo opt-in:
+`solicitarEncerramento(original,operacao)` → `confirmarEncerramento()` →
+`encerrarIntencao(original,confirmacao)`, com autorização própria e de uso único, identidade,
+Web Locks reais, ausência de memória e bases revalidadas. Só intenção inicial íntegra com todos
+os passos não iniciados, criações ainda ausentes e bases preservadas comprovadas é elegível.
+Qualquer aplicação/retomada ou escrita solicitada bloqueia, mesmo se os dados pareçam ausentes.
+
+Terminal estrito `cancelada-sem-aplicacao`, revisão 5, conserva marcadores/payload e adiciona
+contexto `encerramento` versão 1 para validar histórico independentemente de futuras restaurações.
+Reutiliza apenas a capacidade de journal 5C.3: CAS, `operacoes.put`, oncomplete e releitura;
+zero mutações escolares. Terminal íntegro lido libera o bloqueio sem exclusão ou reativação.
+Corrupção permanece bloqueante; nova restauração exige intenção e confirmações novas.
+[APIs, compatibilidade, fundamentos e limites](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#encerramento-assistido-sem-aplicação--lab2c5c5).
+
+Alterados journal, novo teste, especificação e inventário; após falha global, também a fixture
+de retenção de rota em `lab-backup-browser.unit.cjs`, sem alterar asserções anteriores.
+Após a segunda global, também relógio controlado em cenário de preparação pendente de
+`lab-restauracao.unit.cjs` e novo caso da expiração original, sem alteração de produção.
+**49/49 testes novos e
+603/603 LAB aprovados**, incluindo primitivas nativas, CAS adversarial, interrupção real durante
+put, commit sem resposta e dois reinícios completos do Chromium. Build/formato/lint/diff
+aprovados, bundle inalterado; demais módulos conferidos por hash. Resultado global final abaixo.
+Primeira global: **1269/1270 Node**, saída 1, sem Playwright, em
+`tmp/lab2c5c5-global-20261106-155350/npm-test.log`. Falhou persistência Lua do teste de backup;
+edição em memória passou. Fixture podia reter uma segunda consulta da gravação coalescida;
+reprodução com expiração dessa consulta manteve Lua em memória e Sol no storage, sem falsa
+confirmação de produção. Node diagnóstico 1270/1270 passou. Fixture agora retém somente a
+primeira consulta e encaminha as seguintes ao servidor real, mantendo handler/relógio até
+verificar persistência bem-sucedida e a segunda consulta. Arquivo **17/17 aprovado**, cenário de
+expiração original preservado. Produção/prazos/políticas inalterados nesta correção; logs e cópia
+anterior preservados. Segunda global em `tmp/lab2c5c5-global-20261106-160606/npm-test.log`:
+1269/1270 Node, saída 1, sem Playwright. Teste de coordenador ainda preparando retinha identidade
+por tempo real e podia expirar entre observar estado e responder. Reprodução controlada aos
+3.000 ms mostrou `CONSENTIMENTO_NECESSARIO`/`IDENTIDADE_TIMEOUT`, proteção correta.
+Arquivo original isolado 35/35; corrigido **36/36**, com tempo pendente controlado e novo caso
+ativa preparação em 2.999 ms, expiração em 3.000 ms e recusa de habilitação por resposta tardia.
+Asserções anteriores, prazos e políticas mantidos; produção inalterada. Build/formato/lint/diff
+novamente aprovados. Terceira global aprovada em 06/11/2026: **1271/1271 Node e 638/638
+Playwright**, saída 0 (45,6 minutos Playwright). Log:
+`tmp/lab2c5c5-global-20261106-162243/npm-test.log`. Relatório completo, 638 tentativas, sem
+falhas/retries/flakies/skips/omissões/interrupções/timeouts; fontes e artefatos estáveis:
+`tmp/validacao/2026-11-06T19-26-28-741Z-604342e4-c548-4a87-99f1-65113294efe7/run.json`.
+Evidências fixas anteriores preservadas em `evidencias-anteriores/` da primeira rodada, com caminhos,
+contagens e bytes conferidos em `preservacao.json`; relatório final 5C.4 agora na subpasta validacao.
+Três manifestos 5C.5 reconferidos após a global sem divergência; 29 novos PNGs, nove vínculos
+e bundle preservados. Depois da execução, somente documentação de resultados.
+LAB.2C.5C.5 concluída localmente na branch `codex/lab-1-contrato-arquitetura`, HEAD `8024895`.
+Históricos, perfis sintéticos, PNGs, logs e nove vínculos preservados; sem commit,
+push, PR, merge, sincronização, limpeza, rollback, interface ou início de outra etapa.
+
+## LAB.2C.5C.4 — retomada assistida somente de ausentes autorizados
+
+`inspecionarReconciliacao` agora inclui diagnóstico de retomada sem escrita. Novo fluxo opt-in:
+`solicitarRetomada(original,operacao)` → `confirmarRetomada()` →
+`retomarIntencao(original,confirmacao)`, com confirmação própria, exclusiva e de uso único.
+Mesma intenção/UUID, conteúdo/digest/sessões exatos e bases vinculadas; não amplia escopo.
+Todos presentes encaminham à reconciliação 5C.3. Preservados exigem a base original;
+ausência/leitura inconclusiva são distintas. Em `escrita-solicitada`, presente é conferido
+sem regravar, e ausência comprovada sob nova autorização permite criação sem regredir etapas.
+Efeito anteriormente observado/confirmado que desapareceu permanece bloqueado.
+
+Reutiliza somente add atômico de pacote/administração e a capacidade privada de snapshot 5C.2;
+journal usa a capacidade de confirmação 5C.3, com CAS/releitura e passos confirmados imutáveis.
+Marcadores estritos `em-retomada`/`verificados-por-retomada`, no mesmo v1/schema. Sem retry,
+rollback, sobrescrita, remoção, UI ou integração ao aplicativo. Interrupções conservam efeitos
+e pendência; terminal exige oncomplete, leitura independente, identidade e posse válidas.
+[Contrato, APIs, transições e limites](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#retomada-assistida-de-incompletas--lab2c5c4).
+
+Alterados journal, novo teste de retomada, especificação e inventário; após a falha global,
+também sincronização de relógio de um teste anterior de backup, novo caso de expiração e
+correção de identidade sintética no teste de inventário, conforme diagnóstico abaixo.
+Demais módulos permanecem inalterados. **65/65 testes de retomada e 553/553 LAB aprovados**,
+incluindo CAS nas duas capacidades, falhas nativas, memória entre abas, fechamento real nas
+fronteiras de solicitação/add/setItem e dois reinícios completos do Chromium. Build/formato/
+lint/diff aprovados; bundle inalterado. Primeira global: **1219/1220 Node**, saída 1, sem
+Playwright; log `tmp/lab2c5c4-global-20261106-135507/npm-test.log`. Cenário anterior de backup
+retinha identidade enquanto esperava editar Lua; expirando o prazo de 3 s, o motor corretamente
+recusava a edição após suspensão. Arquivo original isolado 16/16 e Node diagnóstico 1220/1220
+passaram; reprodução determinística ao vencer o prazo produziu a mesma divergência Sol/Lua.
+Corrigido somente o relógio do cenário de escrita ainda pendente; asserções originais mantidas.
+Novo caso verifica ativa em 2.999 ms e suspensa em 3.000 ms, resposta tardia sem escrita e captura
+anterior imutável. Arquivo de backup **17/17 aprovado**, sem alterar produção, prazos ou políticas;
+build/formato/lint/diff novamente aprovados. Falhas, cópia anterior e diagnósticos preservados.
+Segunda global: **1220/1221 Node**, saída 1, sem Playwright; log
+`tmp/lab2c5c4-global-20261106-140944/npm-test.log`. Falhou fixture de inventário que simulava
+outro inode por `ino + 1`: para identificador Windows grande, a soma retornava o mesmo Number.
+Reprodução nos arquivos sintéticos preservados comprovou identidades iguais. Corrigida somente
+a fixture, garantindo números diferentes e cobrindo também `2 ** 54`; asserção `untracked`
+mantida. Arquivo **13/13 aprovado**, classificador de produção inalterado; sem mudanças ORG,
+políticas ou prazos. Global final aprovada em 06/11/2026: **1221/1221 Node e 638/638
+Playwright**, saída 0, 45,0 minutos Playwright. Log:
+`tmp/lab2c5c4-global-20261106-142236/npm-test.log`. Relatório completo, 638 tentativas,
+sem falhas/retries/flakies/skips/omissões/interrupções/timeouts; fontes e artefatos estáveis:
+`tmp/validacao/2026-11-06T17-26-15-434Z-0712b488-a9b6-480a-9502-359e961a91fd/run.json`.
+Evidências fixas anteriores preservadas em `evidencias-anteriores/`
+da primeira rodada, com caminhos/contagens/
+bytes conferidos em `preservacao.json`; relatório final 5C.3 agora em sua subpasta validacao.
+Três manifestos 5C.4 reconferidos após a global sem divergência; 29 novos PNGs e nove vínculos
+preservados, bundle inalterado. Depois da execução, somente documentação de resultados.
+LAB.2C.5C.4 concluída localmente na branch `codex/lab-1-contrato-arquitetura`, HEAD `8024895`.
+Alterações acumuladas, nove vínculos, perfis, logs e PNGs anteriores preservados; sem commit,
+push, PR, merge, sincronização, limpeza ou início de outra etapa.
+
+## LAB.2C.5C.3 — reconciliação explícita, conservadora e sem escrita escolar
+
+`inspecionarReconciliacao(operacao,original?)` identifica journal, destino, etapas, conteúdo/
+administração e snapshots, distinguindo presença, preservação, ausência, divergência, corrupção
+e leitura inconclusiva. Somente lê banco existente; não cria schema para diagnosticar ausência.
+Sem original, diagnóstico usa payload suficiente do journal, sem conceder autorização.
+`solicitarReconciliacao(original,operacao)` exige exclusividade e emite confirmação própria por
+`confirmarReconciliacao()`. `reconciliarIntencao(original,confirmacao)` atualiza **só operacoes**,
+com CAS, oncomplete e leitura independente; não cria, regrava, exclui ou reinterpreta dado escolar.
+
+Igualdade não prova autoria. Resultado `presenca-verificada` separa efeito presente de criação
+histórica. Confirmados não retrocedem; etapa posterior não solicitada não vira criação por
+existência de dados. Terminal `verificados-por-reconciliacao` exige todos os efeitos/etapas
+comprovados sob identidade e posse válidas. Ausências/conflitos/incerteza mantêm pendência;
+commit sem resposta ao chamador é reconhecido por nova inspeção, sem recuperação automática.
+[APIs, classificações, transições e limites](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#reconciliação-conservadora-de-interrompidas--lab2c5c3).
+
+Alterados journal, repositório, coordenador e helper de leitura do planejador, novo teste de
+reconciliação, especificação e inventário. Sem módulo novo, UI ou armazenamento oficial.
+**53/53 novos testes e 488/488 LAB aprovados**; build/formato/lint/diff aprovados.
+A primeira global falhou em dois testes anteriores de journal (1153/1155 Node); Playwright não
+iniciou. Diagnóstico reproduziu `ATIVIDADE_OCUPADA` (1154/1155 Node) e comprovou falha no helper:
+`waitForFunction` com predicado async encerrava após uma consulta, mesmo resolvida em false.
+Corrigido somente o polling para `expect.poll`, aguardando cada query nativa; mantidos limite
+de três segundos, asserções e cobertura. Mensagens agora informam o código de recusa.
+Arquivo completo **41/41 aprovado**, com reprodução adicional de lock real ocupado/livre;
+produção inalterada nesta correção. Global integral corrigida aprovada em 06/11/2026:
+**1155/1155 Node e 638/638 Playwright**, saída 0 (43,6 minutos Playwright).
+Relatório completo, 638 tentativas, sem falhas, retries, flakies, skips, omissões, interrupções
+ou timeouts; fontes e artefatos estáveis durante a execução. Relatório:
+`tmp/validacao/2026-11-06T10-46-51-641Z-3baea7cd-04c6-41b1-ba0c-ba88a26cc3a8/run.json`.
+Históricos, falhas e diagnósticos preservados. Retomada, rollback, cancelamento assistido ou
+interface dependem de pedido separado.
+Nova global: `tmp/lab2c5c3-global-20261106-074327/npm-test.log`. Primeira tentativa preservada em
+`tmp/lab2c5c3-global-20261106-072021/npm-test.log`, com evidências
+anteriores preservadas em `evidencias-anteriores/` dessa rodada, com contagens/bytes conferidos
+no manifesto `preservacao.json`; nove junctions, PNGs, perfis e históricos preservados. Bundle inalterado.
+Contagens/bytes dos dois manifestos 5C.3 reconferidos após a global; 29 novos PNGs preservados.
+Depois da execução, somente documentação de resultados. LAB.2C.5C.3 concluída localmente,
+sem commits, na branch `codex/lab-1-contrato-arquitetura`, HEAD `8024895`.
+
+## LAB.2C.5C.2 — primeira aplicação controlada, sem sobrescrita
+
+`LabJournal.solicitarAplicacao(original,operacao)` seleciona intenção persistida íntegra,
+revalida destino/payload/bases sob Web Locks e emite confirmação separada de uso único por
+`confirmarAplicacao()`. `aplicarIntencao(original,confirmacao)` cria somente ausentes:
+pacote/administração por add atômico no IDB; snapshots pela capacidade privada do transporte
+na chave LAB derivada. Iguais são preservados byte a byte; nenhuma execução recebe estado externo.
+
+Journal v1 conserva solicitação, observação por leitura independente e confirmação persistida
+por passo. Só o marcador terminal persistido/relido permite `aplicacaoConcluida:true`.
+Falhas e interrupções deixam etapas incertas detectáveis, sem repetir escrita, remover dados
+ou anunciar restauração integral. Não há atomicidade presumida entre IDB e localStorage.
+Coordenador bloqueia execução persistente com journal pendente/incompatível; oficiais ficam
+preservadas. Concluídos são retidos, sem limpeza automática ou ampliação do limite de registros.
+[APIs, transações, estados e limites](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#aplicação-controlada-sem-sobrescrita--lab2c5c2).
+
+Alterados somente journal, planejador, repositório, progresso e coordenador LAB, além de
+novo teste de aplicação, especificação e inventário. Dois testes anteriores de journal tiveram
+sincronização de liberação nativa após fechamento, sem remoção de assertivas ou cobertura.
+Diagnóstico histórico 5C.1 preservado e consultado pontualmente, sem ampliar prazos de produção
+ou alterar políticas. **43/43 testes novos e
+435/435 LAB aprovados**; build/formato/lint/diff aprovados. Primeiro motivo de falha da transação
+é preservado, sem AbortError mascarar timeout. Global integral aprovada em 06/11/2026:
+**1102/1102 Node e 638/638 Playwright**, saída 0 (45,5 minutos Playwright). Relatório completo,
+638 tentativas, zero falhas/retries/flakies/skips/omissões/interrupções/timeouts na execução
+final; fontes e artefatos estáveis durante a execução. Depois, somente documentação de resultados.
+Log reservado: `tmp/lab2c5c2-global-20261106-005324/npm-test.log`. Evidências anteriores
+preservadas em `evidencias-anteriores/` dessa rodada, com contagens/bytes conferidos no manifesto
+`preservacao.json`; nove junctions, PNGs, perfis e arquivos históricos preservados. Bundle inalterado.
+Primeira global: 1100/1102 Node passaram, saída 1; Playwright não iniciou. Dois testes anteriores
+recusaram preparação após fechar aba com lock; hipótese de timing, sem causa comprovada.
+Arquivo completo passou isolado (41/41), sem mudanças de código/testes/prazos/cobertura/política.
+Reexecução integral também falhou nos mesmos dois casos (1100/1102 Node):
+`tmp/lab2c5c2-global-20261106-012014/npm-test.log`; falhas e artefatos preservados.
+Diagnóstico capturou `ATIVIDADE_OCUPADA` após page.close(): liberação nativa ainda em curso,
+recusa correta da produção. Testes agora exigem query de locks vazia antes de nova preparação,
+preservando bloqueio anterior e sucesso posterior. Cópia do teste anterior e diagnóstico na
+especificação. Após isso, Node padrão **1102/1102 aprovado**, sem instrumentação, falhas ou skips.
+Nova global aprovada: `tmp/lab2c5c2-global-20261106-014423/npm-test.log`; relatório
+`tmp/validacao/2026-11-06T04-47-39-911Z-e51ae6e3-9fee-4e57-a95d-b98ec82e5e12/run.json`.
+Contagens/bytes dos três manifestos reconferidos após a global; nove junctions, bundle,
+29 novos PNGs e históricos preservados. Tentativas anteriores com falhas permanecem registradas.
+Aplicativo continua sem integração/interface; chamadas JS não autenticam responsável humano.
+LAB.2C.5C.2 concluída, sem commits, na branch `codex/lab-1-contrato-arquitetura`, HEAD `8024895`.
+Reconciliação explícita e qualquer retomada dependem de LAB.2C.5C.3, não iniciada.
+
+## LAB.2C.5C.1 — autorização controlada e journal operacional
+
+`LabJournal.solicitarConfirmacao(original)` revalida uma atividade e reserva Web Locks reais;
+o handle expõe prévia, confirmação específica de uso único e cancelamento. Somente
+`prepararIntencao(original,confirmacao)` autenticado persiste `lab-journal-v1` por add em
+`operacoes`, após nova comparação e confirmação nativa oncomplete. Nenhuma escrita em pacote,
+administração ou localStorage; sucesso significa intenção registrada, nunca restauração aplicada.
+Plano diagnóstico, true, registro pronto e objetos forjados continuam recusados.
+
+Memória retida pelo motor conserva proteção nativa entre abas mesmo após suspensão do
+coordenador; temporário usa reserva compartilhada conservadora, exclusiva durante intenção.
+Recusa divergências, arquivos multiatividade, arquivados, limites/transporte excedidos,
+ausência de identidade/locks, progresso não durável e journal conflitante/corrompido.
+Cancelamento/expiração/pagehide revogam callbacks; commit persistido permanece detectável,
+sem aplicação, exclusão, transições ou reconciliação automática.
+[API, reservas, transação, limites e segurança](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#autorização-controlada-e-journal-operacional--lab2c5c1).
+
+41/41 testes novos Chromium e 392/392 LAB aprovados, incluindo interrupção real da aba,
+reinício completo do Chromium, CAS das bases e observação de somente `operacoes:add` nos
+caminhos positivos. Build/formato/lint/diff aprovados; global integral aprovada na reexecução,
+encerrada em 06/11/2026: 1059/1059 Node e 638/638 Playwright (45,9 minutos Playwright), saída 0.
+Relatório completo, 638 tentativas e zero falhas/retries/flakies/skips/omissões/interrupções/
+timeouts nessa reexecução; fontes/artefatos estáveis durante a execução. Depois, somente docs.
+A primeira global saiu com código 1: 1058/1059 Node passaram, Playwright não iniciou; um cenário
+de escrita pendente falhou em 3,39 segundos, compatível com timeout de identidade sob carga,
+sem causa comprovada. Diagnóstico isolado do arquivo completo: 16/16 passaram sem alterações.
+Mesmos código/testes/cobertura/política na reexecução integral aprovada, com log exclusivo
+`tmp/lab2c5c1-global-20261105-232959/npm-test.log`; arquivos da tentativa anterior preservados.
+Evidências anteriores preservadas em `tmp/lab2c5c1-global-20261105-223344/evidencias-anteriores/`,
+com contagens/bytes conferidos no manifesto `preservacao.json`; nove junctions preservadas.
+Log da primeira tentativa: `tmp/lab2c5c1-global-20261105-223344/npm-test.log`.
+Relatório final: `tmp/validacao/2026-11-06T02-32-53-190Z-a8e45f31-eb88-431f-a15d-b141a7fcab9c/run.json`.
+Contagens/bytes arquivados reconferidos após a global; 29 novos PNGs e nove junctions preservados.
+Aplicativo sem integração LAB: uma chamada JavaScript não autentica humano; confirmação de
+interface real ainda é necessária. Sem alegação de defesa contra scripts maliciosos da mesma
+origem. LAB.2C.5C.1 concluída. Nenhuma aplicação de backup ou LAB.2C.5C.2 foi iniciada;
+alterações anteriores preservadas, ainda sem commits na branch `codex/lab-1-contrato-arquitetura`.
+
+## LAB.2C.5B — contrato de journal e detecção de pendências
+
+`lab-journal.js` valida/inspeciona `lab-journal-v1` na store `operacoes` existente, sem schema
+novo, aplicação ou escrita operacional. Destino atual, atividades/digests/sessões, intenções
+criar/preservar, referências/snapshots e estados monotônicos fechados. Repositório ganhou apenas
+cursor limitado e leitura por referência opaca; planejador 5A bloqueia pendências conhecidas
+por atividade e corrupção/alcance incerto globalmente no LAB. Sem atingir revisões oficiais.
+Criação operacional permanece bloqueada por falta da autorização/associação sob exclusividade
+da LAB.2C.5C; não se promove token 5A nem objeto de lock. Persistência/commit/interrupção foram
+exercitados exclusivamente pelo helper das fixtures, conforme exceção explícita do pedido.
+[APIs, contrato, limites e bloqueio operacional](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#journal-contrato-e-detecção-implementados-lab2c5b).
+25/25 novos testes Chromium e 351/351 no conjunto LAB aprovados, incluindo reinício real do
+processo com perfil sintético preservado. Build/formato/lint/diff aprovados; bundle inalterado.
+Global integral aprovada em 05/11/2026: 1018/1018 Node e 638/638 Playwright (45,5 minutos
+Playwright), saída 0, sem falhas/retries/skips/flakies/interrupções/timeouts. Fontes/artefatos
+não mudaram durante a execução. Log `tmp/lab2c5b-global-20261105-204511/npm-test.log`;
+relatório completo na especificação.
+Evidências anteriores preservadas e verificadas em
+`tmp/lab2c5b-global-20261105-204511/evidencias-anteriores/`, manifesto `preservacao.json` na rodada.
+Contagens/bytes reconferidos após a global; novos 29 PNGs e nove vínculos preservados.
+LAB.2C.5B encerrada no recorte permitido de contrato/detecção e persistência sintética,
+com criação operacional explicitamente bloqueada. LAB.2C.5C não iniciada.
+
+## LAB.2C.5A — planejamento conservador por leitura, sem aplicação
+
+`lab-restauracao.js` revalida os bytes/texto originais, identifica destino, consulta conteúdo
+e progresso, observa locks/handles autênticos e entrega plano opaco apenas de inspeção.
+Classifica ausência, idempotência lógica/textual, divergência, corrupção, incompatibilidade
+administrativa e consulta inconclusiva. Reconfirma identidade e bases, sem overwrite, cadastro
+ou correção automática. Arquivada, memória não comprovada, sessão ativa/pendente e snapshot
+maior que o transporte atual bloqueiam; confirmação/associação e validação sob locks continuam futuras.
+[APIs, efeito técnico de schema vazio, limites e dependências](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#planejamento-por-leitura-implementado-lab2c5a).
+35/35 novos testes Chromium e 326/326 no conjunto LAB aprovados; build/formato/lint/diff aprovados.
+Apenas módulo isolado não importado/testes/docs novos; motor, armazenamento e APIs anteriores
+intactos, sem aplicação de restauração. Bundle com hash inalterado. Global integral aprovada
+em 05/11/2026: 993/993 Node e 638/638 Playwright (45,8 minutos Playwright), saída 0, sem
+falhas/retries/skips/flakies/interrupções/timeouts. Fontes/artefatos não mudaram durante a execução.
+Log `tmp/lab2c5a-global-20261105-192552/npm-test.log`; relatório completo na especificação.
+Evidências anteriores preservadas e verificadas
+em `tmp/lab2c5a-global-20261105-192552/evidencias-anteriores/`, manifesto `preservacao.json` na rodada.
+Contagens/bytes reconferidos após a global; novos 29 PNGs e nove vínculos preservados.
+LAB.2C.5A concluída. Nenhuma próxima etapa iniciada; gatilhos de qualidade preservados.
+
+## LAB.2C.4 — formato executável e validação de backups em memória
+
+`lab-backup.js` constrói/valida/inspeciona `lab-backup-v1`, sem arquivo, aplicação, UI ou IO de
+progresso. Capturas autênticas do motor/coordenador geram tokens privados independentes; não
+abrem outras atividades nem inventam sessões ausentes. Parser LAB.2A reutilizado com perfil
+fechado de 20 entradas/8 MiB UTF-8/16 contêineres/200000 tokens, sem relaxar limites dos pacotes.
+Pacotes revalidados individualmente, inclusive trechos originais e digest; identidade repetida
+é recusada. Contexto puro mínimo do motor revalida o pacote e delega coerência à LAB.2C.3,
+sem aceitar vínculo declarado como capacidade. Pontos históricos e durabilidade da captura
+separados; JSON determinístico, prévia sem gabaritos e sem autorização de restauração.
+[APIs, limite Unicode e contratos futuros](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#backups-em-memória-implementados-lab2c4).
+17 testes puros + 16 Chromium, 33/33 novos e 291/291 no conjunto LAB aprovados; build/formato/
+lint/diff aprovados. Global integral aprovada em 05/11/2026: 958/958 Node e 638/638 Playwright
+(44,9 minutos Playwright), saída 0, sem falhas/retries/skips/flakies/interrupções/timeouts.
+Fontes/artefatos não mudaram durante a execução. Log `tmp/lab2c4-global-20261105-172510/npm-test.log`;
+relatório completo na especificação.
+Evidências anteriores preservadas e verificadas em
+`tmp/lab2c4-global-20261105-172510/evidencias-anteriores/`, manifesto `preservacao.json` na rodada.
+Contagens/bytes reconferidos após a global; novos 29 PNGs e nove vínculos preservados.
+Testes/políticas anteriores intactos. LAB.2C.4 concluída; LAB.2C.5 não iniciada.
+
+## LAB.2C.3 — captura interna e prévia rigorosa de snapshots
+
+Handle LAB ganhou `exportarSnapshot()` e `validarSnapshot({vinculo,snapshot})`, sem aplicação,
+gravação implícita, arquivos ou UI. Corpo v1 fechado nos oito campos do motor; vínculo exato
+por pacote/digest/perfil/sessão, sem chaves/copyId. Mesmo avaliador/normalizador estrito,
+recusando qualquer reparação externa, preservando pontos históricos após edição e exigindo
+correção atual para conclusão. Cópias independentes capturam memória recente durante escrita
+pendente/quota/divergência; metadados de durabilidade separados. Revisões oficiais intactas.
+Compatibilidade documentada com o motor real: campos até 1.000 unidades UTF-16, em vez dos
+160 pontos de código planejados. Captura limitada a 2 MiB; transporte persistente não ampliado.
+[Contrato, limites e pendências de backup](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#snapshots-internos-implementados-lab2c3).
+28/28 novos testes Chromium e 258/258 no conjunto LAB aprovados; build/formato/lint/diff aprovados.
+Global integral aprovada em 05/11/2026: 925/925 Node e 638/638 Playwright (45,7 minutos
+Playwright), saída 0, sem falhas/retries/skips/flakies/interrupções/timeouts. Fontes/artefatos
+não mudaram durante a execução. Log `tmp/lab2c3-global-20261105-145224/npm-test.log`;
+relatório completo na especificação.
+Evidências da rodada anterior preservadas e verificadas em
+`tmp/lab2c3-global-20261105-145224/evidencias-anteriores/`, manifesto `preservacao.json` na rodada.
+Contagens/bytes reconferidos após a global; novos 29 PNGs e nove vínculos preservados.
+Testes/políticas anteriores intactos. LAB.2C.3 concluída; próxima etapa não iniciada.
+
+## LAB.2C.2 — execução controlada e progresso assíncrono no motor
+
+O handle LAB abre apenas com instância emitida pelo coordenador, aquisição ativa e seleção
+explícita de principal/responsável. Motor/normalizador/navegação existentes, canal LAB opt-in,
+confirmação de durabilidade e fechamento que retém memória em falha, sem liberação prematura
+do lock. Configuração confiável usa chave gerada pelo coordenador e confere o pacote validado;
+sem JSON externo direto, import/catalog/UI ou alteração da persistência oficial.
+[API, tratamento de falhas e limites](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#integração-opt-in-implementada-lab2c2).
+22/22 testes novos Chromium e 230/230 no conjunto LAB aprovados; build, formato, lint e diff
+aprovados. Global integral aprovada em 05/11/2026: 897/897 Node e 638/638 Playwright
+(43,6 minutos Playwright), saída 0, sem falhas/retries/skips/flakies/interrupções/timeouts.
+Fontes/artefatos não mudaram durante a execução. Log exclusivo em
+`tmp/lab2c2-global-20261105-083100/npm-test.log`; relatório completo na especificação.
+Evidências da rodada anterior preservadas em
+`tmp/lab2c2-global-20261105-083100/evidencias-anteriores/`, com contagens/bytes conferidos e
+manifesto `preservacao.json`; contagens/bytes reconferidos após a global. Novos 29 PNGs e nove
+vínculos mantidos. Nenhum teste anterior/política alterado. LAB.2C.2 concluída; LAB.2C.3 não iniciada.
+
+## LAB.2C.1 — registros LAB inativos por handle no motor
+
+`QuestionariosRevisoes.registrarLab(construirConfiguracao)` cadastra cópia declarativa
+construída por adaptador JS confiável e devolve handle restrito de consulta/liberação.
+Propriedade em mapas privados, não no prefixo; colisões recusadas e revogação idempotente,
+sem apagar progresso ou tocar na revisão oficial ativa. Abertura LAB bloqueada até LAB.2C.2,
+pois durabilidade/normalização assíncronas ainda não estão conectadas ao motor.
+[Contrato, limitações e validação](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#ciclo-de-registros-implementado-lab2c1).
+23/23 direcionados novos e 208/208 no conjunto LAB aprovados; build/formato/lint/diff aprovados.
+Global de 05/11/2026 aprovada: 875/875 Node e 638/638 Playwright, saída 0, 45,9 minutos Playwright,
+sem retries/skips/flakies/interrupções/timeouts; relatório completo na especificação.
+Evidências anteriores arquivadas sem sobrescrita em
+`tmp/lab2c1-global-20261105-065245/evidencias-anteriores/`; manifesto de preservação na mesma rodada.
+Contagens/bytes históricos conferidos após a execução; novos 29 PNGs da global também preservados.
+Nenhum import, cartão, conteúdo escolar ou interface alterado. LAB.2C.2 não iniciada.
+
+## LAB.2B.3 — durabilidade observável em adaptador exclusivo LAB
+
+`js/lab-progresso.js` transporta snapshots opacos com chave LAB validada, resultado real de
+leitura/escrita, preferência pela memória recente e recusa de base persistida divergente.
+`lab-coordenador.js` acrescenta abertura de canal por sessão e gate de identidade/posse antes
+de cada escrita; encerramento invalida handles e limpa memória. `armazenamento.js` e todas
+as assinaturas/retornos legados permanecem intactos. Sem motor, pontuação, backup ou interface.
+[Contrato, durabilidade, limites e dependência da LAB.2C](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#durabilidade-implementada-lab2b3).
+30/30 novos testes Node/Chromium + 155/155 regressões LAB aprovados; nenhum teste anterior alterado.
+Build, formato, lint e diff aprovados em 05/11/2026. Captura de snapshot recente também é
+preservada quando chega durante outra operação pendente; não há retentativa automática.
+Global não acionada: apenas adaptador/coordenador LAB isolados, sem alteração compartilhada no
+aplicativo; futura integração conserva os gatilhos. Evidências/vínculos preservados e próxima
+etapa não iniciada.
+
+## LAB.2B.2 — coordenador isolado de sessões e Web Locks
+
+`js/lab-coordenador.js` prepara sessão, exige consentimento explícito para memória temporária,
+consulta pacotes existentes e mantém exclusividade por atividade/copyId via Web Locks.
+Suspensão por perda de identidade/capacidade, encerramento idempotente e invalidação de
+callbacks tardios; sem integração, escrita persistente, progresso, backup ou interface.
+[API, estados, limites e política de validação](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#coordenador-implementado-lab2b2).
+26/26 testes novos (Node + Chromium com Web Locks reais), mais 129/129 regressões LAB anteriores.
+Build, formato, lint e diff aprovados em 05/11/2026; nenhuma fonte oficial ou módulo LAB anterior alterado.
+Global não acionada por este módulo isolado de consultas, sem mudança de persistência existente
+ou superfícies compartilhadas; futura integração conserva os gatilhos. Evidências e vínculos
+anteriores preservados. Próximo incremento não iniciado.
+
+## LAB.2B.1 — identidade e persistência isoladas de pacotes
+
+`js/lab-identidade.js` consulta a identidade local; `js/lab-repositorio.js` cadastra, consulta
+e lista pacotes LAB.2A em IndexedDB por cópia, com transação de conteúdo/metadados,
+idempotência e recusas sem sobrescrita. Sem integração ao app, motor, progresso, Web Locks,
+backup ou manutenção administrativa. API/limites em
+[Laboratório](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#incremento-implementado-lab2b1).
+Direcionados: 31 novos com IndexedDB real no Chromium + 98 LAB.2A aprovados.
+Global de 05/11/2026: 796/796 Node e 638/638 Playwright, saída 0, 45,8 minutos Playwright,
+sem retries/skips/flakies. Build, formato, lint e diff aprovados; fontes oficiais e bundle
+PDF.js rastreado sem diferenças; app.bundle ignorado regenerado pelo build oficial.
+Falha inicial de resolução das dependências Vite corrigida apenas por vínculos locais adicionais,
+sem alterar os quatro anteriores nem testes/código. Logs, perfis sintéticos e 29 PNGs em
+`output/` preservados, sem limpeza ou publicação. Evidências e limites na especificação.
+Na entrega LAB.2B.1, LAB.2B.2 ainda não havia sido iniciada.
+
+## LAB.2A — validador isolado de pacotes JSON
+
+`js/lab-validador.js` implementa validação/normalização de `lab-questionarios-v1`, limites,
+duplicatas, representação canônica e SHA-256, sem dependências novas ou integração ao aplicativo.
+98/98 testes Node direcionados, build, formato, lint e diff aprovados; bundles sem diferenças.
+O Laboratório completo permanece planejado. API, vetores, limitações e verificação em
+[LABORATORIO_ATIVIDADES_AVULSAS.md](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md#implementação-isolada-lab2a).
+LAB.2B não iniciada; revisões oficiais, armazenamento, catálogo e ORG inalterados.
+
+## LAB.1 — contrato do Laboratório de Atividades Avulsas (planejado)
+
+[Especificação técnica](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md) de `lab-questionarios-v1`,
+registro temporário no motor existente, identidade por cópia, armazenamento, ciclo de vida,
+backup e testes. **Planejada, ainda não implementada**: etapa exclusivamente documental,
+sem carregador, interface, pacote real, mudança de código ou execução de testes. Próxima
+etapa proposta: LAB.2A, somente mediante autorização própria. Catálogo oficial, ORG e
+contratos de adição integrada permanecem inalterados.
+
 ## ORG.9B — primeira avaliação observacional do par físico do reporter
 
 Avaliador opt-in de três arquivos explicitamente selecionados no perímetro experimental,

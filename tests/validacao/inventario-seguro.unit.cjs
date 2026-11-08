@@ -245,21 +245,27 @@ test('case differences use filesystem evidence; missing or ambiguous evidence st
   });
   assert.equal(ambiguous.exitCode, 2);
   assert.equal(ambiguous.resources[0].git, 'indeterminate');
-  const distinct = inspect(root, ['TRACKED.TXT'], {
-    ...services,
-    lstat(file) {
-      return file === target
-        ? {
+  for (const ino of [targetStat.ino, 2 ** 54]) {
+    // Em NTFS ino pode exceder MAX_SAFE_INTEGER: ino + 1 pode ser o mesmo Number.
+    // A fixture precisa realmente simular identidades diferentes, inclusive nesse caso.
+    const otherIno = ino === 1 ? 2 : 1;
+    assert.notEqual(otherIno, ino);
+    const distinct = inspect(root, ['TRACKED.TXT'], {
+      ...services,
+      lstat(file) {
+        if (file === target || file === path.join(root, 'tracked.txt'))
+          return {
             ...targetStat,
-            ino: targetStat.ino + 1,
+            ino: file === target ? otherIno : ino,
             isFile: () => true,
             isDirectory: () => false,
             isSymbolicLink: () => false,
-          }
-        : fs.lstatSync(file);
-    },
-  });
-  assert.equal(distinct.resources[0].git, 'untracked');
+          };
+        return fs.lstatSync(file);
+      },
+    });
+    assert.equal(distinct.resources[0].git, 'untracked');
+  }
 });
 
 test('CLI exit contract: complete, legitimate absence, partial, refusal and fatal', () => {

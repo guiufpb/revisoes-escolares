@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#7657d5" />
     <title>Revisões Escolares</title>
     <link rel="stylesheet" href="css/estilo.css" />
+    <link rel="stylesheet" href="css/lab-listagem.css" />
     <link rel="stylesheet" href="css/geografia-paisagens-outubro.css" />
     <link rel="stylesheet" href="css/ciencias-sustentabilidade-outubro-2026.css" />
   </head>
@@ -69,6 +70,9 @@
           <p class="chapeu" id="saudacao-aluno">Olá!</p>
           <h1 id="titulo-trilhas">O que vamos revisar?</h1>
           <p>Escolha uma matéria para abrir a trilha.</p>
+          <button class="botao-secundario" id="abrir-laboratorio" type="button">
+            Laboratório de Atividades
+          </button>
         </div>
 
         <div class="grade-materias" id="grade-materias">
@@ -431,6 +435,61 @@
         </div>
       </section>
 
+      <section class="tela" id="tela-laboratorio" aria-labelledby="lab-titulo" hidden>
+        <div class="cabecalho-tela">
+          <h1 id="lab-titulo">Laboratório de Atividades</h1>
+          <p>Perfil: <strong id="lab-perfil"></strong></p>
+          <p>Estas atividades ficam nesta cópia local, separadas das revisões escolares.</p>
+          <p>Consulte a lista. Para salvar um arquivo, peça ajuda ao responsável.</p>
+          <button class="botao-secundario" id="lab-voltar" type="button">Voltar às matérias</button>
+        </div>
+        <div id="lab-conteudo" aria-busy="false">
+          <p id="lab-status" role="status" aria-live="polite" aria-atomic="true"></p>
+          <p id="lab-aviso" role="status" aria-live="polite" aria-atomic="true"></p>
+          <details id="lab-estudo">
+            <summary>Estudar atividades</summary>
+            <label class="lab-opcao-layout" for="lab-desktop-amplo">
+              <input
+                id="lab-desktop-amplo"
+                type="checkbox"
+                aria-describedby="lab-desktop-amplo-ajuda"
+              />
+              Modo Desktop Amplo
+            </label>
+            <p id="lab-desktop-amplo-ajuda">
+              Escolha antes de iniciar ou continuar. Vale nas duas sessões até sair da atividade.
+              Para mudar, volte ao Laboratório. No celular, a apresentação se adapta à tela.
+            </p>
+            <p>
+              Escolha Iniciar ou Continuar na atividade. Suas respostas serão salvas neste
+              navegador.
+            </p>
+          </details>
+          <ul id="lab-lista" aria-label="Atividades locais"></ul>
+        </div>
+        <details id="lab-importacao">
+          <summary>Importar atividade — Responsável</summary>
+          <div id="lab-importacao-conteudo" aria-busy="false">
+            <p>
+              Escolha um arquivo de atividade em JSON. Você poderá conferir as informações antes de
+              salvar.
+            </p>
+            <label for="lab-arquivo">Arquivo de atividade JSON (até 256 KiB)</label>
+            <input id="lab-arquivo" type="file" accept=".json,application/json" />
+            <div id="lab-importacao-previa" aria-label="Prévia da atividade"></div>
+            <div class="lab-importacao-acoes">
+              <button id="lab-importar-confirmar" class="botao-secundario" type="button" disabled>
+                Confirmar importação
+              </button>
+              <button id="lab-importar-cancelar" class="botao-secundario" type="button">
+                Cancelar
+              </button>
+            </div>
+            <p id="lab-importacao-status" role="status" aria-live="polite" aria-atomic="true"></p>
+          </div>
+        </details>
+      </section>
+
       <section
         class="tela tela-mariana-revisao tela-gramatica-mariana"
         id="tela-gramatica-mariana"
@@ -462,6 +521,46 @@
           </div>
         </div>
         <div id="gramatica-conteudo"></div>
+        <div id="lab-execucao-acoes" hidden>
+          <p id="lab-execucao-titulo"></p>
+          <p id="lab-execucao-layout"></p>
+          <p id="lab-execucao-identificacao"></p>
+          <button
+            id="lab-execucao-sessao"
+            class="botao-secundario"
+            type="button"
+            aria-haspopup="dialog"
+          >
+            Modo Responsável
+          </button>
+          <button id="lab-execucao-recuperar" class="botao-secundario" type="button" hidden>
+            Recuperar sessão de origem
+          </button>
+          <dialog
+            id="lab-execucao-confirmacao"
+            aria-labelledby="lab-execucao-confirmacao-titulo"
+            aria-describedby="lab-execucao-orientacao"
+          >
+            <h2 id="lab-execucao-confirmacao-titulo">Modo Responsável</h2>
+            <p id="lab-execucao-orientacao">
+              Você vai estudar esta atividade em uma sessão separada. As respostas e os pontos da
+              criança serão preservados.
+            </p>
+            <button id="lab-execucao-cancelar" class="botao-secundario" type="button" autofocus>
+              Cancelar
+            </button>
+            <button id="lab-execucao-confirmar" class="botao-principal" type="button">
+              Confirmar
+            </button>
+          </dialog>
+          <p id="lab-execucao-status" role="status" aria-live="polite" aria-atomic="true"></p>
+          <button id="lab-execucao-persistir" class="botao-secundario" type="button" hidden>
+            Tentar salvar novamente
+          </button>
+          <button id="lab-execucao-voltar" class="botao-secundario" type="button">
+            Voltar ao Laboratório
+          </button>
+        </div>
         <div class="navegacao-etapas">
           <button class="botao-secundario botao-grande" id="gramatica-voltar" type="button">
             ← Voltar

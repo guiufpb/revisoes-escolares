@@ -143,7 +143,22 @@
     );
   }
 
+  var retornoLab = null;
   function mostrarTela(id) {
+    if (
+      id !== 'gramaticaMariana' &&
+      window.LabExecucao &&
+      window.LabExecucao.navegar(function () {
+        mostrarTela(id);
+      })
+    )
+      return;
+    if (telaAtualId === 'laboratorio' && id !== 'laboratorio') {
+      if (window.LabImportacao) window.LabImportacao.fechar();
+      if (window.LabListagem) window.LabListagem.fechar();
+      document.getElementById('limpar-progresso').hidden =
+        id === 'inicial' || !retornoLab || retornoLab.limparOculto;
+    }
     if (telaAtualId === 'ingles' && id !== 'ingles' && window.InglesRevisoes) {
       window.InglesRevisoes.pararAudio();
     }
@@ -389,6 +404,13 @@
   }
 
   function escolherAluno(aluno) {
+    if (
+      window.LabExecucao &&
+      window.LabExecucao.navegar(function () {
+        escolherAluno(aluno);
+      })
+    )
+      return;
     document.getElementById('abrir-alice-gramatica-pontuacao-interpretacao-outubro-2026').hidden =
       aluno !== 'alice';
     document.getElementById('abrir-historia-caixa-lembrancas-outubro-2026').hidden =
@@ -529,6 +551,34 @@
   }
 
   function registrarEventos() {
+    document.getElementById('abrir-laboratorio').addEventListener('click', function () {
+      if (telaAtualId !== 'trilhas' || !alunoAtual) return;
+      retornoLab = {
+        scroll: window.scrollY,
+        limparOculto: document.getElementById('limpar-progresso').hidden,
+      };
+      mostrarTela('laboratorio');
+      document.getElementById('limpar-progresso').hidden = true;
+      if (window.LabListagem) window.LabListagem.abrir(alunoAtual);
+      else
+        document.getElementById('lab-status').textContent =
+          'A lista local está indisponível. Volte às matérias para continuar estudando.';
+      if (window.LabImportacao) window.LabImportacao.abrir(alunoAtual);
+    });
+    document.getElementById('lab-voltar').addEventListener('click', function () {
+      if (
+        window.LabExecucao &&
+        window.LabExecucao.navegar(function () {
+          mostrarTela('trilhas');
+        })
+      )
+        return;
+      if (telaAtualId !== 'laboratorio') return;
+      var scroll = retornoLab ? retornoLab.scroll : 0;
+      mostrarTela('trilhas');
+      document.getElementById('abrir-laboratorio').focus({ preventScroll: true });
+      window.scrollTo({ top: scroll, behavior: 'auto' });
+    });
     document
       .getElementById('abrir-alice-gramatica-pontuacao-interpretacao-outubro-2026')
       .addEventListener('click', function () {
@@ -821,6 +871,13 @@
       mostrarTela('trilhas');
     });
     document.getElementById('botao-inicio').addEventListener('click', function () {
+      if (
+        window.LabExecucao &&
+        window.LabExecucao.navegar(function () {
+          document.getElementById('botao-inicio').click();
+        })
+      )
+        return;
       alunoAtual = null;
       document.getElementById('limpar-progresso').hidden = true;
       mostrarTela('inicial');
@@ -895,6 +952,7 @@
       telas = {
         inicial: document.getElementById('tela-inicial'),
         trilhas: document.getElementById('tela-trilhas'),
+        laboratorio: document.getElementById('tela-laboratorio'),
         revisao: document.getElementById('tela-revisao'),
         ingles: document.getElementById('tela-ingles'),
         trilhaMatematica: document.getElementById('tela-trilha-matematica'),
@@ -919,7 +977,34 @@
       window.InglesRevisoes.inicializar({ mostrarTela: mostrarTela });
       window.MatematicaRevisoes.inicializar({ mostrarTela: mostrarTela });
       window.MatematicaOperacoes.inicializar({ mostrarTela: mostrarTela });
-      window.GramaticaQuestionarios.inicializar({ mostrarTela: mostrarTela });
+      window.GramaticaQuestionarios.inicializar({
+        mostrarTela: mostrarTela,
+        antesAbrir: function (acao) {
+          return window.LabExecucao ? window.LabExecucao.navegar(acao) : false;
+        },
+        retornarLab: function () {
+          if (window.LabExecucao) window.LabExecucao.voltar();
+        },
+      });
+      if (window.LabExecucao)
+        window.LabExecucao.inicializar({
+          perfilAtual: function () {
+            return alunoAtual;
+          },
+          mostrarExecucao: function () {
+            mostrarTela('gramaticaMariana');
+            document.getElementById('limpar-progresso').hidden = true;
+          },
+          retornarLab: async function (id, scroll) {
+            mostrarTela('laboratorio');
+            document.getElementById('limpar-progresso').hidden = true;
+            var resultado = await window.LabListagem.abrir(alunoAtual);
+            if (telaAtualId !== 'laboratorio' || alunoAtual !== id.perfil) return;
+            if (window.LabImportacao) window.LabImportacao.abrir(alunoAtual);
+            if (resultado && resultado.focar) resultado.focar(id);
+            window.scrollTo({ top: scroll, behavior: 'auto' });
+          },
+        });
       registrarEventos();
       atualizarResumo();
       mostrarTela('inicial');
