@@ -88,7 +88,7 @@ async function carregar(page) {
   ])
     await page.addScriptTag({ path: path.join(ROOT, 'ambiente_interativo/js', s) });
 }
-async function preparar(page, temporario = false) {
+async function preparar(page, temporario = false, p = pacote()) {
   return page.evaluate(
     async ({ p, temporario }) => {
       window.pacote = p;
@@ -116,31 +116,35 @@ async function preparar(page, temporario = false) {
         versao: p.versao,
       });
       if (!adquirido.ok) throw new Error(adquirido.codigo);
+      const pedagogia =
+        p.formato === 'lab-questionarios-v2'
+          ? await window.QuestionariosRevisoes.adaptarContratoDitadoLab(JSON.stringify(p))
+          : p;
       window.config = {
         id: 'lab-runtime',
         chave: null,
         aluno: p.perfil,
         nome: 'Fixture',
         materia: 'Ciências',
-        titulo: p.titulo,
-        questoes: p.questoes.map((q) => ({ ...q, sucesso: 'Conferiu.' })),
+        titulo: pedagogia.titulo,
+        questoes: pedagogia.questoes.map((q) => ({ ...q, sucesso: 'Conferiu.' })),
       };
       const registro = window.QuestionariosRevisoes.registrarLab(() => window.config);
       if (!registro.ok) throw new Error(registro.codigo);
       window.h = registro.handle;
       return window.sessao.abrirProgresso('principal').canal.chave;
     },
-    { p: pacote(), temporario }
+    { p, temporario }
   );
 }
-async function contexto(t, temporario = false) {
+async function contexto(t, temporario = false, p = pacote()) {
   copyId = A;
   status = 200;
   const ctx = await browser.newContext();
   t.after(() => ctx.close());
   const page = await ctx.newPage();
   await carregar(page);
-  const chave = await preparar(page, temporario);
+  const chave = await preparar(page, temporario, p);
   return { ctx, page, chave };
 }
 const abrir = (page, sessao = 'principal') =>
@@ -150,6 +154,78 @@ const persistir = (page) => page.evaluate(() => window.h.persistir());
 const opcao = (page, valor) => page.locator(`[data-opcao-gramatica="${valor}"]`).click();
 const conferir = (page) => page.locator('[data-conferir-gramatica]').click();
 const raw = (page, key) => page.evaluate((k) => localStorage.getItem(k), key);
+
+for (const perfil of ['alice', 'mariana'])
+  for (const formato of ['lab-questionarios-v1', 'lab-questionarios-v2'])
+    test(`conclusão LAB neutra e resumo oficial preservado: ${perfil} ${formato}`, async (t) => {
+      const p = { ...pacote(), perfil, formato };
+      if (formato === 'lab-questionarios-v2')
+        p.questoes = p.questoes.map((q, i) => ({
+          id: q.id,
+          bloco: q.bloco,
+          titulo: q.titulo,
+          instrucao: q.instrucao,
+          tipo: 'ditado',
+          idioma: 'pt-BR',
+          itens: [{ id: 'i' + (i + 1), texto: i === 0 ? 'Sol' : 'água' }],
+        }));
+      const { page, chave } = await contexto(t, false, p);
+      if (formato === 'lab-questionarios-v2')
+        await page.addScriptTag({
+          path: path.join(ROOT, 'ambiente_interativo/js/gramatica-ditado.js'),
+        });
+      const mensagem = 'Você concluiu todas as questões desta atividade.';
+      const explicacao = page.locator('#gramatica-conteudo .explicacao-mariana');
+      async function concluir() {
+        if (formato === 'lab-questionarios-v1') await opcao(page, 'Sol');
+        else await page.locator('[data-resposta-gramatica]').fill('Sol');
+        await conferir(page);
+        await page.locator('#gramatica-proxima').click();
+        await page.locator('[data-resposta-gramatica]').fill('água');
+        await conferir(page);
+        await page.locator('#gramatica-proxima').click();
+      }
+      const estados = {};
+      for (const sessao of ['principal', 'responsavel']) {
+        assert.equal((await abrir(page, sessao)).ok, true);
+        assert.equal((await consultar(page)).progresso.estado.pontos, 0);
+        await concluir();
+        assert.equal(await explicacao.textContent(), mensagem);
+        assert.doesNotMatch(await explicacao.textContent(), /undefined|null/);
+        assert.equal((await persistir(page)).ok, true);
+        estados[sessao] = JSON.parse(await raw(page, chave.replace(/principal$/, sessao)));
+        assert.equal(estados[sessao].pontos, 2);
+        assert.equal(estados[sessao].finalizada, true);
+        assert.deepEqual(estados[sessao].respostas, { q1: ['Sol'], q2: ['água'] });
+        assert.equal((await page.evaluate(() => window.h.desativar())).ok, true);
+      }
+      assert.equal((await page.evaluate(() => window.h.liberar())).ok, true);
+      await page.evaluate(() => window.sessao.encerrar());
+      await carregar(page);
+      if (formato === 'lab-questionarios-v2')
+        await page.addScriptTag({
+          path: path.join(ROOT, 'ambiente_interativo/js/gramatica-ditado.js'),
+        });
+      await preparar(page, false, p);
+      for (const sessao of ['principal', 'responsavel']) {
+        assert.equal((await abrir(page, sessao)).ok, true);
+        assert.equal(await explicacao.textContent(), mensagem);
+        assert.deepEqual((await consultar(page)).progresso.estado, estados[sessao]);
+        assert.equal((await page.evaluate(() => window.h.desativar())).ok, true);
+      }
+      assert.equal((await page.evaluate(() => window.h.liberar())).ok, true);
+      await page.evaluate(() => {
+        window.QuestionariosRevisoes.registrar({
+          ...window.config,
+          id: 'oficial-fixture',
+          chave: 'oficial-fixture',
+          resumoFinal: 'Resumo original da revisão oficial.',
+        });
+        window.QuestionariosRevisoes.abrir('oficial-fixture');
+      });
+      await concluir();
+      assert.equal(await explicacao.textContent(), 'Resumo original da revisão oficial.');
+    });
 
 test('abertura autorizada não salva, pontua ou conclui por si', async (t) => {
   const { page, chave } = await contexto(t);

@@ -1731,7 +1731,11 @@
       '<p class="etiqueta">Revisão concluída</p><h1 id="gramatica-titulo-questao">Parabéns, ' +
       escapar(revisaoAtiva.nome) +
       '!</h1><p class="explicacao-mariana">' +
-      escapar(revisaoAtiva.resumoFinal) +
+      escapar(
+        registroLabAtivo()
+          ? 'Você concluiu todas as questões desta atividade.'
+          : revisaoAtiva.resumoFinal
+      ) +
       '</p></div><img class="icone-etapa" src="../assets/objetos_escolares/book.svg" alt=""></div>' +
       '<div class="atividade-mariana"><p class="retorno sucesso" role="status">' +
       (registroLabAtivo()
