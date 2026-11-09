@@ -61,8 +61,16 @@ não mudaram. Sem novas capacidades administrativas, banco, coordenador, motor o
 
 
 
-Status: validação estrutural implementada; Fase B global integral aprovada. Nenhuma reprodução, importação,
-execução pedagógica, backup ou recuperação de v2 está autorizada por esta validação.
+Status histórico da LAB.2D.6A (fase estrutural anterior): validação estrutural implementada;
+Fase B global integral aprovada. Naquela etapa, essa validação não autorizava reprodução,
+importação, execução pedagógica, backup ou recuperação de v2. O estado vigente da integração
+operacional é o descrito na seção LAB.2D.6C.2 acima.
+
+Nota de escopo do manifesto: a limitação de `tests/lab-importacao.spec.js` sobre execução e
+restauração fora da interface descreve o recorte da spec de importação, não a disponibilidade
+atual da execução LAB. A execução operacional é coberta pela infraestrutura e pelos testes de
+`tests/lab-execucao.spec.js`; interfaces de restauração continuam não implementadas. O texto
+do manifesto permanece preservado, sem manutenção de corpus, pins ou homologação seletiva.
 
 
 
