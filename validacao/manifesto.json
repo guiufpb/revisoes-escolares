@@ -8967,6 +8967,72 @@
       ],
       "gaps": ["series-individuais", "associacoes-por-arquivo"],
       "expectedCases": 15
+    },
+    {
+      "file": "tests/lab-listagem.spec.js",
+      "revisions": [],
+      "engines": ["ciencias-legado", "questionarios"],
+      "capabilities": [],
+      "contracts": ["identidade", "persistencia", "acessibilidade", "file-bundle"],
+      "platforms": ["windows", "linux"],
+      "fixtures": ["tests/confirmar-servidor-local.cjs"],
+      "defaults": {
+        "coverage": ["behavioral-contract", "visual-accessibility"],
+        "oracle": "independent",
+        "journeyScope": "contract",
+        "limitations": [
+          "Pacotes sintéticos; consulta somente de leitura, sem importação, execução ou validação pedagógica.",
+          "Defesa contra HTML usa dependência simulada: o schema real recusa HTML.",
+          "Regressão escolar pontual não representa cobertura de todas as revisões."
+        ]
+      },
+      "cases": [],
+      "gaps": ["series-individuais"],
+      "expectedCases": 37
+    },
+    {
+      "file": "tests/lab-importacao.spec.js",
+      "revisions": [],
+      "engines": ["ciencias-legado", "questionarios"],
+      "capabilities": [],
+      "contracts": ["identidade", "persistencia", "acessibilidade", "file-bundle"],
+      "platforms": ["windows", "linux"],
+      "fixtures": ["tests/confirmar-servidor-local.cjs"],
+      "defaults": {
+        "coverage": ["behavioral-contract", "visual-accessibility"],
+        "oracle": "independent",
+        "journeyScope": "contract",
+        "limitations": [
+          "Arquivos sintéticos; não certifica adequação pedagógica ou uso humano.",
+          "Falhas de armazenamento e atrasos específicos são injetados sobre IndexedDB nativo no Chromium.",
+          "Registro Responsável não autentica uma pessoa; execução e restauração seguem fora da interface."
+        ]
+      },
+      "cases": [],
+      "gaps": ["series-individuais"],
+      "expectedCases": 51
+    },
+    {
+      "file": "tests/lab-execucao.spec.js",
+      "revisions": [],
+      "engines": ["ciencias-legado", "questionarios"],
+      "capabilities": [],
+      "contracts": ["identidade", "persistencia", "acessibilidade", "file-bundle", "trocas"],
+      "platforms": ["windows", "linux"],
+      "fixtures": ["tests/confirmar-servidor-local.cjs"],
+      "defaults": {
+        "coverage": ["behavioral-contract", "visual-accessibility"],
+        "oracle": "independent",
+        "journeyScope": "contract",
+        "limitations": [
+          "Pacotes sintéticos; não certifica uso infantil ou adequação pedagógica.",
+          "IndexedDB, localStorage e Web Locks nativos; falhas e atrasos específicos são injetados.",
+          "Aviso beforeunload não garante salvamento em fechamento forçado; recuperação da origem depende de identidade, exclusividade e armazenamento válidos."
+        ]
+      },
+      "cases": [],
+      "gaps": ["series-individuais"],
+      "expectedCases": 124
     }
   ],
   "keyExceptions": [],
@@ -9013,7 +9079,7 @@
     }
   ],
   "discovery": {
-    "fileCount": 47,
-    "caseCount": 638
+    "fileCount": 50,
+    "caseCount": 850
   }
 }

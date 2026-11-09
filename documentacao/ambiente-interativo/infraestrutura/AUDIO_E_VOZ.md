@@ -109,3 +109,13 @@ Nas questões optantes com estímulos separados, ouvir a pergunta não substitui
 Os botões anunciam somente o identificador do estímulo e usam AudioRevisoes. Respostas ficam
 bloqueadas até o término da pergunta; a conferência exige também todos os estímulos obrigatórios.
 Não houve alteração no motor audio.js nem introdução de fila própria de síntese.
+
+## Ditado interno LAB — LAB.2D.6B (global aprovada)
+
+GramaticaDitado conserva pt-BR por padrão e aceita idiomaDitado: en-US como opt-in
+confiável, derivado do contrato validado pelo adaptador do motor. Painel/labels identificam
+o idioma; instruções/controles permanecem em português. AudioRevisoes e velocidade
+oficial são reutilizados, sem novo sintetizador/serviço/microfone. Handlers e feedback
+verificam formulário conectado, revisão ativa e guards LAB. Renderização/desativação e
+início da drenagem LAB cancelam áudio. Isto não libera admissão/execução pública v2.
+Detalhes, sigilo e dependências em LAB_DITADOS_V2.md; pronúncia real requer validação humana.

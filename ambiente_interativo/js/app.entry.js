@@ -16,6 +16,16 @@ import './matematica-cena.js';
 import './matematica.js';
 import './matematica-operacoes.js';
 import './gramatica-questionarios.js';
+// Ponte de consulta LAB. Backup fornece apenas o parser exigido pelo journal.
+import labValidador from './lab-validador.js';
+import labIdentidade from './lab-identidade.js';
+import labRepositorio from './lab-repositorio.js';
+import labJournal from './lab-journal.js';
+import './lab-listagem.js';
+import './lab-importacao.js';
+import labCoordenador from './lab-coordenador.js';
+import labProgresso from './lab-progresso.js';
+import './lab-execucao.js';
 import './questionarios-interacoes.js';
 import '../revisoes/alice/historia-familias-objetos.js';
 import '../revisoes/alice/matematica-dezenas-numeros-dinheiro-outubro-2026.js';
@@ -85,3 +95,12 @@ import '../revisoes/mariana/gramatica-singular-plural-cotidiano-outubro-2026.js'
 import '../revisoes/alice/historia-caixa-lembrancas-outubro-2026.js';
 import '../revisoes/alice/gramatica-pontuacao-interpretacao-outubro-2026.js';
 import './app.js';
+
+// Os módulos UMD são CommonJS no build; publicar somente as APIs da ponte.
+// Nenhuma sessão, operação de backup ou armazenamento é iniciada aqui.
+window.LabValidador = labValidador;
+window.LabIdentidade = labIdentidade;
+window.LabRepositorio = labRepositorio;
+window.LabJournal = labJournal;
+window.LabCoordenador = labCoordenador;
+window.LabProgresso = labProgresso;

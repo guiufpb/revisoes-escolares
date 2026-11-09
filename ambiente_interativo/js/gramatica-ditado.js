@@ -10,10 +10,12 @@
       .replace(/'/g, '&#39;');
   }
 
-  function painelHtml(unidade, instrucao) {
+  function painelHtml(unidade, instrucao, idioma) {
     var frase = unidade === 'frase';
     return (
-      '<section class="painel-ditado-gramatica" aria-label="Ditado em português">' +
+      '<section class="painel-ditado-gramatica" aria-label="Ditado em ' +
+      (idioma === 'en-US' ? 'inglês' : 'português') +
+      '">' +
       '<p>' +
       (instrucao
         ? escaparTexto(instrucao)
@@ -55,17 +57,32 @@
     });
   }
 
-  function configurar(conteudo, item) {
+  function configurar(conteudo, item, autorizada) {
     if (!item.ditado || !window.AudioRevisoes) return;
+    var formulario = conteudo.firstElementChild;
+    var solicitacao = 0;
+    function vigente() {
+      return (
+        formulario &&
+        formulario.isConnected &&
+        conteudo.contains(formulario) &&
+        (!autorizada || autorizada() === true)
+      );
+    }
+    function proteger(callback) {
+      return function () {
+        if (vigente()) return callback.apply(this, arguments);
+      };
+    }
     var status = conteudo.querySelector('.status-ditado-gramatica');
     var repetir = conteudo.querySelector('[data-repetir-ditado-gramatica]');
     var pararBotao = conteudo.querySelector('[data-parar-ditado-gramatica]');
     if (item.cancelarAoTrocarCampo) {
       var campoAtivo = null;
       // O formulário é recriado a cada questão; não acumule listeners no painel persistente.
-      conteudo
-        .querySelector('.lista-campos-mariana')
-        .addEventListener('focusin', function (evento) {
+      conteudo.querySelector('.lista-campos-mariana').addEventListener(
+        'focusin',
+        proteger(function (evento) {
           var alvo = evento.target;
           var indice = alvo.getAttribute('data-resposta-gramatica');
           if (indice === null) indice = alvo.getAttribute('data-ouvir-ditado-gramatica');
@@ -75,44 +92,57 @@
             repetir.disabled = true;
           }
           campoAtivo = indice;
-        });
+        })
+      );
     }
 
     function atualizarStatus(detalhe) {
-      if (status && status.isConnected) status.textContent = detalhe.mensagem;
+      if (vigente() && status && status.isConnected) status.textContent = detalhe.mensagem;
     }
 
     conteudo.querySelectorAll('[data-ouvir-ditado-gramatica]').forEach(function (botao) {
-      botao.addEventListener('click', function () {
-        var indice = Number(botao.dataset.ouvirDitadoGramatica);
-        var subitem = item.itens[indice];
-        var texto =
-          subitem &&
-          (typeof subitem.textoDitado === 'string'
-            ? subitem.textoDitado
-            : subitem.respostas && subitem.respostas[0]);
-        var iniciou = window.AudioRevisoes.falar({
-          texto: texto,
-          idioma: 'pt-BR',
-          velocidade: 0.78,
-          origem: 'gramatica',
-          contexto: 'ditado',
-          unidadeDitado: item.unidadeDitado === 'frase' ? 'frase' : 'palavra',
-          aoEstado: atualizarStatus,
-        });
-        repetir.disabled = !iniciou;
-      });
+      botao.addEventListener(
+        'click',
+        proteger(function () {
+          var indice = Number(botao.dataset.ouvirDitadoGramatica);
+          var subitem = item.itens[indice];
+          var texto =
+            subitem &&
+            (typeof subitem.textoDitado === 'string'
+              ? subitem.textoDitado
+              : subitem.respostas && subitem.respostas[0]);
+          var token = ++solicitacao;
+          var iniciou = window.AudioRevisoes.falar({
+            texto: texto,
+            idioma: item.idiomaDitado === 'en-US' ? 'en-US' : 'pt-BR',
+            velocidade: 0.78,
+            origem: 'gramatica',
+            contexto: 'ditado',
+            unidadeDitado: item.unidadeDitado === 'frase' ? 'frase' : 'palavra',
+            aoEstado: function (detalhe) {
+              if (token === solicitacao) atualizarStatus(detalhe);
+            },
+          });
+          repetir.disabled = !iniciou;
+        })
+      );
     });
 
-    repetir.addEventListener('click', function () {
-      if (!window.AudioRevisoes.repetir()) {
-        atualizarStatus({ mensagem: 'Escolha primeiro uma lacuna para ouvir.' });
-      }
-    });
-    pararBotao.addEventListener('click', function () {
-      parar(false);
-      atualizarStatus({ mensagem: 'Áudio interrompido.' });
-    });
+    repetir.addEventListener(
+      'click',
+      proteger(function () {
+        if (!window.AudioRevisoes.repetir()) {
+          atualizarStatus({ mensagem: 'Escolha primeiro uma lacuna para ouvir.' });
+        }
+      })
+    );
+    pararBotao.addEventListener(
+      'click',
+      proteger(function () {
+        parar(false);
+        atualizarStatus({ mensagem: 'Áudio interrompido.' });
+      })
+    );
   }
 
   window.GramaticaDitado = {

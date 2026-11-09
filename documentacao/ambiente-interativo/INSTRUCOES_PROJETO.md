@@ -29,6 +29,19 @@ ao conteúdo. Não duplique um motor inteiro para trocar matéria ou perguntas.
 
 ## Roteamento por domínio
 
+- [Laboratório de Atividades Avulsas](infraestrutura/LABORATORIO_ATIVIDADES_AVULSAS.md):
+  LAB.2D.4 acrescenta alternância explícita principal/responsável, validação estrita e recuperação
+  da origem à execução opt-in LAB.2D.3; Fase B global integral aprovada;
+  LAB.2D.5 acrescenta escolha visual Desktop Amplo antes da abertura (global integral aprovada).
+  LAB.2D.6A valida estruturalmente contrato v2 de ditados; admissão operacional segue v1,
+  sem áudio/execução v2 (global integral aprovada).
+  LAB.2D.6B integra adaptação/áudio internos com apresentação neutra e en-US opt-in;
+  admissão v2 segue bloqueada (global integral aprovada).
+  LAB.2D.6C.1 prepara reconhecimento compartilhado, projeção e análise estrita de snapshots,
+  backup e journal; operações públicas v2 continuam bloqueadas (Fase B global integral aprovada).
+  LAB.2D.6C.2 integra admissão operacional v2, identidade/progresso/recuperação autênticos e
+  apresentação neutra; Fase B global integral aprovada. Sem novas interfaces de backup/administração.
+  Não altera o catálogo oficial nem os contratos de adição integrada ou ORG.
 - [Áudio e voz](infraestrutura/AUDIO_E_VOZ.md): `audio.js`, ditado, prefixos, vozes e validação
   humana. O protótipo opt-in de microfone e Azure tem contrato próprio em
   [Pronúncia com Azure](infraestrutura/PRONUNCIA_AZURE.md).
