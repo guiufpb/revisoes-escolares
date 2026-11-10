@@ -1,5 +1,20 @@
 # Inventário de implementações do projeto
 
+## LAB Visual v3 — Incremento 2B, transporte ZIP analítico isolado
+
+Novo lab-visual-zip.js e gerador Node de referência, perfil fechado lab-v3-zip-1 (STORED/DEFLATE
+nativo), snapshots, CRC, quotas, hashes e chamada obrigatória ao analisador homologado.
+25 ZIPs sintéticos congelados; V0–V4 mantidos; testes Node/Chromium e documentação em
+[LAB_VISUAL_V3_ZIP.md](infraestrutura/LAB_VISUAL_V3_ZIP.md). Sem admissão, importação ou prévia
+escolar; v1/v2 e analisador 1/1A intactos. Global 2B pendente da autorização após checkpoint.
+Direcionados locais: 90 ZIP + 213 analisador = 303/303; regressões validador/backup v1/v2:
+155/155; build, formatação, lint e diff aprovados. Não equivale a global 2B aprovada.
+
+Encerramento posterior autorizado em 10/11/2026: global 2B integral aprovada, saída 0,
+1647/1647 Node e 850/850 Playwright, sem falhas/skips/retries/flaky/omissões. Fontes/artefatos
+estáveis; somente documentação atualizada depois. Os estados de checkpoint acima são históricos.
+Evidências e limitações no documento próprio. Sem admissão ou integração operacional v3.
+
 ## LAB Visual v3 — Incremento 1A, correções pós-auditoria
 
 Correções locais de DQT progressiva (definição completa e componentes iniciados), hint VP8L
