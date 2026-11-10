@@ -1,5 +1,15 @@
 # Laboratório de Atividades Avulsas — contrato LAB.1
 
+## LAB Visual v3 — transporte ZIP isolado, incremento 2B
+
+Perfil lab-v3-zip-1 e API analítica própria em [LAB_VISUAL_V3_ZIP.md](LAB_VISUAL_V3_ZIP.md).
+O adaptador extrai em memória, confere integridade e chama o analisador homologado; o gerador
+Node serve somente à autoria explícita/testes. Sem registro no aplicativo, importação, prévia,
+backup, progresso ou admissão. Global 2B ainda depende da autorização após checkpoint.
+
+Encerramento posterior: global 2B integral autorizada e aprovada em 10/11/2026, saída 0,
+1647/1647 Node e 850/850 Playwright, conforme evidências no documento próprio. Sem integração escolar.
+
 ## LAB Visual v3 — analisador isolado, sem admissão
 
 O incremento 1 tem contrato próprio em [LAB_VISUAL_V3_ANALISE.md](LAB_VISUAL_V3_ANALISE.md).
