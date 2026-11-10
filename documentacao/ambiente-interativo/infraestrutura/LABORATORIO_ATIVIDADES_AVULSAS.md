@@ -1,5 +1,14 @@
 # Laboratório de Atividades Avulsas — contrato LAB.1
 
+## LAB Visual v3 — analisador isolado, sem admissão
+
+O incremento 1 tem contrato próprio em [LAB_VISUAL_V3_ANALISE.md](LAB_VISUAL_V3_ANALISE.md).
+Não é importado pelo aplicativo nem pelo reconhecedor v1/v2. Estrutura/hash raster não
+comprovam decodificação; admissaoOperacional é sempre false. Global aprovada em 10/11/2026:
+1535/1535 Node e 850/850 Playwright; sem admissão operacional v3.
+Essa aprovação refere-se ao incremento 1. As correções locais 1A também passaram na global:
+1557/1557 Node e 850/850 Playwright, saída 0 em 10/11/2026, conforme o documento próprio.
+
 ## LAB.2D.6C.2 — integração operacional local (validada integralmente)
 
 Contrato vigente: validarPacote revalida explicitamente v1/v2 pelo reconhecimento existente,
