@@ -1,5 +1,25 @@
 # Inventário de implementações do projeto
 
+## LAB Visual v3 — Incremento 1A, correções pós-auditoria
+
+Correções locais de DQT progressiva (definição completa e componentes iniciados), hint VP8L
+e inspeção da coleção sem materializar descritores extras. Cinco PNGs positivos adicionais,
+regressões e códigos de recusa específicos. API/política/V0–V4 e módulos operacionais intactos.
+Direcionados v3: 213/213; regressão validador/backup v1/v2: 155/155; build/formato/lint
+aprovados. Global 1A aprovada em 10/11/2026: 1557/1557 Node e 850/850 Playwright,
+saída 0, sem falhas/retries/flaky/skips/omissões; fontes/artefatos estáveis durante a suíte.
+A global abaixo é histórica do incremento 1.
+Detalhes em [LAB_VISUAL_V3_ANALISE.md](infraestrutura/LAB_VISUAL_V3_ANALISE.md).
+
+## LAB Visual v3 — incremento 1 analítico isolado
+
+`lab-visual-analise.js`: análise pura de manifesto e buffers, política lab-v3-analise-1,
+capacidades fechadas, PNG/WebP/JPEG estruturais, identidade V0–V4. Sem import no aplicativo,
+sem admissão, pixels ainda pendentes de decodificação. V1/v2 intactos. Corpus original e
+testes direcionados em tests/validacao/lab-visual-*.unit.cjs. Global aprovada em 10/11/2026: 1535/1535 Node e 850/850 Playwright, saída 0,
+sem falhas/retries/flaky/skips/omissões; fontes e artefatos estáveis durante a execução.
+Contrato e limites: [LAB_VISUAL_V3_ANALISE.md](infraestrutura/LAB_VISUAL_V3_ANALISE.md).
+
 ## LAB.2D.6C.2 — integração operacional local (validada integralmente)
 
 Admissão explícita v1/v2 com pacote original, digest e infraestrutura de aquisição/progresso/
