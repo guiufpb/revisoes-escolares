@@ -4,6 +4,12 @@ Base: 18b2288757536242e58b9ab41050e884b55a2f07. Perfil aprovado na conversa: lab
 Este documento complementa [a análise v3](LAB_VISUAL_V3_ANALISE.md), sem alterar seus contratos.
 Não é importação escolar, backup, prévia, avaliação ou autorização de armazenamento.
 
+Extensão 3B: leitor/extração foram movidos, sem alteração de perfil ou resultados, para
+lab-visual-zip-nucleo.js. A fachada lab-visual-zip.js mantém a API analítica homologada. Em scripts
+isolados do navegador, carregar o núcleo depois do analisador e antes das fachadas ZIP/prévia.
+Não há loader ou registro escolar automático. A nova fronteira privada e a projeção efêmera
+constam em [LAB_VISUAL_V3_PREVIA.md](LAB_VISUAL_V3_PREVIA.md); as seções seguintes registram 2B/2C.
+
 ## API e fronteira
 
 `ambiente_interativo/js/lab-visual-zip.js` exporta somente

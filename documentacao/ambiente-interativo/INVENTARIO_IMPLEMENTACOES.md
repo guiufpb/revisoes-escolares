@@ -1,5 +1,19 @@
 # Inventário de implementações do projeto
 
+## LAB Visual v3 — Incremento 3B, projeção infantil e contexto efêmero
+
+Pipeline ZIP privado compartilhado, fachada analítica preservada e nova API isolada de preparação.
+Contrato lab-v3-previa-1 por seleção de campos, IDs neutros, recursos opacos por contexto/hash,
+imutabilidade, invalidação por geração e descarte. Sem bytes/gabaritos/alvos na apresentação,
+sem decoder, renderer, UI ou admissão. Ordem de scripts isolados agora inclui o núcleo antes
+das fachadas; aplicativo escolar não alterado. Detalhes em
+[LAB_VISUAL_V3_PREVIA.md](infraestrutura/LAB_VISUAL_V3_PREVIA.md). Global 3B ainda não iniciada.
+
+Encerramento posterior autorizado em 11/11/2026: global 3B integral aprovada, saída 0,
+1701/1701 Node e 850/850 Playwright, zero falhas/skips/retries/flaky/omissões. Reporter completo,
+fontes/artefatos estáveis; somente documentação atualizada após a suíte. O checkpoint acima é
+histórico; evidências no documento próprio. Sem integração operacional, decoder ou renderer.
+
 ## LAB Visual v3 — Incremento 2B, transporte ZIP analítico isolado
 
 Novo lab-visual-zip.js e gerador Node de referência, perfil fechado lab-v3-zip-1 (STORED/DEFLATE

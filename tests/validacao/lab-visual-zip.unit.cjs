@@ -451,6 +451,14 @@ test('isolamento por dependências: somente analisador, sem registro operacional
   const src = fs.readFileSync(path.resolve('ambiente_interativo/js/lab-visual-zip.js'), 'utf8');
   assert.deepEqual(
     [...src.matchAll(/require\('([^']+)'\)/g)].map((m) => m[1]),
+    ['./lab-visual-zip-nucleo.js']
+  );
+  const core = fs.readFileSync(
+    path.resolve('ambiente_interativo/js/lab-visual-zip-nucleo.js'),
+    'utf8'
+  );
+  assert.deepEqual(
+    [...core.matchAll(/require\('([^']+)'\)/g)].map((m) => m[1]),
     ['./lab-visual-analise.js']
   );
   assert.doesNotMatch(

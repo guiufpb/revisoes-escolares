@@ -49,7 +49,7 @@ test('Chromium: corpus congelado, V0–V4 e ausência de efeitos', async () => {
   const page = await browser.newPage();
   try {
     await page.goto(origem);
-    for (const name of ['lab-visual-analise.js', 'lab-visual-zip.js'])
+    for (const name of ['lab-visual-analise.js', 'lab-visual-zip-nucleo.js', 'lab-visual-zip.js'])
       await page.addScriptTag({
         content: fs.readFileSync(
           path.join(__dirname, '../../ambiente_interativo/js', name),
@@ -160,7 +160,7 @@ test('Chromium: recusas físicas, lógicas e DEFLATE preservam isolamento', asyn
   const page = await browser.newPage();
   try {
     await page.goto(origem);
-    for (const name of ['lab-visual-analise.js', 'lab-visual-zip.js'])
+    for (const name of ['lab-visual-analise.js', 'lab-visual-zip-nucleo.js', 'lab-visual-zip.js'])
       await page.addScriptTag({
         content: fs.readFileSync(
           path.join(__dirname, '../../ambiente_interativo/js', name),
@@ -212,7 +212,7 @@ test('Chromium: CRC do ZIP e análise estrutural não comprovam decodificação 
     page = await browser.newPage();
   try {
     await page.goto(origem);
-    for (const name of ['lab-visual-analise.js', 'lab-visual-zip.js'])
+    for (const name of ['lab-visual-analise.js', 'lab-visual-zip-nucleo.js', 'lab-visual-zip.js'])
       await page.addScriptTag({
         content: fs.readFileSync(
           path.join(__dirname, '../../ambiente_interativo/js', name),

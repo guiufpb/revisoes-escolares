@@ -1,5 +1,17 @@
 # Laboratório de Atividades Avulsas — contrato LAB.1
 
+## LAB Visual v3 — projeção infantil isolada, incremento 3B
+
+Preparação efêmera em [LAB_VISUAL_V3_PREVIA.md](LAB_VISUAL_V3_PREVIA.md), sem renderização,
+decodificação, seleção de arquivo ou fluxo escolar. A análise ZIP mantém seu relatório público;
+o núcleo privado compartilhado alimenta projeção fechada sem gabaritos/alvos/bytes e referências
+opacas revogáveis. Não há mudança do reconhecedor, motor, progresso ou admissão operacional.
+Global 3B pendente de autorização após checkpoint.
+
+Encerramento posterior: global 3B integral autorizada e aprovada em 11/11/2026, saída 0,
+1701/1701 Node e 850/850 Playwright, sem falhas/skips/retries/flaky/omissões. Detalhes e
+evidências no documento próprio; sem integração escolar, decodificação ou renderização.
+
 ## LAB Visual v3 — transporte ZIP isolado, incremento 2B
 
 Perfil lab-v3-zip-1 e API analítica própria em [LAB_VISUAL_V3_ZIP.md](LAB_VISUAL_V3_ZIP.md).
