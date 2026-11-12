@@ -1,5 +1,65 @@
 # Inventário de implementações do projeto
 
+## Checkpoint final de consolidação local — 12/11/2026
+
+Estado atual: snapshot corrigido P3/P4 aprovado na global final local. As declarações de
+pendência nos checkpoints abaixo descrevem seus snapshots históricos, não o estado atual.
+Nenhuma aprovação de CI remota é atribuída: o incremento ainda não foi publicado.
+
+- Primeira global reprovada: 1782/1784 Node, duas falhas ambientais por caminho longo,
+  Playwright não iniciado, saída 1.
+- Prova ambiental: 2/2 aprovados com core.longpaths=true temporário.
+- Segunda global aprovada, anterior ao P3: 1784/1784 Node, 850/850 Playwright, saída 0.
+- P3/P4: foco interno recuperado após falha tardia, foco externo preservado e geração
+  obsoleta sem roubo de foco; 615/615 testes direcionados aprovados.
+- Global final do snapshot corrigido: 1787/1787 Node e 850/850 Playwright, saída 0,
+  reporter passed/complete:true, zero falhas, skips, cancelamentos, retries, flaky e
+  timeouts. Nove hashes estáveis; contratos anteriores e V0–V4 preservados.
+
+Comparação observacional inconclusiva: 29 diagnósticos de capturas e 25 de ZIPs congelados,
+sem plano CI local conclusivo. Não confundir aprovação funcional ou completude do reporter
+com comparação observacional aprovada.
+
+A global final usou processo filho isolado e core.longpaths=true temporário, confirmado
+com origem command line. Configurações persistentes preservadas; processo encerrado,
+porta 5181 liberada e variáveis ausentes no processo pai após a execução. O registro
+histórico restaurado:false da execução anterior permanece preservado, sem reinterpretação.
+
+Evidências preservadas em tmp/3c2-global-final-p3p4-20261112T175932/: global.log,
+exit-code.txt, config-efetiva.log, preflight.json e conferencia-final.json. Reporter:
+tmp/validacao/2026-11-12T21-02-53-837Z-e1f41d13-3f8e-4099-8d24-e0eb4128cd6f/run.json.
+Somente os três documentos receberam este fechamento após a global; os seis arquivos
+não documentais continuam byte a byte iguais ao snapshot validado. Sem nova implementação,
+integração escolar, 3D ou publicação. A suíte não foi repetida para consolidar documentação.
+
+
+## LAB Visual v3 — Incremento 3C.2, renderizador isolado de questões
+
+Contrato opt-in lab-v3-renderizador-1: DOM de uma questão da projeção segura 3B,
+imagens autênticas pelo serviço 3C.1, propriedade exclusiva por instância/raiz, gerações,
+liberação de handles e imagens adiadas com controles explícitos de exibir/ocultar.
+Conjuntos, grupos intercalados, campos demonstrativos e ditados neutros sem avaliação.
+CSS/harness isolados, sem registro no aplicativo. APIs anteriores e fixtures preservados.
+Detalhes em [LAB_VISUAL_V3_RENDERIZADOR.md](infraestrutura/LAB_VISUAL_V3_RENDERIZADOR.md).
+Global 3C.2 ainda não iniciada; depende de autorização após verificações direcionadas.
+
+Encerramento histórico e P3/P4 — 12/11/2026: primeira global 1782/1784 Node, duas falhas
+ambientais de caminho Git, Playwright não iniciado, saída 1; prova direcionada 2/2 com
+core.longpaths=true temporário. Segunda global do snapshot anterior ao P3: 1784/1784 Node,
+850/850 Playwright, saída 0, reporter passed/complete:true, zero falhas/skips/retries/flaky/timeouts.
+Observacional inconclusivo: 29 diagnósticos de capturas, 25 de ZIPs congelados, sem plano CI
+local conclusivo. Configurações Git persistentes preservadas; restaurado:false original
+mantido, processo encerrado e variáveis ausentes posteriormente, sem afirmar restauração
+integral. Correção P3 transfere foco interno ao aviso de falha e preserva foco externo;
+regressões também cobrem geração obsoleta. P4 registra este fechamento sem apagar o histórico.
+O snapshot corrigido depende de nova global integral, ainda não iniciada. Detalhes e evidências
+no documento do renderizador; nenhuma homologação global ou remota atribuída à correção.
+
+Correção P3/P4 validada direcionadamente em 12/11/2026: renderizador 33/33 (16 Node/VM,
+17 Chromium), regressões adicionais 582/582; total 615/615 (443 v3, 172 v1/v2), V0–V4
+preservados, build/formato/lint/diff aprovados. Evidências em tmp/3c2-p3p4-20261112T170944/.
+Nova global integral do código corrigido permanece pendente de autorização.
+
 ## LAB Visual v3 — Incremento 3C.1, serviço privado de imagens opt-in
 
 Nova criarPreparacaoIlustradaVisual, contrato lab-v3-ilustrada-1: pipeline homologado único,
