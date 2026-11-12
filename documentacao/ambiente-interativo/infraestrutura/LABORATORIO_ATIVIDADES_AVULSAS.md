@@ -1,5 +1,21 @@
 # Laboratório de Atividades Avulsas — contrato LAB.1
 
+## LAB Visual v3 — serviço de imagens isolado, incremento 3C.1
+
+Preparação ilustrada independente em [LAB_VISUAL_V3_IMAGENS.md](LAB_VISUAL_V3_IMAGENS.md):
+recursos verificados privados, confirmação por decode/ImageBitmap nativos e apresentações
+liberáveis. Sem alteração das APIs analíticas ou da projeção 3B, sem renderizador completo,
+importação, persistência, avaliação ou registro no aplicativo. Admissão operacional sempre falsa.
+Global ainda pendente de autorização; evidências desta etapa não substituem as históricas.
+
+Fechamento posterior em 11/11/2026: global 3C.1 local aprovada, 1753/1753 Node e
+850/850 Playwright, saída 0, sem falhas/skips/retries/flaky/timeouts, reporter completo,
+11 hashes estáveis. Observação inconclusiva (sem plano CI local; 29 diagnósticos de
+capturas e 25 ZIPs anteriores), separada do resultado obrigatório. Após a auditoria,
+teste FIFO/documentação atualizados e 565/565 direcionados aprovados, com build/formato/lint/diff.
+Produção inalterada; teste novo posterior à global; CI integral do snapshot final ainda pendente.
+O checkpoint anterior permanece histórico. Detalhes e evidências no documento de imagens.
+
 ## LAB Visual v3 — projeção infantil isolada, incremento 3B
 
 Preparação efêmera em [LAB_VISUAL_V3_PREVIA.md](LAB_VISUAL_V3_PREVIA.md), sem renderização,

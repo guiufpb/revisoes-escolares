@@ -1,5 +1,22 @@
 # Inventário de implementações do projeto
 
+## LAB Visual v3 — Incremento 3C.1, serviço privado de imagens opt-in
+
+Nova criarPreparacaoIlustradaVisual, contrato lab-v3-ilustrada-1: pipeline homologado único,
+preflight nativo sequencial decode + ImageBitmap, dimensões, projeção 3B e apresentações
+descartáveis com URLs privadas, orçamento de pixels, fila limitada e invalidação por geração.
+Sem renderer de questões, seleção/navegação, importação ou admissão operacional. APIs analíticas
+anteriores e aplicativo escolar preservados. Detalhes em
+[LAB_VISUAL_V3_IMAGENS.md](infraestrutura/LAB_VISUAL_V3_IMAGENS.md).
+Global deste incremento ainda não iniciada; depende de autorização após os direcionados.
+
+Fechamento posterior em 11/11/2026: checkpoint anterior preservado como histórico.
+Global local aprovada (1753/1753 Node, 850/850 Playwright, saída 0, reporter completo,
+sem falhas/skips/retries/flaky/timeouts; 11 hashes estáveis). Comparação observacional
+inconclusiva: sem plano CI local, 29 diagnósticos de capturas e 25 ZIPs anteriores.
+Após auditoria, somente teste FIFO e documentação: lote final 565/565, build/formato/lint/diff
+aprovados; produção intacta. A global anterior não inclui o teste novo. CI integral futura pendente.
+
 ## LAB Visual v3 — Incremento 3B, projeção infantil e contexto efêmero
 
 Pipeline ZIP privado compartilhado, fachada analítica preservada e nova API isolada de preparação.

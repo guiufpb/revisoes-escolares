@@ -510,7 +510,341 @@
     }
     return Object.freeze({ preparar, consultarReferencia, consultarEstado, descartar });
   }
-  const api = Object.freeze({ analisarTransporteZipVisual, criarPreparacaoPreviaVisual });
+  // Opt-in 3C.1. Nenhum byte ou callback de extração atravessa esta fronteira.
+  function criarPreparacaoIlustradaVisual() {
+    const limitePixels = 8388608,
+      limiteFila = 64;
+    let geracao = 0,
+      estado = 'inicial',
+      contexto = null,
+      ativo = null;
+    let pixels = 0,
+      verificacoes = 0,
+      urlsTeste = 0;
+    const fila = [],
+      apresentacoes = new Set(),
+      problemas = new WeakMap();
+    const recusado = (codigo) =>
+      Object.freeze({
+        status: 'recusado',
+        erros: [{ codigo, caminho: '', origem: 'ilustrada' }],
+        truncado: false,
+        admissaoOperacional: false,
+        decodificacao: 'pendente',
+      });
+    function erro(codigo) {
+      const e = {};
+      problemas.set(e, codigo);
+      return e;
+    }
+    const vigente = (g) => geracao === g && estado !== 'descartado';
+    function invalidar(novoEstado) {
+      geracao++;
+      estado = novoEstado;
+      contexto = null;
+      for (const a of [...apresentacoes]) a.liberar();
+      for (const j of fila.splice(0)) j.resolver(recusado('ILUSTRADA_INVALIDADA'));
+      if (ativo) {
+        ativo.resolver(recusado('ILUSTRADA_INVALIDADA'));
+        ativo.limpar?.();
+      }
+    }
+    // O slot físico só é liberado quando decode() efetivamente termina, mesmo após invalidação.
+    async function drenar() {
+      if (ativo || !fila.length) return;
+      const j = fila.shift();
+      ativo = j;
+      try {
+        j.resolver(await j.executar(j));
+      } catch (e) {
+        const codigo = vigente(j.geracao)
+          ? problemas.get(e) || 'ILUSTRADA_RECURSO_FALHOU'
+          : 'ILUSTRADA_INVALIDADA';
+        j.resolver(recusado(codigo));
+        if (vigente(j.geracao)) invalidar('falha');
+      } finally {
+        ativo = null;
+        void drenar();
+      }
+    }
+    function agendar(g, executar) {
+      if (!vigente(g)) return Promise.resolve(recusado('ILUSTRADA_INVALIDADA'));
+      if (fila.length >= limiteFila) return Promise.resolve(recusado('ILUSTRADA_FILA_OCUPADA'));
+      return new Promise((resolver) => {
+        fila.push({ geracao: g, executar, resolver, limpar: null });
+        void drenar();
+      });
+    }
+    function runtimeDisponivel() {
+      return (
+        typeof root.document?.createElement === 'function' &&
+        typeof root.HTMLImageElement?.prototype.decode === 'function' &&
+        typeof root.createImageBitmap === 'function' &&
+        typeof root.Blob === 'function' &&
+        typeof root.URL?.createObjectURL === 'function' &&
+        typeof root.URL?.revokeObjectURL === 'function'
+      );
+    }
+    async function decodificar(img, info, g) {
+      try {
+        await img.decode();
+      } catch {
+        throw erro('ILUSTRADA_DECODIFICACAO_FALHOU');
+      }
+      if (!vigente(g)) throw erro('ILUSTRADA_INVALIDADA');
+      if (!(
+        img.naturalWidth > 0 &&
+        img.naturalHeight > 0 &&
+        img.naturalWidth === info.largura &&
+        img.naturalHeight === info.altura
+      ))
+        throw erro('ILUSTRADA_DIMENSOES_DIVERGENTES');
+    }
+    async function verificar(recurso, g, j) {
+      let url = null,
+        img = null,
+        bitmap = null,
+        liberado = false;
+      function limpar() {
+        if (liberado) return;
+        liberado = true;
+        if (img) {
+          img.removeAttribute('src');
+          img.remove();
+        }
+        if (url !== null) {
+          root.URL.revokeObjectURL(url);
+          urlsTeste--;
+        }
+        if (bitmap) {
+          bitmap.close();
+          bitmap = null;
+        }
+      }
+      j.limpar = limpar;
+      try {
+        const blob = new root.Blob([recurso.bytes], { type: recurso.info.mime });
+        url = root.URL.createObjectURL(blob);
+        urlsTeste++;
+        img = root.document.createElement('img');
+        img.src = url;
+        await decodificar(img, recurso.info, g);
+        // Chromium pode resolver img.decode() mesmo com falha no fluxo de pixels.
+        // Materializar um frame nativo é o mesmo oráculo já usado pelo corpus raster.
+        try {
+          bitmap = await root.createImageBitmap(blob);
+        } catch {
+          throw erro('ILUSTRADA_DECODIFICACAO_FALHOU');
+        }
+        if (!vigente(g)) throw erro('ILUSTRADA_INVALIDADA');
+        if (bitmap.width !== recurso.info.largura || bitmap.height !== recurso.info.altura)
+          throw erro('ILUSTRADA_DIMENSOES_DIVERGENTES');
+        verificacoes++;
+        return null;
+      } finally {
+        // Um bitmap concluído depois da invalidação também deve ser fechado.
+        if (bitmap) {
+          bitmap.close();
+          bitmap = null;
+        }
+        limpar();
+      }
+    }
+    async function preparar(zipBytes) {
+      void zipBytes;
+      if (estado === 'descartado') return recusado('ILUSTRADA_DESCARTADA');
+      invalidar('preparando');
+      verificacoes = 0;
+      const g = geracao;
+      try {
+        const interno = await processarZip.apply(undefined, arguments);
+        if (!vigente(g)) return recusado('ILUSTRADA_INVALIDADA');
+        if (interno.relatorio.status === 'recusado') {
+          estado = 'falha';
+          return { ...interno.relatorio, decodificacao: 'pendente' };
+        }
+        if (!runtimeDisponivel()) {
+          estado = 'falha';
+          return recusado('ILUSTRADA_RUNTIME_INDISPONIVEL');
+        }
+        const porHash = new Map(),
+          recursos = new Map();
+        for (const d of Object.values(interno.relatorio.manifesto.recursos)) {
+          if (porHash.has(d.sha256)) continue;
+          const ref = Object.freeze({});
+          porHash.set(d.sha256, ref);
+          recursos.set(ref, {
+            bytes: interno.verificados.get(d.sha256),
+            info: { mime: d.mime, largura: d.largura, altura: d.altura },
+            url: null,
+            usuarios: 0,
+          });
+        }
+        const projecao = projetar(interno.relatorio.manifesto, porHash);
+        const usos = new Set();
+        function visitar(v) {
+          if (!v || typeof v !== 'object') return;
+          if (v.tipo === 'imagem') usos.add(v);
+          else for (const x of Object.values(v)) visitar(x);
+        }
+        visitar(projecao);
+        // Este contexto não é publicável até o último recurso ter sido decodificado.
+        const candidato = { projecao, recursos, usos };
+        for (const recurso of recursos.values()) {
+          const r = await agendar(g, (j) => verificar(recurso, g, j));
+          if (r?.status === 'recusado') {
+            if (vigente(g)) invalidar('falha');
+            return r;
+          }
+          if (!vigente(g)) return recusado('ILUSTRADA_INVALIDADA');
+        }
+        if (!vigente(g)) return recusado('ILUSTRADA_INVALIDADA');
+        contexto = candidato;
+        estado = 'disponivel';
+        return consultarProjecao();
+      } catch (e) {
+        if (!vigente(g)) return recusado('ILUSTRADA_INVALIDADA');
+        invalidar('falha');
+        return recusado(problemas.get(e) || 'ILUSTRADA_PREPARACAO_FALHOU');
+      }
+    }
+    function consultarProjecao() {
+      if (estado !== 'disponivel' || !contexto) return recusado('ILUSTRADA_INDISPONIVEL');
+      return Object.freeze({
+        status: 'ilustracao-disponivel',
+        formato: 'lab-v3-ilustrada-1',
+        projecao: contexto.projecao,
+        admissaoOperacional: false,
+        decodificacao: contexto.recursos.size ? 'verificada-no-navegador' : 'sem-recursos',
+      });
+    }
+    function criarApresentacao(uso) {
+      if (arguments.length !== 1 || estado !== 'disponivel' || !contexto?.usos.has(uso))
+        return Promise.resolve(recusado('ILUSTRADA_REFERENCIA_INVALIDA'));
+      const g = geracao;
+      let recurso = contexto.recursos.get(uso.recurso);
+      return agendar(g, async (j) => {
+        const custo = recurso.info.largura * recurso.info.altura;
+        if (pixels + custo > limitePixels) return recusado('ILUSTRADA_ORCAMENTO_OCUPADO');
+        let img = null,
+          liberada = false,
+          pronta = false,
+          reservada = false;
+        let estadoApresentacao = 'preparando';
+        function liberar() {
+          if (liberada) return;
+          liberada = true;
+          estadoApresentacao = 'liberada';
+          if (img) {
+            img.removeEventListener('error', falhou);
+            img.removeAttribute('src');
+            img.remove();
+            img = null;
+          }
+          if (reservada) {
+            pixels -= custo;
+            recurso.usuarios--;
+            if (!recurso.usuarios && recurso.url !== null) {
+              root.URL.revokeObjectURL(recurso.url);
+              recurso.url = null;
+            }
+          }
+          recurso = null;
+          apresentacoes.delete(registro);
+        }
+        function falhou() {
+          if (!pronta || liberada || !vigente(g)) return;
+          invalidar('falha');
+          estadoApresentacao = 'indisponivel';
+        }
+        const registro = { liberar };
+        j.limpar = liberar;
+        try {
+          if (recurso.url === null)
+            recurso.url = root.URL.createObjectURL(
+              new root.Blob([recurso.bytes], { type: recurso.info.mime })
+            );
+          recurso.usuarios++;
+          pixels += custo;
+          reservada = true;
+          apresentacoes.add(registro);
+          img = root.document.createElement('img');
+          img.alt = uso.acessibilidade.tipo === 'essencial' ? uso.acessibilidade.descricao : '';
+          img.width = recurso.info.largura;
+          img.height = recurso.info.altura;
+          img.addEventListener('error', falhou);
+          img.src = recurso.url;
+          await decodificar(img, recurso.info, g);
+          if (liberada || !vigente(g)) throw erro('ILUSTRADA_INVALIDADA');
+          pronta = true;
+          estadoApresentacao = 'pronta';
+          return Object.freeze({
+            get status() {
+              return estadoApresentacao === 'pronta' ? 'imagem-disponivel' : 'imagem-indisponivel';
+            },
+            elemento: img,
+            liberar,
+            consultarEstado: () =>
+              Object.freeze({
+                estado: estadoApresentacao,
+                admissaoOperacional: false,
+                decodificacao:
+                  estadoApresentacao === 'pronta' ? 'verificada-no-navegador' : 'pendente',
+              }),
+            admissaoOperacional: false,
+            get decodificacao() {
+              return estadoApresentacao === 'pronta' ? 'verificada-no-navegador' : 'pendente';
+            },
+          });
+        } catch (e) {
+          liberar();
+          throw e;
+        }
+      });
+    }
+    function consultarEstado() {
+      let urls = 0;
+      if (contexto) for (const r of contexto.recursos.values()) if (r.url !== null) urls++;
+      return congelar({
+        formato: 'lab-v3-ilustrada-1',
+        estado,
+        admissaoOperacional: false,
+        decodificacao:
+          estado === 'disponivel'
+            ? contexto.recursos.size
+              ? 'verificada-no-navegador'
+              : 'sem-recursos'
+            : 'pendente',
+        observacao: {
+          recursosVerificados: verificacoes,
+          semRecursos: estado === 'disponivel' && !contexto.recursos.size,
+          pixelsEmUso: pixels,
+          limitePixels,
+          decodificacoesAtivas: ativo ? 1 : 0,
+          fila: fila.length,
+          limiteFila,
+          urlsVerificacao: urlsTeste,
+          urlsApresentacao: urls,
+          apresentacoes: apresentacoes.size,
+        },
+      });
+    }
+    function descartar() {
+      invalidar('descartado');
+    }
+    return Object.freeze({
+      preparar,
+      consultarEstado,
+      consultarProjecao,
+      criarApresentacao,
+      descartar,
+    });
+  }
+  const api = Object.freeze({
+    analisarTransporteZipVisual,
+    criarPreparacaoPreviaVisual,
+    criarPreparacaoIlustradaVisual,
+  });
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.LabVisualZipNucleo = api;
 })(typeof window === 'undefined' ? globalThis : window);

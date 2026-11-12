@@ -131,6 +131,7 @@ test('V0–V4: pipeline privado único, um analisador por preparação', async (
   // O parser e o pipeline não são métodos da API interna ou pública.
   assert.deepEqual(Object.keys(api).sort(), [
     'analisarTransporteZipVisual',
+    'criarPreparacaoIlustradaVisual',
     'criarPreparacaoPreviaVisual',
   ]);
 });

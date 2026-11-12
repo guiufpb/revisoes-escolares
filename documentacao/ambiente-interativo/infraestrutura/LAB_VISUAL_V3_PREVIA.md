@@ -1,5 +1,10 @@
 # LAB Visual v3 — núcleo de projeção infantil, incremento 3B
 
+Extensão opt-in 3C.1: [serviço privado de imagens](LAB_VISUAL_V3_IMAGENS.md).
+As descrições e evidências 3B abaixo permanecem históricas; sua API continua sem decodificar
+e sempre informa decodificação pendente. A nova fábrica é independente e não registra
+componentes no aplicativo. A projeção lab-v3-previa-1 não muda.
+
 Base: 9af0139d98c22ff0f16f81c6fa0151fd4fda71b2. Complementa os contratos
 [analítico](LAB_VISUAL_V3_ANALISE.md) e [ZIP](LAB_VISUAL_V3_ZIP.md).
 Não é renderizador, decodificação, prévia navegável, importação ou execução escolar.
