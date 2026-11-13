@@ -1,5 +1,48 @@
 # Inventário de implementações do projeto
 
+## Fechamento dos achados P2 — 13/11/2026
+
+Estado atual: global local do 3D aprovada no snapshot ANTERIOR aos reforços de testes P2.
+Os checkpoints de global pendente abaixo são registros históricos; nenhum é reescrito.
+
+- Global: 1811/1811 Node, 850/850 Playwright, saída 0, reporter passed/complete:true;
+  zero falhas, skips, cancelamentos, retries, flaky ou timeouts. Nove hashes estáveis.
+- Execução em processo filho isolado com core.longpaths=true temporário, configuração
+  persistente preservada e porta 5181 liberada. Outras 42 worktrees e stash preservados.
+- Comparação observacional inconclusiva: 29 diagnósticos de capturas, 25 de ZIPs congelados,
+  sem plano CI local conclusivo. Não equivale a comparação observacional aprovada.
+- Auditoria final sem P0/P1: dois P2 de cobertura e um P2 de fechamento documental.
+- Reforços posteriores à global: observer comprovado por alteração DOM antes de qualquer
+  consultarEstado() do teste; consultas do renderer contadas no helper VM. Foco interno
+  verificado pela identidade exata do aviso e tabindex=-1, antes e depois da reação assíncrona.
+- Validação desta correção: 57/57 direcionados (24 testes 3D e 33 regressões 3C.2,
+  incluindo P3 de foco), sem falhas/skips/cancelamentos. Nenhum defeito de produção revelado.
+
+Evidências da global em tmp/3d-global-20261113T005122/ e reporter
+em tmp/validacao/2026-11-13T03-54-32-139Z-b83771c9-4dfc-4ef8-8374-9610375e8b75/run.json.
+Reforços em tmp/3d-p2-testes.log; hashes anteriores e posteriores em tmp/3d-p2-antes.json
+e tmp/3d-p2-depois.json. Código de produção do 3D, módulos anteriores e fixtures preservados.
+A global de 1811/850 NÃO executou estes oráculos posteriores. O snapshot final de testes
+aguarda decisão sobre nova validação integral; nenhuma global adicional foi iniciada.
+Sem aprovação de CI remota, commit ou publicação do 3D.
+
+
+## LAB Visual v3 — 3D, prévia navegável isolada (13/11/2026)
+
+Contrato lab-v3-navegacao-1: seleção local de ZIP, FileReader com teto prévio,
+navegação por índices da projeção autêntica, descarte por geração e drenagem do serviço
+anterior antes de iniciar outra preparação. Um candidato File e um timer de acompanhamento.
+Observer restrito ao conteúdo consulta estado público; foco interno/externo preservado.
+Página lab-visual-previa.html independente do aplicativo escolar; APIs e módulos 3B/3C.1/3C.2
+inalterados, admissaoOperacional:false. Sem importação, avaliação, áudio ou persistência.
+Detalhes em [LAB_VISUAL_V3_NAVEGACAO.md](infraestrutura/LAB_VISUAL_V3_NAVEGACAO.md). Implementação local; suíte global 3D ainda NÃO iniciada,
+aguardando autorização após validações direcionadas. Sem commit ou publicação.
+
+Checkpoint direcionado 13/11/2026: 24/24 novos (9 Node/VM, 15 Chromium), 615/615
+regressões, total 639/639 (467 v3, 172 v1/v2); V0–V4, build/formato/lint/diff
+aprovados. Global integral 3D ainda pendente de autorização.
+
+
 ## Checkpoint final de consolidação local — 12/11/2026
 
 Estado atual: snapshot corrigido P3/P4 aprovado na global final local. As declarações de

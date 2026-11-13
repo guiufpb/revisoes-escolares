@@ -1,0 +1,47 @@
+.lab-v3-navegacao {
+  box-sizing: border-box;
+  max-width: 80rem;
+  margin: auto;
+  padding: 1rem;
+  font:
+    1.2rem/1.6 system-ui,
+    sans-serif;
+  color: #26213b;
+  background: #fff;
+  overflow-wrap: anywhere;
+}
+.lab-v3-navegacao * {
+  box-sizing: border-box;
+  min-width: 0;
+}
+.lab-v3-navegacao nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.lab-v3-navegacao button,
+.lab-v3-navegacao input {
+  font: inherit;
+  max-width: 100%;
+  min-height: 3rem;
+}
+.lab-v3-navegacao button {
+  padding: 0.65rem 1rem;
+  background: #4c317c;
+  color: white;
+  border: 2px solid #4c317c;
+  border-radius: 0.5rem;
+}
+.lab-v3-navegacao button[aria-disabled='true'] {
+  background: #ece8f2;
+  color: #433b51;
+}
+.lab-v3-navegacao :focus-visible {
+  outline: 3px solid #005fcc;
+  outline-offset: 3px;
+}
+@media (max-width: 600px) {
+  .lab-v3-navegacao {
+    padding: 0.65rem;
+  }
+}
