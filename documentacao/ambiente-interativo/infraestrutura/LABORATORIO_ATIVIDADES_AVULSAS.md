@@ -1,5 +1,64 @@
 # Laboratório de Atividades Avulsas — contrato LAB.1
 
+## Checkpoint final de consolidação local — 12/11/2026
+
+Estado atual: snapshot corrigido P3/P4 aprovado na global final local. As declarações de
+pendência nos checkpoints abaixo descrevem seus snapshots históricos, não o estado atual.
+Nenhuma aprovação de CI remota é atribuída: o incremento ainda não foi publicado.
+
+- Primeira global reprovada: 1782/1784 Node, duas falhas ambientais por caminho longo,
+  Playwright não iniciado, saída 1.
+- Prova ambiental: 2/2 aprovados com core.longpaths=true temporário.
+- Segunda global aprovada, anterior ao P3: 1784/1784 Node, 850/850 Playwright, saída 0.
+- P3/P4: foco interno recuperado após falha tardia, foco externo preservado e geração
+  obsoleta sem roubo de foco; 615/615 testes direcionados aprovados.
+- Global final do snapshot corrigido: 1787/1787 Node e 850/850 Playwright, saída 0,
+  reporter passed/complete:true, zero falhas, skips, cancelamentos, retries, flaky e
+  timeouts. Nove hashes estáveis; contratos anteriores e V0–V4 preservados.
+
+Comparação observacional inconclusiva: 29 diagnósticos de capturas e 25 de ZIPs congelados,
+sem plano CI local conclusivo. Não confundir aprovação funcional ou completude do reporter
+com comparação observacional aprovada.
+
+A global final usou processo filho isolado e core.longpaths=true temporário, confirmado
+com origem command line. Configurações persistentes preservadas; processo encerrado,
+porta 5181 liberada e variáveis ausentes no processo pai após a execução. O registro
+histórico restaurado:false da execução anterior permanece preservado, sem reinterpretação.
+
+Evidências preservadas em tmp/3c2-global-final-p3p4-20261112T175932/: global.log,
+exit-code.txt, config-efetiva.log, preflight.json e conferencia-final.json. Reporter:
+tmp/validacao/2026-11-12T21-02-53-837Z-e1f41d13-3f8e-4099-8d24-e0eb4128cd6f/run.json.
+Somente os três documentos receberam este fechamento após a global; os seis arquivos
+não documentais continuam byte a byte iguais ao snapshot validado. Sem nova implementação,
+integração escolar, 3D ou publicação. A suíte não foi repetida para consolidar documentação.
+
+
+## LAB Visual v3 — renderizador ilustrado isolado, incremento 3C.2
+
+[Contrato lab-v3-renderizador-1](LAB_VISUAL_V3_RENDERIZADOR.md): apresentação DOM não avaliativa
+de uma questão, reutilizando projeção 3B e serviço 3C.1 sem mudar seus contratos. Imagens
+sequenciais, descarte por geração, ocupação recuperável e relações visuais preservadas.
+Não altera entrada escolar, importação, progresso, motores ou admissão operacional.
+Sem seleção/navegação 3D. Global deste incremento ainda pendente de autorização.
+
+Fechamento histórico e P3/P4 — 12/11/2026: primeira global 1782/1784 Node, duas falhas
+ambientais por caminho Git, Playwright não iniciado, saída 1. Prova ambiental 2/2 com
+core.longpaths=true temporário. Segunda global do snapshot anterior ao P3 aprovada:
+1784/1784 Node, 850/850 Playwright, saída 0, reporter passed/complete:true, sem
+falhas/skips/retries/flaky/timeouts. Comparação observacional inconclusiva: 29 diagnósticos
+de capturas, 25 de ZIPs congelados e ausência de plano CI local conclusivo.
+Configuração Git persistente preservada; restaurado:false original mantido, processo
+encerrado e variáveis ausentes no ambiente posterior; sem alegar restauração integral.
+P3 corrige foco após falha tardia e acrescenta regressões internas/externas/geração obsoleta;
+P4 documenta o encerramento. Checkpoints anteriores preservados. A global aprovada não
+inclui esta correção: novo snapshot aguarda autorização para outra global integral.
+Detalhes e evidências em LAB_VISUAL_V3_RENDERIZADOR.md; sem integração escolar.
+
+Validação direcionada P3/P4 de 12/11/2026: 33/33 do renderizador e 582/582 regressões,
+total 615/615 (443 v3, 172 v1/v2), V0–V4 preservados, build/formato/lint/diff aprovados.
+Evidências em tmp/3c2-p3p4-20261112T170944/. Nova global do snapshot corrigido ainda
+não iniciada; requer autorização separada, sem configuração Git persistente.
+
 ## LAB Visual v3 — serviço de imagens isolado, incremento 3C.1
 
 Preparação ilustrada independente em [LAB_VISUAL_V3_IMAGENS.md](LAB_VISUAL_V3_IMAGENS.md):
